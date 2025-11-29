@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><img src = "/static/logo.png" style = "width: 130px; height: 130px"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse d-flex justify-content-end me-5 gap-3" id="collapsibleNavbar">
+      <ul class="navbar-nav">
+        <li class="nav-item p-3">
+          <a class="nav-link" href="/index">Home</a>
+        </li>
+        <li class="nav-item p-3">
+          <a class="nav-link" href="/about">About Us</a>
+        </li>
+        <li class="nav-item p-3">
+          <a class="nav-link" href="/contact">Services</a>
+        </li>
+        <li class="nav-item p-3">
+          <a class="nav-link" href="/projects">Projects</a>
+        </li>
+        <li class="nav-item p-3">
+          <a class="nav-link" href="/projects">Blogs</a>
+        </li>
+        <li class="nav-item p-3">
+          <a class="nav-link" href="/projects">Contact Us</a>
+        </li>
+<!--        <li class="nav-item dropdown">-->
+<!--          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Dropdown</a>-->
+<!--          <ul class="dropdown-menu">-->
+<!--            <li><a class="dropdown-item" href="#">Directory</a></li>-->
+<!--            <li><a class="dropdown-item" href="#">Another link</a></li>-->
+<!--            <li><a class="dropdown-item" href="#">A third link</a></li>-->
+<!--          </ul>-->
+<!--        </li>-->
+      </ul>
+<!--      <form class="d-flex ms-auto">-->
+<!--        <input class="form-control me-2" type="text" placeholder="Search">-->
+<!--        <button class="btn btn-primary" type="button">Search</button>-->
+<!--      </form>-->
+    </div>
+  </div>
+</nav>
+
+<!-- Contact Form -->
+<div class="container-fluid mt-3">
+  <div class = "d-flex justify-content-center">
+    <form style = "width: 504px; border: 1px solid red;" method="post" action="/contact">
+    {% csrf_token %}
+    <div class="form-group mt-2">
+      <label for="inputEmail4">First Name</label>
+      <input type="text" class="form-control" id="inputEmail4" name = "fname">
+    </div>
+    <div class="form-group mt-2">
+      <label for="inputPassword4">Last Name</label>
+      <input type="text" class="form-control" id="inputPassword4" name = "lname">
+    </div>
+    <div class="form-group mt-2">
+      <label for="inputAddress">Email</label>
+      <input type="email" class="form-control" id="inputAddress" placeholder="abc@gmail.com" name = "email">
+    </div>
+    <div class="form-group mt-2">
+      <label for="inputAddress2">Feedback</label>
+      <textarea type="text" class="form-control" id="inputAddress2" placeholder="Suggestion" cols="5" name = "feedback"></textarea>
+    </div>
+  <!--  <div class="form-row">-->
+  <!--    <div class="form-group col-md-6">-->
+  <!--      <label for="inputCity">City</label>-->
+  <!--      <input type="text" class="form-control" id="inputCity">-->
+  <!--    </div>-->
+  <!--    <div class="form-group col-md-4">-->
+  <!--      <label for="inputState">State</label>-->
+  <!--      <select id="inputState" class="form-control">-->
+  <!--        <option selected>Choose...</option>-->
+  <!--        <option>...</option>-->
+  <!--      </select>-->
+  <!--    </div>-->
+  <!--    <div class="form-group col-md-2">-->
+  <!--      <label for="inputZip">Zip</label>-->
+  <!--      <input type="text" class="form-control" id="inputZip">-->
+  <!--    </div>-->
+  <!--  </div>-->
+  <!--  <div class="form-group">-->
+  <!--    <div class="form-check">-->
+  <!--      <input class="form-check-input" type="checkbox" id="gridCheck">-->
+  <!--      <label class="form-check-label" for="gridCheck">-->
+  <!--        Check me out-->
+  <!--      </label>-->
+  <!--    </div>-->
+  <!--  </div>-->
+      <div class = "d-flex justify-content-center">
+          <button type="submit" class="btn btn-primary mt-2">Sign in</button>
+        </div>
+  </form>
+    </div>
+</div>
+
+</body>
+</html>
+
+

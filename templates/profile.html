@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .card{
+        border: 0px solid white;
+        box-shadow: 5px 5px 10px 5px lightgray;
+    }
+    .card-image-custom{
+        width: 119px;
+        height: 126px;
+    }
+    .small-font{
+        font-size: 14px;
+        color: gray;
+    }
+</style>
+<div class="col">
+    <div class="container-fluid mt-3 h-100">
+        <div class="card p-3 " style = "width: 60%;">
+            <div class="d-flex">
+                <div class="card-image-custom ms-2">
+                    <img src = "/static/skit_logo.png">
+                </div>
+                <div class="card-body1-custom ms-5 mb-2">
+                    <h1><strong>{{data.name}}</strong></h1>
+                    <h5 style = "color: gray; font-size: 18px;">{{department}}, {{designation}}</h5>
+                    <button class = "btn text-white mt-3" style = "background-color: rgb(79 70 229);" onclick="window.location.href='{% url 'editProfile' %}';"><i class = "fa-solid fa-pen me-2"></i>Edit Profie</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class = "small-font mt-3"><i data-lucide="mail" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{data.email}}</h5>
+                <h5 class = "small-font mt-3"><i data-lucide="phone" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{data.contact_number}}</h5>
+                <h5 class = "small-font mt-3"><i data-lucide="map-pin" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>Address</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

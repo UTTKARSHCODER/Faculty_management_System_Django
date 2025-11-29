@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .card {
+        background: linear-gradient(135deg, #3F51B5, #5C6BC0);
+        border-radius: 1.5rem;
+        height: 10rem;
+        padding: 1.5rem;
+        transition: transform .1s ease;
+        font-size: 1.2rem;
+    }
+    .card:hover {
+        transform: scale(1.02);
+    }
+</style>
+<div class="col">
+    <div class="row m-2">
+        {% for value in values %}
+        <div class="col-3 forms">
+            <a href = "/all_forms/{{value.no}}" style = "text-decoration: None;"><div class="card text-white text-center mt-3" style = "width: 100%">
+                <p class = "mt-3 mb-0">{{value.form}}</p>
+    <!--            <p>{{batch.no_of_stu}} Students</p>-->
+            </div></a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

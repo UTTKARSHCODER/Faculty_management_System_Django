@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .form-check{
+        padding-left: 1.0em;
+    }
+    .section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+    }
+
+    .section-title {
+        font-size: 1.3em;
+        color: #333;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    .form-row {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+    }
+    .form-row-non-tech {
+        margin: 10px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+    }
+    .badge {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.85em;
+        margin-left: 10px;
+    }
+    .sub-form-field{
+        display: flex;
+        margin: 10px
+    }
+    .sub-form-input{
+        margin-left: 0.5rem;
+        width: 25%
+    }
+    .col-form-label{
+        font-weight: bold;
+    }
+    .form-check-input{
+        border: 2px solid black;
+    }
+    .custom-back-select {
+        padding-right: 30px;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 10px 10px;
+    }
+</style>
+<div class="col">
+    <div class="container-fluid mt-3 h-100">
+        <div class="row form-row-non-tech">
+            <form action="/save_all_forms/13" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label for="top" class="col-sm-4 col-form-label">Name<span class="ms-1" style="color: red;">*</span></label>
+                            <div class = "col-md-8">
+                                <input type="text" class="form-control custom-back" id="top" placeholder="Enter your name" value = {{key.name}} name="name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Mobile No<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" placeholder="Enter mobile number" name = "mobile_no" value = {{key.contact_number}} required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Email ID<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" value="{{key.email}}" name = "email" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Department<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <select class="form-control custom-back-select" name="department" id="department" value = "{{key}}" required>
+                                    <option value="" {% if key.department == "" %}selected{% endif %} disabled>Select your Department</option>
+                                    <option value="CSE" {% if key.department == "CSE" %}selected{% endif %}>Computer Science & Engineering</option>
+                                    <option value="CSE(AI)" {% if key.department == "CSE(AI)" %}selected{% endif %}>Computer Science & Engineering(AI)</option>
+                                    <option value="CSE(DS)" {% if key.department == "CSE(DS)" %}selected{% endif %}>Computer Science & Engineering(DS)</option>
+                                    <option value="CSE(IOT)" {% if key.department == "CSE(IOT)" %}selected{% endif %}>Computer Science & Engineering(IOT)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Employee ID<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" placeholder="Enter employee id" name = "emp_id" value = "{{key.emp_id}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Desgination<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <select class="form-control custom-back-select" name="designation" id="designation" required>
+                                    <option value="" {% if key.designation == "" %}selected{% endif %} disabled>Select your Highest Qualification</option>
+                                    <option value="AP1" {% if key.designation == "AP1" %}selected{% endif %}>Assistant Professor 1</option>
+                                    <option value="AP2" {% if key.designation == "AP2" %}selected{% endif %}>Assistant Professor 2</option>
+                                    <option value="ASP1" {% if key.designation == "ASP1" %}selected{% endif %}>Associate Professor 1</option>
+                                    <option value="ASP2" {% if key.designation == "ASP2" %}selected{% endif %}>Associate Professor 2</option>
+                                    <option value="P" {% if key.designation == "P" %}selected{% endif %}>Professor</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Area of Specialization<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <select class="form-control custom-back-select" name="aos" id="aos" required>
+                                    <option value="" {% if key.aos == "" %}selected{% endif %} disabled>Select your Area of Specialization</option>
+                                    <option value="AIML" {% if key.aos == "AIML" %}selected{% endif %}>Artificial Intelligence & Machine Learning</option>
+                                    <option value="CN" {% if key.aos == "CN" %}selected{% endif %}>Cybersecurity & Networks</option>
+                                    <option value="SSD" {% if key.aos == "SSD" %}selected{% endif %}>Software Systems & Development</option>
+                                    <option value="CSA" {% if key.aos == "CSA" %}selected{% endif %}>Computer Systems & Architecture</option>
+                                    <option value="M" {% if key.aos == "M" %}selected{% endif %}>Mathematics</option>
+                                    <option value="TCS" {% if key.aos == "TCS" %}selected{% endif %}>Theoretical Computer Science</option>
+                                    <option value="O" id="Other" {% if key.aos == "O" %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Highest Qualification<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <select class="form-control custom-back-select" name="highest_qualification" id="highest_qualification" required>
+                                    <option value="" {% if key.hq == "" %}selected{% endif %} disabled>Select your Highest Qualification</option>
+                                    <option value="BT" {% if key.hq == "BT" %}selected{% endif %}>B.E. / B.Tech</option>
+                                    <option value="MT" {% if key.hq == "MT" %}selected{% endif %}>M.E. / M.Tech</option>
+                                    <option value="MS" {% if key.hq == "MS" %}selected{% endif %}>M.S.</option>
+                                    <option value="MBA" {% if key.hq == "MBA" %}selected{% endif %}>MBA</option>
+                                    <option value="PHD" {% if key.hq == "PHD" %}selected{% endif %}>Ph.D.</option>
+                                    <option value="PD" {% if key.hq == "PD" %}selected{% endif %}>Post-Doctoral Research (Post-Doc)</option>
+                                    <option value="O" id="hqOther" {% if key.hq == "O" %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">University Name<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Enter university name" name = "univ_name" value = "{{key.univ_name}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Passing Year of Highest Degree<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" placeholder="Enter passing year of highest degree" name = "pshd" value = "{{key.pshd}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 " style = "margin-top: 1.7rem;">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Pan No.<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Enter pan no." name = "pan_no" value="{{key.pan_no}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Date of Birth<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" placeholder="Enter your dob" name = "dob" value="{{ key.dob|date:'Y-m-d' }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Joining Date<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" placeholder="Enter your date of joining" name = "jd" value="{{ key.jd|date:'Y-m-d' }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Promotion Date(If any)</label>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" placeholder="Enter your date of promotion" name = "pd" value = "{{ key.pd|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-6">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Joining Report{% if not key.jr %}<span class="ms-1" style="color: red;">*</span>{% endif %}</label>
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control" name = "jr" accept=".pdf" {% if not key.jr %}required{% endif %}>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mt-3">
+                        <div class="row align-items-center">
+                            <div class="col-sm-8">
+                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.jr}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Offer Letter     (Appointment Letter){% if not key.of %}<span class="ms-1" style="color: red;">*</span>{% endif %}</label>
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control" name = "ol" accept=".pdf" {% if not key.of %}required{% endif %}>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 " style = "margin-top: 2.5rem;">
+                        <div class="row align-items-center">
+                            <div class="col-sm-8">
+                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.of}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Higher Degree Certificate(Date of Award){% if not key.hdc %}<span class="ms-1" style="color: red;">*</span>{% endif %}</label>
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control" name = "hdc" accept=".pdf" {% if not key.hdc %}required{% endif %}>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2" style = "margin-top: 2.5rem;">
+                        <div class="row align-items-center">
+                            <div class="col-sm-8">
+                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.hdc}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Salary Slip (Recently)</label>
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control" name = "ss" accept=".pdf">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mt-3">
+                        <div class="row align-items-center">
+                            <div class="col-sm-8">
+                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.ss}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">If Awards and recognition received for extension activities (Upload Certificate)</label>
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control" name = "awards" accept=".pdf">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2" style = "margin-top: 4rem;">
+                        <div class="row align-items-center">
+                            <div class="col-sm-8">
+                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.certificate}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 " style = "margin-top: 1.7rem;">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Name of University(If PhD pursuing)</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="Enter name of university" name = "phd_univ" value="{{key.phd_univ}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 " style = "margin-top: 1.7rem;">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Date of registration</label>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" name = "phd_dor" value="{{ key.phd_dor|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 " style = "margin-top: 1.7rem;">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Number of research paper<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" placeholder="Enter number of research Paper" name = "norp" value="{{key.norp}}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "col-md-12">
+                        <div class="row align-items-center justify-content-center">
+                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

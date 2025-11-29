@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .bg-indigo{
+        width: 3rem;
+        height: 3rem;
+        border-radius: 9999px;
+        --tw-bg-opacity: 1;
+        background-color: rgb(224 231 255 / var(--tw-bg-opacity));
+    }
+    .text-gray{
+        --tw-bg-opacity: 1;
+        color: rgb(75 85 99/ var(--tw-bg-opacity));
+    }
+    .bg-indigo-600 {
+        --tw-bg-opacity: 1;
+        background-color: rgb(79 70 229 / var(--tw-bg-opacity));
+    }
+</style>
+<div class="col">
+    <div class="container-fluid mt-3 mb-3 h-100">
+        <!-- Cards Begins -->
+        <div class="row">
+            {% for value in card_data %}
+            <div class="col-6 mt-3">
+                <div class="card p-3" style = "box-shadow: 5px 5px 10px 5px lightgray">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex justify-content-start">
+                                <div class="w-12 h-12 bg-indigo d-flex flex-wrap align-content-center justify-content-center">
+                                    <i data-lucide="user-check" style="color: blue; width: 20px; height: 20px; color: rgb(79 70 229);"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mt-2">
+                            <div class="d-flex justify-content-end">
+                                <span class="rounded-pill d-flex flex-wrap justify-content-center align-content-center" style="width:70px; --tw-bg-opacity: 1; background-color: rgb(220 252 231 / var(--tw-bg-opacity))">
+                                    <h5 class = "small-font text-success mt-2" style = "font-size: 15px;">Active</h5>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mt-4">
+                        <h3>{{value.batch}}</h3>
+                        <p class = "text-gray ms-1" style = "font-size: 18px;">{{value.subject}}</p> <!-- Subject I taught in allocated batch -->
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex justify-content-start">
+                                <p class = "text-gray">Semester:</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex justify-content-end">
+                                <p class = "text-gray"><strong>{{value.semester}}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex justify-content-start">
+                                <p class = "text-gray">Students:</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex justify-content-end">
+                                <p class = "text-gray"><strong>{{value.no_of_students}}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex justify-content-start">
+                                <p class = "text-gray">Avg Attendance:</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex justify-content-end">
+                                <p class = "text-success"><strong>{{value.avg_attendance}}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-flex justify-content-start">
+                                <p class = "text-gray">Avg CGPA:</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex justify-content-end">
+                                <p class = "text-info"><strong>{{value.avg_cgpa}}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button class = "bg-indigo-600 w-100 text-white py-2" style = "border-radius: 0.5rem;">View Details</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <!-- Cards Ends -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}

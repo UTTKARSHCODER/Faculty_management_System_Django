@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col">
+    <div class="conatiner">
+        <div class="row" style="--bs-gutter-x:0;">
+        {% for detail in stu_data %}
+            <div class="col-2 ms-3 mt-3">
+                <div class="card p-3" style = "width: 202px;">
+                    <img class="card-img-top" src="/static/skit_logo.png" alt="Card image" style = "width: 150px; height: 150px; margin-left: 10px;">
+                    <div class="card-body text-center">
+                       <h5 class="card-title">{{detail.name}}</h5>
+                       <p class="card-text">{{detail.email_id}}</p>
+                       <p>{{detail.student_phone_no}}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
