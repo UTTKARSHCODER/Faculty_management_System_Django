@@ -1,18 +1,24 @@
 import datetime
-from tkinter.constants import CASCADE
 
 from django.db import models
 from django.db.models import DO_NOTHING
 
-class Contact(models.Model):
-    first_name = models.CharField(max_length=122)
-    last_name = models.CharField(max_length=122)
-    email = models.CharField(max_length=122)
-    feedback = models.CharField(max_length=122)
+class batch(models.TextChoices):
+    CS_A = "3CS-A",
+    CS_B = "3CS-B",
+    CS_C = "3CS-C",
+    CS_D = "3CS-D",
+    CS_E = "3CS-E",
+    CS_F = "3CS-F",
+    CS_AI_A = "3CS(AI)-A",
+    CS_AI_B = "3CS(AI)-B",
+    CS_DS_A = "3CS(DS)-A",
+    CS_IOT_A = "3CS(IOT)-A",
+    CS_IOT_B = "3CS(IOT)-B"
 
 class Student_Directory(models.Model):
     name = models.CharField(max_length=100)
-    batch = models.CharField(max_length=100,default='Unknown')
+    batch = models.CharField(max_length=10,default=batch.CS_F,choices=batch.choices)
     roll_no = models.CharField(max_length=100)
     college_id = models.CharField(max_length=20)
     email = models.EmailField(max_length=254)
@@ -75,6 +81,11 @@ class highest_qual(models.TextChoices):
     POST_DOCTORAL = "PD", "Post-Doctoral Research (Post-Doc)",
     OTHER = "O", "Other"
 
+class gender(models.TextChoices):
+    MALE = 'M', "Male",
+    FEMALE = 'F', "Female",
+    OTHER  = 'O', "Other"
+
 class Faculty(models.Model):
     name = models.CharField(max_length=100)
     contact_number = models.CharField(max_length=10)
@@ -83,6 +94,12 @@ class Faculty(models.Model):
         max_length=8,
         choices=department.choices
     )
+    gender = models.CharField(
+        max_length=1,
+        choices=gender.choices,
+        default=gender.MALE
+    )
+    address = models.CharField(max_length=100,default='Address')
     emp_id = models.IntegerField()
     role = models.CharField(
         max_length=3,
@@ -112,8 +129,8 @@ class Faculty(models.Model):
     univ_name = models.CharField(max_length=100,default='Unknown')
     pshd = models.IntegerField(default=0)
     pan_no = models.CharField(max_length=10,default='AAAEE875AE')
-    dob = models.DateField()
-    jd = models.DateField()
+    dob = models.DateField(default=datetime.date(1970, 1, 1))
+    jd = models.DateField(default=datetime.date(1970, 1, 1))
     pd = models.DateField(null=True,blank=True)
     jr = models.FileField(upload_to='uploads/faculty_documents/joining_report/',default=None,null = True)
     of = models.FileField(upload_to='uploads/faculty_documents/offer_letter/',default=None,null = True)

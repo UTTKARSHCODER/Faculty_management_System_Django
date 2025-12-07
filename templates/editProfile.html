@@ -94,6 +94,31 @@
                             </div>
                         </div>
                     </div>
+                    <div class = "col-md-4 mt-4">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class = "form-label" ><b>Gender</b><span class = "ms-1" style = "color: red;">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <div class = "form-check">
+                                    <input type = "radio" class = "form-check-input" id = "radio1" name = "optradio" value = "M" {% if key.gender == "M" %}checked{% endif %}>
+                                    <label class = "form-check-label" for = "radio1">Male</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class ="form-check">
+                                    <input type = "radio" class = "form-check-input" id = "radio2" name = "optradio" value = "F" {% if key.gender == "F" %}checked{% endif %}>
+                                    <label class = "form-check-label" for = "radio2">Female</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class = "form-check">
+                                    <input type = "radio" class = "form-check-input" id = "radio3" name = "optradio" value = "O" {% if key.gender == "O" %}checked{% endif %}>
+                                    <label class = "form-check-label" for = "radio3">Others</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-4">
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Department<span class="ms-1" style="color: red;">*</span></label>
@@ -213,6 +238,12 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-4 mt-3" id = "add">
+                    <span>
+                        <label for = "address" class = "form-label"><b>Address:-</b><span class = "ms-1" style = "color: red;">*</span></label>
+                    </span>
+                    <textarea type = "text" class = "form-control mt-2 custom-back" rows = "4" id = "address" placeholder = "Enter your permanent Address" name = "address" oninput = "validateForm('add')" required>{{key.address}}</textarea>
                 </div>
                 <div class="row g-3 mt-2">
                     <div class="col-md-6">

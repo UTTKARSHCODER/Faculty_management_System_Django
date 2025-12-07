@@ -1,35 +1,26 @@
+import base64
+import io
+from functools import wraps
+
 from django.contrib import messages
-from django.shortcuts import render, HttpResponse, redirect
+from django.db.models import Count
+from django.forms import model_to_dict
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.urls import reverse
 from tablib import Dataset
+import pandas as pd
 
 from MyFirstDjangoWebsite import settings
-from firstWebsite.modals import Contact, Faculty, Faculty_participation_data, mooc_course, events, \
+from firstWebsite.modals import Faculty, Faculty_participation_data, mooc_course, events, \
     awards_and_achievments, sponsored_research, research_journal, research_conference, research_book, patents, guided, \
-    resource, non_teaching_staff, designation
+    resource, non_teaching_staff
 from .modals import Student_Directory
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
-from .resources import StudentResources
-
-batches = [
-    {'batch':'3CS-A','no_of_stu':'64'},
-    {'batch':'3CS-B','no_of_stu':'56'},
-    {'batch':'3CS-C','no_of_stu':'60'},
-    {'batch':'3CS-D','no_of_stu':'62'},
-    {'batch':'3CS-E','no_of_stu':'63'},
-    {'batch':'3CS-F','no_of_stu':'58'},
-    {'batch':'3CS(AI)-A','no_of_stu':'63'},
-    {'batch':'3CS(AI)-B','no_of_stu':'51'},
-    {'batch':'3CS(DS)-A','no_of_stu':'48'},
-    {'batch':'3CS(IOT)-A','no_of_stu':'24'},
-    {'batch':'3CS(IOT)-B','no_of_stu':'18'}
-]
 
 CLIENT_ID = settings.SOCIALACCOUNT_PROVIDERS['google']['APP']['client_id']
 @csrf_exempt
@@ -55,27 +46,26 @@ def gsi_verify_login(request):
 
             email = idinfo.get('email')
 
-            adapter = GoogleOAuth2Adapter(request)
             try:
                 if email.endswith('@skit.ac.in'):
                     if users_post == 'spa' or users_post == 'ad' or users_post == 'fa':
                         User = Faculty
-                        user = User.objects.get(email=email,role__iexact=users_post)
+                        user = Faculty.objects.get(email=email,role__iexact=users_post)
                     elif users_post == 'student':
-                        User = Student_Directory
-                        user = User.objects.get(email=email)
+                        User =Student_Directory
+                        user = Student_Directory.objects.get(email=email)
                     else:
                         User = None
                         user = None
                     # If login is successful:
-                    request.session["secret_key"] = user.email
+                    request.session['user_id'] = user.pk
                     request.session['topLeftBar'] = users_post
                     return JsonResponse({
                         'success': True,
                         'redirect_url': '/profile'  # Redirect to the home or dashboard page
                     })
                 else:
-                    error_message = f"Access denied: The email '{email}' is not authorized to log in."
+                    error_message = f"Access denied: Only institutional mails are allowed."
 
                     # You can optionally add a Django message for standard page rendering
                     messages.error(request, error_message)
@@ -86,7 +76,7 @@ def gsi_verify_login(request):
                     }, status=403)
             except User.DoesNotExist:
 
-                error_message = f"Access denied: The email '{email}' is not authorized to log in."
+                error_message = f"Access denied: The email '{email}' is not authorized to log in with selected post."
 
                 # You can optionally add a Django message for standard page rendering
                 messages.error(request, error_message)
@@ -104,10 +94,36 @@ def gsi_verify_login(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid method.'}, status=405)
 
+
+def session_login_required(view_func):
+    """
+    A custom decorator that checks for a specific key
+    to determine if a user is logged in.
+    """
+
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        # 1. Check for the session key
+        # We assume you set request.session['user_id'] or request.session['is_logged_in']
+        # upon successful manual login.
+
+        # Check if the 'user_id' is set in the session
+        if request.session.get('user_id'):
+            # User is "logged in" based on the session key
+            return view_func(request, *args, **kwargs)
+        else:
+            # User is not "logged in", redirect to the login page
+            # We use settings.LOGIN_URL for consistency, but you can hardcode a URL too.
+            login_url = getattr(settings, 'LOGIN_URL', '/login/')
+            return redirect(f'{login_url}?next={request.path}')
+
+    return wrapper
+
+
 def save_all_forms(request, pk):
     if request.method == 'POST':
         session = request.POST.get('sessionyear')
-        faculty_instance = Faculty.objects.get(email=request.session.get('secret_key'))
+        faculty_instance = Faculty.objects.get(pk=request.session.get('user_id'))
         if pk == 0:
             name = request.POST.get('name')
             mobile_no = request.POST.get('mobile_no')
@@ -326,11 +342,22 @@ def save_all_forms(request, pk):
                 faculty_instance.phd_dor = None
             faculty_instance.norp = request.POST.get('norp')
             faculty_instance.save()
+        elif pk == 14:
+            faculty_instance = Faculty.objects.get(email=request.POST.get('existing_email'))
+            faculty_instance.name = request.POST.get('updated_name')
+            faculty_instance.contact_number = request.POST.get('updated_number')
+            faculty_instance.email = request.POST.get('updated_email')
+            faculty_instance.department = request.POST.get('updated_department')
+            faculty_instance.emp_id = request.POST.get('updated_id')
+            faculty_instance.status = request.POST.get('updated_status')
+            faculty_instance.save()
+            return redirect(reverse('directory'))
         return redirect(reverse('success'))
     return render(request, 'about')
 
+@session_login_required
 def edit_profile(request):
-    faculty_instance = Faculty.objects.get(email=request.session.get('secret_key'))
+    faculty_instance = Faculty.objects.get(pk=request.session.get('user_id'))
     context = {'key': faculty_instance}
     return render(request,'editProfile.html',context=context)
 
@@ -338,32 +365,75 @@ def successfulsubmission(request):
     return render(request,'submitSuccess.html')
 
 
-def upload_excel(request):
+def upload_excel(request, pk):
     if request.method == 'POST':
-        student_resource = StudentResources()
         dataset = Dataset()
-        new_students = request.FILES['excel_file']
-        imported_data = dataset.load(new_students.read(), format = 'xlsx')
-        for data in imported_data:
-            value = Student_Directory(*data)
+        new_data = request.FILES['excel_file']
+        if not new_data or new_data.name == '':
+            return "No file selected or invalid file", 400
+        imported_data = dataset.load(new_data.read(), format='xlsx')
+        df = pd.DataFrame(
+            imported_data.dict,
+            columns=imported_data.headers
+        )
+        if pk == 0:
 
-        value.save()
-        # messages.success(request,'We are glad to share that your excel file is uploaded successfully!')
-        return render(request,'student_directory.html')
+            for data in imported_data.dict:
+                print(data['name'])
+                print(data['roll_no'])
+                print(data['college_id'])
+                print(data['email_id'])
+                print(data['student_phone_no'])
+                print(data['parent_phone_no'])
+                print(data['address'])
+                value = Student_Directory(name=data['name'],roll_no=data['roll_no'],college_id=data['college_id'],email=data['email_id'],student_phone_no=data['student_phone_no'],parent_phone_no=data['parent_phone_no'],address=data['address'])
+                value.save()
+
+            # messages.success(request,'We are glad to share that your excel file is uploaded successfully!')
+            return redirect(reverse('student-directory'))
+
+        elif pk == 1:
+            df.columns = df.columns.str.lower().str.replace(' ', '_').str.strip()
+            for data in df.to_dict(orient='records'):
+                if not data['name']:
+                    print("No name exist")
+                    continue
+                print(data['name'])
+                print(data['employee_id'])
+                print(data['email'])
+                print(data['department'])
+                print(data['contact_number'])
+
+                value = Faculty(name=data['name'],emp_id=data['employee_id'],email=data['email'],department=data['department'],contact_number=data['contact_number'],status="NR")
+                value.save()
+
+            return redirect(reverse('directory'))
+
     return render(request,'about.html')
 
+def deleteuser(request):
+    if request.method == "POST":
+        # print("Employee ID is:- ", request.POST.get('faculty_emp_id'))
+        faculty_id = request.POST.get('faculty_emp_id')
+        faculty_object = get_object_or_404(Faculty, emp_id=faculty_id)
+        faculty_object.delete()
+
+    return redirect(reverse('directory'))
+
+@session_login_required
 def all_forms(request,pk):
     value = request.session.get('topLeftBar')
     if value == 'ad' or value == 'spa' or value == 'fa':
-        data = Faculty.objects.get(email=request.session.get('secret_key'))
+        data = Faculty.objects.get(pk=request.session.get('user_id'))
     elif value == 'student':
-        data = Student_Directory.objects.get(email=request.session.get('secret_key'))
+        data = Student_Directory.objects.get(pk=request.session.get('user_id'))
     else:
         data = None
     form_number = pk
     secret_key = data
     return render(request,'forms.html',{'form_number': form_number, 'value': secret_key})
 
+@session_login_required
 def fdp(request):
     forms = [
         {'no': '0', 'form': "Non-teaching Staff Profile Details"},
@@ -381,9 +451,10 @@ def fdp(request):
     ]
     return render(request, 'fdp_forms.html',context={'values': forms})
 
+@session_login_required
 def custom_logout(request):
-    if 'secret_key' in request.session and 'topLeftBar' in request.session:
-        del request.session['secret_key']
+    if 'user_id' in request.session and 'topLeftBar' in request.session:
+        del request.session['user_id']
         del request.session['topLeftBar']
         return redirect(reverse('home'))
     return redirect(reverse('about'))
@@ -391,11 +462,15 @@ def custom_logout(request):
 stu_data = Student_Directory.objects.all()
 # Create your views here.
 def index(request):
-    context = {'batches':batches}
+    stu_dir_instance = Student_Directory.objects.values('batch').annotate(
+        count=Count('id')
+    ).order_by('batch')
+    context = {'dir_ins':stu_dir_instance}
     return render(request, 'index.html',context = context)
 
+@session_login_required
 def profile(request):
-    if 'secret_key' in request.session and 'topLeftBar' in request.session:
+    if 'user_id' in request.session and 'topLeftBar' in request.session:
         try:
             modal = request.session.get('topLeftBar')
             if modal == 'ad' or modal == 'spa' or modal == 'fa':
@@ -404,39 +479,17 @@ def profile(request):
                 user = Student_Directory
         except:
             user = None
-    value = user.objects.get(email = request.session.get('secret_key'))
-    #Setting department complete value
-    if value.department == "CSE":
-        department = "Computer Science and Engineering"
-    elif value.department == "CSE(AI)":
-        department = "Computer Science and Engineering(AI)"
-    elif value.department == "CSE(DS)":
-        department = "Computer Science and Engineering(DS)"
-    elif value.department == "CSE(IOT)":
-        department = "Computer Science and Engineering(IOT)"
-    else:
-        department = "Not Selected"
-    # Setting designation complete value
-    if value.designation == "AP1":
-        designation1 = "Assistant Professor 1"
-    elif value.desigantion == "AP2":
-        designation1 = "Assistant Professor 2"
-    elif value.desigantion == "ASP1":
-        designation1 = "Associate Professor 1"
-    elif value.desigantion == "ASP2":
-        designation1 = "Associate Professor 2"
-    elif value.desigantion == "P":
-        designation1 = "Professor"
-    else:
-        designation1 = None
+    value = user.objects.get(pk=request.session.get('user_id'))
 
-    context = {'data': value, 'department': department,'designation': designation1}
+    context = {'data': value}
     return render(request,'profile.html', context=context)
 
+@session_login_required
 def allocated_batches(request):
     context = {'card_data': stu_data}
     return render(request,'allocated_batches.html',context= context)
 
+@session_login_required
 def student_directory(request):
     stu_data = Student_Directory.objects.all()
     context = {'stu_data': stu_data}
@@ -445,6 +498,7 @@ def student_directory(request):
 def about(request):
     return render(request,'about.html')
 
+@session_login_required
 def stu_card_details(request,pk):
     batch = Student_Directory.objects.filter(batch = pk)
     context = {'stu_data': batch}
@@ -453,15 +507,140 @@ def stu_card_details(request,pk):
 def login_page(request):
     return render(request,'login.html')
 
+@session_login_required
 def progress(request):
-    return render(request,'progress.html')
+    return render(request,'progresschart.html')
 
-def contact(request):
+@session_login_required
+def directory(request):
+    if 'user_id' in request.session and 'topLeftBar' in request.session:
+        try:
+            modal = request.session.get('topLeftBar')
+            if modal == 'ad' or modal == 'spa' or modal == 'fa':
+
+                value = Faculty.objects.all()
+
+                context = { 'data': value }
+                return render(request,'directory.html',context=context)
+            else:
+                return render(request,'about.html')
+        except:
+            user = None
+    return None
+
+@session_login_required
+def faculty_report(request):
+    registerd_faculties = Faculty.objects.filter(status="R")
+    context = {'rf' : registerd_faculties}
+    return render(request,'faculty_report.html',context)
+
+@session_login_required
+def download(request):
     if request.method == "POST":
-        first_name = request.POST.get('fname')
-        last_name = request.POST.get('lname')
-        email = request.POST.get('email')
-        feedback = request.POST.get('feedback')
-        contact = Contact(first_name = first_name, last_name = last_name, email = email, feedback = feedback)
-        contact.save()
-    return HttpResponse("This is contact page")
+        if request.POST.get('file_type') == 'excel':
+            CHOICES_FIELDS = ['department', 'designation', 'aos', 'hq', 'status', 'role', 'gender']
+            files_field = ['jr', 'of', 'hdc', 'ss', 'certificate']
+            values = request.POST.getlist('optcheck[]')
+            result_instance = Faculty.objects.filter(department__in=values,status="R")
+
+            data = []
+
+            # 2. Iterate and process each instance
+            for result in result_instance:
+
+                row_dict = model_to_dict(result)
+
+                # b) Dynamically override the code value with the display value
+                for field_name in CHOICES_FIELDS:
+                    # getattr to call the correct get_FIELDNAME_display() method
+
+                    display_method = getattr(result, f'get_{field_name}_display')
+
+
+                    row_dict[field_name] = display_method()
+
+                for field in files_field:
+                    hyperlink_text = "http://127.0.0.1:8000/media/" + str(row_dict[field])
+                    hyperlink_formula = f'=HYPERLINK("{hyperlink_text}", "View File online")'
+                    row_dict[field] = hyperlink_formula
+
+
+                data.append(row_dict)
+            df = pd.DataFrame(data)
+
+            output = io.BytesIO()
+            writer = pd.ExcelWriter(output, engine='xlsxwriter')
+            df.to_excel(writer,index = False,sheet_name="faculty_report")
+
+            writer.close()
+            excel_data = base64.b64encode(output.getvalue())
+            request.session['excel_data'] = excel_data.decode('utf-8')
+
+
+    elif request.method == "GET":
+        if request.GET.get('file_type') == 'excel_repo':
+            excel_data = request.session.get('excel_data').encode('utf-8')
+            retrieved_excel_data = base64.b64decode(excel_data)
+            response = HttpResponse(
+                retrieved_excel_data,
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = 'attachment; filename="faculty_report.xlsx"'
+            return response
+        elif request.GET.get('file_type') == 'excel_dir':
+            result_instance = Faculty.objects.all()
+
+            data = [
+                {
+                    'Name': result.name,
+                    'Email': result.email,
+                    'Employee ID': result.emp_id,
+                    'Department': result.get_department_display(),
+                    'Contact Number': result.contact_number,
+                    'Status': result.get_status_display()
+                }
+                for result in result_instance
+            ]
+
+            df = pd.DataFrame(data)
+            output = io.BytesIO()
+            writer = pd.ExcelWriter(output, engine='openpyxl')
+            df.to_excel(writer, index=False, sheet_name="faculty_directory")
+            writer.close()
+            excel_data = output.getvalue()
+            response = HttpResponse(
+                excel_data,
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = 'attachment; filename="faculty_directory.xlsx"'
+            return response
+
+        elif request.GET.get('file_type') == 'excel_stu_dir':
+            result_instance = Student_Directory.objects.all()
+            data = [
+                {
+                    'Name': result.name,
+                    'Roll No': result.roll_no,
+                    'College ID': result.college_id,
+                    'Email': result.email,
+                    'Student Phone No': result.student_phone_no,
+                    'Parent Phone No': result.parent_phone_no,
+                    'Address': result.address
+                }
+                for result in result_instance
+            ]
+
+            df = pd.DataFrame(data)
+            output = io.BytesIO()
+            writer = pd.ExcelWriter(output, engine='openpyxl')
+            df.to_excel(writer, index=False, sheet_name="student_directory")
+            writer.close()
+            excel_data = output.getvalue()
+            response = HttpResponse(
+                excel_data,
+                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            response['Content-Disposition'] = 'attachment; filename="student_directory.xlsx"'
+            return response
+
+    return redirect(reverse('about'))

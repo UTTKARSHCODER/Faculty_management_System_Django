@@ -7,15 +7,21 @@
         --tw-bg-opacity: 1;
         background-color: rgb(249 250 251 / var(--tw-bg-opacity));
     }
+    #student_directory1 th {
+        white-space: nowrap;
+    }
 </style>
+<link rel="stylesheet" href="/static/dataTable.css">
 <div class="col">
-    <div class="container ms-2 mt-3 mb-3">
+    <div class="container ms-4 mt-3 mb-3">
+        <script src="/static/dataTables.js"></script>
+        <script src="/static/dataTables.bootstrap5.js"></script>
         <div class="row d-flex justify-content-end">
             <button type="button" class="btn btn-success mt-2 me-2 d-flex" data-bs-toggle="modal"
                 data-bs-target="#add_email" style="width: 117px;"><i
                     class="fa-solid fa-add mt-1"></i>Add Email</button>
         </div>
-        <table class="table table-hover mt-3">
+        <table class="table table-hover mt-3" id="student_directory1">
         <thead class = "table-dark">
             <tr>
               <th>Name</th>
@@ -48,13 +54,13 @@
                 File</button>
             <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">Download</button>
             <ul class="dropdown-menu">
-                <li id="excel-download"><a class="dropdown-item">Excel</a></li>
+                <li id="excel-download"><a class="dropdown-item" href="/download?file_type=excel_stu_dir">Excel</a></li>
                 <li id="csv-download"><a class="dropdown-item" href="assets/php/download.php?file_type=csv1">CSV</a>
                 </li>
             </ul>
         </div>
     </div>
-    <form action="/upload_excel" method="POST" enctype="multipart/form-data">
+    <form action="/upload_excel/0" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="modal fade" id="upload_file" tabindex="-1">
             <div class="modal-dialog">
@@ -111,5 +117,11 @@
     </form>
     </div>
 </div>
-
+<script>
+    new DataTable('#student_directory1',{
+        paging: false,
+        scrollY: '360px',
+        scrollCollapse: true
+    });
+</script>
 {% endblock %}

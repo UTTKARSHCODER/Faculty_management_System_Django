@@ -25,7 +25,7 @@
                 </div>
                 <div class="card-body1-custom ms-5 mb-2">
                     <h1><strong>{{data.name}}</strong></h1>
-                    <h5 style = "color: gray; font-size: 18px;">{{department}}, {{designation}}</h5>
+                    <h5 style = "color: gray; font-size: 18px;">{{data.get_department_display}}, {{data.get_designation_display}}</h5>
                     <button class = "btn text-white mt-3" style = "background-color: rgb(79 70 229);" onclick="window.location.href='{% url 'editProfile' %}';"><i class = "fa-solid fa-pen me-2"></i>Edit Profie</button>
                 </div>
             </div>
@@ -33,6 +33,12 @@
                 <h5 class = "small-font mt-3"><i data-lucide="mail" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{data.email}}</h5>
                 <h5 class = "small-font mt-3"><i data-lucide="phone" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{data.contact_number}}</h5>
                 <h5 class = "small-font mt-3"><i data-lucide="map-pin" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>Address</h5>
+                <p class = "small font mt-3" style="margin-bottom: 0px;">Specilization</p>
+                <h5 style="font-size: 15px;"><strong>{{data.get_aos_display}}</strong></h5>
+                <p class = "small font mt-3" style="margin-bottom: 0px;">Highest Qualification</p>
+                <h5 style="font-size: 15px;"><strong>{{data.get_hq_display}}</strong></h5>
+                <p class = "small font mt-3" style="margin-bottom: 0px;">Publications</p>
+                <h5 style="font-size: 15px;"><strong>{{data.norp}}</strong></h5>
             </div>
         </div>
     </div>
