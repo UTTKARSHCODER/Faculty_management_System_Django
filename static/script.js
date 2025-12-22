@@ -406,7 +406,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of the Course<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Name of the Course']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter name of course" name = "noc" required>
-                                            div class="invalid-feedback">Please provide name of the course.</div>
+                                            <div class="invalid-feedback">Please provide name of the course.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -541,7 +541,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Remarks(If any)</label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Remarks" name = "remarks">
-                                            .invalid-feedback">Please provide remarks.</div>
+                                            <div class="invalid-feedback">Please provide remarks.</div>
                                         </div>
                                     </div>
                                 </div>
