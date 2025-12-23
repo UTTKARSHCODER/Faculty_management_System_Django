@@ -1,6 +1,5 @@
 {% url 'home' as home %}
 {% url 'profile' as profile %}
-{% url 'allocated-batches' as allocated_batches %}
 {% url 'student-directory' as student_directory %}
 {% url 'about' as about %}
 {% url 'fdp' as fdp %}
@@ -87,7 +86,6 @@
                         <a href="/" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == home or '/batch/' in request.path %} active {% endif %}" id = "home">Home</li></a>
                         {% if request.session.topLeftBar %}
                         <a href="/profile" style = "text-decoration: none;"><li class = "nav-item text-white {% if request.path == profile or request.path == editProfile %} active {% endif %}" id = "profile">Profile</li></a>
-                        <a href="/allocated_batches" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == allocated_batches %} active {% endif %}" id = "allocated_batches">Allocated Batches</li></a>
                         <a href="/student_directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == student_directory %} active {% endif %}" id = "student_directory">Student Directory</li></a>
                         <a href="/fdp" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == fdp or 'all_forms' in request.path %} active {% endif %}" id = "faculty_development">FDP Forms</li></a>
                         <a href="/directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == directory %} active {% endif %}" id = "directory">Directory</li></a>

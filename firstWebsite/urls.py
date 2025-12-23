@@ -4,7 +4,6 @@ from firstWebsite import views
 urlpatterns = [
     path('', views.index, name = "home"),
     path('profile', views.profile, name = "profile"),
-    path('allocated_batches', views.allocated_batches, name = "allocated-batches"),
     path('student_directory', views.student_directory, name = "student-directory"),
     path('about', views.about, name = "about"),
     path('batch/<str:pk>', views.stu_card_details, name = "batch"),

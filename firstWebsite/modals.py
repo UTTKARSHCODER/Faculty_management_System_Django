@@ -254,6 +254,11 @@ class pertopper(models.TextChoices):
 
 
 class mooc_course(models.Model):
+    category = models.CharField(
+        max_length=6,
+        choices=category.choices,
+        default=category.MOOC
+    )
     timeline = models.CharField(max_length=100)
     noc = models.CharField(max_length=100)
     doc = models.CharField(

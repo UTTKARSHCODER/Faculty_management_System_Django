@@ -357,6 +357,7 @@ function generateSubForms() {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
+                        <input type = "hidden" name = "category" value = "${categoryValue[category]}">
                         <div class="sub-form-fields">
                             <div class="row g-3">
                                 <div class="col-md-6">

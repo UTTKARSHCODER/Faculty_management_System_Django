@@ -82,20 +82,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="d-flex justify-content-start">
-                                <p class = "text-gray">Avg CGPA:</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex justify-content-end">
-                                <p class = "text-info"><strong>{{value.avg_cgpa}}</strong></p>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-12">
-                        <button class = "bg-indigo-600 w-100 text-white py-2" style = "border-radius: 0.5rem;">View Details</button>
+                        <button class = "bg-indigo-600 w-100 text-white py-2" style = "border-radius: 0.5rem;" onclick="window.location.href = '/allocated_batches_details/{{value.batch}}'">View Details</button>
                     </div>
                 </div>
             </div>

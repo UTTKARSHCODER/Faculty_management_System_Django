@@ -1,19 +1,21 @@
 import base64
 import io
-from functools import wraps
+from functools import wraps, total_ordering
 
 from django.contrib import messages
 from django.db.models import Count
+from django.db.models import Q
 from django.forms import model_to_dict
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.urls import reverse
 from tablib import Dataset
 import pandas as pd
+from unicodedata import category
 
 from MyFirstDjangoWebsite import settings
 from firstWebsite.modals import Faculty, Faculty_participation_data, mooc_course, events, \
     awards_and_achievments, sponsored_research, research_journal, research_conference, research_book, patents, guided, \
-    resource, non_teaching_staff
+    resource, non_teaching_staff, category as cat
 from .modals import Student_Directory
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -165,6 +167,7 @@ def save_all_forms(request, pk):
             obj1 = Faculty_participation_data(category=category,top=top,mode=mode,level=level,organizer=organizer,sponsors=sponser,approval=approval,begi_date=begi_date,end_date=end_date,session=session,no_of_days=num_of_days,proof_enclosed=proof_approval,proof_file=proof_file_path,email=faculty_instance)
             obj1.save()
         elif pk == 2:
+            category = request.POST.get('category')
             timeline = request.POST.get('toc')
             noc = request.POST.get('noc')
             doc = request.POST.get('optradio3')
@@ -175,7 +178,7 @@ def save_all_forms(request, pk):
             topper_in = request.POST.get('optradio2')
             remarks = request.POST.get('remarks')
             proof_file = request.FILES.get('proof_file')
-            obj2 = mooc_course(timeline=timeline,noc=noc,doc=doc,begi_date=begi_date,end_date=end_date,offer=offer,ctype=ctype,topper_in=topper_in,session=session,remarks=remarks,proof_file=proof_file,email=faculty_instance)
+            obj2 = mooc_course(category=category,timeline=timeline,noc=noc,doc=doc,begi_date=begi_date,end_date=end_date,offer=offer,ctype=ctype,topper_in=topper_in,session=session,remarks=remarks,proof_file=proof_file,email=faculty_instance)
             obj2.save()
         elif pk == 3:
             category = request.POST.get('category')
@@ -352,6 +355,16 @@ def save_all_forms(request, pk):
             faculty_instance.status = request.POST.get('updated_status')
             faculty_instance.save()
             return redirect(reverse('directory'))
+        elif pk == 15:
+            emp_id = request.POST.get('emp_id')
+            emp_name = request.POST.get('name_per')
+            email = request.POST.get('new_email').strip()
+            department = request.POST.get('selected_department')
+            con_no = request.POST.get('contact_number')
+            status = request.POST.get('selected_status')
+            obj12 = Faculty(name=emp_name,emp_id=emp_id,email=email,department=department,contact_number=con_no,status=status)
+            obj12.save()
+            return redirect(reverse('directory'))
         return redirect(reverse('success'))
     return render(request, 'about')
 
@@ -379,13 +392,6 @@ def upload_excel(request, pk):
         if pk == 0:
 
             for data in imported_data.dict:
-                print(data['name'])
-                print(data['roll_no'])
-                print(data['college_id'])
-                print(data['email_id'])
-                print(data['student_phone_no'])
-                print(data['parent_phone_no'])
-                print(data['address'])
                 value = Student_Directory(name=data['name'],roll_no=data['roll_no'],college_id=data['college_id'],email=data['email_id'],student_phone_no=data['student_phone_no'],parent_phone_no=data['parent_phone_no'],address=data['address'])
                 value.save()
 
@@ -396,13 +402,7 @@ def upload_excel(request, pk):
             df.columns = df.columns.str.lower().str.replace(' ', '_').str.strip()
             for data in df.to_dict(orient='records'):
                 if not data['name']:
-                    print("No name exist")
                     continue
-                print(data['name'])
-                print(data['employee_id'])
-                print(data['email'])
-                print(data['department'])
-                print(data['contact_number'])
 
                 value = Faculty(name=data['name'],emp_id=data['employee_id'],email=data['email'],department=data['department'],contact_number=data['contact_number'],status="NR")
                 value.save()
@@ -413,7 +413,7 @@ def upload_excel(request, pk):
 
 def deleteuser(request):
     if request.method == "POST":
-        # print("Employee ID is:- ", request.POST.get('faculty_emp_id'))
+
         faculty_id = request.POST.get('faculty_emp_id')
         faculty_object = get_object_or_404(Faculty, emp_id=faculty_id)
         faculty_object.delete()
@@ -484,10 +484,6 @@ def profile(request):
     context = {'data': value}
     return render(request,'profile.html', context=context)
 
-@session_login_required
-def allocated_batches(request):
-    context = {'card_data': stu_data}
-    return render(request,'allocated_batches.html',context= context)
 
 @session_login_required
 def student_directory(request):
@@ -500,8 +496,10 @@ def about(request):
 
 @session_login_required
 def stu_card_details(request,pk):
-    batch = Student_Directory.objects.filter(batch = pk)
-    context = {'stu_data': batch}
+    batches = Student_Directory.objects.filter(batch = pk)
+
+
+    context = {'stu_data': batches }
     return render(request,'batch_details.html',context=context)
 
 def login_page(request):
@@ -509,7 +507,39 @@ def login_page(request):
 
 @session_login_required
 def progress(request):
-    return render(request,'progresschart.html')
+    email = Faculty.objects.get(pk=request.session.get('user_id'))
+    no_of_awards = list(awards_and_achievments.objects.filter(email=email).values('category').annotate(count=Count('id')))
+    label_map = {choice.value: choice.label for choice in cat}
+
+    for item in no_of_awards:
+        item['category_display'] = label_map.get(item['category'], item['category'])
+
+    events_instance = list(events.objects.filter(email=email).values('category').annotate(count=Count('id')))
+    for item in events_instance:
+        item['category_display'] = label_map.get(item['category'], item['category'])
+
+    faculty_participartion_data = list(Faculty_participation_data.objects.filter(email=email).values('category').annotate(count=Count('id')))
+    for item in faculty_participartion_data:
+        item['category_display'] = label_map.get(item['category'], item['category'])
+
+    guided_instance = guided.objects.filter(email=email).count()
+    mooc_course_instance = list(mooc_course.objects.filter(email=email).values('category').annotate(count=Count('id')))
+    for item in mooc_course_instance:
+        item['category_display'] = label_map.get(item['category'], item['category'])
+
+    patents_instance = patents.objects.filter(email=email).count()
+    research_book_instance = research_book.objects.filter(email=email).count()
+    research_conference_instance = research_conference.objects.filter(email=email).count()
+    research_journal_instance = research_journal.objects.filter(email=email).count()
+    resource_instance = resource.objects.filter(email=email).count()
+    sponsored_research_instance = list(sponsored_research.objects.filter(email=email).values('category').annotate(count=Count('id')))
+    for item in sponsored_research_instance:
+        item['category_display'] = label_map.get(item['category'], item['category'])
+
+    total_forms = sum(item['count'] for item in no_of_awards) + sum(item['count'] for item in events_instance) + sum(item['count'] for item in faculty_participartion_data) + guided_instance + sum(item['count'] for item in mooc_course_instance) + patents_instance + research_book_instance + research_conference_instance + research_journal_instance + resource_instance + sum(item['count'] for item in sponsored_research_instance)
+    total_remaining_field_forms = 33 - (len(no_of_awards) + len(events_instance) + len(faculty_participartion_data) + (1 if guided_instance > 0 else 0) + len(mooc_course_instance) + (1 if patents_instance > 0 else 0) + (1 if research_book_instance > 0 else 0) + (1 if research_conference_instance > 0 else 0) + (1 if research_journal_instance > 0 else 0) + (1 if resource_instance > 0 else 0) + len(sponsored_research_instance))
+    context = {'total_forms': total_forms,'total_rff' : total_remaining_field_forms, 'faa1': no_of_awards, 'eod1': events_instance, 'fdp1': faculty_participartion_data, 'mp1': guided_instance, 'msc1' : mooc_course_instance, 'patents1': patents_instance, 'rpb1': research_book_instance, 'rpcp1': research_conference_instance, 'rpj1': research_journal_instance, 'rp1': resource_instance, 'sgc1': sponsored_research_instance}
+    return render(request,'progresschart.html',context)
 
 @session_login_required
 def directory(request):

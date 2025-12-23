@@ -12,18 +12,18 @@
             <div class="col-6 col-md-3 ">
                 <div class="boxes">
                     <img src="/static/icon.jpeg" alt="" style="width: 35px; height: 45px;">
-                    <div id="info">
-                     <p>faculty</p>
-                     <p>5</p>
+                    <div id="info1">
+                     <p>Number of forms filled</p>
+                     <p>{{total_forms}}</p>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="boxes">
                     <img src="/static/icon.jpeg" alt="" style="width: 35px; height: 45px;">
-                     <div id="info">
-                     <p>faculty</p>
-                     <p>5</p>
+                     <div id="info2">
+                     <p>Basic Remaining Forms</p>
+                     <p>{{total_rff}}</p>
                     </div>
 
                 </div>
@@ -31,9 +31,9 @@
             <div class="col-6 col-md-3">
                 <div class="boxes ">
                     <img src="/static/icon.jpeg" alt="" style="width: 35px; height: 45px;">
-                    <div id="info">
-                     <p>faculty</p>
-                     <p>5</p>
+                    <div id="info3">
+                     <p>Partially Filled forms</p>
+                     <p>0</p>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 <div class="boxes">
                     <img src="/static/icon.jpeg" alt="" style="width: 35px; height: 45px;">
                      <div id="info">
-                     <p>faculty</p>
+                     <p>More forms to explore</p>
                      <p>5</p>
                     </div>
                 </div>
@@ -50,17 +50,26 @@
 
 
         <div class="row align-items-center">
-            <div class="col-md-6 text-md-start text-center mb-4">
-                <h1 class="mb-3">Faculty Activity Progress</h1>
+            <div class="col-md-4 text-md-start text-center mb-4">
+                <h3 class="mb-3">Faculty Activity Progress</h3>
 
                 <select id="activityDropdown" class="form-select w-75 mx-md-0 mx-auto">
-                    <option value="forms">Forms Submitted</option>
-                    <option value="seminars">Seminars Attended</option>
-                    <option value="projects">Projects Completed</option>
+                    <option value="" selected disabled>Select any category(Sample Form)</option>
+                    <option value="fdp">Faculty Participation</option>
+                    <option value="msc">MOOC's/Short Term Course/Course Completion</option>
+                    <option value="eod">Events Organized by Department</option>
+                    <option value="faa">Faculty Awards and Achievements</option>
+                    <option value="sgc">Sponsored Research/Grant Received/Consultancy</option>
+                    <option value="rpj">Research Publication - Journals</option>
+                    <option value="rpcp">Research Publication - Conference Publication</option>
+                    <option value="rpb">Research Publication - Book and Book Chapters</option>
+                    <option value="patents">Patents</option>
+                    <option value="mp">M.Tech/Ph.D Guided</option>
+                    <option value="rp">Resource Person</option>
                 </select>
             </div>
 
-            <div class="col-md-6 mt-5">
+            <div class="col-md-8 mt-3 mb-3">
                 <div class="chart-container">
                     <canvas id="pieChart"></canvas>
                 </div>
@@ -68,6 +77,18 @@
         </div>
 
     </div>
+
+{{ fdp1|json_script:"my-data-fdp1" }}
+{{ msc1|json_script:"my-data-msc1" }}
+{{ eod1|json_script:"my-data-eod1" }}
+{{ faa1|json_script:"my-data-faa1" }}
+{{ sgc1|json_script:"my-data-sgc1" }}
+{{ rpj1|json_script:"my-data-rpj1" }}
+{{ rpcp1|json_script:"my-data-rpcp1" }}
+{{ rpb1|json_script:"my-data-rpb1" }}
+{{ patents1|json_script:"my-data-patents1" }}
+{{ mp1|json_script:"my-data-mp1" }}
+{{ rp1|json_script:"my-data-rp1" }}
 
 <script src="../static/progresschart.js"></script>
 </div>
