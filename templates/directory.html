@@ -59,7 +59,7 @@
                 </ul>
             </div>
         </div>
-        <form action="/upload_excel/1" method="POST" enctype="multipart/form-data">
+        <form action="/upload_excel/1" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
             <div class="modal fade" id="upload_file" tabindex="-1">
                 <div class="modal-dialog">
@@ -132,55 +132,61 @@
                         <h4 class="modal-title text-white">Edit Faculty Details</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <form action="/save_all_forms/14" method="POST">
+                    <form action="/save_all_forms/14" class="needs-validation" method="POST" novalidate>
                         {% csrf_token %}
                         <!-- Modal body -->
                         <div class="modal-body">
                             <input type="hidden" name="existing_email" id = "existing_email" value="">
-                            <div style = "display: flex;">
-                                <div class = "mb-2">
-                                    <label for = "updated_id" class = "form-label">Employee ID</label>
-                                    <input type = "text" class = "form-control" id = "updated_id" value = "" placeholder="Enter Employee ID"  name = "updated_id" required>
+                            <div style="display: flex;">
+                                <div class="mb-2">
+                                    <label for="updated_id" class="form-label">Employee ID</label>
+                                    <input type="text" class="form-control" id="updated_id" value="" placeholder="Enter Employee ID" name="updated_id" required>
+                                    <div class="invalid-feedback">Please enter Employee ID.</div>
                                 </div>
                             </div>
-                            <div style = "display: flex;">
-                                <div class = "mb-2">
-                                    <label for = "name_per" class = "form-label">Name</label>
-                                    <input type = "text" class = "form-control" id = "name_per" value = "" placeholder="Enter Name"  name = "updated_name" required>
+                            <div style="display: flex;">
+                                <div class="mb-2">
+                                    <label for="name_per" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name_per" value="" placeholder="Enter Name" name="updated_name" required>
+                                    <div class="invalid-feedback">Please enter name.</div>
                                 </div>
                             </div>
-                            <div style = "display: flex;">
-                                <div class = "mb-2">
-                                    <label for = "updated_email" class = "form-label">Email</label>
-                                    <input type = "text" class = "form-control" id = "updated_email" value = "" placeholder="Enter email"  name = "updated_email" required>
+                            <div style="display: flex;">
+                                <div class="mb-2">
+                                    <label for="updated_email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="updated_email" value="" placeholder="Enter email" name="updated_email" required>
+                                    <div class="invalid-feedback">Please enter valid email.</div>
                                 </div>
                             </div>
-                            <div style = "display: flex;">
-                                <div class = "mb-2">
-                                    <label for = "department_selection" class = "form-label">Department</label>
-                                    <select class = "form-control" id="department_selection" name="updated_department" required>
-                                        <option value = "" selected disabled>Select your Department</option>
-                                        <option value = "CSE">Computer Science & Engineering</option>
-                                        <option value = "CSE(AI)" >Computer Science & Engineering(AI)</option>
-                                        <option value = "CSE(DS)" >Computer Science & Engineering(DS)</option>
-                                        <option value = "CSE(IOT)" >Computer Science & Engineering(IOT)</option>
+                            <div style="display: flex;">
+                                <div class="mb-2">
+                                    <label for="department_selection" class="form-label">Department</label>
+                                    <select class="form-select" id="department_selection" name="updated_department" required>
+                                        <option value="" selected disabled>Select your Department</option>
+                                        <option value="CSE">Computer Science & Engineering</option>
+                                        <option value="CSE(AI)">Computer Science & Engineering(AI)</option>
+                                        <option value="CSE(DS)">Computer Science & Engineering(DS)</option>
+                                        <option value="CSE(IOT)">Computer Science & Engineering(IOT)</option>
                                     </select>
+                                    <div class="invalid-feedback">Please select department.</div>
                                 </div>
                             </div>
-                            <div style = "display: flex;">
-                                <div class = "mb-2">
-                                    <label for = "con_num" class = "form-label">Contact Number</label>
-                                    <input type = "text" class = "form-control" id = "con_num" value = "" placeholder="Enter Contact Number"  name = "updated_number" required>
+                            <div style="display: flex;">
+                                <div class="mb-2">
+                                    <label for="con_num" class="form-label">Contact Number</label>
+                                    <input type="tel" class="form-control" id="con_num" value="" placeholder="Enter Contact Number" name="updated_number" required>
+                                    <div class="invalid-feedback">Please enter contact number.</div>
                                 </div>
                             </div>
-                            <div style = "display: flex;">
-                                <div class = "mb-2">
-                                    <label for = "status_selection" class = "form-label">Status</label>
-                                    <select class = "form-control" id="status_selection" name="updated_status" required>
-                                        <option value = "" selected disabled>Select Status</option>
-                                        <option value="R" >Registered</option>
+                            <div style="display: flex;">
+                                <div class="mb-2">
+                                    <label for="status_selection" class="form-label">Status</label>
+                                    <select class="form-control" id="status_selection" name="updated_status" required>
+                                        <option value="" selected disabled>Select Status</option>
+                                        <option value="R">Registered</option>
                                         <option value="NR" selected>Not Registered</option>
                                     </select>
+                                    <div class="invalid-feedback">Please select status.</div>
                                 </div>
                             </div>
 
@@ -241,6 +247,26 @@
         scrollCollapse: true
     });
 
+(function() {
+    'use strict'
+    
+    // Get the form
+    const form = document.querySelector('form[action="/save_all_forms/14"]');
+    
+    if (form) {
+        // Add submit event listener
+        form.addEventListener('submit', function(event) {
+            // Check if form is valid
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            // Add validation styling
+            form.classList.add('was-validated');
+        }, false);
+    }
+})();
 </script>
 
 {% endblock %}
