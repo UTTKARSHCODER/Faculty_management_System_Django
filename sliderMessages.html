@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="container text-center">
+        <button class="btn btn-outline-success mt-5" id="check">clcik me</button>
+    </div>
+    <script>
+        let check = document.querySelector("#check");
+        let container = document.querySelector(".container");
+
+        let see = check.addEventListener("click", function(){
+                let div1 = document.createElement("div");
+                let div2 = document.createElement("div");
+                div1.className = "d-flex justify-content-end";
+                div2.className = "alert alert-danger ";
+                div2.innerHTML = `<i class="bi bi-exclamation-circle-fill me-2"></i> This organisation has been disabled`;
+                div2.style.width = "350px";
+                div2.style.color = "red";
+                div2.style.backgroundColor = "white";
+                div1.appendChild(div2);
+                container.appendChild(div1);
+                
+                setTimeout(()=>{
+                    div1.remove();
+                },1000);
+        })
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
