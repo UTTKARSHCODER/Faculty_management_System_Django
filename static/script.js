@@ -1,3 +1,4 @@
+console.log('=== Script loaded successfully ===');
 const checkboxGroup = document.getElementById('checkboxGroup');
 const inputFields = document.getElementById('inputFields');
 const subFormsContainer = document.getElementById('subFormsContainer');
@@ -162,6 +163,23 @@ function generateInputFields() {
     });
 }
 
+function initializeBootstrapValidation() {
+    'use strict'
+    
+    const forms = document.querySelectorAll('.needs-validation')
+    
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            
+            form.classList.add('was-validated')
+        }, false)
+    })
+}
+
 function generateSubForms() {
     subFormsContainer.innerHTML = '';
     let totalForms = 0;
@@ -186,7 +204,8 @@ function generateSubForms() {
                 totalForms++;
 
                 const subForm = document.createElement('form');
-                subForm.className = 'sub-form';
+                subForm.className = 'sub-for needs-validation';
+                subForm.setAttribute('novalidate', '');
                 subForm.style = 'flex-direction: column';
                 subForm.method  = 'POST';
                 subForm.action = '/save_all_forms/' + form_number;
@@ -200,9 +219,11 @@ function generateSubForms() {
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label for="top" class="col-sm-4 col-form-label">Title Of Program<span class="ms-1" style="color: red;">*</span></label>
+                                        <label for="top-${i}" class="col-sm-4 col-form-label">Title Of Program<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control custom-back" id="top" placeholder="Enter title of the program" name="top" required>
+                                            <div class="invalid-feedback">Please provide a program title.</div>
+                            
                                         </div>
                                     </div>
                                 </div>
@@ -212,14 +233,15 @@ function generateSubForms() {
                                         <div class = "col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="optradio" value="On" required>
-                                                    <label class="form-check-label" for="radio1">Online</label>
+                                                    <input type="radio" class="form-check-input" id="radio1-${i}" name="optradio" value="On" required>
+                                                    <label class="form-check-label" for="radio1-${i}">Online</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio2" name="optradio" value="Of">
-                                                    <label class="form-check-label" for="radio2">Offline</label>
+                                                    <input type="radio" class="form-check-input" id="radio2-${i}" name="optradio" value="Of">
+                                                    <label class="form-check-label" for="radio2-${i}">Offline</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select a mode.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -229,14 +251,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio3" name="optradio1" value="Na" required>
-                                                    <label class="form-check-label" for="radio3">National</label>
+                                                    <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio1" value="Na" required>
+                                                    <label class="form-check-label" for="radio3-${i}">National</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="In">
-                                                    <label class="form-check-label" for="radio4">International</label>
+                                                    <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio1" value="In">
+                                                    <label class="form-check-label" for="radio4-${i}">International</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select a level.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -245,6 +268,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Organizer<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Organizer']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter organizer" name = "organizer" required>
+                                            <div class="invalid-feedback">Please provide an organizer name.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -253,6 +277,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Sponsored By<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Sponsered By']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter sponsors" name = "sponser" required>
+                                            <div class="invalid-feedback">Please provide sponsor details.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -262,14 +287,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio2" value="y" required>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="y" required>
                                                     <label class="form-check-label" for="radio5">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="N">
-                                                    <label class="form-check-label" for="radio6">No</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="N">
+                                                    <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select approval status.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -278,6 +304,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">From Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
+                                            <div class="invalid-feedback">Please provide a start date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -286,6 +313,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">To Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "end_date" required>
+                                            <div class="invalid-feedback">Please provide an end date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -293,7 +321,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -301,6 +329,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select a session.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -309,6 +338,8 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">No. of days<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="number" class="form-control" placeholder="Enter number of days" name = "num_of_days" required>
+                                            <div class="invalid-feedback">Please provide number of days.</div>
+                                        </div>
                                         </div>
                                     </div>
                                 </div>
@@ -318,14 +349,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio3" value="y" required>
-                                                    <label class="form-check-label" for="radio5">Yes</label>
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio3" value="y" required>
+                                                    <label class="form-check-label" for="radio7-${i}">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio3" value="N">
-                                                    <label class="form-check-label" for="radio6">No</label>
+                                                    <input type="radio" class="form-check-input" id="radio8-${i}" name="optradio3" value="N">
+                                                    <label class="form-check-label" for="radio8-${i}">No</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select proof status.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -334,6 +366,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -346,7 +379,7 @@ function generateSubForms() {
                                 </div>
                                 <div class = "col-md-12">
                                     <div class="row align-items-center justify-content-center">
-                                        <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
+                                        <button type = "submit" class="btn btn-submit btn-primary rounded-pill" style = "width: 10%;">Submit</button>
                                     </div>
                                 </div>
                             </div>
@@ -362,9 +395,10 @@ function generateSubForms() {
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label for="top" class="col-sm-4 col-form-label">Timeline of course<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Timeline of Course']}"></span></label>
+                                        <label for="toc-${i}" class="col-sm-4 col-form-label">Timeline of course<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Timeline of Course']}"></span></label>
                                         <div class = "col-md-8">
-                                            <input type="text" class="form-control" id="toc" placeholder="Enter timeline of the program" name="toc" required>
+                                            <input type="text" class="form-control" id="toc-${i}" placeholder="Enter timeline of the program" name="toc-${i}" required>
+                                            <div class="invalid-feedback">Please provide timeline of the course.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -373,6 +407,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of the Course<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Name of the Course']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter name of course" name = "noc" required>
+                                            <div class="invalid-feedback">Please provide name of the course.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -382,22 +417,23 @@ function generateSubForms() {
                                         <div class = "col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="optradio3" value="4" required>
+                                                    <input type="radio" class="form-check-input" id="radio1-${i}" name="optradio3" value="4" required>
                                                     <label class="form-check-label" for="radio1">4 Week</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio2" name="optradio3" value="8">
-                                                    <label class="form-check-label" for="radio2">8 Week</label>
+                                                    <input type="radio" class="form-check-input" id="radio2-${i}" name="optradio3" value="8">
+                                                    <label class="form-check-label" for="radio2-${i}">8 Week</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio3" name="optradio3" value="12">
-                                                    <label class="form-check-label" for="radio2">12 Week</label>
+                                                    <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio3" value="12">
+                                                    <label class="form-check-label" for="radio3-${i}">12 Week</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio3" value="O">
-                                                    <label class="form-check-label" for="radio2">Other</label>
+                                                    <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio3" value="O">
+                                                    <label class="form-check-label" for="radio4-${i}">Other</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select duration.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -406,6 +442,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Start Date of Course<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
+                                            <div class="invalid-feedback">Please provide start date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -414,6 +451,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">End Date of Course<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "end_date" required>
+                                            <div class="invalid-feedback">Please provide end date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -422,6 +460,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Offering Agency/ Organizer<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Offering Agency / Organizer']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Offering Agency" name = "ofo" required>
+                                            <div class="invalid-feedback">Please provide offering agency/organizer.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -431,22 +470,24 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio1" value="G" required>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="G" required>
                                                     <label class="form-check-label" for="radio5">Gold</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio1" value="S">
-                                                    <label class="form-check-label" for="radio6">Silver</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="S">
+                                                    <label class="form-check-label" for="radio6-${i}">Silver</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio7" name="optradio1" value="E">
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="E">
                                                     <label class="form-check-label" for="radio7">Elite</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio8" name="optradio1" value="SC">
-                                                    <label class="form-check-label" for="radio8">Successfully Completed</label>
+                                                    <input type="radio" class="form-check-input" id="radio8-${i}" name="optradio1" value="SC">
+                                                    <label class="form-check-label" for="radio8-${i}">Successfully Completed</label>
                                                 </div>
+                                                
                                             </div>
+                                            <div class="invalid-feedback">Please select certificate type.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -456,26 +497,27 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio9" name="optradio2" value="1" required>
+                                                    <input type="radio" class="form-check-input" id="radio9-${i}" name="optradio2" value="1" required>
                                                     <label class="form-check-label" for="radio9">Topper of 1% in this course</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio10" name="optradio2" value="2">
-                                                    <label class="form-check-label" for="radio10">Topper of 2% in this course</label>
+                                                    <input type="radio" class="form-check-input" id="radio10-${i}" name="optradio2" value="2">
+                                                    <label class="form-check-label" for="radio10-${i}">Topper of 2% in this course</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio11" name="optradio2" value="5">
-                                                    <label class="form-check-label" for="radio11">Topper of 5% in this course</label>
+                                                    <input type="radio" class="form-check-input" id="radio11-${i}" name="optradio2" value="5">
+                                                    <label class="form-check-label" for="radio11-${i}">Topper of 5% in this course</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio12" name="optradio2" value="10">
-                                                    <label class="form-check-label" for="radio12">Topper of 10% in this course</label>
+                                                    <input type="radio" class="form-check-input" id="radio12-${i}" name="optradio2" value="10">
+                                                    <label class="form-check-label" for="radio12-${i}">Topper of 10% in this course</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio13" name="optradio2" value="NA">
+                                                    <input type="radio" class="form-check-input" id="radio13-${i}" name="optradio2" value="NA">
                                                     <label class="form-check-label" for="radio13">Not Applicable</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select a category.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -483,7 +525,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -491,6 +533,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select a session.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -499,6 +542,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Remarks(If any)</label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Remarks" name = "remarks">
+                                            <div class="invalid-feedback">Please provide remarks.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -507,6 +551,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate(MOOC)']}"></span></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -539,18 +584,19 @@ function generateSubForms() {
                                         <div class="col-sm-8 mt-4">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input group-required" id="radio1" name="optradio3" value="S">
+                                                    <input type="checkbox" class="form-check-input group-required" id="radio1-${i}" name="optradio3" value="S">
                                                     <label class="form-check-label" for="radio1">Students</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="radio2" name="optradio3" value="TS">
-                                                    <label class="form-check-label" for="radio2">Teaching Staff</label>
+                                                    <input type="checkbox" class="form-check-input" id="radio2-${i}" name="optradio3" value="TS">
+                                                    <label class="form-check-label" for="radio2-${i}">Teaching Staff</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="radio3" name="optradio3" value="NTS">
+                                                    <input type="checkbox" class="form-check-input" id="radio3-${i}" name="optradio3" value="NTS">
                                                     <label class="form-check-label" for="radio3">Non-Teaching Staff</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select at least one option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -559,6 +605,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of the Professional Development Program Organized<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the Professional Development Program Organized']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of the Professional Development Program Organized" name = "topdpo" required>
+                                            <div class="invalid-feedback">Please provide the title of the program.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -567,6 +614,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">No. of participants<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="number" class="form-control" placeholder="Enter no. of participants" name = "nop" required>
+                                            <div class="invalid-feedback">Please provide number of participants.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -575,6 +623,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Academic Department/ Cell/ Committees/ Labs/ COE<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Academic Department/ Cell / Committees/ Labs /COE']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Academic Department/ Cell/ Committees/ Labs/ COE" name = "adcc" required>
+                                            <div class="invalid-feedback">Please provide the department/cell/committee/lab/COE.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -582,7 +631,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Academic Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -590,6 +639,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select a session.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -599,14 +649,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio3" name="optradio1" value="S" required>
+                                                    <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio1" value="S" required>
                                                     <label class="form-check-label" for="radio3">Sponsored</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio4">Non-Sponsored</label>
+                                                    <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio1" value="NS">
+                                                    <label class="form-check-label" for="radio4-${i}">Non-Sponsored</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select certificate type.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -615,6 +666,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of Sponsoring Agency(if Sponsored)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter name of sponsoring agency" name = "nosa" required>
+                                            <div class="invalid-feedback">Please provide name of sponsoring agency.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -623,6 +675,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Collaboration Details<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Collaboration Details']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter collaboration details" name = "cd" required>
+                                            <div class="invalid-feedback">Please provide collaboration details.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -631,6 +684,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Start Date of the Event<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
+                                            <div class="invalid-feedback">Please provide the start date of the event.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -639,6 +693,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">End Date of the Event<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "end_date" required>
+                                            <div class="invalid-feedback">Please provide the end date of the event.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -648,14 +703,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio2" value="y" required>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="y" required>
                                                     <label class="form-check-label" for="radio5">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="N">
-                                                    <label class="form-check-label" for="radio6">No</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="N">
+                                                    <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select grant received status.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -664,6 +720,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Grant Details<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Grant Details']}"></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter grant details" name = "gd" required>
+                                            <div class="invalid-feedback">Please provide grant details.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -672,6 +729,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Association with professional societies for organization of event<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Association with professional societies for organization of event']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter details" name = "awpsfooe" required>
+                                            <div class="invalid-feedback">Please provide association details.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -680,6 +738,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="number" class="form-control" placeholder="Enter details" name = "nossp" required>
+                                            <div class="invalid-feedback">Please provide number of SKIT students participated.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -688,6 +747,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Number of staff member participated(Provide list of staff members with  their EMPLOYEE ID & Certificates)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="number" class="form-control" placeholder="Enter details" name = "nosmp" required>
+                                            <div class="invalid-feedback">Please provide number of staff members participated.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -697,14 +757,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio4" value="y" required>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}-${i}" name="optradio4" value="y" required>
                                                     <label class="form-check-label" for="radio5">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio4" value="N">
-                                                    <label class="form-check-label" for="radio6">No</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio4" value="N">
+                                                    <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -713,6 +774,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Event Report']}"></span></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -728,6 +790,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Remarks(If any)</label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Remarks" name = "remarks">
+                                            <div class="invalid-feedback">Please provide remarks.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -752,6 +815,7 @@ function generateSubForms() {
                                         <label for="top" class="col-sm-4 col-form-label">Name of the Award/   Achievement<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Name of the Award/Achievement']}"></span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control custom-back" id="top" placeholder="Enter name of award / achievement" name="noaa" required>
+                                            <div class="invalid-feedback">Please provide name of award / achievement.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -760,6 +824,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Position / Award For<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Position / Award For']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter award for" name = "paf" required>
+                                            <div class="invalid-feedback">Please provide position / award for.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -768,6 +833,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Agency / Organization<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Agency / Organization']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter organizer" name = "ao" required>
+                                            <div class="invalid-feedback">Please provide agency / organization.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -776,6 +842,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Prize<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Prize']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter organizer" name = "prize" required>
+                                            <div class="invalid-feedback">Please provide prize.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -784,6 +851,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Award Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "award_date" required>
+                                            <div class="invalid-feedback">Please provide award date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -792,6 +860,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Remark<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Remark']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter organizer" name = "remark" required>
+                                            <div class="invalid-feedback">Please provide remark.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -800,6 +869,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -815,7 +885,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -823,6 +893,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -831,6 +902,7 @@ function generateSubForms() {
                                         <label class="col-sm-8 col-form-label">All information filled by me is correct and I will submit proof and other related document whenever is asked<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-4">
                                             <input type="checkbox" class="form-check-input" name = "num_of_days" required>
+                                            <div class="invalid-feedback">Please confirm the information.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -855,6 +927,7 @@ function generateSubForms() {
                                         <label for="top" class="col-sm-4 col-form-label">Name of the Funding Agency</label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control custom-back" id="nofa" placeholder="Enter title of the program" name="nofa" required>
+                                            <div class="invalid-feedback">Please provide the name of the funding agency.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -863,6 +936,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Duration of Project (in Years)<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="number" class="form-control" placeholder="Enter organizer" name = "dop" required>
+                                            <div class="invalid-feedback">Please provide duration of project.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -871,6 +945,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Amount in Rs.<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="number" class="form-control" placeholder="Enter organizer" name = "amount" required>
+                                            <div class="invalid-feedback">Please provide amount in Rs.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -878,7 +953,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -886,6 +961,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -895,14 +971,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio2" value="ON" required>
-                                                    <label class="form-check-label" for="radio5">Ongoing</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="ON" required>
+                                                    <label class="form-check-label" for="radio5-${i}">Ongoing</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="CM">
-                                                    <label class="form-check-label" for="radio6">Completed</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="CM">
+                                                    <label class="form-check-label" for="radio6-${i}">Completed</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select status.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -911,6 +988,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Upload Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Proof']}"></span></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -941,6 +1019,7 @@ function generateSubForms() {
                                         <label for="top" class="col-sm-4 col-form-label">Name of the author(s)<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control" id="toc" placeholder="Enter name of author" name="noa" required>
+                                            <div class="invalid-feedback">Please provide name of author(s).</div>
                                         </div>
                                     </div>
                                 </div>
@@ -949,6 +1028,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of Paper<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of Paper" name = "top" required>
+                                            <div class="invalid-feedback">Please provide title of paper.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -957,6 +1037,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of Journal<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter name of journal" name = "noj" required>
+                                            <div class="invalid-feedback">Please provide name of journal.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -965,6 +1046,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of the Publisher<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter name of publisher" name = "nop" required>
+                                            <div class="invalid-feedback">Please provide name of publisher.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -973,6 +1055,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Volume, Issue<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter volumn, issue" name = "vi" required>
+                                            <div class="invalid-feedback">Please provide volume, issue.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -981,6 +1064,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Page No.<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="number" class="form-control" placeholder="Enter page no." name = "pn" required>
+                                            <div class="invalid-feedback">Please provide page no.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -989,6 +1073,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Published Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
+                                            <div class="invalid-feedback">Please provide published date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -996,7 +1081,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Academic Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -1004,6 +1089,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select academic session.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1012,6 +1098,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">ISSN number : Print<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter details" name = "isnp" required>
+                                            <div class="invalid-feedback">Please provide ISSN number : Print.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1020,6 +1107,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">ISSN number : Online<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter details" name = "isno" required>
+                                            <div class="invalid-feedback">Please provide ISSN number : Online.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1029,14 +1117,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="optradio3" value="Na" required>
-                                                    <label class="form-check-label" for="radio1">National</label>
+                                                    <input type="radio" class="form-check-input" id="radio1-${i}" name="optradio3" value="Na" required>
+                                                    <label class="form-check-label" for="radio1-${i}">National</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio2" name="optradio3" value="In">
-                                                    <label class="form-check-label" for="radio2">International</label>
+                                                    <input type="radio" class="form-check-input" id="radio2-${i}" name="optradio3" value="In">
+                                                    <label class="form-check-label" for="radio2-${i}">International</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select level.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1045,6 +1134,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">DOI(Digital Object Identifier)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['DOI']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter DOI(Digital Object Identifier)" name = "doi" required>
+                                            <div class="invalid-feedback">Please provide DOI(Digital Object Identifier).</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1053,6 +1143,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to website of the Journal<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter DOI(Digital Object Identifier)" name = "lwj" required>
+                                            <div class="invalid-feedback">Please provide Link to website of the Journal.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1061,6 +1152,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to article/paper/ abstract of the article<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to article/paper/abstract of the article']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to article/paper/abstract of the article " name = "lap" required>
+                                            <div class="invalid-feedback">Please provide Link to article/paper/ abstract of the article.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1069,6 +1161,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to the recognition in SCOPUS enlistment of the Journal<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to the recognition in SCOPUS enlistment of the Journal" name = "lrsj" required>
+                                            <div class="invalid-feedback">Please provide Link to the recognition in SCOPUS enlistment of the Journal.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1077,6 +1170,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Affiliating Institute at the time of publication<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Affiliating Institute at the time of publication']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Affiliating Institute at the time of publication" name = "aiop" required>
+                                            <div class="invalid-feedback">Please provide Affiliating Institute at the time of publication.-${i}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1086,14 +1180,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio2" value="y" required>
-                                                    <label class="form-check-label" for="radio5">Yes</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="y" required>
+                                                    <label class="form-check-label" for="radio5-${i}">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="N">
-                                                    <label class="form-check-label" for="radio6">No</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="N">
+                                                    <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1102,6 +1197,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Student details" name = "details" required>
+                                            <div class="invalid-feedback">Please provide student(s) details.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1111,26 +1207,27 @@ function generateSubForms() {
                                         <div class="col-sm-9">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio3" name="optradio1" value="S" required>
-                                                    <label class="form-check-label" for="radio3">SCI/SCIE/SSCI</label>
+                                                    <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio1" value="S" required>
+                                                    <label class="form-check-label" for="radio3-${i}">SCI/SCIE/SSCI</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio4">Scopus</label>
+                                                    <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio1" value="NS">
+                                                    <label class="form-check-label" for="radio4-${i}">Scopus</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="ES">
-                                                    <label class="form-check-label" for="radio5">ESCI</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="ES">
+                                                    <label class="form-check-label" for="radio5-${i}">ESCI</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="UGC">
-                                                    <label class="form-check-label" for="radio6">UGC</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="UGC">
+                                                    <label class="form-check-label" for="radio6-${i}">UGC</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="Other">
-                                                    <label class="form-check-label" for="radio7">Other</label>
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="Other">
+                                                    <label class="form-check-label" for="radio7-${i}">Other</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1140,26 +1237,27 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio3" name="optradio" value="Q1" required>
+                                                    <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio" value="Q1" required>
                                                     <label class="form-check-label" for="radio3">Q1</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio" value="Q2">
-                                                    <label class="form-check-label" for="radio4">Q2</label>
+                                                    <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio" value="Q2">
+                                                    <label class="form-check-label" for="radio4-${i}">Q2</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio" value="Q3">
-                                                    <label class="form-check-label" for="radio5">Q3</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio" value="Q3">
+                                                    <label class="form-check-label" for="radio5-${i}">Q3</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio" value="Q4">
-                                                    <label class="form-check-label" for="radio6">Q4</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio" value="Q4">
+                                                    <label class="form-check-label" for="radio6-${i}">Q4</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio" value="NA">
-                                                    <label class="form-check-label" for="radio7">NA</label>
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio" value="NA">
+                                                    <label class="form-check-label" for="radio7-${i}">NA</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1168,6 +1266,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1198,6 +1297,7 @@ function generateSubForms() {
                                         <label for="top" class="col-sm-4 col-form-label">Name of the author(s)<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control" id="toc" placeholder="Enter name of author" name="noa" required>
+                                            <div class="invalid-feedback">Please provide name of author(s).</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1206,6 +1306,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of Conference<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the Conference']}"></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Title of the conference" name = "toc" required>
+                                            <div class="invalid-feedback">Please provide Title of Conference.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1214,6 +1315,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of Paper<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of Paper" name = "top" required>
+                                            <div class="invalid-feedback">Please provide Title of Paper.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1222,6 +1324,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of the proceedings of the conference<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the proceedings of the conference']}"></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Title of the proceedings of the conference" name = "topc" required>
+                                            <div class="invalid-feedback">Please provide Title of the proceedings of the conference.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1231,14 +1334,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="optradio3" value="Na" required>
-                                                    <label class="form-check-label" for="radio1">National</label>
+                                                    <input type="radio" class="form-check-input" id="radio1-${i}" name="optradio3" value="Na" required>
+                                                    <label class="form-check-label" for="radio1-${i}">National</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio2" name="optradio3" value="In">
-                                                    <label class="form-check-label" for="radio2">International</label>
+                                                    <input type="radio" class="form-check-input" id="radio2-${i}" name="optradio3" value="In">
+                                                    <label class="form-check-label" for="radio2-${i}">International</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select level.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1247,6 +1351,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">ISBN/ISSN number of the proceeding<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter ISBN/ISSN number of the proceeding" name = "isnp" required>
+                                            <div class="invalid-feedback">Please provide ISBN/ISSN number of the proceeding.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1255,6 +1360,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of the Publisher<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter name of publisher" name = "nop" required>
+                                            <div class="invalid-feedback">Please provide name of publisher.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1263,6 +1369,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Published Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
+                                            <div class="invalid-feedback">Please provide published date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1270,7 +1377,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Academic Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -1278,6 +1385,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please provide academic session.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1286,6 +1394,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">DOI(Digital Object Identifier)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['DOI']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter DOI(Digital Object Identifier)" name = "doi" required>
+                                            <div class="invalid-feedback">Please provide DOI(Digital Object Identifier).</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1294,6 +1403,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to website of the Journal<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "lwj" required>
+                                            <div class="invalid-feedback">Please provide Link to website of the Journal.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1302,6 +1412,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Affiliating Institute at the time of publication<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Affiliating Institute at the time of publication']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Affiliating Institute at the time of publication" name = "aitp" required>
+                                            <div class="invalid-feedback">Please provide Affiliating Institute at the time of publication.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1311,14 +1422,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio2" value="y" required>
-                                                    <label class="form-check-label" for="radio5">Yes</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="y" required>
+                                                    <label class="form-check-label" for="radio5-${i}">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="N">
-                                                    <label class="form-check-label" for="radio6">No</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="N">
+                                                    <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1327,6 +1439,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Student details" name = "details" required>
+                                            <div class="invalid-feedback">Please provide student(s) details.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1336,26 +1449,27 @@ function generateSubForms() {
                                         <div class="col-sm-9">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio3" name="optradio1" value="S" required>
-                                                    <label class="form-check-label" for="radio3">SCI/SCIE/SSCI</label>
+                                                    <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio1" value="S" required>
+                                                    <label class="form-check-label" for="radio3-${i}">SCI/SCIE/SSCI</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio4">Scopus</label>
+                                                    <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio1" value="NS">
+                                                    <label class="form-check-label" for="radio4-${i}">Scopus</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio5">ESCI</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="NS">
+                                                    <label class="form-check-label" for="radio5-${i}">ESCI</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio6">UGC</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="NS">
+                                                    <label class="form-check-label" for="radio6-${i}">UGC</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio7">Other</label>
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="NS">
+                                                    <label class="form-check-label" for="radio7-${i}">Other</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1364,6 +1478,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1394,6 +1509,7 @@ function generateSubForms() {
                                         <label for="top" class="col-sm-4 col-form-label">Name of the author(s)<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control" id="toc" placeholder="Enter name of author" name="noa" required>
+                                            <div class="invalid-feedback">Please provide name of author(s).</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1402,6 +1518,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of the book<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Title of the conference" name = "tob" required>
+                                            <div class="invalid-feedback">Please provide Title of the book.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1410,6 +1527,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of the chapter Published<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of Paper" name = "top" required>
+                                            <div class="invalid-feedback">Please provide Title of the chapter Published.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1419,14 +1537,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio1" name="optradio3" value="Na" required>
-                                                    <label class="form-check-label" for="radio1">National</label>
+                                                    <input type="radio" class="form-check-input" id="radio1-${i}" name="optradio3" value="Na" required>
+                                                    <label class="form-check-label" for="radio1-${i}">National</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio2" name="optradio3" value="In">
-                                                    <label class="form-check-label" for="radio2">International</label>
+                                                    <input type="radio" class="form-check-input" id="radio2-${i}" name="optradio3" value="In">
+                                                    <label class="form-check-label" for="radio2-${i}">International</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select level.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1435,6 +1554,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">ISBN<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter ISBN" name = "isbn" required>
+                                            <div class="invalid-feedback">Please enter ISBN.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1443,6 +1563,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of the Publisher<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter name of publisher" name = "nop" required>
+                                            <div class="invalid-feedback">Please provide name of publisher.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1451,6 +1572,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Published Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
+                                            <div class="invalid-feedback">Please provide published date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1458,7 +1580,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Academic Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -1466,6 +1588,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select academic session.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1474,6 +1597,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">DOI(Digital Object Identifier)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['DOI']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter DOI(Digital Object Identifier)" name = "doi" required>
+                                            <div class="invalid-feedback">Please provide DOI(Digital Object Identifier).</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1482,6 +1606,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to website of the Journal<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "lwj" required>
+                                            <div class="invalid-feedback">Please provide Link to website of the Journal.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1490,6 +1615,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Affiliating Institute at the time of publication<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Affiliating Institute at the time of publication']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Affiliating Institute at the time of publication" name = "aitp" required>
+                                            <div class="invalid-feedback">Please provide Affiliating Institute at the time of publication.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1499,14 +1625,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio2" value="y" required>
-                                                    <label class="form-check-label" for="radio5">Yes</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="y" required>
+                                                    <label class="form-check-label" for="radio5-${i}">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="N">
-                                                    <label class="form-check-label" for="radio6">No</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="N">
+                                                    <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1515,6 +1642,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Student details" name = "details" required>
+                                            <div class="invalid-feedback">Please provide student(s) details.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1524,26 +1652,27 @@ function generateSubForms() {
                                         <div class="col-sm-9">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio3" name="optradio1" value="S" required>
-                                                    <label class="form-check-label" for="radio3">SCI/SCIE/SSCI</label>
+                                                    <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio1" value="S" required>
+                                                    <label class="form-check-label" for="radio3-${i}">SCI/SCIE/SSCI</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio4">Scopus</label>
+                                                    <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio1" value="NS">
+                                                    <label class="form-check-label" for="radio4-${i}">Scopus</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio1" value="ES">
-                                                    <label class="form-check-label" for="radio5">ESCI</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="ES">
+                                                    <label class="form-check-label" for="radio5-${i}">ESCI</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio1" value="UGC">
-                                                    <label class="form-check-label" for="radio6">UGC</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="UGC">
+                                                    <label class="form-check-label" for="radio6-${i}">UGC</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio7" name="optradio1" value="O">
-                                                    <label class="form-check-label" for="radio7">Other</label>
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="O">
+                                                    <label class="form-check-label" for="radio7-${i}">Other</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1552,6 +1681,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1583,14 +1713,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio1" value="P" required>
-                                                    <label class="form-check-label" for="radio5">Published</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="P" required>
+                                                    <label class="form-check-label" for="radio5-${i}">Published</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio1" value="G">
-                                                    <label class="form-check-label" for="radio6">Granted</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="G">
+                                                    <label class="form-check-label" for="radio6-${i}">Granted</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1599,6 +1730,7 @@ function generateSubForms() {
                                         <label for="top" class="col-sm-4 col-form-label">Granted ID<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control" id="toc" placeholder="Enter " name="nof" required>
+                                            <div class="invalid-feedback">Please provide Granted ID.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1607,6 +1739,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Application ID<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter ID" name = "ag" required>
+                                            <div class="invalid-feedback">Please provide Application ID.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1616,14 +1749,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio2" value="I" required>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="I" required>
                                                     <label class="form-check-label" for="radio5">Innovation</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="D">
-                                                    <label class="form-check-label" for="radio6">Design</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="D">
+                                                    <label class="form-check-label" for="radio6-${i}">Design</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1632,6 +1766,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of Patent<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of Patent" name = "top" required>
+                                            <div class="invalid-feedback">Please provide Title of Patent.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1640,6 +1775,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Granted Country<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter detail" name = "gc" required>
+                                            <div class="invalid-feedback">Please provide Granted Country.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1648,6 +1784,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Patent Filed Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "filed_date" required>
+                                            <div class="invalid-feedback">Please provide Patent Filed Date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1656,6 +1793,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Publication Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
+                                            <div class="invalid-feedback">Please provide Publication Date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1663,7 +1801,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Academic Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -1671,6 +1809,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select Academic Session.-${i}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1681,14 +1820,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio" value="y" required>
-                                                    <label class="form-check-label" for="radio5">Yes</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio" value="y" required>
+                                                    <label class="form-check-label" for="radio5-${i}">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio" value="N">
-                                                    <label class="form-check-label" for="radio6">No</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio" value="N">
+                                                    <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1697,6 +1837,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Student details" name = "details" required>
+                                            <div class="invalid-feedback">Please provide student(s) details.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1705,6 +1846,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "link" required>
+                                            <div class="invalid-feedback">Please provide Link.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1713,6 +1855,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1744,6 +1887,7 @@ function generateSubForms() {
                                         <label for="top" class="col-sm-4 col-form-label">Name of the student Guided<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control custom-back" id="top" placeholder="Enter Name of the student Guided" name="nos" required>
+                                            <div class="invalid-feedback">Please provide Name of the student Guided.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1752,6 +1896,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Enrollment Number of Student<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Enrollment Number of Student" name = "ens" required>
+                                            <div class="invalid-feedback">Please enter Enrollment Number of Student.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1760,6 +1905,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">University Roll Number of Student<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter organizer" name = "urns" required>
+                                            <div class="invalid-feedback">Please enter University Roll Number of Student.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1767,12 +1913,13 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Enrollment Year of Student<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="enrollmentyear" id="enrollmentyear" required>
+                                            <select class="form-select custom-back-select" name="enrollmentyear" id="enrollmentyear" required>
                                                 <option value="" selected disabled>Select enrollment year</option>
                                                 <option value="2023">2023</option>
                                                 <option value="2024">2024</option>
                                                 <option value="2025">2025</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select Enrollment Year of Student.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1781,6 +1928,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of the Dissertation<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter organizer" name = "tod" required>
+                                            <div class="invalid-feedback">Please enter Title of the Dissertation.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1790,14 +1938,15 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio2" value="S" required>
-                                                    <label class="form-check-label" for="radio5">Supervisor</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="S" required>
+                                                    <label class="form-check-label" for="radio5-${i}">Supervisor</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="CS">
-                                                    <label class="form-check-label" for="radio6">Co-supervisor</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="CS">
+                                                    <label class="form-check-label" for="radio6-${i}">Co-supervisor</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1806,6 +1955,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Date of Viva-Voce<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "dov" required>
+                                            <div class="invalid-feedback">Please provide Date of Viva-Voce.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1814,6 +1964,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of external examiner<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Name of external examiner" name = "noe" required>
+                                            <div class="invalid-feedback">Please provide Name of external examiner.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1821,7 +1972,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -1829,6 +1980,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select Session.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1853,6 +2005,7 @@ function generateSubForms() {
                                         <label for="top" class="col-sm-4 col-form-label">Title of Event/ Exam Name<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of Event/ Exam Name']}"></span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control custom-back" id="top" placeholder="Enter Name of the student Guided" name="toe" required>
+                                            <div class="invalid-feedback">Please provide Title of Event/ Exam Name.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1861,6 +2014,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Subject Area/Subject Name/Lab Name/Session Name<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Subject Area/Subject Name/Lab Name/Session Name']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Enrollment Number of Student" name = "sa" required>
+                                            <div class="invalid-feedback">Please enter Subject Area/Subject Name/Lab Name/Session Name.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1869,6 +2023,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Duration of event (in days)<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="number" class="form-control" placeholder="Enter no. of days" name = "doe" required>
+                                            <div class="invalid-feedback">Please enter Duration of event.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1878,72 +2033,73 @@ function generateSubForms() {
                                         <div class="col-sm-10">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5" name="optradio2" value="EE(UG)" required>
-                                                    <label class="form-check-label" for="radio5">External Examination (UG)</label>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="EE(UG)" required>
+                                                    <label class="form-check-label" for="radio5-${i}">External Examination (UG)</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="EE(PG)">
-                                                    <label class="form-check-label" for="radio6">External Examination (PG)</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="EE(PG)">
+                                                    <label class="form-check-label" for="radio6-${i}">External Examination (PG)</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio7" name="optradio2" value="EBM">
-                                                    <label class="form-check-label" for="radio7">Editorial Board Member</label>
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio2" value="EBM">
+                                                    <label class="form-check-label" for="radio7-${i}">Editorial Board Member</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio8" name="optradio2" value="JM">
-                                                    <label class="form-check-label" for="radio8">Jury Member</label>
+                                                    <input type="radio" class="form-check-input" id="radio8-${i}" name="optradio2" value="JM">
+                                                    <label class="form-check-label" for="radio8-${i}">Jury Member</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio9" name="optradio2" value="R">
-                                                    <label class="form-check-label" for="radio9">Reviewer</label>
+                                                    <input type="radio" class="form-check-input" id="radio9-${i}" name="optradio2" value="R">
+                                                    <label class="form-check-label" for="radio9-${i}">Reviewer</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio10" name="optradio2" value="SC">
-                                                    <label class="form-check-label" for="radio10">Session Chair</label>
+                                                    <input type="radio" class="form-check-input" id="radio10-${i}" name="optradio2" value="SC">
+                                                    <label class="form-check-label" for="radio10-${i}">Session Chair</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio11" name="optradio2" value="E">
-                                                    <label class="form-check-label" for="radio11">Expert</label>
+                                                    <input type="radio" class="form-check-input" id="radio11-${i}" name="optradio2" value="E">
+                                                    <label class="form-check-label" for="radio11-${i}">Expert</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio12" name="optradio2" value="S">
-                                                    <label class="form-check-label" for="radio12">Speaker</label>
+                                                    <input type="radio" class="form-check-input" id="radio12-${i}" name="optradio2" value="S">
+                                                    <label class="form-check-label" for="radio12-${i}">Speaker</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio13" name="optradio2" value="KNS">
-                                                    <label class="form-check-label" for="radio13">Key Note Speaker</label>
+                                                    <input type="radio" class="form-check-input" id="radio13-${i}" name="optradio2" value="KNS">
+                                                    <label class="form-check-label" for="radio13-${i}">Key Note Speaker</label>
                                                 </div>
                                             </div>
                                             <div class="d-flex column-gap-4 mt-3">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="T">
-                                                    <label class="form-check-label" for="radio6">Trainer</label>
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="T">
+                                                    <label class="form-check-label" for="radio6-${i}">Trainer</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="TCM">
-                                                    <label class="form-check-label" for="radio6">Technical Committee Member</label>
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio2" value="TCM">
+                                                    <label class="form-check-label" for="radio7-${i}">Technical Committee Member</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="DET">
-                                                    <label class="form-check-label" for="radio6">Delivered Expert Lecture/Talk</label>
+                                                    <input type="radio" class="form-check-input" id="radio8-${i}" name="optradio2" value="DET">
+                                                    <label class="form-check-label" for="radio8-${i}">Delivered Expert Lecture/Talk</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="DIT">
-                                                    <label class="form-check-label" for="radio6">Delivered Invited Talk</label>
+                                                    <input type="radio" class="form-check-input" id="radio9-${i}" name="optradio2" value="DIT">
+                                                    <label class="form-check-label" for="radio9-${i}">Delivered Invited Talk</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="BM">
-                                                    <label class="form-check-label" for="radio6">BOS Member</label>
+                                                    <input type="radio" class="form-check-input" id="radio10-${i}" name="optradio2" value="BM">
+                                                    <label class="form-check-label" for="radio10-${i}">BOS Member</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="DM">
-                                                    <label class="form-check-label" for="radio6">DRC Member</label>
+                                                    <input type="radio" class="form-check-input" id="radio11-${i}" name="optradio2" value="DM">
+                                                    <label class="form-check-label" for="radio11-${i}">DRC Member</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6" name="optradio2" value="O">
-                                                    <label class="form-check-label" for="radio6">Other</label>
+                                                    <input type="radio" class="form-check-input" id="radio12-${i}" name="optradio2" value="O">
+                                                    <label class="form-check-label" for="radio12-${i}">Other</label>
                                                 </div>
                                             </div>
+                                            <div class="invalid-feedback">Please select Resource Person Type.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1952,6 +2108,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">From Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
+                                            <div class="invalid-feedback">Please provide From Date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1960,6 +2117,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">To Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "end_date" required>
+                                            <div class="invalid-feedback">Please provide To Date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1967,7 +2125,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control custom-back-select" name="sessionyear" id="sessionyear" required>
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
@@ -1975,6 +2133,7 @@ function generateSubForms() {
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
+                                            <div class="invalid-feedback">Please select Session.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1983,6 +2142,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Venue<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter venue of event" name = "venue" required>
+                                            <div class="invalid-feedback">Please provide Venue.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1991,6 +2151,7 @@ function generateSubForms() {
                                         <label class="col-sm-5 col-form-label">Proof(Certificate/Mail)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Proof (Certificate/Mail)']}"></span></label>
                                         <div class="col-sm-7">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2017,6 +2178,7 @@ function generateSubForms() {
                 tooltips.forEach(tooltip => {
                     new bootstrap.Tooltip(tooltip);
                 });
+                
             }
         }
     });
@@ -2026,4 +2188,9 @@ function generateSubForms() {
     }
 
     subformCount.textContent = `${totalForms} form${totalForms !== 1 ? 's' : ''}`;
+
+    // Initialize Bootstrap validation for all newly created forms
+    setTimeout(() => {
+        initializeBootstrapValidation();
+    }, 100);
 }
