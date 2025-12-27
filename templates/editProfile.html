@@ -87,7 +87,7 @@
                         <div class="row align-items-center">
                             <label for="top" class="col-sm-4 col-form-label">Name<span class="ms-1" style="color: red;">*</span></label>
                             <div class = "col-md-8">
-                                <input type="text" class="form-control custom-back" id="top" placeholder="Enter your name" value = {{key.name}} name="name" required>
+                                <input type="text" class="form-control custom-back" id="top" pattern="[A-Za-z\s]+" title="Number and special character are not allowed" placeholder="Enter your name" value = {{key.name}} name="name" required>
                                 <div class="invalid-feedback">Please enter your name.</div>
                             </div>
                         </div>
@@ -96,8 +96,8 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Mobile No<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
-                                <input type="number" class="form-control" placeholder="Enter mobile number" name = "mobile_no" value = {{key.contact_number}} required>
-                                <div class="invalid-feedback">Please enter your mobile number.</div>
+                                <input type="tel" class="form-control" maxlength="10" pattern="[6789][0-9]{9}" placeholder="Enter 10-Digits mobile number" name = "mobile_no" value = {{key.contact_number}} required>
+                                <div class="invalid-feedback">Please enter your mobile number with starting digit 6 onwards.</div>
                             </div>
                         </div>
                     </div>
@@ -155,7 +155,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Employee ID<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
-                                <input type="number" class="form-control" placeholder="Enter employee id" name = "emp_id" value = "{{key.emp_id}}" required>
+                                <input type="number" class="form-control" min="0" maxlength="6" oninput="if(this.value<0)this.value=0" placeholder="Enter employee id" name = "emp_id" value = "{{key.emp_id}}" required>
                                 <div class="invalid-feedback">Please enter your employee id.</div>
                             </div>
                         </div>
@@ -216,7 +216,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">University Name<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter university name" name = "univ_name" value = "{{key.univ_name}}" required>
+                                <input type="text" class="form-control" pattern="[A-Za-z\s]+" title="Numbers and special characters are not allowed" placeholder="Enter university name" name = "univ_name" value = "{{key.univ_name}}" required>
                                 <div class="invalid-feedback">Please enter your university name.</div>
                             </div>
                         </div>
@@ -225,7 +225,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Passing Year of Highest Degree<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
-                                <input type="number" class="form-control" placeholder="Enter passing year of highest degree" name = "pshd" value = "{{key.pshd}}" required>
+                                <input type="date" class="form-control" min="2000-01-01" placeholder="Enter passing year of highest degree" name = "pshd" value = "{{key.pshd}}" required>
                                 <div class="invalid-feedback">Please enter your passing year of highest degree.</div>
                             </div>
                         </div>
@@ -244,7 +244,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Date of Birth<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
-                                <input type="date" class="form-control" placeholder="Enter your dob" name = "dob" value="{{ key.dob|date:'Y-m-d' }}" required>
+                                <input type="date" class="form-control" min="1930-01-01" max="2001-12-31" placeholder="Enter your dob" name = "dob" value="{{ key.dob|date:'Y-m-d' }}" required>
                                 <div class="invalid-feedback">Please enter your date of birth.</div>
                             </div>
                         </div>
@@ -253,7 +253,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Joining Date<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
-                                <input type="date" class="form-control" placeholder="Enter your date of joining" name = "jd" value="{{ key.jd|date:'Y-m-d' }}" required>
+                                <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of joining" name = "jd" value="{{ key.jd|date:'Y-m-d' }}" required>
                                 <div class="invalid-feedback">Please enter your joining date.</div>
                             </div>
                         </div>
@@ -262,7 +262,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Promotion Date(If any)</label>
                             <div class="col-sm-8">
-                                <input type="date" class="form-control" placeholder="Enter your date of promotion" name = "pd" value = "{{ key.pd|date:'Y-m-d' }}">
+                                <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of promotion" name = "pd" value = "{{ key.pd|date:'Y-m-d' }}">
                                 <div class="invalid-feedback">Please enter your promotion date.</div>
                             </div>
                         </div>
@@ -272,8 +272,8 @@
                     <span>
                         <label for = "address" class = "form-label"><b>Address:-</b><span class = "ms-1" style = "color: red;">*</span></label>
                     </span>
-                    <textarea type = "text" class = "form-control mt-2 custom-back" rows = "4" id = "address" placeholder = "Enter your permanent Address" name = "address" oninput = "validateForm('add')" required>{{key.address}}</textarea>
-                    <div class="invalid-feedback">Please enter your address.</div>
+                    <textarea class = "form-control mt-2 custom-back" rows = "4" id = "address" placeholder = "Enter your permanent Address" name = "address" oninput = "validateForm('add')" required>{{key.address}}</textarea>
+                    <div class="invalid-feedback">Please enter a valid address (Letters, numbers, and , . / - allowed).</div>
                 </div>
                 <div class="row g-3 mt-2">
                     <div class="col-md-6">
@@ -388,7 +388,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Name of University(If PhD pursuing)</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter name of university" name = "phd_univ" value="{{key.phd_univ}}">
+                                <input type="text" class="form-control" placeholder="Enter name of university" name = "phd_univ" value="{{key.phd_univ}}" required>
                                 <div class="invalid-feedback">Please enter your university name.</div>
                             </div>
                         </div>
@@ -397,7 +397,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Date of registration</label>
                             <div class="col-sm-8">
-                                <input type="date" class="form-control" name = "phd_dor" value="{{ key.phd_dor|date:'Y-m-d' }}">
+                                <input type="date" class="form-control" name = "phd_dor" value="{{ key.phd_dor|date:'Y-m-d' }}" required>
                                 <div class="invalid-feedback">Please enter your date of registration.</div>
                             </div>
                         </div>
@@ -406,7 +406,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Number of research paper<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
-                                <input type="number" class="form-control" placeholder="Enter number of research Paper" name = "norp" value="{{key.norp}}" required>
+                                <input type="number" class="form-control" min="0" max="1000" placeholder="Enter number of research Paper" name = "norp" value="{{key.norp}}" required>
                                 <div class="invalid-feedback">Please enter number of research paper.</div>
                             </div>
                         </div>
@@ -459,6 +459,118 @@
             this.value = this.value.toUpperCase().replace(/\s/g, '');
             
             // Check HTML5 pattern validity
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    }
+    //Name validation handler
+    const nameInput = document.querySelector('input[name="name"]');
+    if (nameInput) {
+        nameInput.addEventListener('input', function() {
+            // Remove numbers and special chars instantly
+            this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+            validateField(this);
+        });
+    }
+    const univInput = document.querySelector('input[name="univ_name"]');
+    if (univInput) {
+        univInput.addEventListener('input', function() {
+            // Remove numbers and special chars instantly
+            this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+            validateField(this);
+        });
+    }
+
+    //Mobile Validation Logic ---
+    const mobileInput = document.querySelector('input[name="mobile_no"]');
+    if (mobileInput) {
+        mobileInput.addEventListener('input', function() {
+            // 1. Remove anything that is NOT a digit
+            this.value = this.value.replace(/\D/g, '');
+            //if the first digit is 5 or less, clear it or show error
+            if (this.value.length > 0 && !['6','7', '8', '9'].includes(this.value[0])) {
+                this.setCustomValidity("Mobile number must start with 7, 8, or 9.");
+            } else if (this.value.length > 0 && this.value.length < 10) {
+                this.setCustomValidity("Number must be exactly 10 digits.");
+            } else {
+                this.setCustomValidity(""); // Reset validity if it passes
+            }
+
+            // 3. Toggle Bootstrap validation classes
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    }
+
+    // --- Address Validation Logic ---
+    const addressArea = document.querySelector('textarea[name="address"]');
+    if (addressArea) {
+        addressArea.addEventListener('input', function() {
+            // removes@, #, $, %, ^, <, >,
+            const regex = /[^a-zA-Z0-9\s,.\/\-]/g;
+            this.value = this.value.replace(regex, '');
+
+            // Standard Bootstrap validation toggle
+            if (this.value.trim().length > 5) { 
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                this.setCustomValidity(""); 
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+                this.setCustomValidity("Invalid");
+            }
+        });
+    }
+
+    // --- Passing Year Date Validation ---
+    const dateInput = document.querySelector('input[name="pshd"]');
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        
+        dateInput.setAttribute('max', today);
+        dateInput.addEventListener('input', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    }
+
+    // --- Validation for jd and pd ---
+    const today = new Date().toISOString().split('T')[0];
+    const restrictedDates = document.querySelectorAll('input[name="jd"], input[name="pd"]');
+
+    restrictedDates.forEach(input => {
+        input.setAttribute('max', today);
+        input.addEventListener('input', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    });
+
+    //validation for dob selection
+    const dobInput = document.querySelector('input[name="dob"]');
+    if (dobInput) {
+        dobInput.addEventListener('input', function() {
             if (this.checkValidity()) {
                 this.classList.remove('is-invalid');
                 this.classList.add('is-valid');
