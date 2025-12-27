@@ -7,8 +7,8 @@
         white-space: nowrap;
     }
 </style>
-<div class="col">
-    <div class="container ms-4 mt-4 mb-3" style = "width: auto;">
+<div class="col-10">
+    <div class="container ms-5 mt-4 mb-3">
         <script src="/static/dataTables.js"></script>
         <script src="/static/dataTables.bootstrap5.js"></script>
         <div class="row d-flex justify-content-end">
@@ -159,8 +159,8 @@
                             <div style="display: flex;">
                                 <div class="mb-2">
                                     <label for="updated_email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="updated_email" value="" placeholder="Enter email" name="updated_email" required>
-                                    <div class="invalid-feedback">Please enter valid email.</div>
+                                    <input type="email" class="form-control" id="updated_email" value="" title="Please use your institutional email ending in @skit.ac.in" pattern="[a-z0-9._%+-]+@skit\.ac\.in$" placeholder="username@skit.ac.in" name="updated_email" required>
+                                    <div class="invalid-feedback">Please enter a valid institutional email (ending with @skit.ac.in)</div>
                                 </div>
                             </div>
                             <div style="display: flex;">
@@ -311,6 +311,23 @@
         scrollY: '260px',
         scrollCollapse: true
     });
+    // --- Institutional Email Validation Logic ---
+    const emailInput = document.querySelector('input[name="updated_email"]');
+    if (emailInput) {
+        emailInput.addEventListener('input', function() {
+            // Force lowercase for consistency
+            this.value = this.value.toLowerCase();
+
+            // Check against the HTML5 pattern
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    }
 
 (function() {
     'use strict'
