@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col-10">
+    <div class="container ms-5">
+        <div class="row" style="--bs-gutter-x:0;">
+        {% for detail in fac_data %}
+            <div class="col-2 m-3">
+                <div class="card p-3" style = "width: 202px;">
+                    <img class="card-img-top" src="/media/uploads/faculty_documents/profile_picture/{{detail.profile_picture}}" alt="Profile Picture" style = "width: 150px; height: 150px; margin-left: 10px;">
+                    <div class="card-body text-center">
+                       <h5 class="card-title">{{detail.name}}</h5>
+                       <h5 class="card-title">{{detail.get_designation_display}}</h5>
+                       <p class="card-text">Email: {{detail.email}}</p>
+                       <p>Contact No.: {{detail.contact_number}}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

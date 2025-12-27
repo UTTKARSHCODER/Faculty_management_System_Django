@@ -3,10 +3,13 @@ from firstWebsite import views
 
 urlpatterns = [
     path('', views.index, name = "home"),
+    path('student', views.student, name = "student"),
+    path('faculty', views.faculty, name = "faculty"),
     path('profile', views.profile, name = "profile"),
     path('student_directory', views.student_directory, name = "student-directory"),
     path('about', views.about, name = "about"),
-    path('batch/<str:pk>', views.stu_card_details, name = "batch"),
+    path('student/<str:pk>', views.stu_card_details, name = "batch"),
+    path('faculty/<str:pk>', views.fac_card_details, name = "fac"),
     path('login', views.login_page, name = "login"),
     path('auth/google/gsi-verify/', views.gsi_verify_login, name='gsi_verify_login'),
     path('logout', views.custom_logout, name='logout'),

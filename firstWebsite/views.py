@@ -1,16 +1,14 @@
 import base64
 import io
-from functools import wraps, total_ordering
+from functools import wraps
 
 from django.contrib import messages
 from django.db.models import Count
-from django.db.models import Q
 from django.forms import model_to_dict
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.urls import reverse
 from tablib import Dataset
 import pandas as pd
-from unicodedata import category
 
 from MyFirstDjangoWebsite import settings
 from firstWebsite.modals import Faculty, Faculty_participation_data, mooc_course, events, \
@@ -321,6 +319,7 @@ def save_all_forms(request, pk):
             faculty_instance.name = request.POST.get('name')
             faculty_instance.contact_number = request.POST.get('mobile_no')
             faculty_instance.email = request.POST.get('email')
+            faculty_instance.gender = request.POST.get('optradio')
             faculty_instance.department = request.POST.get('department')
             faculty_instance.emp_id = request.POST.get('emp_id')
             faculty_instance.designation = request.POST.get('designation')
@@ -334,11 +333,19 @@ def save_all_forms(request, pk):
             pd = request.POST.get('pd')
             if pd == '':
                 faculty_instance.pd = None
-            faculty_instance.jr = request.FILES.get('jr')
-            faculty_instance.of = request.FILES.get('ol')
-            faculty_instance.hdc = request.FILES.get('hdc')
-            faculty_instance.ss = request.FILES.get('ss')
-            faculty_instance.certificate = request.FILES.get('awards')
+            faculty_instance.address = request.POST.get('address')
+            if request.FILES.get('profile_picture'):
+                faculty_instance.profile_picture = request.FILES.get('profile_picture')
+            if request.FILES.get('jr'):
+                faculty_instance.jr = request.FILES.get('jr')
+            if request.FILES.get('ol'):
+                faculty_instance.of = request.FILES.get('ol')
+            if request.FILES.get('hdc'):
+                faculty_instance.hdc = request.FILES.get('hdc')
+            if request.FILES.get('ss'):
+                faculty_instance.ss = request.FILES.get('ss')
+            if request.FILES.get('awards'):
+                faculty_instance.certificate = request.FILES.get('awards')
             faculty_instance.phd_univ = request.POST.get('phd_univ')
             phd_dor = request.POST.get('phd_dor')
             if phd_dor == '':
@@ -349,7 +356,11 @@ def save_all_forms(request, pk):
             faculty_instance = Faculty.objects.get(email=request.POST.get('existing_email'))
             faculty_instance.name = request.POST.get('updated_name')
             faculty_instance.contact_number = request.POST.get('updated_number')
-            faculty_instance.email = request.POST.get('updated_email')
+            if request.POST.get('updated_email').endswith('@skit.ac.in'):
+                faculty_instance.email = request.POST.get('updated_email')
+            else:
+                messages.error(request,'Mail should always end with @skit.ac.in')
+                return redirect(reverse('directory'))
             faculty_instance.department = request.POST.get('updated_department')
             faculty_instance.emp_id = request.POST.get('updated_id')
             faculty_instance.status = request.POST.get('updated_status')
@@ -358,7 +369,11 @@ def save_all_forms(request, pk):
         elif pk == 15:
             emp_id = request.POST.get('emp_id')
             emp_name = request.POST.get('name_per')
-            email = request.POST.get('new_email').strip()
+            if request.POST.get('new_email').strip().endswith('@skit.ac.in'):
+                email = request.POST.get('new_email').strip()
+            else:
+                messages.error(request, 'Mail should always end with @skit.ac.in')
+                return redirect(reverse('directory'))
             department = request.POST.get('selected_department')
             con_no = request.POST.get('contact_number')
             status = request.POST.get('selected_status')
@@ -459,14 +474,26 @@ def custom_logout(request):
         return redirect(reverse('home'))
     return redirect(reverse('about'))
 
-stu_data = Student_Directory.objects.all()
 # Create your views here.
+
 def index(request):
+    return render(request,'index.html')
+
+def student(request):
     stu_dir_instance = Student_Directory.objects.values('batch').annotate(
         count=Count('id')
     ).order_by('batch')
     context = {'dir_ins':stu_dir_instance}
-    return render(request, 'index.html',context = context)
+    return render(request, 'student_card_details.html',context = context)
+
+def faculty(request):
+    fac_dir_instance = Faculty.objects.values('department').annotate(
+        count=Count('id')
+    ).order_by('department')
+    for item in fac_dir_instance:
+        print("Department send from faculty is: ",item['department'])
+    context = {'dir_ins':fac_dir_instance}
+    return render(request, 'faculty_card_details.html',context = context)
 
 @session_login_required
 def profile(request):
@@ -497,10 +524,15 @@ def about(request):
 @session_login_required
 def stu_card_details(request,pk):
     batches = Student_Directory.objects.filter(batch = pk)
-
-
     context = {'stu_data': batches }
     return render(request,'batch_details.html',context=context)
+
+@session_login_required
+def fac_card_details(request,pk):
+    print("Value receieved in card details is: ",pk)
+    department = Faculty.objects.filter(department = pk)
+    context = {'fac_data': department }
+    return render(request,'faculty_details.html',context=context)
 
 def login_page(request):
     return render(request,'login.html')
@@ -569,7 +601,7 @@ def download(request):
     if request.method == "POST":
         if request.POST.get('file_type') == 'excel':
             CHOICES_FIELDS = ['department', 'designation', 'aos', 'hq', 'status', 'role', 'gender']
-            files_field = ['jr', 'of', 'hdc', 'ss', 'certificate']
+            files_field = ['profile_picture', 'jr', 'of', 'hdc', 'ss', 'certificate']
             values = request.POST.getlist('optcheck[]')
             result_instance = Faculty.objects.filter(department__in=values,status="R")
 
@@ -586,21 +618,23 @@ def download(request):
 
                     display_method = getattr(result, f'get_{field_name}_display')
 
-
                     row_dict[field_name] = display_method()
 
                 for field in files_field:
-                    hyperlink_text = "http://127.0.0.1:8000/media/" + str(row_dict[field])
+                    hyperlink_text = "https://uttkarsh007.pythonanywhere.com/media/" + str(row_dict[field])
                     hyperlink_formula = f'=HYPERLINK("{hyperlink_text}", "View File online")'
                     row_dict[field] = hyperlink_formula
 
-
                 data.append(row_dict)
-            df = pd.DataFrame(data)
 
+            df = pd.DataFrame(data)
+            #For CSV
+            json_data = df.to_json(orient='records', date_format='iso')
+            request.session['csv_data'] = json_data
+            #For Excel
             output = io.BytesIO()
             writer = pd.ExcelWriter(output, engine='xlsxwriter')
-            df.to_excel(writer,index = False,sheet_name="faculty_report")
+            df.to_excel(writer,index = False,sheet_name="faculty_report",header=['S.No.','Name','Contact Number','Email','Department','Gender','Address','Employee ID','Role','Status','Desigantion','Area of Specialization','Highest Qualification','University Name(highest degree)','Passing Year of Highest Degree','PAN NO.','Date of birth','Joining Data','Promotion Date','Profile Picture(Link)','Joining Report','Offer Letter','Salary Slip','Highest Degree Certificate','Extra Certificate','PHD pursuing University Name','PHD Date of Registration','Number of research paper'])
 
             writer.close()
             excel_data = base64.b64encode(output.getvalue())
@@ -617,6 +651,7 @@ def download(request):
             )
             response['Content-Disposition'] = 'attachment; filename="faculty_report.xlsx"'
             return response
+
         elif request.GET.get('file_type') == 'excel_dir':
             result_instance = Faculty.objects.all()
 
@@ -672,5 +707,8 @@ def download(request):
             )
             response['Content-Disposition'] = 'attachment; filename="student_directory.xlsx"'
             return response
+
+        elif request.GET.get('file_type') == 'csv_repo' or request.GET.get('file_type') == 'csv_dir' or request.GET.get('file_type') == 'csv_stu_dir':
+            return render(request,'page_under_construction.html')
 
     return redirect(reverse('about'))

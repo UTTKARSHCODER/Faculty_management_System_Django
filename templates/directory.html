@@ -11,6 +11,10 @@
     <div class="container ms-5 mt-4 mb-3">
         <script src="/static/dataTables.js"></script>
         <script src="/static/dataTables.bootstrap5.js"></script>
+<!--        <div class="container-msg text-center">-->
+<!--            <div class = "check">-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="row d-flex justify-content-end">
             <button type="button" class="btn btn-success mt-2 me-2 d-flex" data-bs-toggle="modal"
                 data-bs-target="#add_email" style="width: 117px;"><i
@@ -59,7 +63,7 @@
                 <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">Download</button>
                 <ul class="dropdown-menu">
                     <li id="excel-download"><a class="dropdown-item" href = "/download?file_type=excel_dir">Excel</a></li>
-                    <li id="csv-download"><a class="dropdown-item" href="assets/php/download.php?file_type=csv1">CSV</a>
+                    <li id="csv-download"><a class="dropdown-item" href="/download?file_type=csv_dir">CSV</a>
                     </li>
                 </ul>
             </div>

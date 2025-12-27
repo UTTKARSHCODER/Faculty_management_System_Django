@@ -1,0 +1,43 @@
+function showMessages(message,tags) {
+    let div1 = document.createElement("div");
+    let div2 = document.createElement("div");
+    div1.className = "d-flex justify-content-end";
+
+    div1.style.position = "fixed";
+    div1.style.top = "20px";   // Distance from top of screen
+    div1.style.right = "20px"; // Distance from right of screen
+    div1.style.zIndex = "1000";
+
+    div1.style.opacity = "0";
+    div1.style.transform = "translateX(50px)";
+
+    // 2. Add Transition: Smoothly animate all changes over 0.5 seconds
+    div1.style.transition = "all 0.5s ease";
+
+    div2.className = `alert alert-${tags} shadow`;
+    div2.innerHTML = `<i class="bi bi-exclamation-circle-fill me-2"></i> ${message}`;
+    div2.style.width = "350px";
+    div2.classList.add(`text-${tags}`);
+    div2.style.backgroundColor = "white";
+    div1.appendChild(div2);
+    document.body.appendChild(div1);
+
+    setTimeout(() => {
+        div1.style.opacity = "1";        // Make visible
+        div1.style.transform = "translateX(0)"; // Move to original position
+    }, 10);
+
+
+    // --- TRIGGER EXIT ANIMATION ---
+    setTimeout(() => {
+        // 1. Slide back out and fade
+        div1.style.opacity = "0";
+        div1.style.transform = "translateX(50px)";
+
+        // 2. Remove from HTML after animation finishes (0.5s)
+        setTimeout(() => {
+            div1.remove();
+        }, 500);
+
+    }, 50000);
+}

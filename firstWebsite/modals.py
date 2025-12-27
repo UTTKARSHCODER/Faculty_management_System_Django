@@ -132,6 +132,7 @@ class Faculty(models.Model):
     dob = models.DateField(default=datetime.date(1970, 1, 1))
     jd = models.DateField(default=datetime.date(1970, 1, 1))
     pd = models.DateField(null=True,blank=True)
+    profile_picture = models.FileField(upload_to='uploads/faculty_documents/profile_picture',default=None,null = True)
     jr = models.FileField(upload_to='uploads/faculty_documents/joining_report/',default=None,null = True)
     of = models.FileField(upload_to='uploads/faculty_documents/offer_letter/',default=None,null = True)
     ss = models.FileField(upload_to='uploads/faculty_documents/salary_slip/',default=None,null = True)
