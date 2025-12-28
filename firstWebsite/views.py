@@ -405,9 +405,9 @@ def upload_excel(request, pk):
             columns=imported_data.headers
         )
         if pk == 0:
-
+            df.columns = df.columns.str.lower().str.replace(' ', '_').str.strip()
             for data in imported_data.dict:
-                value = Student_Directory(name=data['name'],roll_no=data['roll_no'],college_id=data['college_id'],email=data['email_id'],student_phone_no=data['student_phone_no'],parent_phone_no=data['parent_phone_no'],address=data['address'])
+                value = Student_Directory(name=data['name'],roll_no=data['roll_no'],college_id=data['college_id'],email=data['email'],student_phone_no=data['student_phone_no'],parent_phone_no=data['parent_phone_no'],address=data['address'])
                 value.save()
 
             # messages.success(request,'We are glad to share that your excel file is uploaded successfully!')
