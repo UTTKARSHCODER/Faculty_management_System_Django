@@ -138,6 +138,15 @@
                     </div>
                     <div class="col-md-4">
                         <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Date of Birth<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" min="1930-01-01" max="2001-12-31" placeholder="Enter your dob" name = "dob" value="{{ key.dob|date:'Y-m-d' }}" id = "dob" required>
+                                <div class="invalid-feedback">Please enter your date of birth.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Department<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
                                 <select class="form-select custom-back-select" name="department" id="department" value = "{{key}}" required>
@@ -221,15 +230,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Passing Year of Highest Degree<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="date" class="form-control" min="2000-01-01" placeholder="Enter passing year of highest degree" name = "pshd" value = "{{key.pshd}}" required>
-                                <div class="invalid-feedback">Please enter your passing year of highest degree.</div>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="col-md-4 " style = "margin-top: 1.7rem;">
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Pan No.<span class="ms-1" style="color: red;">*</span></label>
@@ -242,10 +243,42 @@
                     </div>
                     <div class="col-md-4">
                         <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Date of Birth<span class="ms-1" style="color: red;">*</span></label>
+                            <label class="col-sm-4 col-form-label" for = "pshd">Passing Year of Highest Degree<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
-                                <input type="date" class="form-control" min="1930-01-01" max="2001-12-31" placeholder="Enter your dob" name = "dob" value="{{ key.dob|date:'Y-m-d' }}" required>
-                                <div class="invalid-feedback">Please enter your date of birth.</div>
+                                <select class = "form-control" id = "pshd" name = "pshd" required>
+                                <script>
+                                    function populateYearOptions(dobValue) {
+                                        const selectYear = document.getElementById('pshd');
+                                        const dateObject = new Date(dobValue);
+                                        const yearBirth = dateObject.getFullYear();
+                                        const val = {{ key.pshd }};
+                                        if (val >= yearBirth + 18) {
+                                            selectYear.innerHTML = '<option value = "'+val+'"selected>'+val+'</option>';
+                                        } else {
+                                            selectYear.innerHTML = '<option value = ""selected disabled>Select Year</option>';
+                                        }
+
+                                        if(!dobValue) {
+                                            return;
+                                        }
+
+                                        for (let year = yearBirth + 18; year <= 2025; year++) {
+                                            const option = document.createElement('option');
+                                            option.value = year;
+                                            option.textContent = year;
+                                            selectYear.appendChild(option);
+                                        }
+                                    }
+
+                                    const initialDob = document.getElementById('dob').value;
+                                    populateYearOptions(initialDob);
+
+                                    document.getElementById('dob').addEventListener('input', function() {
+                                        const updatedDob = this.value;
+                                        populateYearOptions(updatedDob);
+                                    });
+                                </script>
+                                </select>
                             </div>
                         </div>
                     </div>
