@@ -16,11 +16,13 @@
     <div class="container ms-5 mt-3 mb-3">
         <script src="/static/dataTables.js"></script>
         <script src="/static/dataTables.bootstrap5.js"></script>
+        {% if user == 'ad' or user == 'spa' %}
         <div class="row d-flex justify-content-end">
             <button type="button" class="btn btn-success mt-2 me-2 d-flex" data-bs-toggle="modal"
                 data-bs-target="#add_email" style="width: 117px;"><i
                     class="fa-solid fa-add mt-1"></i>Add Email</button>
         </div>
+        {% endif %}
         <table class="table table-hover mt-3" id="student_directory1">
         <thead class = "table-dark">
             <tr>
@@ -47,19 +49,21 @@
             {% endfor %}
         </tbody>
       </table>
+        {% if user == 'ad' or user == 'spa' %}
         <div class="d-flex justify-content-center mb-3 mt-3">
-        <div class="dropdown">
-            <!-- <i class = "fa-solid fa-file-arrow-down dropdown-toggle" data-bs-toggle="dropdown"></i> -->
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#upload_file">Upload Excel
-                File</button>
-            <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">Download</button>
-            <ul class="dropdown-menu">
-                <li id="excel-download"><a class="dropdown-item" href="/download?file_type=excel_stu_dir">Excel</a></li>
-                <li id="csv-download"><a class="dropdown-item" href="/download?file_type=csv_stu_dir">CSV</a>
-                </li>
-            </ul>
+            <div class="dropdown">
+                <!-- <i class = "fa-solid fa-file-arrow-down dropdown-toggle" data-bs-toggle="dropdown"></i> -->
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#upload_file">Upload Excel
+                    File</button>
+                <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">Download</button>
+                <ul class="dropdown-menu">
+                    <li id="excel-download"><a class="dropdown-item" href="/download?file_type=excel_stu_dir">Excel</a></li>
+                    <li id="csv-download"><a class="dropdown-item" href="/download?file_type=csv_stu_dir">CSV</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
+        {% endif %}
     <form action="/upload_excel/0" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="modal fade" id="upload_file" tabindex="-1">

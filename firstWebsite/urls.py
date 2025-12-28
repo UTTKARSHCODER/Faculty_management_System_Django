@@ -24,4 +24,6 @@ urlpatterns = [
     path('deleteUser',views.deleteuser,name="deleteUser"),
     path('faculty_report',views.faculty_report,name="faculty_report"),
     path('download',views.download,name="download"),
+    path('puc',views.page_under_construction,name="page_under_construction"),
+    path('faq',views.faq,name="FaQ"),
 ]

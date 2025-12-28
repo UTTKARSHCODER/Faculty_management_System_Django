@@ -74,6 +74,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% if user == 'ad' or user == 'spa' %}
             <div class = "mt-3">
                 <h5 style = "color: gray; text-align: center;">Select the department:</h5>
                 <div class = "d-flex justify-content-center">
@@ -109,6 +110,7 @@
                     </ul>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>

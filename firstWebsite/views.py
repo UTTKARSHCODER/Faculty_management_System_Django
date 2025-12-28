@@ -514,8 +514,9 @@ def profile(request):
 
 @session_login_required
 def student_directory(request):
+    modal = request.session.get('topLeftBar')
     stu_data = Student_Directory.objects.all()
-    context = {'stu_data': stu_data}
+    context = {'stu_data': stu_data, 'user': modal}
     return render(request,'student_directory.html',context = context)
 
 def about(request):
@@ -582,7 +583,7 @@ def directory(request):
 
                 value = Faculty.objects.all()
 
-                context = { 'data': value }
+                context = { 'data': value, 'user': modal }
                 return render(request,'directory.html',context=context)
             else:
                 return render(request,'about.html')
@@ -592,8 +593,9 @@ def directory(request):
 
 @session_login_required
 def faculty_report(request):
+    modal = request.session.get('topLeftBar')
     registerd_faculties = Faculty.objects.filter(status="R")
-    context = {'rf' : registerd_faculties}
+    context = {'rf' : registerd_faculties, 'user': modal}
     return render(request,'faculty_report.html',context)
 
 @session_login_required
@@ -712,3 +714,9 @@ def download(request):
             return render(request,'page_under_construction.html')
 
     return redirect(reverse('about'))
+
+def faq(request):
+    return render(request,'FaQ.html')
+
+def page_under_construction(request):
+    return render(request,'page_under_construction.html')

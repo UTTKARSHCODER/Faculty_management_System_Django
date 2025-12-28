@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="col-10">
+    <div class="container mt-3 mb-3">
+      <h2 class="mb-4 text-center mb-5">Faculty Information Portal - FAQs</h2>
+      <div class="accordion" id="faqAccordion">
+
+        <!-- 1. -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+              How do I log in to the Faculty Portal?
+            </button>
+          </h2>
+          <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">Use your faculty ID and password provided by the admin to log in.</div>
+          </div>
+        </div>
+
+        <!-- 2.  -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+              How can I update my faculty profile?
+            </button>
+          </h2>
+          <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">Log in to your portal website ,navigate to profile section then click on purple edit profile button right next to profile picture. </div>
+          </div>
+        </div>
+
+        <!-- 3. -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+              How can I fill any FDP form?
+            </button>
+          </h2>
+          <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">Go to ‘FDP Forms’ section and select your desired FDP form. You can fill multiple FDP forms keeping your common information static which in turn reduces your time a lot.</div>
+          </div>
+        </div>
+
+        <!-- 4. Feedback -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingFour">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+              Is there any way where I can keep track of what all forms are filled ?
+            </button>
+          </h2>
+          <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">Yes, Of Course! For that, there is a dedicated tab named 'Progress' Tab. Here, you can actually track which all forms are filled and which are remaining.</div>
+          </div>
+        </div>
+        <!-- 5.-->
+         <div class="accordion-item">
+          <h2 class="accordion-header" id="headingFive">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+              Can I download the data of all faculty memebers as admin ?
+            </button>
+          </h2>
+          <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">Yes as a admin you are given privilage that you can download the data of faculties as in Excel or csv format.</div>
+          </div>
+        </div>
+        <!-- 6.-->
+         <div class="accordion-item">
+          <h2 class="accordion-header" id="headingSix">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+              Can I also download the data of students ?
+            </button>
+          </h2>
+          <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">Yes you can also download the data of students.</div>
+          </div>
+        </div>
+
+        <!-- 7. -->
+         <div class="accordion-item">
+          <h2 class="accordion-header" id="headingSeven">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+              Can I update, delete or add new faculty or student as a admin ?
+            </button>
+          </h2>
+          <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">Yes as a admin you been provided with this function to add, delete or Update any user.</div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+</div>
+
+{% endblock %}

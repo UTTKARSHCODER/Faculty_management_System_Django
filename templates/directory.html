@@ -15,11 +15,13 @@
 <!--            <div class = "check">-->
 <!--            </div>-->
 <!--        </div>-->
+        {% if user == 'ad' or user == 'spa' %}
         <div class="row d-flex justify-content-end">
             <button type="button" class="btn btn-success mt-2 me-2 d-flex" data-bs-toggle="modal"
                 data-bs-target="#add_email" style="width: 117px;"><i
                     class="fa-solid fa-add mt-1"></i>Add Email</button>
         </div>
+        {% endif %}
 <!--        <div class = "d-flex justify-content-end">-->
 <!--            <div class = "col-4">-->
 <!--                <h5 style="font-size: 13px;">NR = "Not Registered"</h5>-->
@@ -34,9 +36,11 @@
                   <th>Email ID</th>
                   <th>Department</th>
                   <th>Contact Number</th>
+                  {% if user == 'ad' or user == 'spa' %}
                   <th>Status</th>
                   <th>Edit</th>
                   <th>Delete</th>
+                  {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -48,13 +52,16 @@
                   <td>{{value.email}}</td>
                   <td>{{value.get_department_display}}</td>
                   <td>{{value.contact_number}}</td>
+                  {% if user == 'ad' or user == 'spa' %}
                   <td>{{value.get_status_display}}</td>
                   <td><a href = "#" data-bs-toggle="modal" data-bs-target="#editDetails" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" data-contact-number="{{value.contact_number}}" data-status="{{value.status}}" data-department = "{{value.department}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
                   <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                  {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% if user == 'ad' or user == 'spa' %}
         <div class="d-flex justify-content-center mb-3 mt-3">
             <div class="dropdown">
                 <!-- <i class = "fa-solid fa-file-arrow-down dropdown-toggle" data-bs-toggle="dropdown"></i> -->
@@ -68,6 +75,7 @@
                 </ul>
             </div>
         </div>
+        {% endif %}
         <form action="/upload_excel/1" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
             <div class="modal fade" id="upload_file" tabindex="-1">
