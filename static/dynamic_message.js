@@ -3,11 +3,6 @@ function showMessages(message,tags) {
     let div2 = document.createElement("div");
     div1.className = "d-flex justify-content-end";
 
-    div1.style.position = "fixed";
-    div1.style.top = "20px";   // Distance from top of screen
-    div1.style.right = "20px"; // Distance from right of screen
-    div1.style.zIndex = "1000";
-
     div1.style.opacity = "0";
     div1.style.transform = "translateX(50px)";
 
@@ -20,7 +15,7 @@ function showMessages(message,tags) {
     div2.classList.add(`text-${tags}`);
     div2.style.backgroundColor = "white";
     div1.appendChild(div2);
-    document.body.appendChild(div1);
+    toastContainer.appendChild(div1);
 
     setTimeout(() => {
         div1.style.opacity = "1";        // Make visible
@@ -39,5 +34,5 @@ function showMessages(message,tags) {
             div1.remove();
         }, 500);
 
-    }, 4000);
+    }, 3000);
 }

@@ -106,11 +106,11 @@
         color: #198754;
     }
 </style>
-<div class="col">
+<div class="col-10">
     <div class="conatiner">
-    {% if form_number == 0 %}
+    {% if form_number == 16 %}
         <div class="row form-row-non-tech">
-            <form action="/save_all_forms/0" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
+            <form action="/save_all_forms/16" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
                 <div class="row g-3">
                     <div class="col-md-4">
@@ -876,7 +876,8 @@
                                     <label class="form-check-label" for="radio23-${i}"><b>Other</b></label>
                                  </div>
                              </div>
-                                <div class="invalid-feedback">Please select at least one option.</div>
+                             <div class="invalid-feedback">Please select at least one option.</div>
+                         </div>
                     </div>
                  </div>
             </div>

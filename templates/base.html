@@ -94,11 +94,13 @@
                         <a href="/" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == home or '/student/' in request.path or '/faculty/' in request.path or request.path == stu or request.path == fac %} active {% endif %}" id = "home">Home</li></a>
                         {% if request.session.topLeftBar %}
                         <a href="/profile" style = "text-decoration: none;"><li class = "nav-item text-white {% if request.path == profile or request.path == editProfile %} active {% endif %}" id = "profile">Profile</li></a>
+                        {% if request.session.topLeftBar == 'ad' or request.session.topLeftBar == 'fa' or request.session.topLeftBar == 'spa' %}
                         <a href="/student_directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == student_directory %} active {% endif %}" id = "student_directory">Student Directory</li></a>
                         <a href="/fdp" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == fdp or 'all_forms' in request.path %} active {% endif %}" id = "faculty_development">FDP Forms</li></a>
                         <a href="/directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == directory %} active {% endif %}" id = "directory">Directory</li></a>
                         <a href="/faculty_report" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == faculty_report %} active {% endif %}" id = "faculty_report">Faculty Report</li></a>
                         <a href="/progress" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == progress %} active {% endif %}" id = "progress">Progress</li></a>
+                        {% endif %}
                         {% endif %}
                         <a href="/about" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == about %} active {% endif %}" id = "about_us">About Us</li></a>
                     </ul>
@@ -108,6 +110,7 @@
 
         {% endblock %}
     </div>
+        <script src="/static/dynamic_message.js"></script>
         <script>
             document.getElementById('forceLogoutRedirect').addEventListener('click', function(event) {
                 // 1. Let Bootstrap do its thing (close the dropdown menu)
@@ -122,31 +125,50 @@
                     window.location.href = targetUrl;
                 }, 50); // 50 milliseconds is usually enough
             });
-            document.addEventListener("DOMContentLoaded", function(){
-                // Create an empty array
-                let djangoMessages = [];
+            let toastContainer = document.getElementById('toast-container');
 
-                // Loop through messages and push them into the JS array
-                {% for message in messages %}
-                    djangoMessages.push({
-                        "tag": "{{ message.tags|escapejs }}",
-                        "text": "{{ message|escapejs }}"
-                    });
-                {% endfor %}
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
 
-                // Now you can use them in your code
-                console.log(djangoMessages);
+                // Position the CONTAINER, not the messages
+                toastContainer.style.position = "fixed";
+                toastContainer.style.top = "20px";
+                toastContainer.style.right = "20px";
+                toastContainer.style.zIndex = "1050";
 
-                // Example: Trigger your alert for each message
-                djangoMessages.forEach(msg => {
-                    // Call your function to show the red alert
+                // Ensure messages stack vertically
+                toastContainer.style.display = "flex";
+                toastContainer.style.flexDirection = "column";
+                toastContainer.style.gap = "0px"; // Space between messages
+
+                document.body.appendChild(toastContainer);
+            }
+            // Create an empty array
+            let djangoMessages = [];
+
+            // Loop through messages and push them into the JS array
+            {% for message in messages %}
+                djangoMessages.push({
+                    "tag": "{{ message.tags|escapejs }}",
+                    "text": "{{ message|escapejs }}"
+                });
+            {% endfor %}
+
+            // Now you can use them in your code
+            console.log(djangoMessages);
+
+            // Example: Trigger your alert for each message
+            djangoMessages.forEach((msg, index) => {
+                // Call your function to show the red alert
+                setTimeout(() => {
                     if(msg.tag.includes('error')) {
                         showMessages(msg.text,'danger');
                     } else {
                         showMessages(msg.text,msg.tag);
                     }
                     console.log(msg.tag);
-                });
+                }, index * 300);
             });
 
         </script>
@@ -163,7 +185,7 @@
             margin: 4px;
         }
     </style>
-    <script src="/static/dynamic_message.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     {% include 'footer.html' %}
 
