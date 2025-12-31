@@ -221,7 +221,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label for="top-${i}" class="col-sm-4 col-form-label">Title Of Program<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
-                                            <input type="text" class="form-control custom-back" id="top" placeholder="Enter title of the program" name="top" required>
+                                            <input type="text" class="form-control custom-back" pattern="[A-Za-z\s]+" title="Numbers and special characters are not allowed" id="top-${i}" placeholder="Enter title of the program" name="top">
                                             <div class="invalid-feedback">Please provide a program title.</div>
                             
                                         </div>
@@ -337,7 +337,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">No. of days<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter number of days" name = "num_of_days" required>
+                                            <input type="number" class="form-control" min="0" placeholder="Enter number of days" name = "num_of_days" required>
                                             <div class="invalid-feedback">Please provide number of days.</div>
                                         </div>
                                         </div>

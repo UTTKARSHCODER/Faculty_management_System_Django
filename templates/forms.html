@@ -905,6 +905,115 @@
                 <div class="empty-state">Enter quantities above to generate sub-forms</div>
             </div>
         </div>
+        <script>
+    document.addEventListener('keydown', function(event) {
+        const target = event.target;
+        if (target.tagName !== 'INPUT') return;
+
+        // Numeric Fields: Block '-', 'e', 'E', '.', '+' to ensure positive integers only
+        const numericNames = [
+            'num_of_days', 'nop', 'nossp', 'nosmp', 'dop', 
+            'amount', 'pn', 'nos', 'doe'
+        ];
+        if (target.type === 'number' || numericNames.includes(target.name)) {
+            if (['-', 'e', 'E', '.', '+'].includes(event.key)) {
+                event.preventDefault();
+            }
+        }
+
+        const alphabeticNames = ['top', 'organizer', 'sponser', 'noa', 'noe', 'gc', 'venue'];
+        if (alphabeticNames.includes(target.name)) {
+            const functionalKeys = ['Backspace', 'Tab', 'Delete', 'ArrowLeft', 'ArrowRight', 'Enter'];
+            if (functionalKeys.includes(event.key)) return;
+            
+            // Regex: Only allow A-Z, a-z, and Space
+            if (!/^[a-zA-Z\s]$/.test(event.key)) {
+                event.preventDefault();
+            }
+        }
+    });
+
+    document.addEventListener('input', function(event) {
+        const input = event.target;
+        if (input.tagName !== 'INPUT') return;
+
+        const cursorPosition = input.selectionStart;
+        const originalLength = input.value.length;
+        const fieldName = input.name;
+
+        const numericNames = ['num_of_days', 'nop', 'nossp', 'nosmp', 'dop', 'amount', 'pn', 'nos', 'doe'];
+        if (input.type === 'number' || numericNames.includes(fieldName)) {
+            input.value = input.value.replace(/[^0-9]/g, '');
+            if (input.getAttribute('min') !== '0') input.setAttribute('min', '0');
+            if (parseInt(input.value) < 0) input.value = '0';
+        }
+
+        // Pure Alphabetic Fields (Remove everything except letters and spaces)
+        const alphabeticNames = ['top', 'organizer', 'sponser', 'noa', 'noe', 'gc', 'venue'];
+        if (alphabeticNames.includes(fieldName)) {
+            input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+        }
+
+        // Includes IDs, Titles, Journal info, DOI, and Links
+        const mixedNames = [
+            'topdpo', 'adcc', 'remarks', 'nosa', 'cd', 'gd', 'awpsfooe', 
+            'noaa', 'paf', 'ao', 'prize', 'remark', 'nofa', 'noj', 
+            'nop', 'vi', 'isnp', 'isno', 'doi', 'lwj', 'lap', 
+            'lrsj', 'aiop', 'aitp', 'details', 'tob', 'ens', 'urns', 
+            'tod', 'nof', 'ag', 'link', 'toe', 'sa'
+        ];
+        if (mixedNames.includes(fieldName) || fieldName.startsWith('toc-')) {
+            // Allows alphanumeric and standard separators like hyphens, dots, and slashes
+            input.value = input.value.replace(/[^a-zA-Z0-9\s]/g, '');
+        }
+
+        // Prevent cursor jumping in text fields
+        if (input.type === 'text' && originalLength > 0) {
+            const newLength = input.value.length;
+            if (newLength < originalLength) {
+                const adj = Math.max(0, cursorPosition - (originalLength - newLength));
+                input.setSelectionRange(adj, adj);
+            }
+        }
+    });
+
+    // DATE VALIDATION (2000-01-01 to Today)
+    document.addEventListener('focusin', function(event) {
+        const target = event.target;
+        if (target.type === 'date') {
+            const minDate = "2000-01-01";
+            const today = new Date().toISOString().split('T')[0];
+            
+            target.setAttribute('min', minDate);
+            target.setAttribute('max', today);
+        }
+    });
+
+    document.addEventListener('change', function(event) {
+        const target = event.target;
+        if (target.type === 'date') {
+            const selectedDate = target.value;
+            const minDate = "2000-01-01";
+            const today = new Date().toISOString().split('T')[0];
+
+            if (selectedDate && (selectedDate < minDate || selectedDate > today)) {
+                alert("Please select a date between 2000-01-01 and today.");
+                target.value = "";
+                return;
+            }
+3
+            const parentBlock = target.closest('.sub-form-fields');
+            if (parentBlock) {
+                const start = parentBlock.querySelector('input[name="begi_date"]');
+                const end = parentBlock.querySelector('input[name="end_date"]');
+                if (start?.value && end?.value && end.value < start.value) {
+                    alert("The 'End Date' cannot be earlier than the 'Start Date'.");
+                    target.value = "";
+                }
+            }
+        }
+    });
+</script>
     {% endif %}
     </div>
 </div>
@@ -975,8 +1084,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     //university name validation
     const univInput = document.querySelector('input[name="univ_name"]');
-    if (nameInput) {
-        nameInput.addEventListener('input', function() {
+    if (univInput) {
+        univInput.addEventListener('input', function() {
             // Remove numbers and special chars instantly
             this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
             validateField(this);
