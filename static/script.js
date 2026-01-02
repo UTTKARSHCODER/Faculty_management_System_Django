@@ -56,6 +56,7 @@ const categoryValue = {
     'Conference': 'CON',
     'STTP': 'STTP',
     'Seminar': 'SEM',
+    'Webinar': 'WEB',
     'Lecture Series': 'LS',
     'Symposium': 'SYM',
     'External  Examination(UG)': 'EE(UG)',
@@ -69,7 +70,7 @@ const categoryValue = {
     'BOS': 'BOS',
     'DRC': 'DRC',
     'Short Term Courses': 'STC',
-    'MOOC courses': 'MOOC',
+    'MOOC': 'MOOC',
     'Induction Program': 'IP',
     'Education': 'EDU',
     'Research': 'REA',
@@ -220,9 +221,8 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label for="top-${i}" class="col-sm-4 col-form-label">Title Of Program<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
-                                            <input type="text" class="form-control custom-back" pattern="[A-Za-z\s]+" title="Numbers and special characters are not allowed" id="top-${i}" placeholder="Enter title of the program" name="top">
+                                            <input type="text" class="form-control custom-back" pattern="[A-Za-z ]+" title="Numbers and special characters are not allowed" id="top-${i}" placeholder="Enter title of the program" name="top">
                                             <div class="invalid-feedback">Please provide a program title.</div>
-                            
                                         </div>
                                     </div>
                                 </div>
@@ -395,7 +395,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label for="toc-${i}" class="col-sm-4 col-form-label">Timeline of course<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Timeline of Course']}"></span></label>
                                         <div class = "col-md-8">
-                                            <input type="text" class="form-control" id="toc-${i}" placeholder="Enter timeline of the program" name="toc-${i}" required>
+                                            <input type="text" class="form-control" id="toc-${i}" placeholder="Enter timeline of the program" name="toc" required>
                                             <div class="invalid-feedback">Please provide timeline of the course.</div>
                                         </div>
                                     </div>
