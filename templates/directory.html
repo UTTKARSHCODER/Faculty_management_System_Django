@@ -37,6 +37,7 @@
                   <th>Department</th>
                   <th>Contact Number</th>
                   {% if user == 'ad' or user == 'spa' %}
+                  <th>Role</th>
                   <th>Status</th>
                   <th>Edit</th>
                   <th>Delete</th>
@@ -53,8 +54,9 @@
                   <td>{{value.get_department_display}}</td>
                   <td>{{value.contact_number}}</td>
                   {% if user == 'ad' or user == 'spa' %}
+                  <td>{{value.get_role_display}}</td>
                   <td>{{value.get_status_display}}</td>
-                  <td><a href = "#" data-bs-toggle="modal" data-bs-target="#editDetails" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" data-contact-number="{{value.contact_number}}" data-status="{{value.status}}" data-department = "{{value.department}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                  <td><a href = "#" data-bs-toggle="modal" data-bs-target="#editDetails" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" data-contact-number="{{value.contact_number}}" data-status="{{value.status}}" data-department = "{{value.department}}" data-role = "{{value.role}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
                   <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                   {% endif %}
                 </tr>
@@ -179,13 +181,25 @@
                                 <div class="mb-2">
                                     <label for="department_selection" class="form-label">Department</label>
                                     <select class="form-select" id="department_selection" name="updated_department" required>
-                                        <option value="" selected disabled>Select your Department</option>
+                                        <option value="" selected disabled>Select Department</option>
                                         <option value="CSE">Computer Science & Engineering</option>
                                         <option value="CSE(AI)">Computer Science & Engineering(AI)</option>
                                         <option value="CSE(DS)">Computer Science & Engineering(DS)</option>
                                         <option value="CSE(IOT)">Computer Science & Engineering(IOT)</option>
                                     </select>
                                     <div class="invalid-feedback">Please select department.</div>
+                                </div>
+                            </div>
+                            <div style="display: flex;">
+                                <div class="mb-2">
+                                    <label for="role" class="form-label">Role</label>
+                                    <select class="form-select" id="role" name="updated_role" required>
+                                        <option value="" selected disabled>Select Role</option>
+                                        <option value="SPA">SuperAdmin</option>
+                                        <option value="AD">Admin</option>
+                                        <option value="FA">Faculty</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select role.</div>
                                 </div>
                             </div>
                             <div style="display: flex;">
@@ -258,6 +272,15 @@
                                     <option value="Computer Science & Engineering(IOT)">Computer Science & Engineering(IOT)</option>
                                 </select>
                             </div>
+                            <label for = "role_selection_new" class = "form-label mt-2"><b>Role</b></label>
+                            <div class = "d-flex">
+                                <select class = "form-control" id="role_selection_new" name="selected_role">
+                                    <option value = "" selected disabled>Select Role</option>
+                                    <option value="SPA">SuperAdmin</option>
+                                    <option value=AD">Admin</option>
+                                    <option value="FA">Faculty</option>
+                                </select>
+                            </div>
                             <label for = "contact_number" class = "form-label mt-2"><b>Enter Contact Number</b></label>
                             <div class = "d-flex">
                                 <input class = "form-control" type="text" id = "contact_number" name="contact_number" maxlength = "10" required>
@@ -306,7 +329,8 @@
             var email = link.data('empEmail');
             var contact_number = link.data('contactNumber');
             var status = link.data('status');
-            var department = link.data('department')
+            var department = link.data('department');
+            var role = link.data('role');
             var modal = $(this);
             modal.find('#existing_email').val(email);
             modal.find('#updated_id').val(faculty_id);
@@ -315,6 +339,7 @@
             modal.find('#con_num').val(contact_number);
             modal.find('#status_selection').val(status);
             modal.find('#department_selection').val(department);
+            modal.find('#role').val(role);
         });
     });
 
