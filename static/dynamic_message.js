@@ -34,5 +34,5 @@ function showMessages(message,tags) {
             div1.remove();
         }, 500);
 
-    }, 3000);
+    }, 5000);
 }

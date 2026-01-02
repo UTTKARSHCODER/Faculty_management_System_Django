@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.utils import timezone
 import re
-import validations as va
+import firstWebsite.validations as va
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.urls import reverse
@@ -976,21 +976,25 @@ def save_all_forms(request, pk):
                 faculty_instance.save()
 
             elif pk == 14:
+
                 faculty_instance = Faculty.objects.get(email=request.POST.get('existing_email'))
+
 
                 faculty_instance.name = request.POST.get('updated_name')
                 if not va.nameValidate(request, faculty_instance.name, "Name"):
-                    return redirect('all_forms', pk=pk)
+                    return redirect(reverse('directory'))
 
                 faculty_instance.contact_number = request.POST.get('updated_number')
                 if not va.mobileNumberValidate(request, faculty_instance.contact_number):
-                    return redirect('all_forms', pk=pk)
+                    return redirect(reverse('directory'))
 
                 faculty_instance.email = request.POST.get('updated_email')
                 if not va.emailValidate(request,faculty_instance.email):
                     return redirect(reverse('directory'))
 
                 faculty_instance.department = request.POST.get('updated_department').strip()
+
+                faculty_instance.role = request.POST.get('updated_role').strip()
 
                 faculty_instance.emp_id = request.POST.get('updated_id')
                 if not va.numberValidate(request, faculty_instance.name, "Employee ID"):
@@ -1016,13 +1020,15 @@ def save_all_forms(request, pk):
 
                 department = request.POST.get('selected_department').strip()
 
+                role = request.POST.get('selected_role').strip()
+
                 con_no = request.POST.get('contact_number')
                 if not va.mobileNumberValidate(request, emp_id):
                     return redirect(reverse('directory'))
 
                 status = request.POST.get('selected_status').strip()
 
-                obj12 = Faculty(name=emp_name,emp_id=emp_id,email=email,department=department,contact_number=con_no,status=status)
+                obj12 = Faculty(name=emp_name,emp_id=emp_id,email=email,department=department,role=role,contact_number=con_no,status=status)
                 obj12.save()
 
                 return redirect(reverse('directory'))

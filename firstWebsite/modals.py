@@ -659,10 +659,7 @@ class non_teaching_staff(models.Model):
     )
     university_name = models.CharField(max_length=100)
     pshd = models.IntegerField()
-    professional_course = models.CharField(
-        max_length=4,
-        choices=professional_course.choices
-    )
+    professional_course = models.JSONField(default=list, blank=True)
     pan_no = models.CharField(max_length=10)
     dob = models.DateField()
     joining_date = models.DateField()

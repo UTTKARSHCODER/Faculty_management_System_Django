@@ -20,7 +20,7 @@ def mobileNumberValidate(request,key):
         error_message = f"Mobile Number cannot be empty"
         messages.error(request, error_message)
         return False
-    elif re.match(mobilepattern,key):
+    elif not re.match(mobilepattern,key):
         error_message = f"Mobile Number cannot contains special characters,digits,tabs or newline."
         messages.error(request, error_message)
         return False
