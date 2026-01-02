@@ -311,10 +311,12 @@
                 <div class="row g-3 mt-2">
                     <div class="col-md-6">
                         <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Profile Picture{% if not key.profile_picture %}<span class="ms-1" style="color: red;">*</span>{% endif %}</label>
+                            <label class="col-sm-4 col-form-label">Profile Picture{% if not key.profile_picture %}<span class="ms-1" style="color: red;">*</span>{% endif %}
+                            <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload Image of .png, .jpeg, .jpg Image Format(MAX SIZE:- 10MB)</h5>
+                            </label>
                             <div class="col-sm-8">
                                 <input type="file" class="form-control" name = "profile_picture" accept=".jpg, .jpeg, .png" {% if not key.profile_picture %}required{% endif %}>
-                                <div class="invalid-feedback">Please upload your profile picture.</div>
+                                <div class="invalid-feedback">Please upload your profile picture in .jpeg or .png format only.</div>
                             </div>
                         </div>
                     </div>
@@ -322,17 +324,17 @@
                         <div class="row align-items-center">
                             <div class="col-sm-8">
                                 {% if key.profile_picture %}
-                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.profile_picture}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.profile_picture}}')"><i class="fa-solid fa-eye"></i>View</button>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Joining Report{% if not key.jr %}<span class="ms-1" style="color: red;">*</span>{% endif %}</label>
+                            <label class="col-sm-4 col-form-label">Joining Report{% if not key.jr %}<span class="ms-1" style="color: red;">*</span>{% endif %} <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 10MB)</h5></label>
                             <div class="col-sm-8">
                                 <input type="file" class="form-control" name = "jr" accept=".pdf" {% if not key.jr %}required{% endif %}>
-                                <div class="invalid-feedback">Please upload your joining report.</div>
+                                <div class="invalid-feedback">Please upload your joining report in <b>pdf format only.</b></div>
                             </div>
                         </div>
                     </div>
@@ -340,17 +342,17 @@
                         <div class="row align-items-center">
                             <div class="col-sm-8">
                                 {% if key.jr %}
-                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.jr}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.jr}}')"><i class="fa-solid fa-eye"></i>View</button>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Offer Letter     (Appointment Letter){% if not key.of %}<span class="ms-1" style="color: red;">*</span>{% endif %}</label>
+                            <label class="col-sm-4 col-form-label">Offer Letter(Appointment Letter){% if not key.of %}<span class="ms-1" style="color: red;">*</span>{% endif %} <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 10MB)</h5></label>
                             <div class="col-sm-8">
                                 <input type="file" class="form-control" name = "ol" accept=".pdf" {% if not key.of %}required{% endif %}>
-                                <div class="invalid-feedback">Please upload your offer letter.</div>
+                                <div class="invalid-feedback">Please upload your offer letter in <b>pdf format only.</b>.</div>
                             </div>
                         </div>
                     </div>
@@ -358,17 +360,17 @@
                         <div class="row align-items-center">
                             <div class="col-sm-8">
                                 {% if key.of %}
-                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.of}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.of}}')"><i class="fa-solid fa-eye"></i>View</button>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Higher Degree Certificate(Date of Award){% if not key.hdc %}<span class="ms-1" style="color: red;">*</span>{% endif %}</label>
+                            <label class="col-sm-4 col-form-label">Higher Degree Certificate(Date of Award){% if not key.hdc %}<span class="ms-1" style="color: red;">*</span>{% endif %} <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 10MB)</h5></label>
                             <div class="col-sm-8">
                                 <input type="file" class="form-control" name = "hdc" accept=".pdf" {% if not key.hdc %}required{% endif %}>
-                                <div class="invalid-feedback">Please upload your higher degree certificate.</div>
+                                <div class="invalid-feedback">Please upload your higher degree certificate in <b>pdf format only.</b>.</div>
                             </div>
                         </div>
                     </div>
@@ -376,17 +378,17 @@
                         <div class="row align-items-center">
                             <div class="col-sm-8">
                                 {% if key.hdc %}
-                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.hdc}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.hdc}}')"><i class="fa-solid fa-eye"></i>View</button>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Salary Slip (Recent)</label>
+                            <label class="col-sm-4 col-form-label">Salary Slip (Recent) <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 10MB)</h5></label>
                             <div class="col-sm-8">
                                 <input type="file" class="form-control" name = "ss" accept=".pdf">
-                                <div class="invalid-feedback">Please upload your salary slip.</div>
+                                <div class="invalid-feedback">Please upload your salary slip in <b>pdf format only.</b>.</div>
                             </div>
                         </div>
                     </div>
@@ -394,17 +396,17 @@
                         <div class="row align-items-center">
                             <div class="col-sm-8">
                                 {% if key.ss %}
-                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.ss}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.ss}}')"><i class="fa-solid fa-eye"></i>View</button>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
                     <div class="col-md-8">
                         <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">If Awards and recognition received for extension activities (Upload Certificate)</label>
+                            <label class="col-sm-4 col-form-label">If Awards and recognition received for extension activities (Upload Certificate) <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 10MB)</h5></label>
                             <div class="col-sm-8">
                                 <input type="file" class="form-control" name = "awards" accept=".pdf">
-                                <div class="invalid-feedback">Please upload your awards certificate.</div>
+                                <div class="invalid-feedback">Please upload your awards certificate in <b>pdf format only.</b>.</div>
                             </div>
                         </div>
                     </div>
@@ -430,7 +432,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Date of registration</label>
                             <div class="col-sm-8">
-                                <input type="date" class="form-control" name = "phd_dor" value="{{ key.phd_dor|date:'Y-m-d' }}">
+                                <input type="date" class="form-control" min="2000-01-01" name = "phd_dor" value="{{ key.phd_dor|date:'Y-m-d' }}">
                                 <div class="invalid-feedback">Please enter your date of registration.</div>
                             </div>
                         </div>
@@ -501,6 +503,51 @@
             }
         });
     }
+    //pdf file validation
+    document.addEventListener('change', function(event) {
+    const input = event.target;
+
+        if (input.type === 'file' && (input.name === 'awards' || input.name === 'ss' || input.name === 'hdc' || input.name === 'ol' || input.name === 'jr')) {
+            const file = input.files[0];
+            const feedback = input.nextElementSibling; // Selects the .invalid-feedback div
+
+            if (file) {
+                // Check if the file is a PDF
+                if (file.type !== "application/pdf") {
+                    input.classList.add('is-invalid');
+                    input.classList.remove('is-valid');
+                    input.value = ""; // Reset the input so the wrong file isn't submitted
+                } else {
+                    // Show Bootstrap success state
+                    input.classList.remove('is-invalid');
+                    input.classList.add('is-valid');
+                }
+            }
+        }
+    });
+
+    // For png, jpeg, jpg file format
+    document.addEventListener('change', function(event) {
+    const input = event.target;
+
+    if (input.type === 'file' && input.name === 'profile_picture') {
+        const file = input.files[0];
+        
+        if (file) {
+            
+            const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+
+            if (!allowedTypes.includes(file.type)) {
+                input.classList.add('is-invalid');
+                input.classList.remove('is-valid');
+                input.value = ""; 
+            } else {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            }
+        }
+    }
+});
     //Name validation handler
     const nameInput = document.querySelector('input[name="name"]');
     if (nameInput) {
@@ -513,6 +560,15 @@
     const univInput = document.querySelector('input[name="univ_name"]');
     if (univInput) {
         univInput.addEventListener('input', function() {
+            // Remove numbers and special chars instantly
+            this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+            validateField(this);
+        });
+    }
+
+    const phdUnivInput = document.querySelector('input[name="phd_univ"]');
+    if (phdUnivInput) {
+        phdUnivInput.addEventListener('input', function() {
             // Remove numbers and special chars instantly
             this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
             validateField(this);
@@ -585,7 +641,7 @@
 
     // --- Validation for jd and pd ---
     const today = new Date().toISOString().split('T')[0];
-    const restrictedDates = document.querySelectorAll('input[name="jd"], input[name="pd"]');
+    const restrictedDates = document.querySelectorAll('input[name="jd"], input[name="pd"], input[name="phd_dor"]');
 
     restrictedDates.forEach(input => {
         input.setAttribute('max', today);

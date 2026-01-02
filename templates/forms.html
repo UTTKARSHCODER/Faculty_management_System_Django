@@ -990,6 +990,29 @@
     });
 
     document.addEventListener('change', function(event) {
+    const input = event.target;
+
+    // Target the specific file input
+        if (input.type === 'file' && input.name === 'proof_file') {
+            const file = input.files[0];
+            const feedback = input.nextElementSibling; // Selects the .invalid-feedback div
+
+            if (file) {
+                // Check if the file is a PDF
+                if (file.type !== "application/pdf") {
+                    input.classList.add('is-invalid');
+                    input.classList.remove('is-valid');
+                    input.value = ""; // Reset the input so the wrong file isn't submitted
+                } else {
+                    // Show Bootstrap success state
+                    input.classList.remove('is-invalid');
+                    input.classList.add('is-valid');
+                }
+            }
+        }
+    });
+
+    document.addEventListener('change', function(event) {
         const target = event.target;
         if (target.type === 'date') {
             const selectedDate = target.value;
