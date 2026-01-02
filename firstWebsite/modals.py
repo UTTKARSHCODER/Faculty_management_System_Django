@@ -403,7 +403,7 @@ class research_journal(models.Model):
     top = models.CharField(max_length=100)
     noj = models.CharField(max_length=100)
     nop = models.CharField(max_length=100)
-    vi = models.CharField(max_length=100)
+    vi = models.IntegerField()
     pn = models.IntegerField()
     pd = models.DateField()
     session = models.CharField(

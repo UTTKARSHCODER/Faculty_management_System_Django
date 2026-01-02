@@ -1,4 +1,3 @@
-console.log('=== Script loaded successfully ===');
 const checkboxGroup = document.getElementById('checkboxGroup');
 const inputFields = document.getElementById('inputFields');
 const subFormsContainer = document.getElementById('subFormsContainer');
@@ -303,7 +302,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">From Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <input type="date" class="form-control" name = "begi_date" required>
+                                            <input type="date" class="form-control" name = "begi_date" id = "begi_date" required>
                                             <div class="invalid-feedback">Please provide a start date.</div>
                                         </div>
                                     </div>
@@ -312,7 +311,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">To Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <input type="date" class="form-control" name = "end_date" required>
+                                            <input type="date" class="form-control" name = "end_date" id = "end_date" required>
                                             <div class="invalid-feedback">Please provide an end date.</div>
                                         </div>
                                     </div>
@@ -337,9 +336,8 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">No. of days<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" min="0" placeholder="Enter number of days" name = "num_of_days" required>
+                                            <input type="number" class="form-control" min="0" placeholder="Enter number of days" name = "num_of_days" id = "num_of_days" readonly>
                                             <div class="invalid-feedback">Please provide number of days.</div>
-                                        </div>
                                         </div>
                                     </div>
                                 </div>

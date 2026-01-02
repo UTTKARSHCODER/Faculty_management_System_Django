@@ -118,7 +118,6 @@ let barChart = new Chart(ctx, {
 
 document.getElementById('activityDropdown').addEventListener('change', function () {
   const selected = this.value;
-//  console.log(trim_selected);
   const data = JSON.parse(document.getElementById(`my-data-${selected}1`).textContent);
   let dy_list_count = [];
   let dy_list_label = [];
@@ -163,7 +162,6 @@ document.getElementById('activityDropdown').addEventListener('change', function 
 
   dataMap[selected] = updated_countList;
   label[selected] = updated_labelList;
-  console.log(dy_list_short_label);
   const backgroundColors = dy_list_short_label.map(item => categoryColors[item] || categoryColors['DEFAULT']);
   const borderColors = backgroundColors.map(color => color.replace('0.7', '1.0'));
 

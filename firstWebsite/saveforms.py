@@ -994,7 +994,7 @@ def save_all_forms(request, pk):
 
                 faculty_instance.emp_id = request.POST.get('updated_id')
                 if not va.numberValidate(request, faculty_instance.name, "Employee ID"):
-                    return redirect('all_forms', pk=pk)
+                    return redirect(reverse('directory'))
 
                 faculty_instance.status = request.POST.get('updated_status').strip()
 
@@ -1004,21 +1004,21 @@ def save_all_forms(request, pk):
             elif pk == 15:
                 emp_id = request.POST.get('emp_id')
                 if not va.numberValidate(request, emp_id, "Employee ID"):
-                    return redirect('all_forms', pk=pk)
+                    return redirect(reverse('directory'))
 
                 emp_name = request.POST.get('name_per')
                 if not va.nameValidate(request, emp_id, "Name"):
-                    return redirect('all_forms', pk=pk)
+                    return redirect(reverse('directory'))
 
                 email = request.POST.get('new_email').strip()
-                if not va.mobileNumberValidate(request, email):
-                    return redirect('all_forms', pk=pk)
+                if not va.emailValidate(request, email):
+                    return redirect(reverse('directory'))
 
                 department = request.POST.get('selected_department').strip()
 
                 con_no = request.POST.get('contact_number')
                 if not va.mobileNumberValidate(request, emp_id):
-                    return redirect('all_forms', pk=pk)
+                    return redirect(reverse('directory'))
 
                 status = request.POST.get('selected_status').strip()
 

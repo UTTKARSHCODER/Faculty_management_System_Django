@@ -131,7 +131,6 @@
             const formData = new FormData();
             selCheckVal.forEach(value => {
                 formData.append('optcheck[]', value);
-                console.log(value);
             });
             formData.append('file_type','excel');
             fetch('/download', {
