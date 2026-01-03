@@ -162,23 +162,6 @@ function generateInputFields() {
     });
 }
 
-function initializeBootstrapValidation() {
-    'use strict'
-    
-    const forms = document.querySelectorAll('.needs-validation')
-    
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-            }
-            
-            form.classList.add('was-validated')
-        }, false)
-    })
-}
-
 function generateSubForms() {
     subFormsContainer.innerHTML = '';
     let totalForms = 0;
@@ -1043,7 +1026,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Name of the Publisher<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter name of publisher" name = "nop" required>
+                                            <input type="text" class="form-control"  placeholder="Enter name of publisher" name = "nop" required>
                                             <div class="invalid-feedback">Please provide name of publisher.</div>
                                         </div>
                                     </div>
@@ -1141,7 +1124,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to website of the Journal<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter DOI(Digital Object Identifier)" name = "lwj" required>
-                                            <div class="invalid-feedback">Please provide Link to website of the Journal.</div>
+                                            <div class="invalid-feedback">Please provide Link to website of the Journal starting with www., http://, or https://.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1150,7 +1133,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to article/paper/ abstract of the article<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to article/paper/abstract of the article']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to article/paper/abstract of the article " name = "lap" required>
-                                            <div class="invalid-feedback">Please provide Link to article/paper/ abstract of the article.</div>
+                                            <div class="invalid-feedback">Please provide Link to article/paper/ abstract of the article starting with www., http://, or https://.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1159,7 +1142,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to the recognition in SCOPUS enlistment of the Journal<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to the recognition in SCOPUS enlistment of the Journal" name = "lrsj" required>
-                                            <div class="invalid-feedback">Please provide Link to the recognition in SCOPUS enlistment of the Journal.</div>
+                                            <div class="invalid-feedback">Please provide Link to the recognition in SCOPUS enlistment of the Journal starting with www., http://, or https://.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1401,7 +1384,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to website of the Journal<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "lwj" required>
-                                            <div class="invalid-feedback">Please provide Link to website of the Journal.</div>
+                                            <div class="invalid-feedback">Please provide Link to website of the Journal starting with www., http://, or https://.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1604,7 +1587,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to website of the Journal<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "lwj" required>
-                                            <div class="invalid-feedback">Please provide Link to website of the Journal.</div>
+                                            <div class="invalid-feedback">Please provide Link to website of the Journal starting with www., http://, or https://.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1843,8 +1826,8 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Link<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "link" required>
-                                            <div class="invalid-feedback">Please provide Link.</div>
+                                            <input type="text" class="form-control" pattern="^(https?:\/\/|www\.).+" placeholder="Enter Link to website of the Journal" name = "link" required>
+                                            <div class="invalid-feedback">Please provide a valid link starting with www., http://, or https://</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2190,5 +2173,73 @@ function generateSubForms() {
     // Initialize Bootstrap validation for all newly created forms
     setTimeout(() => {
         initializeBootstrapValidation();
+        attachLinkValidation(); // ADD THIS LINE HERE
     }, 100);
+}
+
+function attachLinkValidation() {
+    const linkFields = document.querySelectorAll('input[name="link"], input[name="lwj"], input[name="lrsj"], input[name="lap"]');
+    // Updated pattern: REQUIRES either http://, https://, or www. at the start
+    const urlPattern = /^(https?:\/\/|www\.)[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*(\.[a-zA-Z]{2,})?([\/\?#].*)?$/;
+    
+    linkFields.forEach(field => {
+        // Set HTML5 pattern attribute for native validation
+        field.setAttribute('pattern', '^(https?:\\/\\/|www\\.)[a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?)*(\\.\\[a-zA-Z]{2,})?([\\/?#].*)?$');
+        
+        field.addEventListener('blur', function() {
+            validateLinkField(this, urlPattern);
+        });
+        
+        field.addEventListener('input', function() {
+            validateLinkField(this, urlPattern);
+        });
+    });
+}
+
+function validateLinkField(field, pattern) {
+    const val = field.value.trim();
+    
+    if (val === "") {
+        field.classList.remove('is-valid', 'is-invalid');
+        field.setCustomValidity("");
+    } else if (pattern.test(val)) {
+        field.classList.add('is-valid');
+        field.classList.remove('is-invalid');
+        field.setCustomValidity("");
+    } else {
+        field.classList.add('is-invalid');
+        field.classList.remove('is-valid');
+        field.setCustomValidity("URL must start with http://, https://, or www. (e.g., https://example.com or www.example.com)");
+    }
+}
+
+function initializeBootstrapValidation() {
+    'use strict'
+    
+    const forms = document.querySelectorAll('.needs-validation')
+    
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            // Check custom link validation first
+            const linkFields = form.querySelectorAll('input[name="link"], input[name="lwj"], input[name="lrsj"], input[name="lap"]');
+            let hasInvalidLinks = false;
+            
+            linkFields.forEach(field => {
+                if (!field.checkValidity()) {
+                    hasInvalidLinks = true;
+                    field.classList.add('is-invalid');
+                } else if (field.value.trim() !== "") {
+                    field.classList.add('is-valid');
+                }
+            });
+            
+            // Then check standard HTML5 validation
+            if (!form.checkValidity() || hasInvalidLinks) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            
+            form.classList.add('was-validated')
+        }, false)
+    })
 }

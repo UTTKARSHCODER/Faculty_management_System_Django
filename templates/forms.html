@@ -940,7 +940,7 @@ document.addEventListener('change', function(event) {
 
         // Numeric Fields: Block '-', 'e', 'E', '.', '+' to ensure positive integers only
         const numericNames = [
-            'num_of_days', 'nop', 'nossp', 'nosmp', 'dop', 
+            'num_of_days', 'nossp', 'nosmp', 'dop', 
             'amount', 'pn', 'nos', 'doe'
         ];
         if (target.type === 'number' || numericNames.includes(target.name)) {
@@ -949,7 +949,7 @@ document.addEventListener('change', function(event) {
             }
         }
 
-        const alphabeticNames = ['top', 'organizer', 'sponser', 'noa', 'noe', 'gc', 'venue'];
+        const alphabeticNames = ['top', 'organizer', 'sponser', 'nop' ,'noa', 'noe', 'gc', 'venue'];
         if (alphabeticNames.includes(target.name)) {
             const functionalKeys = ['Backspace', 'Tab', 'Delete', 'ArrowLeft', 'ArrowRight', 'Enter'];
             if (functionalKeys.includes(event.key)) return;
@@ -961,6 +961,8 @@ document.addEventListener('change', function(event) {
         }
     });
 
+    
+
     document.addEventListener('input', function(event) {
         const input = event.target;
         if (input.tagName !== 'INPUT') return;
@@ -969,7 +971,7 @@ document.addEventListener('change', function(event) {
         const originalLength = input.value.length;
         const fieldName = input.name;
 
-        const numericNames = ['num_of_days', 'nop', 'nossp', 'nosmp', 'dop', 'amount', 'pn', 'nos', 'doe'];
+        const numericNames = ['num_of_days', 'nossp', 'nosmp', 'dop', 'amount', 'pn', 'nos', 'doe'];
         if (input.type === 'number' || numericNames.includes(fieldName)) {
             input.value = input.value.replace(/[^0-9]/g, '');
             if (input.getAttribute('min') !== '0') input.setAttribute('min', '0');
@@ -977,7 +979,7 @@ document.addEventListener('change', function(event) {
         }
 
         // Pure Alphabetic Fields (Remove everything except letters and spaces)
-        const alphabeticNames = ['top', 'organizer', 'sponser', 'noa', 'noe', 'gc', 'venue'];
+        const alphabeticNames = ['top', 'organizer', 'sponser', 'noa', 'npo', 'noe', 'gc', 'venue'];
         if (alphabeticNames.includes(fieldName)) {
             input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
         }
@@ -986,9 +988,9 @@ document.addEventListener('change', function(event) {
         const mixedNames = [
             'topdpo', 'adcc', 'remarks', 'nosa', 'cd', 'gd', 'awpsfooe', 
             'noaa', 'paf', 'ao', 'prize', 'remark', 'nofa', 'noj', 
-            'nop', 'vi', 'isnp', 'isno', 'doi', 'lwj', 'lap', 
-            'lrsj', 'aiop', 'aitp', 'details', 'tob', 'ens', 'urns', 
-            'tod', 'nof', 'ag', 'link', 'toe', 'sa'
+            'nop', 'vi', 'isnp', 'isno', 'doi', 
+            'aiop', 'aitp', 'details', 'tob', 'ens', 'urns', 
+            'tod', 'nof', 'ag', 'toe', 'sa'
         ];
         if (mixedNames.includes(fieldName) || fieldName.startsWith('toc-')) {
             // Allows alphanumeric and standard separators like hyphens, dots, and slashes
@@ -1005,6 +1007,38 @@ document.addEventListener('change', function(event) {
         }
     });
 
+
+    // In your dynamic field creation code, ADD THIS after creating the input:
+function createLinkField(name, placeholder) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'form-control';
+    input.name = name;
+    input.placeholder = placeholder;
+    input.required = true;
+    
+    // ADD VALIDATION IMMEDIATELY
+    const urlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}(\/.*)?$/;
+    
+    input.addEventListener('input', function() {
+        const val = this.value.trim();
+        
+        if (val === "") {
+            this.classList.remove('is-valid', 'is-invalid');
+            this.setCustomValidity("");
+        } else if (urlPattern.test(val)) {
+            this.classList.add('is-valid');
+            this.classList.remove('is-invalid');
+            this.setCustomValidity("");
+        } else {
+            this.classList.add('is-invalid');
+            this.classList.remove('is-valid');
+            this.setCustomValidity("Invalid URL");
+        }
+    });
+    
+    return input;
+}
     // DATE VALIDATION (2000-01-01 to Today)
     document.addEventListener('focusin', function(event) {
         const target = event.target;
