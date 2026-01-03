@@ -209,10 +209,7 @@ class Faculty_participation_data(models.Model):
         choices=level.choices
     )
     organizer = models.CharField(max_length=100)
-    sponsors = models.CharField(
-        max_length=2,
-        choices=sponsors.choices
-    )
+    sponsors = models.CharField(max_length=100)
     approval = models.CharField(
         max_length=1,
         choices=accept.choices
@@ -299,10 +296,7 @@ class events(models.Model):
         choices=category.choices,
         default=category.OTHER
     )
-    eof = models.CharField(
-        max_length=3,
-        choices=eof.choices
-    )
+    eof = models.JSONField(default=list, blank=True)
     topdpo = models.CharField(max_length=100)
     nop = models.IntegerField()
     adcc = models.CharField(max_length=100)

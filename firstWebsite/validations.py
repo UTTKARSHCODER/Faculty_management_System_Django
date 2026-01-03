@@ -15,7 +15,6 @@ def emailValidate(request,key):
 
 def mobileNumberValidate(request,key):
     mobilepattern = r'[6789][0-9]{9}'
-    key = key.strip()
     if not key or key == '':
         error_message = f"Mobile Number cannot be empty"
         messages.error(request, error_message)
@@ -37,7 +36,7 @@ def validate_pan(pan_number):
     pattern = r'^[A-Z]{3}[PCHFATBLJG][A-Z][0-9]{4}[A-Z]$'
 
     # Ensure the input is treated as uppercase and stripped of whitespace
-    pan_number = str(pan_number).strip().upper()
+    pan_number = str(pan_number).upper()
 
     if re.match(pattern, pan_number):
         return True
@@ -46,7 +45,6 @@ def validate_pan(pan_number):
 
 def nameValidate(request,key,tag):
     namepattern = re.compile(r'[^a-zA-Z ]')
-    key = key.strip()
     if not key or key == '':
         error_message = f"{tag} cannot be empty"
         messages.error(request,error_message)
@@ -59,7 +57,6 @@ def nameValidate(request,key,tag):
         return True
 
 def alphanumnameValidate(request,key,tag):
-    key = key.strip()
     namepattern = re.compile(r'[^a-zA-Z0-9 ]')
     if not key or key == '':
         error_message = f"{tag} cannot be empty"
@@ -81,7 +78,6 @@ def numberValidate(request,key,tag):
         return True
 
 def radiocheck(request,key,tag):
-    key = key.strip()
     if len(key) < 1:
         error_message = f"Please select at least one {tag}"
         messages.error(request, error_message)
@@ -112,12 +108,12 @@ def fileValidate(request,key,tag):
 
 def addressValidate(request,key,tag):
     pattern = re.compile(r'[^a-zA-Z0-9\s,./-]')
-    if not key or key.strip() == '':
+    if not key or key == '':
         error_message = f"{tag} cannot be empty"
         messages.error(request, error_message)
         return False
-    elif pattern.search(key.strip()):
-        result = pattern.search(key.strip())
+    elif pattern.search(key):
+        result = pattern.search(key)
         error_message = f"{tag} cannot contain {result.group()}"
         messages.error(request, error_message)
         return False

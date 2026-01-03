@@ -992,9 +992,9 @@ document.addEventListener('change', function(event) {
             'aiop', 'aitp', 'details', 'tob', 'ens', 'urns', 
             'tod', 'nof', 'ag', 'toe', 'sa'
         ];
-        if (mixedNames.includes(fieldName) || fieldName.startsWith('toc-')) {
+        if (mixedNames.includes(fieldName) || fieldName.startsWith('toc') || fieldName.startsWith('noc')) {
             // Allows alphanumeric and standard separators like hyphens, dots, and slashes
-            input.value = input.value.replace(/[^a-zA-Z0-9\s]/g, '');
+            input.value = input.value.replace(/[^a-zA-Z0-9\s\-\.\/]/g, '');
         }
 
         // Prevent cursor jumping in text fields
