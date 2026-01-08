@@ -3,286 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Completion Status - List View</title>
+    <title>Exclusive Academic Activity Tracker</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-dark: #2c3e50;
+            --accent-blue: #3498db;
+            --header-blue: #4e5cc4;
+            --bg-gray: #f4f7f9;
+        }
+
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
+            background-color: var(--bg-gray);
+            padding: 40px 15px;
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        .container-custom {
-            max-width: 1000px; /* Narrower container looks better for list views */
-            margin: 0 auto;
-        }
+        .container-custom { max-width: 1000px; margin: 0 auto; }
 
-        .header-section {
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
-        .header-section h1 {
-            font-weight: 700;
-            color: #2c3e50;
-            font-size: 2.5rem;
-        }
-
-        /* Forms Stack (Horizontal Rows) */
-        .forms-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 50px;
-        }
-
-        .form-card {
+        /* Tier 1: Primary Horizontal Bars */
+        .primary-card {
             background: white;
             border-radius: 12px;
-            padding: 15px 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
-            width: 100%; /* Occupy full width */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid #dee2e6;
         }
 
-        .form-card-content {
+        .primary-header {
+            background: var(--header-blue);
+            color: white;
+            padding: 18px 25px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            gap: 20px;
-        }
-
-        .form-card.completed {
-            border-color: #27ae60;
-            background: #f0fdf4;
-        }
-
-        .form-card.pending {
-            border-color: #ecf0f1;
-        }
-
-        .form-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #2c3e50;
-            flex: 2; /* Occupies more space */
-            margin: 0;
-        }
-
-        .form-count {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #7f8c8d;
-            flex: 1;
-            text-align: right;
-            margin: 0;
-        }
-
-        .status-icon {
-            display: flex;
             align-items: center;
-            justify-content: center;
-            width: 40px;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
-        .icon-checkmark {
-            color: #27ae60;
-            font-size: 1.5rem;
-        }
+        .primary-header:hover { background: #3f4bb0; }
 
-        .icon-circle {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid #bdc3c7;
-        }
-
-        /* Dropdown Button */
-        .dropdown-btn {
-            background: transparent;
-            border: none;
-            color: #95a5a6;
-            transition: transform 0.3s ease;
-            padding: 5px;
-        }
-
-        .dropdown-btn.expanded {
-            transform: rotate(180deg);
-        }
-
-        /* Sub Forms Container */
-        .subforms-container {
+        /* Tier 2: Sub-Category Dropdowns */
+        .sub-category-container {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.3s ease;
-            opacity: 0;
-            width: 100%;
+            transition: max-height 0.4s ease-out, padding 0.3s;
+            background: #fff;
         }
 
-        .subforms-container.show {
-            max-height: 1000px;
-            opacity: 1;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
+        .sub-category-container.show { max-height: 5000px; padding: 20px; }
 
-        .subform-item {
-            padding: 10px 15px;
-            margin-bottom: 8px;
+        .sub-row {
+            border: 1px solid #e9ecef;
             border-radius: 8px;
+            margin-bottom: 10px;
+            background: #fdfdfd;
+        }
+
+        .sub-header {
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Tier 3: Entries */
+        .entry-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            background: #f8f9fa;
+        }
+
+        .entry-list.show { max-height: 1000px; padding: 10px 20px; border-top: 1px solid #eee; }
+
+        .entry-item {
+            padding: 8px 15px;
+            margin: 5px 0;
+            background: white;
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 4px;
             display: flex;
             align-items: center;
-            gap: 12px;
             font-size: 0.9rem;
         }
 
-        .subform-item.filled {
-            background: #d5f4e6;
-            color: #27ae60;
-        }
-
-        .subform-item.unfilled {
-            background: #f8f9fa;
-            color: #7f8c8d;
-        }
-
-        /* Summary Section */
-        .summary-section {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-        }
-
-        .summary-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-        }
-
-        .summary-item.completed .summary-number { color: #27ae60; }
-        .summary-item.pending .summary-number { color: #95a5a6; }
-
-        @media (max-width: 600px) {
-            .form-card-content {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            .form-title { flex: 100%; }
-            .form-count { text-align: left; flex: 1; }
-        }
+        .rotate { transition: transform 0.3s; }
+        .expanded .rotate { transform: rotate(180deg); }
     </style>
 </head>
 <body>
-    <div class="container-custom">
-        <div class="header-section">
-            <h1>Form Submission Status</h1>
-            <p>You have completed <span class="text-success" id="completedCount">0</span> out of <span class="text-success">11</span> forms</p>
-        </div>
 
-        <div class="forms-grid" id="formsGrid">
-            </div>
-
-        <div class="summary-section">
-            <div class="summary-row">
-                <div class="summary-item completed">
-                    <div class="summary-number" id="summaryCompleted">0</div>
-                    <div style="color:#7f8c8d; font-weight:700">COMPLETED</div>
-                </div>
-                <div class="summary-item pending">
-                    <div class="summary-number" id="summaryPending">0</div>
-                    <div style="color:#7f8c8d; font-weight:700">PENDING</div>
-                </div>
-            </div>
-        </div>
+<div class="container-custom">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold" style="color: var(--primary-dark);">Faculty & Departmental Dashboard</h2>
     </div>
 
-    <script>
-        const formsData = [
-            { id: 1, name: 'FDP', isCompleted: true, count: 3, subForms: [{ title: 'Expert Lecture on AI', filled: true }, { title: 'Advanced Python Workshop', filled: true }, { title: 'Web Development Course', filled: true }] },
-            { id: 2, name: 'MOOC Courses', isCompleted: true, count: 2, subForms: [{ title: 'DBMS Course', filled: true }, { title: 'Data Science Fundamentals', filled: true }] },
-            { id: 3, name: 'Conference', isCompleted: false, count: 1, subForms: [{ title: 'Intl Conference 2025', filled: true }, { title: 'National Workshop', filled: false }] },
-            { id: 4, name: 'Awards & Achievement', isCompleted: true, count: 1, subForms: [{ title: 'Best Teacher Award', filled: true }] },
-            { id: 5, name: 'Sponsored Grant', isCompleted: false, count: 0, subForms: [{ title: 'AICTE Grant', filled: false }] },
-            { id: 6, name: 'Journal Publication', isCompleted: false, count: 1, subForms: [{ title: 'Research Paper', filled: true }] },
-            { id: 7, name: 'Conference Publication', isCompleted: false, count: 0, subForms: [{ title: 'AI Apps Paper', filled: false }] },
-            { id: 8, name: 'Book Chapter', isCompleted: false, count: 0, subForms: [{ title: 'Chapter 1', filled: false }] },
-            { id: 9, name: 'Patent', isCompleted: false, count: 0, subForms: [{ title: 'IoT Patent', filled: false }] },
-            { id: 10, name: 'Students Guided', isCompleted: true, count: 2, subForms: [{ title: 'M.Tech Research', filled: true }, { title: 'PhD Student', filled: true }] },
-            { id: 11, name: 'Resource Person', isCompleted: false, count: 1, subForms: [{ title: 'Expert Speaker', filled: true }, { title: 'Jury Member', filled: false }] }
-        ];
+    <div id="masterContainer"></div>
+</div>
 
-        function renderForms() {
-            const formsGrid = document.getElementById('formsGrid');
-            formsGrid.innerHTML = '';
+<script>
+    const primaryHeadings = [
+        "Non-teaching Staff Profile Details",
+        "Faculty Participation",
+        "MOOC's/Short Term Course/Course Completion",
+        "Events Organized by Department",
+        "Faculty Awards and Achievements",
+        "Sponsored Research/Grant Received/Consultancy",
+        "Research Publication - Journals",
+        "Research Publication - Conference Publication",
+        "Research Publication - Book and Book Chapters",
+        "Patents",
+        "M.Tech/Ph.D Guided",
+        "Resource Person"
+    ];
 
-            formsData.forEach((form) => {
-                const statusClass = form.isCompleted ? 'completed' : 'pending';
-                const statusIcon = form.isCompleted 
-                    ? '<div class="icon-checkmark"><i class="fas fa-check-circle"></i></div>'
-                    : '<div class="icon-circle"></div>';
+    const facultySubOptions = ["FDP", "Workshop", "Conference", "STTP", "Seminar", "Webinar", "Lecture Series", "Symposium", "Other"];
 
-                let subformsHTML = form.subForms.map(sub => `
-                    <div class="subform-item ${sub.filled ? 'filled' : 'unfilled'}">
-                        <i class="fas ${sub.filled ? 'fa-check-circle' : 'fa-circle'}"></i>
-                        <span>${sub.title}</span>
+    function render() {
+        const container = document.getElementById('masterContainer');
+        container.innerHTML = primaryHeadings.map((heading, pIndex) => {
+            const subs = (heading === "Faculty Participation") ? facultySubOptions : ["Recent Activity", "Archived Records"];
+
+            return `
+                <div class="primary-card" id="p-card-${pIndex}">
+                    <div class="primary-header" onclick="togglePrimary(${pIndex})">
+                        <h5 class="m-0 fs-6 fw-bold">${heading}</h5>
+                        <i class="fas fa-chevron-down rotate"></i>
                     </div>
-                `).join('');
 
-                const formCard = document.createElement('div');
-                formCard.className = `form-card ${statusClass}`;
-                formCard.innerHTML = `
-                    <div class="form-card-content">
-                        <div class="form-title">${form.name}</div>
-                        <div class="form-count">${form.count} filled</div>
-                        <div class="status-icon">${statusIcon}</div>
-                        <button class="dropdown-btn">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
+                    <div class="sub-category-container" id="p-content-${pIndex}">
+                        ${subs.map((sub, sIndex) => `
+                            <div class="sub-row">
+                                <div class="sub-header" onclick="toggleSub(${pIndex}, ${sIndex}, event)">
+                                    <span>${sub}</span>
+                                    <i class="fas fa-plus rotate fa-xs"></i>
+                                </div>
+                                <div class="entry-list" id="s-content-${pIndex}-${sIndex}">
+                                    <div class="entry-item"><i class="fas fa-check-circle text-success me-2"></i>Expert AI Workshop</div>
+                                    <div class="entry-item"><i class="fas fa-check-circle text-success me-2"></i>Advanced Python Series</div>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
-                    <div class="subforms-container">
-                        ${subformsHTML}
-                    </div>
-                `;
+                </div>
+            `;
+        }).join('');
+    }
 
-                const btn = formCard.querySelector('.dropdown-btn');
-                const container = formCard.querySelector('.subforms-container');
-                
-                formCard.addEventListener('click', (e) => {
-                    // Prevent click if clicking inside subforms
-                    if(e.target.closest('.subforms-container')) return;
-                    btn.classList.toggle('expanded');
-                    container.classList.toggle('show');
-                });
+    // Function to handle the 12 Primary Blue Bars
+    function togglePrimary(index) {
+        const allContent = document.querySelectorAll('.sub-category-container');
+        const allHeaders = document.querySelectorAll('.primary-header');
+        const targetContent = document.getElementById(`p-content-${index}`);
+        const targetHeader = allHeaders[index];
 
-                formsGrid.appendChild(formCard);
-            });
+        const isOpening = !targetContent.classList.contains('show');
 
-            updateSummary();
+        // Close all primary sections first
+        allContent.forEach((el, i) => {
+            el.classList.remove('show');
+            allHeaders[i].classList.remove('expanded');
+        });
+
+        // Open only the clicked one if it wasn't already open
+        if (isOpening) {
+            targetContent.classList.add('show');
+            targetHeader.classList.add('expanded');
         }
+    }
 
-        function updateSummary() {
-            const completed = formsData.filter(f => f.isCompleted).length;
-            document.getElementById('completedCount').textContent = completed;
-            document.getElementById('summaryCompleted').textContent = completed;
-            document.getElementById('summaryPending').textContent = formsData.length - completed;
+    // Function to handle the internal Sub-Categories (FDP, Workshop, etc.)
+    function toggleSub(pIdx, sIdx, event) {
+        event.stopPropagation();
+        
+        // Find all sub-entries within this specific primary card
+        const parentCard = document.getElementById(`p-content-${pIdx}`);
+        const allSubContents = parentCard.querySelectorAll('.entry-list');
+        const allSubHeaders = parentCard.querySelectorAll('.sub-header');
+        
+        const targetSub = document.getElementById(`s-content-${pIdx}-${sIdx}`);
+        const targetHeader = allSubHeaders[sIdx];
+        
+        const isOpening = !targetSub.classList.contains('show');
+
+        // Close all other sub-categories in this group
+        allSubContents.forEach((el, i) => {
+            el.classList.remove('show');
+            allSubHeaders[i].classList.remove('expanded');
+            const icon = allSubHeaders[i].querySelector('.fa-minus');
+            if(icon) { icon.classList.replace('fa-minus', 'fa-plus'); }
+        });
+
+        // Open clicked one
+        if (isOpening) {
+            targetSub.classList.add('show');
+            targetHeader.classList.add('expanded');
+            targetHeader.querySelector('.fas').classList.replace('fa-plus', 'fa-minus');
         }
+    }
 
-        renderForms();
-    </script>
+    render();
+</script>
+
 </body>
 </html>
