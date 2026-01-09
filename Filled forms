@@ -1,285 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Academic Tracker</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --main-green: #22c55e;
-            --bg-light-green: #f0fdf4;
-            --border-green: #4ade80;
-            --text-dark: #1e293b;
-            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academic Tracker – Enhanced</title>
 
-        body { 
-            background-color: #f8fafc; 
-            padding: 40px 15px; 
-            font-family: 'Inter', sans-serif; 
-        }
-        
-        .container-custom { 
-            max-width: 900px; 
-            margin: 0 auto; 
-        }
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-        .primary-card {
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            border: 2px solid var(--main-green);
-            overflow: hidden;
-        }
+<style>
+body {
+    background: #f8fafc;
+    padding: 40px 15px;
+    font-family: Inter, sans-serif;
+}
 
-        .primary-header {
-            padding: 18px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            background: white;
-            color: var(--main-green);
-            transition: background-color 0.3s ease;
-        }
+.container-custom {
+    max-width: 1000px;
+    margin: auto;
+}
 
-        .primary-header:hover {
-            background-color: var(--bg-light-green);
-        }
+/* PRIMARY CARD */
+.primary-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 2px solid var(--card-color);
+    margin-bottom: 16px;
+    overflow: hidden;
+}
 
-        .sub-category-container {
-            height: 0;
-            overflow: hidden;
-            background: var(--bg-light-green);
-            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+.primary-header {
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: var(--card-color);
+}
 
-        .inner-content { 
-            padding: 20px;
-            min-height: 0;
-        }
+.primary-header h5 {
+    margin: 0;
+    font-weight: 550;
+}
 
-        .sub-row {
-            background: white;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-        }
+.primary-header small {
+    display: block;
+    margin-top: 4px;
+    color: #64748b;
+}
 
-        .sub-header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--text-dark);
-            transition: background-color 0.3s ease;
-        }
+/* GRID ACCORDION (NO HEIGHT BUGS) */
+.primary-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+}
 
-        .sub-header:hover {
-            background-color: #f1f5f9;
-        }
+.primary-card.open .primary-body {
+    grid-template-rows: 1fr;
+}
 
-        .entry-list {
-            height: 0;
-            overflow: hidden;
-            transition: height 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            background: white;
-        }
+.primary-body > div {
+    overflow: hidden;
+}
 
-        .entry-padding { 
-            padding: 10px 20px 20px 20px; 
-        }
+/* INNER CONTENT */
+.inner-content {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #fafafa;
+}
 
-        .entry-item {
-            padding: 12px 15px;
-            margin: 8px 0;
-            background: white;
-            border-left: 5px solid var(--border-green);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            font-size: 0.95rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
+/* SUB ROW */
+.sub-row {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
 
-        .rotate { 
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        
-        .expanded .rotate { 
-            transform: rotate(180deg); 
-        }
-        
-        .fa-check-circle { 
-            color: var(--main-green); 
-            margin-right: 12px; 
-            font-size: 1.2rem; 
-        }
+.sub-header {
+    padding: 12px 20px;
+    font-weight: 550;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
 
-        h2 {
-            color: var(--text-dark);
-        }
-    </style>
+/* SUB ACCORDION */
+.entry-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+}
+
+.sub-row.open .entry-wrapper {
+    grid-template-rows: 1fr;
+}
+
+.entry-wrapper > div {
+    overflow: hidden;
+}
+
+.entry-padding {
+    padding: 0 20px 15px;
+}
+
+.entry-item {
+    padding: 10px 14px;
+    margin-top: 6px;
+    border-left: 4px solid var(--card-color);
+    border-radius: 6px;
+    background: #fff;
+    font-size: 0.9rem;
+}
+
+.rotate {
+    transition: transform 0.3s ease;
+}
+
+.primary-card.open .rotate,
+.sub-row.open .rotate {
+    transform: rotate(180deg);
+}
+</style>
 </head>
+
 <body>
 
-<div class="container-custom">
-    <div class="mb-5">
-        <h2 class="fw-bold">Form Submission Status</h2>
-        <p class="text-muted">You have completed <span style="color: var(--main-green); font-weight: bold;">4 out of 11</span> forms</p>
-    </div>
-
-    <div id="masterContainer"></div>
-</div>
+<div class="container-custom" id="app"></div>
 
 <script>
-    const primaryHeadings = [
-        "Non-teaching Staff Profile Details", "Faculty Participation", "MOOC's/Short Term Course/Course Completion",
-        "Events Organized by Department", "Faculty Awards and Achievements", "Sponsored Research/Grant Received/Consultancy",
-        "Research Publication - Journals", "Research Publication - Conference Publication", "Research Publication - Book and Book Chapters",
-        "Patents", "M.Tech/Ph.D Guided", "Resource Person"
-    ];
+const forms = [
+    { title: "Non-teaching Staff Profile Details", color: "#64748b" },
+    { title: "Faculty Participation", color: "#22c55e" },
+    { title: "MOOC's/Short Term Course/Course Completion", color: "#eab308" },
+    { title: "Events Organized by Department", color: "#ef4444" },
+    { title: "Faculty Awards and Achievements", color: "#06b6d4" },
+    { title: "Sponsored Research/Grant Received/Consultancy", color: "#8b5cf6" },
+    { title: "Research Publication - Journals", color: "#0ea5e9" },
+    { title: "Research Publication - Conference Publication", color: "#3b82f6" },
+    { title: "Research Publication - Book and Book Chapters", color: "#f59e0b" },
+    { title: "Patents", color: "#14b8a6" },
+    { title: "M.Tech/Ph.D Guided", color: "#06b6d4" },
+    { title: "Resource Person", color: "#ec4899" }
+];
 
-    const facultySubOptions = ["FDP", "Workshop", "Conference", "STTP", "Seminar", "Webinar", "Lecture Series", "Symposium", "Other"];
+document.getElementById("app").innerHTML = forms.map(f => `
+<div class="primary-card" style="--card-color:${f.color}">
+    <div class="primary-header">
+        <div>
+            <h5>${f.title}</h5>
+            <small>3 forms filled</small>
+        </div>
+        <i class="fas fa-chevron-down rotate"></i>
+    </div>
 
-    function render() {
-        const container = document.getElementById('masterContainer');
-        container.innerHTML = primaryHeadings.map((heading, pIndex) => {
-            const subs = (heading === "Faculty Participation") ? facultySubOptions : ["Recent Activity", "General Records"];
+    <div class="primary-body">
+        <div class="inner-content">
+            ${["Recent Activity", "General Records"].map(s => `
+            <div class="sub-row">
+                <div class="sub-header">
+                    <span>${s}</span>
+                    <i class="fas fa-plus rotate fa-xs"></i>
+                </div>
 
-            return `
-                <div class="primary-card" data-primary="${pIndex}">
-                    <div class="primary-header" onclick="togglePrimary(${pIndex})">
-                        <div>
-                            <h5 class="m-0 fw-bold">${heading}</h5>
-                            <small class="text-muted">3 forms filled</small>
-                        </div>
-                        <i class="fas fa-chevron-down rotate"></i>
-                    </div>
-
-                    <div class="sub-category-container" id="p-content-${pIndex}">
-                        <div class="inner-content" id="inner-${pIndex}">
-                            ${subs.map((sub, sIndex) => `
-                                <div class="sub-row" data-sub="${sIndex}">
-                                    <div class="sub-header" onclick="toggleSub(${pIndex}, ${sIndex})">
-                                        <span>${sub}</span>
-                                        <i class="fas fa-plus rotate fa-xs"></i>
-                                    </div>
-                                    <div class="entry-list" id="entry-${pIndex}-${sIndex}">
-                                        <div class="entry-padding">
-                                            <div class="entry-item"><i class="fas fa-check-circle"></i>Expert AI Lecture</div>
-                                            <div class="entry-item"><i class="fas fa-check-circle"></i>Advanced Python Workshop</div>
-                                            <div class="entry-item"><i class="fas fa-check-circle"></i>Dynamic Data Analysis</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
+                <div class="entry-wrapper">
+                    <div>
+                        <div class="entry-padding">
+                            <div class="entry-item">Verified Entry 01</div>
+                            <div class="entry-item">Verified Entry 02</div>
                         </div>
                     </div>
                 </div>
-            `;
-        }).join('');
-    }
+            </div>
+            `).join("")}
+        </div>
+    </div>
+</div>
+`).join("");
 
-    // Recalculate primary container height
-    function recalculatePrimaryHeight(primaryIndex) {
-        const primaryContent = document.getElementById(`p-content-${primaryIndex}`);
-        const innerContent = document.getElementById(`inner-${primaryIndex}`);
-        
-        if (primaryContent && innerContent) {
-            // Only recalculate if parent is open
-            if (primaryContent.style.height !== "0px" && primaryContent.style.height !== "") {
-                primaryContent.style.height = innerContent.scrollHeight + "px";
-            }
-        }
-    }
-
-    // Toggle Primary (Main Green Bars)
-    function togglePrimary(pIndex) {
-        const header = document.querySelector(`[data-primary="${pIndex}"] .primary-header`);
-        const primaryContent = document.getElementById(`p-content-${pIndex}`);
-        const innerContent = document.getElementById(`inner-${pIndex}`);
-
-        const isOpening = primaryContent.style.height === "0px" || primaryContent.style.height === "";
-
-        // Close all primary cards
-        document.querySelectorAll('.sub-category-container').forEach(el => {
-            el.style.height = "0px";
+/* EVENTS */
+document.querySelectorAll(".primary-header").forEach(h => {
+    h.onclick = () => {
+        document.querySelectorAll(".primary-card").forEach(c => {
+            if (c !== h.parentElement) c.classList.remove("open");
         });
-        document.querySelectorAll('.primary-header').forEach(el => {
-            el.classList.remove('expanded');
-        });
-        document.querySelectorAll('.entry-list').forEach(el => {
-            el.style.height = "0px";
-        });
-        document.querySelectorAll('.sub-header').forEach(el => {
-            el.classList.remove('expanded');
-        });
+        h.parentElement.classList.toggle("open");
+    };
+});
 
-        if (isOpening) {
-            header.classList.add('expanded');
-            primaryContent.style.height = innerContent.scrollHeight + "px";
-        }
-    }
-
-    // Toggle Sub Items (FDP, Workshop, etc.)
-    function toggleSub(pIndex, sIndex) {
-        const primaryContent = document.getElementById(`p-content-${pIndex}`);
-        const innerContent = document.getElementById(`inner-${pIndex}`);
-        const subHeader = document.querySelector(`#entry-${pIndex}-${sIndex}`).previousElementSibling;
-        const entryList = document.getElementById(`entry-${pIndex}-${sIndex}`);
-        const entryPadding = entryList.querySelector('.entry-padding');
-
-        const isOpening = entryList.style.height === "0px" || entryList.style.height === "";
-
-        // Close all entry lists in this primary section
-        innerContent.querySelectorAll('.entry-list').forEach(list => {
-            list.style.height = "0px";
-        });
-        innerContent.querySelectorAll('.sub-header').forEach(header => {
-            header.classList.remove('expanded');
-        });
-
-        if (isOpening) {
-            // Open the clicked entry list
-            subHeader.classList.add('expanded');
-            entryList.style.height = entryPadding.scrollHeight + "px";
-            
-            // Update parent height IMMEDIATELY to prevent content hiding
-            setTimeout(() => {
-                primaryContent.style.height = (innerContent.scrollHeight + entryPadding.scrollHeight) + "px";
-            }, 5);
-        } else {
-            // Close the clicked entry list
-            subHeader.classList.remove('expanded');
-            entryList.style.height = "0px";
-            
-            // Force recalculate base height (faster timing for 150ms animation)
-            setTimeout(() => {
-                // Force DOM to recalculate scrollHeight by accessing offsetHeight
-                void innerContent.offsetHeight;
-                const baseHeight = innerContent.scrollHeight;
-                primaryContent.style.height = baseHeight + "px";
-            }, 200);
-        }
-    }
-
-    // Add event listener to recalculate when window resizes
-    window.addEventListener('resize', () => {
-        document.querySelectorAll('.sub-category-container').forEach((container, pIndex) => {
-            if (container.style.height !== "0px" && container.style.height !== "") {
-                const innerContent = container.querySelector('.inner-content');
-                container.style.height = innerContent.scrollHeight + "px";
-            }
-        });
-    });
-
-    render();
+document.querySelectorAll(".sub-header").forEach(h => {
+    h.onclick = e => {
+        e.stopPropagation();
+        const row = h.parentElement;
+        row.classList.toggle("open");
+    };
+});
 </script>
+
 </body>
 </html>
