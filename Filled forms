@@ -3,107 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exclusive Academic Activity Tracker</title>
+    <title>Faculty Dashboard - Emerald Green Theme</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-dark: #2c3e50;
-            --accent-blue: #3498db;
-            --header-blue: #4e5cc4;
-            --bg-gray: #f4f7f9;
+            /* Exact shades from provided images */
+            --main-green: #22c55e;        /* The vibrant emerald green */
+            --bg-light-green: #f0fdf4;   /* The very light green background for dropdowns */
+            --item-border-green: #4ade80; /* Border color for inner items */
+            --primary-text: #166534;
         }
 
         body {
-            background-color: var(--bg-gray);
+            background-color: #f8fafc;
             padding: 40px 15px;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
         }
 
-        .container-custom { max-width: 1000px; margin: 0 auto; }
+        .container-custom { max-width: 900px; margin: 0 auto; }
 
-        /* Tier 1: Primary Horizontal Bars */
+        /* Level 1: Primary Green Headers */
         .primary-card {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             margin-bottom: 15px;
             overflow: hidden;
-            border: 1px solid #dee2e6;
+            border: 2px solid var(--main-green);
+            transition: box-shadow 0.3s ease;
         }
 
         .primary-header {
-            background: var(--header-blue);
-            color: white;
+            background: white; /* Header background is white with green text/border as per Image f133eb */
+            color: var(--main-green);
+            background: var(--bg-light-green);
             padding: 18px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: background 0.3s;
+            user-select: none;
         }
 
-        .primary-header:hover { background: #3f4bb0; }
+        .primary-header.active {
+            border-bottom: 2px solid var(--main-green);
+        }
 
-        /* Tier 2: Sub-Category Dropdowns */
+        .primary-header h5 { margin: 0; font-weight: 700; font-size: 1.1rem; }
+
+        /* Level 2: Sub-Category Dropdown (The light green area) */
         .sub-category-container {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-out, padding 0.3s;
-            background: #fff;
+            transition: max-height 0.4s ease-out;
+            background: var(--bg-light-green); /* Exact shade from image_f13c04 */
         }
 
-        .sub-category-container.show { max-height: 5000px; padding: 20px; }
+        .sub-category-container.show { max-height: 3000px; padding: 20px; }
 
         .sub-row {
-            border: 1px solid #e9ecef;
             border-radius: 8px;
             margin-bottom: 10px;
-            background: #fdfdfd;
+            background: white;
+            border: 1px solid #e2e8f0;
         }
 
         .sub-header {
             padding: 12px 20px;
             display: flex;
             justify-content: space-between;
+            background: var(--bg-light-green);
             align-items: center;
             cursor: pointer;
             font-weight: 600;
+            color: var(--primary-text);
         }
 
-        /* Tier 3: Entries */
+        /* Level 3: Inner Entry Items (FDP names etc) */
         .entry-list {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-in-out;
-            background: #f8f9fa;
+            background: #ffffff;
         }
 
-        .entry-list.show { max-height: 1000px; padding: 10px 20px; border-top: 1px solid #eee; }
+        .entry-list.show { max-height: 800px; padding: 10px 15px; border-top: 1px solid #eee; }
 
         .entry-item {
-            padding: 8px 15px;
-            margin: 5px 0;
-            background: white;
-            border-left: 4px solid var(--accent-blue);
-            border-radius: 4px;
+            padding: 10px 15px;
+            margin: 6px 0;
+            background: #fff;
+            border-left: 5px solid var(--item-border-green);
+            border-radius: 6px;
             display: flex;
             align-items: center;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            color: var(--primary-text);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
+        .entry-item i { color: var(--main-green); margin-right: 12px; }
+
+        /* Icons & Utilities */
         .rotate { transition: transform 0.3s; }
         .expanded .rotate { transform: rotate(180deg); }
+        
+        .check-circle-main { color: var(--main-green); font-size: 1.4rem; }
     </style>
 </head>
 <body>
 
 <div class="container-custom">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold" style="color: var(--primary-dark);">Faculty & Departmental Dashboard</h2>
+    <div class="mb-5">
+        <h2 class="fw-bold" style="color: #1e293b;">Form Submission Status</h2>
+        <p style="color: #64748b;">You have completed <span style="color: var(--main-green); font-weight: bold;">4 out of 11</span> forms</p>
     </div>
 
-    <div id="masterContainer"></div>
+    <div id="masterContainer">
+        </div>
 </div>
 
 <script>
@@ -130,22 +147,29 @@
             const subs = (heading === "Faculty Participation") ? facultySubOptions : ["Recent Activity", "Archived Records"];
 
             return `
-                <div class="primary-card" id="p-card-${pIndex}">
-                    <div class="primary-header" onclick="togglePrimary(${pIndex})">
-                        <h5 class="m-0 fs-6 fw-bold">${heading}</h5>
-                        <i class="fas fa-chevron-down rotate"></i>
+                <div class="primary-card">
+                    <div class="primary-header" id="p-header-${pIndex}" onclick="togglePrimary(${pIndex})">
+                        <div>
+                            <h5>${heading}</h5>
+                            <small class="text-muted">3 forms filled</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle check-circle-main me-3"></i>
+                            <i class="fas fa-chevron-down rotate"></i>
+                        </div>
                     </div>
 
                     <div class="sub-category-container" id="p-content-${pIndex}">
                         ${subs.map((sub, sIndex) => `
                             <div class="sub-row">
-                                <div class="sub-header" onclick="toggleSub(${pIndex}, ${sIndex}, event)">
+                                <div class="sub-header" id="s-header-${pIndex}-${sIndex}" onclick="toggleSub(${pIndex}, ${sIndex}, event)">
                                     <span>${sub}</span>
                                     <i class="fas fa-plus rotate fa-xs"></i>
                                 </div>
                                 <div class="entry-list" id="s-content-${pIndex}-${sIndex}">
-                                    <div class="entry-item"><i class="fas fa-check-circle text-success me-2"></i>Expert AI Workshop</div>
-                                    <div class="entry-item"><i class="fas fa-check-circle text-success me-2"></i>Advanced Python Series</div>
+                                    <div class="entry-item"><i class="fas fa-check-circle"></i>Expert AI Lecture</div>
+                                    <div class="entry-item"><i class="fas fa-check-circle"></i>Advanced Python Workshop</div>
+                                    <div class="entry-item"><i class="fas fa-check-circle"></i>Web Development Course</div>
                                 </div>
                             </div>
                         `).join('')}
@@ -155,55 +179,49 @@
         }).join('');
     }
 
-    // Function to handle the 12 Primary Blue Bars
+    // EXCLUSIVE ACCORDION LOGIC: Level 1 (Primary Bars)
     function togglePrimary(index) {
         const allContent = document.querySelectorAll('.sub-category-container');
         const allHeaders = document.querySelectorAll('.primary-header');
         const targetContent = document.getElementById(`p-content-${index}`);
-        const targetHeader = allHeaders[index];
+        const targetHeader = document.getElementById(`p-header-${index}`);
 
         const isOpening = !targetContent.classList.contains('show');
 
-        // Close all primary sections first
+        // Close all primary bars
         allContent.forEach((el, i) => {
             el.classList.remove('show');
-            allHeaders[i].classList.remove('expanded');
+            allHeaders[i].classList.remove('expanded', 'active');
         });
 
-        // Open only the clicked one if it wasn't already open
+        // Open clicked one
         if (isOpening) {
             targetContent.classList.add('show');
-            targetHeader.classList.add('expanded');
+            targetHeader.classList.add('expanded', 'active');
         }
     }
 
-    // Function to handle the internal Sub-Categories (FDP, Workshop, etc.)
+    // EXCLUSIVE ACCORDION LOGIC: Level 2 (Internal Items)
     function toggleSub(pIdx, sIdx, event) {
         event.stopPropagation();
-        
-        // Find all sub-entries within this specific primary card
         const parentCard = document.getElementById(`p-content-${pIdx}`);
         const allSubContents = parentCard.querySelectorAll('.entry-list');
         const allSubHeaders = parentCard.querySelectorAll('.sub-header');
         
         const targetSub = document.getElementById(`s-content-${pIdx}-${sIdx}`);
-        const targetHeader = allSubHeaders[sIdx];
+        const targetHeader = document.getElementById(`s-header-${pIdx}-${sIdx}`);
         
         const isOpening = !targetSub.classList.contains('show');
 
-        // Close all other sub-categories in this group
+        // Close all other sub-categories in this specific section
         allSubContents.forEach((el, i) => {
             el.classList.remove('show');
             allSubHeaders[i].classList.remove('expanded');
-            const icon = allSubHeaders[i].querySelector('.fa-minus');
-            if(icon) { icon.classList.replace('fa-minus', 'fa-plus'); }
         });
 
-        // Open clicked one
         if (isOpening) {
             targetSub.classList.add('show');
             targetHeader.classList.add('expanded');
-            targetHeader.querySelector('.fas').classList.replace('fa-plus', 'fa-minus');
         }
     }
 
