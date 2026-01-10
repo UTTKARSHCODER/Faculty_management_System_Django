@@ -101,6 +101,8 @@ function getCookie(name) {
 
 const csrfToken = getCookie('csrftoken');
 
+// Consider the case where user deselects a checkbox then your value is not reset back to previous sum value or 0 value
+var total_forms = 0;
 checkboxGroup.addEventListener('change', (e) => {
     if (e.target.type === 'checkbox') {
         generateInputFields();
@@ -159,6 +161,7 @@ function generateInputFields() {
             if (val < 0) val = 0;
             e.target.value = val || '';
             quantities[value] = val;
+            total_forms += val;
             generateSubForms();
         });
     });
@@ -192,13 +195,12 @@ function generateSubForms() {
                 subForm.setAttribute('novalidate', '');
                 subForm.style = 'flex-direction: column';
                 subForm.method  = 'POST';
-                subForm.action = '/save_all_forms/' + form_number;
                 subForm.enctype = 'multipart/form-data'
                 if(form_number == '1') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
-                        <input type = "hidden" name = "category" value = "${categoryValue[category]}">
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
+                        <input type = "hidden" name = "category" value = "${categoryValue[category]}">
                         <div class="sub-form-fields">
                             <div class="row g-3">
                                 <div class="col-md-4">
@@ -320,7 +322,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">No. of days<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" min="0" placeholder="Enter number of days" name = "num_of_days" id = "num_of_days" readonly>
+                                            <input type="number" class="form-control" min="0" placeholder="Enter number of days" name = "num_of_days" id = "num_of_days" required>
                                             <div class="invalid-feedback">Please provide number of days.</div>
                                         </div>
                                     </div>
@@ -349,13 +351,6 @@ function generateSubForms() {
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 mt-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
                                         </div>
                                     </div>
                                 </div>
@@ -534,13 +529,6 @@ function generateSubForms() {
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 mt-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
                                         </div>
                                     </div>
                                 </div>
@@ -760,13 +748,6 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2 mt-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Remarks(If any)</label>
@@ -852,13 +833,6 @@ function generateSubForms() {
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2" style = "margin-top: 2.5rem;">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
                                         </div>
                                     </div>
                                 </div>
@@ -971,13 +945,6 @@ function generateSubForms() {
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 mt-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1252,13 +1219,6 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class = "col-md-12">
                                     <div class="row align-items-center justify-content-center">
                                         <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
@@ -1464,13 +1424,6 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class = "col-md-12">
                                     <div class="row align-items-center justify-content-center">
                                         <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
@@ -1667,13 +1620,6 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class = "col-md-12">
                                     <div class="row align-items-center justify-content-center">
                                         <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
@@ -1838,13 +1784,6 @@ function generateSubForms() {
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
                                         </div>
                                     </div>
                                 </div>
@@ -2137,13 +2076,6 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2 mt-4">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class = "col-md-12 mt-4">
                                     <div class="row align-items-center justify-content-center">
                                         <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
@@ -2244,3 +2176,43 @@ function initializeBootstrapValidation() {
         }, false)
     })
 }
+
+var curr_count = 0;
+document.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const submitButton = e.target.querySelector('button[type="submit"]');
+
+    // Disable it immediately to prevent double-clicks
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerText = "Saving...";
+    }
+    if(e.target.classList.contains('sub-for')) {
+        const formData = new FormData(e.target);
+        const redirect_url = `/save_all_forms/${form_number}`;
+        fetch(redirect_url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': `${csrfToken}`
+            }
+        })
+        .then(response=>response.json())
+        .then(data=> {
+            if(data.status === 'success') {
+                curr_count++;
+                alert("Form submitted Successfully");
+                submitButton.innerText = "Saved Successfully!";
+                if(curr_count === total_forms) {
+                    window.location.href = '/success';
+                }
+            } else {
+                submitButton.disabled = false;
+                submitButton.innerText = "Try Again";
+            }
+        })
+        .catch(error => {
+            console.log("Error fetching the result");
+        });
+    }
+});

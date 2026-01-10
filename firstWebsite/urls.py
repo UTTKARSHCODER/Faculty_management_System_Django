@@ -26,4 +26,5 @@ urlpatterns = [
     path('download',download.download_files,name="download"),
     path('puc',views.page_under_construction,name="page_under_construction"),
     path('faq',views.faq,name="FaQ"),
+    path('forms_listing/<str:pk>',progress_track.forms_listing,name="form_listing"),
 ]

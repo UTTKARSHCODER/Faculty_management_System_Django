@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Count
 from firstWebsite.modals import Faculty, awards_and_achievments, category as cat, events, Faculty_participation_data, \
@@ -9,38 +9,38 @@ from firstWebsite.views import session_login_required
 @session_login_required
 def progress_bar(request):
     try:
-        email = Faculty.objects.get(pk=request.session.get('user_id'))
+        faculty_instance = Faculty.objects.get(pk=request.session.get('user_id'))
 
         label_map = {choice.value: choice.label for choice in cat}
 
-        no_of_awards = list(awards_and_achievments.objects.filter(email=email).values('category').annotate(count=Count('id')))
+        no_of_awards = list(awards_and_achievments.objects.filter(email=faculty_instance).values('category').annotate(count=Count('id')))
         for item in no_of_awards:
             item['category_display'] = label_map.get(item['category'], item['category'])
 
-        events_instance = list(events.objects.filter(email=email).values('category').annotate(count=Count('id')))
+        events_instance = list(events.objects.filter(email=faculty_instance).values('category').annotate(count=Count('id')))
         for item in events_instance:
             item['category_display'] = label_map.get(item['category'], item['category'])
 
-        faculty_participartion_data = list(Faculty_participation_data.objects.filter(email=email).values('category').annotate(count=Count('id')))
+        faculty_participartion_data = list(Faculty_participation_data.objects.filter(email=faculty_instance).values('category').annotate(count=Count('id')))
         for item in faculty_participartion_data:
             item['category_display'] = label_map.get(item['category'], item['category'])
 
-        guided_instance = guided.objects.filter(email=email).count()
+        guided_instance = guided.objects.filter(email=faculty_instance).count()
 
-        mooc_course_instance = list(mooc_course.objects.filter(email=email).values('category').annotate(count=Count('id')))
+        mooc_course_instance = list(mooc_course.objects.filter(email=faculty_instance).values('category').annotate(count=Count('id')))
         for item in mooc_course_instance:
             item['category_display'] = label_map.get(item['category'], item['category'])
 
-        patents_instance = patents.objects.filter(email=email).count()
+        patents_instance = patents.objects.filter(email=faculty_instance).count()
 
-        research_book_instance = research_book.objects.filter(email=email).count()
+        research_book_instance = research_book.objects.filter(email=faculty_instance).count()
 
-        research_conference_instance = research_conference.objects.filter(email=email).count()
+        research_conference_instance = research_conference.objects.filter(email=faculty_instance).count()
 
-        research_journal_instance = research_journal.objects.filter(email=email).count()
-        resource_instance = resource.objects.filter(email=email).count()
+        research_journal_instance = research_journal.objects.filter(email=faculty_instance).count()
+        resource_instance = resource.objects.filter(email=faculty_instance).count()
 
-        sponsored_research_instance = list(sponsored_research.objects.filter(email=email).values('category').annotate(count=Count('id')))
+        sponsored_research_instance = list(sponsored_research.objects.filter(email=faculty_instance).values('category').annotate(count=Count('id')))
         for item in sponsored_research_instance:
             item['category_display'] = label_map.get(item['category'], item['category'])
 
@@ -54,3 +54,80 @@ def progress_bar(request):
         error_message = f"User does not exist in database."
         messages.error(request,error_message)
         return render(request,'index.html')
+
+@session_login_required
+def forms_listing(request, pk):
+
+    users_post = request.session.get('topLeftBar')
+    faculty_instance = Faculty.objects.get(pk=request.session.get('user_id'))
+
+    no_of_awards = awards_and_achievments.objects
+
+    events_instance = events.objects
+
+    faculty_participation_data = Faculty_participation_data.objects
+
+    mooc_course_instance = mooc_course.objects
+
+    guided_instance = guided.objects
+
+    patents_instance = patents.objects
+
+    research_book_instance = research_book.objects
+
+    research_conference_instance = research_conference.objects
+
+    research_journal_instance = research_journal.objects
+
+    sponsored_research_instance = sponsored_research.objects
+
+    resource_instance = resource.objects
+
+    if users_post == 'fa':
+        if pk == "filled_forms":
+            form_type = "filled_forms"
+        elif pk == "unfilled_forms":
+            form_type = "unfilled_forms"
+        elif pk == "all_forms":
+            form_type = "all_forms"
+        elif pk == "patially_filled_forms":
+            return redirect('page_under_construction.html')
+        else:
+            return redirect('404.html')
+
+        label_map = {choice.value: choice.label for choice in cat}
+
+        no_of_awards = no_of_awards.filter(email=faculty_instance).order_by('category')
+        for item in no_of_awards:
+            item.category_display= label_map.get(item.category, item.category)
+
+        events_instance = events_instance.filter(email=faculty_instance).order_by('category')
+        for item in events_instance:
+            item.category_display = label_map.get(item.category, item.category)
+
+        faculty_participation_data = faculty_participation_data.filter(email=faculty_instance).order_by('category')
+        for item in faculty_participation_data:
+            item.category_display = label_map.get(item.category, item.category)
+
+        mooc_course_instance = mooc_course_instance.filter(email=faculty_instance).order_by('category')
+        for item in mooc_course_instance:
+            item.category_display = label_map.get(item.category, item.category)
+
+        sponsored_research_instance = sponsored_research_instance.filter(email=faculty_instance).order_by('category')
+        for item in sponsored_research_instance:
+            item.category_display = label_map.get(item.category, item.category)
+
+        context = {'form_type': form_type,'faa1': no_of_awards, 'eod1': events_instance, 'fdp1': faculty_participation_data, 'mp1': guided_instance, 'msc1' : mooc_course_instance, 'patents1': patents_instance, 'rpb1': research_book_instance, 'rpcp1': research_conference_instance, 'rpj1': research_journal_instance, 'rp1': resource_instance, 'sgc1': sponsored_research_instance}
+
+        return render(request, 'form_listing.html', context)
+
+    elif users_post == 'ad' or users_post == 'spa':
+
+        context = {'faa1': no_of_awards.all(), 'eod1': events_instance.all(),
+                   'fdp1': faculty_participation_data.all(), 'mp1': guided_instance.all(), 'msc1': mooc_course_instance.all(),
+                   'patents1': patents_instance.all(), 'rpb1': research_book_instance.all(), 'rpcp1': research_conference_instance.all(),
+                   'rpj1': research_journal_instance.all(), 'rp1': resource_instance.all(), 'sgc1': sponsored_research_instance.all()}
+
+        return render(request,'form_listing_dir.html',context)
+
+    return render(request, '404.html')

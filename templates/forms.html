@@ -1106,19 +1106,6 @@ function createLinkField(name, placeholder) {
             }
         }
     });
-            // -- Auto fill Number of days --
-    document.addEventListener('input', function(event) {
-        if (event.target && event.target.id == 'end_date' || event.target.id == 'begi_date') {
-            const num_of_days = document.getElementById('num_of_days');
-            const begi_date = new Date(document.getElementById('begi_date').value);
-            const end_date = new Date(document.getElementById('end_date').value);
-            const diffInMs = end_date - begi_date;
-            const millisecondPerDay = 1000 * 60* 60 * 24;
-            const diffInDays = diffInMs / millisecondPerDay;
-            num_of_days.value = Math.round(diffInDays);
-            console.log(num_of_days.valve);
-        }
-    });
 </script>
     {% endif %}
     </div>

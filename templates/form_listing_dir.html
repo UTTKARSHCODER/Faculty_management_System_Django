@@ -1,0 +1,616 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/dataTable.css">
+<script src="/static/dataTables.js"></script>
+<script src="/static/dataTables.bootstrap5.js"></script>
+<style>
+     th {
+        white-space: nowrap;
+     }
+</style>
+<div class="col-10">
+    <div class="container ms-5 mt-4 mb-3">
+        <ul class="nav nav-tabs" role="tablist">
+            <li><button class="nav-link active" onclick="openTab(event, 'fdp')">Faculty Participation</button></li>
+            <li><button class="nav-link" onclick="openTab(event, 'msc')">MOOC/Short-Term Courses</button></li>
+            <li><button class="nav-link" onclick="openTab(event, 'events')">Events</button></li>
+            <li><button class="nav-link" onclick="openTab(event, 'faa')">Awards & Achievments</button></li>
+            <li><button class="nav-link" onclick="openTab(event, 'sgc')">Sponsored Research/Grant</button></li>
+            <li><button class="nav-link" onclick="openTab(event, 'rpj')">Research Publication-Journal</button></li>
+            <li><button class="nav-link" onclick="openTab(event, 'rpcp')">Research Publication-Conference</button></li>
+            <li><button class="nav-link" onclick="openTab(event, 'rpb')">Research Publication-Book</button></li>
+            <li><button class="nav-link" onclick="openTab(event, 'patent')">Patents</button></li>
+            <li><button class="nav-link" onclick="openTab(event, 'mp')">M.Tech/Ph.D Guided</button></li>
+            <li><button class="nav-link" onclick="openTab(event, 'rp')">Resource Person</button></li>
+        </ul>
+        <div class="tab-content table-responsive pt-2" id="faa">
+            <table class = "table table-hover mt-3" id="form_table_faa">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Name of Award/Achievement</th>
+                        <th>Position / Award For</th>
+                        <th>Agency / Organization</th>
+                        <th>Prize</th>
+                        <th>Award Date</th>
+                        <th>Session</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in faa1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.get_category_display}}</td>
+                        <td>{{value.noaa}}</td>
+                        <td>{{value.paf}}</td>
+                        <td>{{value.ao}}</td>
+                        <td>{{value.prize}}</td>
+                        <td>{{value.ad}}</td>
+                        <td>{{value.get_session_display}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content pt-2" id="events" style = "display: none;">
+            <table class = "table table-hover mt-3" id="form_table_events">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Event organized for</th>
+                        <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Title of the Professional Development Program Organized">TPDPO</th>
+                        <th>No. of participants</th>
+                        <th>Academic Department</th>
+                        <th>Academic Session</th>
+                        <th>Certificate Type</th>
+                        <th>Name of Sponsoring Agency</th>
+                        <th>Collaboration Details</th>
+                        <th>Start Date of the Event</th>
+                        <th>End Date of the Event</th>
+                        <th>Grant Received</th>
+                        <th>Grant Details</th>
+                        <th data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Association with professional societies for organization of event">APSOE</th>
+                        <th>Number of SKIT students participated</th>
+                        <th>Number of staff member participated</th>
+                        <th>Event report attached in proper format</th>
+                        <th>Uploaded Certificate</th>
+                        <th>Remarks(If any)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in eod1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.get_category_display}}</td>
+                        <td>{{value.eof_display_list|join:", "}}</td>
+                        <td>{{value.topdpo}}</td>
+                        <td>{{value.nop}}</td>
+                        <td>{{value.adcc}}</td>
+                        <td>{{value.get_session_display}}</td>
+                        <td>{{value.get_ct_display}}</td>
+                        <td>{{value.nosa}}</td>
+                        <td>{{value.cd}}</td>
+                        <td>{{value.begi_date}}</td>
+                        <td>{{value.end_date}}</td>
+                        <td>{{value.get_gr_display}}</td>
+                        <td>{{value.gd}}</td>
+                        <td>{{value.awpsfooe}}</td>
+                        <td>{{value.nossp}}</td>
+                        <td>{{value.nosmp}}</td>
+                        <td>{{value.get_eraipf_display}}</td>
+                        <td>{{value.proof_file}}</td>
+                        <td>{{value.remarks}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content pt-2" id="fdp" style = "display: none;">
+            <table class = "table table-hover mt-3" id="form_table_fdp">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Title Of Program</th>
+                        <th>Mode</th>
+                        <th>Level</th>
+                        <th>Organizer</th>
+                        <th>Sponsored By</th>
+                        <th>SKIT Approved</th>
+                        <th>From Date</th>
+                        <th>To Date</th>
+                        <th>Session</th>
+                        <th>No. of days</th>
+                        <th>Proof Enclosed</th>
+                        <th>Uploaded Certificate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in fdp1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.get_category_display}}</td>
+                        <td>{{value.top}}</td>
+                        <td>{{value.get_mode_display}}</td>
+                        <td>{{value.get_level_display}}</td>
+                        <td>{{value.organizer}}</td>
+                        <td>{{value.sponsors}}</td>
+                        <td>{{value.get_approval_display}}</td>
+                        <td>{{value.begi_date}}</td>
+                        <td>{{value.end_date}}</td>
+                        <td>{{value.session}}</td>
+                        <td>{{value.no_of_days}}</td>
+                        <td>{{value.get_proof_enclosed_display}}</td>
+                        <td>{{value.proof_file}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content pt-2" id="mp" style = "display: none;">
+            <table class = "table table-hover mt-3" id="form_table_mp">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Name of the student Guided</th>
+                        <th>Enrollment Number of Student</th>
+                        <th>University Roll Number of Student</th>
+                        <th>Enrollment Year of Student</th>
+                        <th>Title of the Dissertation</th>
+                        <th>Supervisor / Co-supervisor</th>
+                        <th>Date of Viva-Voce</th>
+                        <th>Name of external examiner</th>
+                        <th>Session</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in mp1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.nos}}</td>
+                        <td>{{value.ens}}</td>
+                        <td>{{value.urns}}</td>
+                        <td>{{value.get_eys_display}}</td>
+                        <td>{{value.tod}}</td>
+                        <td>{{value.get_visor_display}}</td>
+                        <td>{{value.dov}}</td>
+                        <td>{{value.noe}}</td>
+                        <td>{{value.session}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content pt-2" id="msc" style = "display: none;">
+            <table class = "table table-hover mt-3" id="form_table_msc">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Timeline of course</th>
+                        <th>Name of the Course</th>
+                        <th>Duration of Course</th>
+                        <th>Start Date of Course</th>
+                        <th>End Date of Course</th>
+                        <th>Offering Agency/ Organizer</th>
+                        <th>Certificate Type</th>
+                        <th>Topper Category</th>
+                        <th>Session</th>
+                        <th>Remarks</th>
+                        <th>Uploaded Certificate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in msc1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.category}}</td>
+                        <td>{{value.timeline}}</td>
+                        <td>{{value.noc}}</td>
+                        <td>{{value.get_doc_display}}</td>
+                        <td>{{value.begi_date}}</td>
+                        <td>{{value.end_date}}</td>
+                        <td>{{value.offer}}</td>
+                        <td>{{value.get_ctype_display}}</td>
+                        <td>{{value.get_topper_in_display}}</td>
+                        <td>{{value.get_session_display}}</td>
+                        <td>{{value.remarks}}</td>
+                        <td>{{value.proof_file}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content pt-2" id="patent" style = "display: none;">
+            <table class = "table table-hover mt-3" id="form_table_patent">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Status of Patent</th>
+                        <th>Granted ID</th>
+                        <th>Application ID</th>
+                        <th>Type of Patent</th>
+                        <th>Title of Patent</th>
+                        <th>Granted Country</th>
+                        <th>Patent Filed Date</th>
+                        <th>Publication Date</th>
+                        <th>Session</th>
+                        <th>Is SKIT student associated?</th>
+                        <th>Details(Student)</th>
+                        <th>Link</th>
+                        <th>Uploaded Full Paper</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in patents1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.get_sop_display}}</td>
+                        <td>{{value.gi}}</td>
+                        <td>{{value.ag}}</td>
+                        <td>{{value.get_pg_display}}</td>
+                        <td>{{value.top}}</td>
+                        <td>{{value.gc}}</td>
+                        <td>{{value.pfd}}</td>
+                        <td>{{value.pd}}</td>
+                        <td>{{value.get_session_display}}</td>
+                        <td>{{value.get_ssa_display}}</td>
+                        <td>{{value.details}}</td>
+                        <td>{{value.link}}</td>
+                        <td>{{value.proof_file}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content pt-2" id="rpb" style = "display: none;">
+            <table class = "table table-hover mt-3" id="form_table_rpb">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Name of the author(s)</th>
+                        <th>Title of the book</th>
+                        <th>Title of the chapter Published</th>
+                        <th>Level (National/ International)</th>
+                        <th>ISBN</th>
+                        <th>Name of the Publisher</th>
+                        <th>Published Date</th>
+                        <th>Session</th>
+                        <th>DOI(Digital Object Identifier)</th>
+                        <th>Link to website of the Journal</th>
+                        <th>Affiliating Institute at the time of publication</th>
+                        <th>Is SKIT student associated?</th>
+                        <th>Details</th>
+                        <th>Indexed by</th>
+                        <th>Uploaded Full Paper</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in rpb1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.noa}}</td>
+                        <td>{{value.tob}}</td>
+                        <td>{{value.top}}</td>
+                        <td>{{value.get_level_display}}</td>
+                        <td>{{value.isbn}}</td>
+                        <td>{{value.nop}}</td>
+                        <td>{{value.pd}}</td>
+                        <td>{{value.get_session_display}}</td>
+                        <td>{{value.doi}}</td>
+                        <td>{{value.lwj}}</td>
+                        <td>{{value.aitp}}</td>
+                        <td>{{value.get_ssa_display}}</td>
+                        <td>{{value.details}}</td>
+                        <td>{{value.get_index_by_display}}</td>
+                        <td>{{value.proof_file}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content pt-2" id="rpcp" style = "display: none;">
+            <table class = "table table-hover mt-3" id="form_table_rpcp">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Name of the author(s)</th>
+                        <th>Title of Conference</th>
+                        <th>Title of Paper</th>
+                        <th>Title of the proceedings of the conference</th>
+                        <th>Level (National/ International)</th>
+                        <th>ISBN/ISSN number of the proceeding</th>
+                        <th>Name of the Publisher</th>
+                        <th>Published Date</th>
+                        <th>Session</th>
+                        <th>DOI(Digital Object Identifier)</th>
+                        <th>Link to website of the Journal</th>
+                        <th>Affiliating Institute at the time of publication</th>
+                        <th>Is SKIT student associated?</th>
+                        <th>Details</th>
+                        <th>Indexed by</th>
+                        <th>Uploaded Full Paper</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in rpcp1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.noa}}</td>
+                        <td>{{value.toc}}</td>
+                        <td>{{value.top}}</td>
+                        <td>{{value.topc}}</td>
+                        <td>{{value.get_level_display}}</td>
+                        <td>{{value.isnp}}</td>
+                        <td>{{value.nop}}</td>
+                        <td>{{value.pd}}</td>
+                        <td>{{value.get_session_display}}</td>
+                        <td>{{value.doi}}</td>
+                        <td>{{value.lwj}}</td>
+                        <td>{{value.aitp}}</td>
+                        <td>{{value.get_ssa_display}}</td>
+                        <td>{{value.details}}</td>
+                        <td>{{value.get_index_by_display}}</td>
+                        <td>{{value.proof_file}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content pt-2" id="rpj" style = "display: none;">
+            <table class = "table table-hover mt-3" id="form_table_rpj">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Name of the author(s)</th>
+                        <th>Title of Paper</th>
+                        <th>Name of Journal</th>
+                        <th>Name of the Publisher</th>
+                        <th>Volume, Issue</th>
+                        <th>Page No.</th>
+                        <th>Published Date</th>
+                        <th>Session</th>
+                        <th>ISSN number : Print</th>
+                        <th>ISSN number : Online</th>
+                        <th>Level (National/ International)</th>
+                        <th>DOI(Digital Object Identifier)</th>
+                        <th>Link to website of the Journal</th>
+                        <th>Link to article/paper</th>
+                        <th>Link to the recognition in SCOPUS enlistment of the Journal</th>
+                        <th>Affiliating Institute at the time of publication</th>
+                        <th>Is SKIT student associated?</th>
+                        <th>Details</th>
+                        <th>Indexed by</th>
+                        <th>Quartile</th>
+                        <th>Uploaded Full Paper</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in rpj1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.noa}}</td>
+                        <td>{{value.top}}</td>
+                        <td>{{value.noj}}</td>
+                        <td>{{value.nop}}</td>
+                        <td>{{value.vi}}</td>
+                        <td>{{value.pn}}</td>
+                        <td>{{value.pd}}</td>
+                        <td>{{value.get_session_display}}</td>
+                        <td>{{value.isnp}}</td>
+                        <td>{{value.isno}}</td>
+                        <td>{{value.get_level_display}}</td>
+                        <td>{{value.doi}}</td>
+                        <td>{{value.lwj}}</td>
+                        <td>{{value.lap}}</td>
+                        <td>{{value.lrsj}}</td>
+                        <td>{{value.aiop}}</td>
+                        <td>{{value.get_ssa_display}}</td>
+                        <td>{{value.details}}</td>
+                        <td>{{value.get_index_by_display}}</td>
+                        <td>{{value.get_quartile_display}}</td>
+                        <td>{{value.proof_file}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content pt-2" id="rp" style = "display: none;">
+            <table class = "table table-hover mt-3" id="form_table_rp">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Title of Event/ Exam Name</th>
+                        <th>Subject Area/Subject Name/Lab Name/Session Name</th>
+                        <th>Duration of event (in days)</th>
+                        <th>Resource Person Type</th>
+                        <th>From Date</th>
+                        <th>To Date</th>
+                        <th>Session</th>
+                        <th>Venue</th>
+                        <th>Proof(Certificate/Mail)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in rp1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.get_category_display}}</td>
+                        <td>{{value.toe}}</td>
+                        <td>{{value.sa}}</td>
+                        <td>{{value.doe}}</td>
+                        <td>{{value.get_rpt_display}}</td>
+                        <td>{{value.begi_date}}</td>
+                        <td>{{value.end_date}}</td>
+                        <td>{{value.get_session_display}}</td>
+                        <td>{{value.venue}}</td>
+                        <td>{{value.proof_file}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-content pt-2" id="sgc" style = "display: none;">
+            <table class = "table table-hover mt-3" id="form_table_sgc">
+                <thead class = "table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Name of the Funding Agency</th>
+                        <th>Duration of Project (in Years)</th>
+                        <th>Amount in Rs.</th>
+                        <th>Session</th>
+                        <th>Status</th>
+                        <th>Uploaded Proof</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in sgc1 %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{value.email.name}}</td>
+                        <td>{{value.get_category_display}}</td>
+                        <td>{{value.nofa}}</td>
+                        <td>{{value.dop}}</td>
+                        <td>{{value.amount}}</td>
+                        <td>{{value.get_session_display}}</td>
+                        <td>{{value.get_status_display}}</td>
+                        <td>{{value.proof_file}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center mb-3 mt-3">
+            <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">Download</button>
+                <ul class="dropdown-menu">
+                    <li id="excel-download"><a class="dropdown-item" href = "/download?file_type=excel_dir">Excel</a></li>
+                    <li id="csv-download"><a class="dropdown-item" href="/download?file_type=csv_dir">CSV</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const table1 = new DataTable('#form_table_faa', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    const table2 = new DataTable('#form_table_events', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    const table3 = new DataTable('#form_table_fdp', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    const table4 = new DataTable('#form_table_mp', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    const table5 = new DataTable('#form_table_msc', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    const table6 = new DataTable('#form_table_patent', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    const table7 = new DataTable('#form_table_rpb', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    const table8 = new DataTable('#form_table_rpcp', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    const table9 = new DataTable('#form_table_rpj', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    const table10 = new DataTable('#form_table_rp', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    const table11 = new DataTable('#form_table_sgc', {
+        paging: false,
+        scrollY: '260px',
+        scrollX: true
+    });
+
+    function openTab(evt, containerId) {
+        document.querySelectorAll(".tab-content").forEach(tab => {
+            tab.style.display = "none";
+        });
+
+        document.querySelectorAll(".nav-link").forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+        const activeContainer = document.getElementById(containerId);
+        activeContainer.style.display = "block";
+        evt.currentTarget.classList.add("active");
+
+        table1.columns.adjust();
+        table2.columns.adjust();
+        table3.columns.adjust();
+        table4.columns.adjust();
+        table5.columns.adjust();
+        table6.columns.adjust();
+        table7.columns.adjust();
+        table8.columns.adjust();
+        table9.columns.adjust();
+        table10.columns.adjust();
+        table11.columns.adjust();
+    }
+
+</script>
+
+{% endblock %}

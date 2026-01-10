@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from django.http.response import JsonResponse
 from django.utils import timezone
 import re
 import firstWebsite.validations as va
@@ -359,15 +361,15 @@ def save_all_forms(request, pk):
                     return redirect('all_forms',pk=pk)
 
                 paf = request.POST.get('paf').strip()
-                if not va.nameValidate(request, noaa, "Name of award/Achievement"):
+                if not va.alphanumnameValidate(request, noaa, "Position / Award For"):
                     return redirect('all_forms', pk=pk)
 
                 ao = request.POST.get('ao').strip()
-                if not va.nameValidate(request, noaa, "Name of award/Achievement"):
+                if not va.nameValidate(request, noaa, "Agency / Organization"):
                     return redirect('all_forms', pk=pk)
 
                 prize = request.POST.get('prize').strip()
-                if not va.nameValidate(request, noaa, "Name of award/Achievement"):
+                if not va.alphanumnameValidate(request, noaa, "Prize"):
                     return redirect('all_forms', pk=pk)
 
                 ad = request.POST.get('award_date')
@@ -459,11 +461,11 @@ def save_all_forms(request, pk):
                     return redirect('all_forms', pk=pk)
 
                 isnp = request.POST.get('isnp').strip()
-                if not va.nameValidate(request, pn, "ISSN number : Print"):
+                if not va.alphanumnameValidate(request, pn, "ISSN number : Print"):
                     return redirect('all_forms', pk=pk)
 
                 isno = request.POST.get('isno').strip()
-                if not va.nameValidate(request, pn, "ISSN number : Online"):
+                if not va.alphanumnameValidate(request, pn, "ISSN number : Online"):
                     return redirect('all_forms', pk=pk)
 
                 level = request.POST.get('optradio3').strip()
@@ -471,7 +473,7 @@ def save_all_forms(request, pk):
                     return redirect('all_forms', pk=pk)
 
                 doi = request.POST.get('doi').strip()
-                if not va.nameValidate(request, pn, "DOI(Digital Object Identifier)"):
+                if not va.alphanumnameValidate(request, pn, "DOI(Digital Object Identifier)"):
                     return redirect('all_forms', pk=pk)
 
                 lwj = request.POST.get('lwj').strip()
@@ -662,11 +664,11 @@ def save_all_forms(request, pk):
                     return redirect('all_forms', pk=pk)
 
                 gi = request.POST.get('nof').strip()
-                if not va.nameValidate(request, gi, "Granted ID"):
+                if not va.alphanumnameValidate(request, gi, "Granted ID"):
                     return redirect('all_forms', pk=pk)
 
                 ag = request.POST.get('ag').strip()
-                if not va.nameValidate(request, ag, "Application ID"):
+                if not va.alphanumnameValidate(request, ag, "Application ID"):
                     return redirect('all_forms', pk=pk)
 
                 top = request.POST.get('top').strip()
@@ -714,8 +716,6 @@ def save_all_forms(request, pk):
                     return redirect('all_forms', pk=pk)
 
                 link = request.POST.get('link').strip()
-                if not va.nameValidate(request, link, "Link"):
-                    return redirect('all_forms', pk=pk)
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
@@ -731,11 +731,11 @@ def save_all_forms(request, pk):
                     return redirect('all_forms', pk=pk)
 
                 ens = request.POST.get('ens').strip()
-                if not va.nameValidate(request, ens, "Enrollment Number of Student"):
+                if not va.alphanumnameValidate(request, ens, "Enrollment Number of Student"):
                     return redirect('all_forms', pk=pk)
 
                 urns = request.POST.get('urns').strip()
-                if not va.nameValidate(request, urns, "University Roll Number of Student"):
+                if not va.alphanumnameValidate(request, urns, "University Roll Number of Student"):
                     return redirect('all_forms', pk=pk)
 
                 eys = request.POST.get('enrollmentyear').strip()
@@ -1034,7 +1034,7 @@ def save_all_forms(request, pk):
 
                 return redirect(reverse('directory'))
 
-            return redirect(reverse('success'))
+            return JsonResponse({'status': 'success'})
         # Method not allowed
         return render(request, '404.html')
 

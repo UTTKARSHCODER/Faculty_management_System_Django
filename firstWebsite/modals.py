@@ -285,7 +285,7 @@ class mooc_course(models.Model):
     def __str__(self):
         return self.noc
 
-class eof(models.TextChoices):
+class eof_choices(models.TextChoices):
     STUDENTS = "S", "Students",
     TEACHING_STAFF = "TS", "Teaching Staff",
     NON_TEACHING_STAFF = "NTS", "Non-Teaching Staff"
@@ -297,6 +297,23 @@ class events(models.Model):
         default=category.OTHER
     )
     eof = models.JSONField(default=list, blank=True)
+
+    @property
+    def eof_display_list(self):
+        data = self.eof
+
+        # If the database accidentally stored a single string instead of a list
+        if isinstance(data, str):
+            data = [data]
+
+        # If it's empty or None
+        if not data:
+            return []
+
+        choice_dict = dict(eof_choices.choices)
+
+        # Now 'NTS' stays together as one key
+        return [choice_dict.get(key, key) for key in data]
     topdpo = models.CharField(max_length=100)
     nop = models.IntegerField()
     adcc = models.CharField(max_length=100)
@@ -411,9 +428,9 @@ class research_journal(models.Model):
         choices=level.choices
     )
     doi = models.CharField(max_length=100)
-    lwj = models.CharField(max_length=100)
-    lap = models.CharField(max_length=100)
-    lrsj = models.CharField(max_length=100)
+    lwj = models.URLField(max_length=500)
+    lap = models.URLField(max_length=500)
+    lrsj = models.URLField(max_length=500)
     aiop = models.CharField(max_length=100)
     ssa = models.CharField(
         max_length=1,
@@ -451,7 +468,7 @@ class research_conference(models.Model):
         choices=session.choices
     )
     doi = models.CharField(max_length=100)
-    lwj = models.CharField(max_length=100)
+    lwj = models.URLField(max_length=500)
     aitp = models.CharField(max_length=100)
     ssa = models.CharField(
         max_length=1,
@@ -484,7 +501,7 @@ class research_book(models.Model):
         choices=session.choices
     )
     doi = models.CharField(max_length=255)
-    lwj = models.CharField(max_length=255)
+    lwj = models.URLField(max_length=500)
     aitp = models.CharField(max_length=100)
     ssa = models.CharField(
         max_length=1,
@@ -533,7 +550,7 @@ class patents(models.Model):
         choices=accept.choices
     )
     details = models.CharField(max_length=255)
-    link = models.CharField(max_length=255)
+    link = models.URLField(max_length=500)
     proof_file = models.FileField(upload_to='uploads/patents/')
     email = models.ForeignKey(Faculty,on_delete=DO_NOTHING)
 
