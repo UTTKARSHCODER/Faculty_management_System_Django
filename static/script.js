@@ -142,6 +142,7 @@ function generateInputFields() {
                 id="input-${value}"
                 min="0"
                 max="20"
+                style="width: 200px;"
                 placeholder="Enter quantity (max 20)"
                 value="${quantities[value] || ''}"
             >
