@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Count
 from firstWebsite.modals import Faculty, awards_and_achievments, category as cat, events, Faculty_participation_data, \
-    guided, mooc_course, patents, research_book, research_conference, research_journal, resource, sponsored_research
+    guided, mooc_course, patents, research_book, research_conference, research_journal, resource, sponsored_research, \
+    non_teaching_staff
 from firstWebsite.views import session_login_required
 
 
@@ -60,6 +61,8 @@ def forms_listing(request, pk):
 
     faculty_instance = Faculty.objects.get(pk=request.session.get('user_id'))
 
+    non_teaching_staff_instance = non_teaching_staff.objects
+
     no_of_awards = awards_and_achievments.objects
 
     events_instance = events.objects
@@ -115,7 +118,7 @@ def forms_listing(request, pk):
 
         return render(request, 'form_listing.html', context)
     elif pk == "report":
-        context = {'faa1': no_of_awards.all(), 'eod1': events_instance.all(),
+        context = {'non_teaching': non_teaching_staff_instance.all(),'faa1': no_of_awards.all(), 'eod1': events_instance.all(),
                    'fdp1': faculty_participation_data.all(), 'mp1': guided_instance.all(),
                    'msc1': mooc_course_instance.all(),
                    'patents1': patents_instance.all(), 'rpb1': research_book_instance.all(),

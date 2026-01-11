@@ -609,6 +609,15 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Name of Faculty Coordinator(s)<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class = "col-sm-8">
+                                            <input type="text" class="form-control" placeholder="Enter Name of Faculty Coordinator(s)" name = "nofc" required>
+                                            <div class="invalid-feedback">Please provide the title of the program.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Title of the Professional Development Program Organized<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the Professional Development Program Organized']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of the Professional Development Program Organized" name = "topdpo" required>

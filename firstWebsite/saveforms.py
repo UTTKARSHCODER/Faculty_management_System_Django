@@ -269,6 +269,10 @@ def save_all_forms(request, pk):
                 if not va.radiocheck(request,eof,"Event organized for"):
                     return redirect('all_forms',pk=pk)
 
+                nofc = request.POST.get('nofc').strip()
+                if not va.nameValidate(request,nofc,"Name of Faculty Coordinator(s)"):
+                    return redirect('all_forms',pk=pk)
+
                 topdpo = request.POST.get('topdpo').strip()
                 if not va.nameValidate(request,topdpo,"Title of Professional Development Program Organized"):
                     return redirect('all_forms',pk=pk)
@@ -348,7 +352,7 @@ def save_all_forms(request, pk):
 
                 remarks = request.POST.get('remarks')
 
-                obj3 = events(category=category,eof=eof,topdpo=topdpo,nop=nop,adcc=adcc,session=session,ct=ct,nosa=nosa,cd=cd,begi_date=begi_date,end_date=end_date,gr=gr,gd=gd,awpsfooe=awpsfooe,nossp=nossp,nosmp=nosmp,eraipf=eraipf,proof_file=proof_file,remarks=remarks,email=faculty_instance)
+                obj3 = events(category=category,eof=eof,nofc=nofc,topdpo=topdpo,nop=nop,adcc=adcc,session=session,ct=ct,nosa=nosa,cd=cd,begi_date=begi_date,end_date=end_date,gr=gr,gd=gd,awpsfooe=awpsfooe,nossp=nossp,nosmp=nosmp,eraipf=eraipf,proof_file=proof_file,remarks=remarks,email=faculty_instance)
                 obj3.save()
 
             elif pk == 4:

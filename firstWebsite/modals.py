@@ -302,7 +302,6 @@ class events(models.Model):
         default=category.OTHER
     )
     eof = models.JSONField(default=list, blank=True)
-
     @property
     def eof_display_list(self):
         data = self.eof
@@ -319,6 +318,8 @@ class events(models.Model):
 
         # Now 'NTS' stays together as one key
         return [choice_dict.get(key, key) for key in data]
+
+    nofc = models.CharField(max_length=255,default="Unknown")
     topdpo = models.CharField(max_length=100)
     nop = models.IntegerField()
     adcc = models.CharField(max_length=100)
@@ -418,9 +419,9 @@ class quartile(models.TextChoices):
     NA = "NA", "NA"
 
 class research_journal(models.Model):
-    noa = models.CharField(max_length=100)
-    top = models.CharField(max_length=100)
-    noj = models.CharField(max_length=100)
+    noa = models.CharField(max_length=150)
+    top = models.CharField(max_length=255)
+    noj = models.CharField(max_length=255)
     nop = models.CharField(max_length=100)
     vi = models.IntegerField()
     pn = models.IntegerField()
@@ -579,6 +580,11 @@ class survillance(models.TextChoices):
     C = "C", "Co-Supervisor"
 
 class guided(models.Model):
+    category = models.CharField(
+        max_length=6,
+        choices=category.choices,
+        default=category.OTHER
+    )
     nos = models.CharField(max_length=100)
     ens = models.CharField(max_length=100)
     urns = models.CharField(max_length=100)
