@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.db.models import DO_NOTHING
+from django.utils import timezone
 
 class batch(models.TextChoices):
     CS_A = "3CS-A",
@@ -25,6 +26,7 @@ class Student_Directory(models.Model):
     student_phone_no = models.CharField(max_length=10)
     parent_phone_no = models.CharField(max_length=10)
     address = models.TextField()
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -141,6 +143,7 @@ class Faculty(models.Model):
     phd_univ = models.CharField(max_length=100, null = True, blank = True)
     phd_dor = models.DateField(null=True,blank=True)
     norp = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now=True)
 
 
     def __str__(self):
@@ -227,6 +230,7 @@ class Faculty_participation_data(models.Model):
     )
     proof_file = models.FileField(upload_to='uploads/fdp_certificate/')
     email = models.ForeignKey(Faculty,on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.get_category_display() + ": " + self.top
@@ -281,6 +285,7 @@ class mooc_course(models.Model):
     remarks = models.CharField(max_length=255,null=True)
     proof_file = models.FileField(upload_to='uploads/mooc_certificate/')
     email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.noc
@@ -344,6 +349,7 @@ class events(models.Model):
     proof_file = models.FileField(upload_to='uploads/events/')
     remarks = models.CharField(max_length=255, null = True)
     email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.get_category_display() + " " + self.topdpo
@@ -365,6 +371,7 @@ class awards_and_achievments(models.Model):
         choices=session.choices
     )
     email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.get_category_display() + " " + self.noaa
@@ -391,6 +398,7 @@ class sponsored_research(models.Model):
     )
     proof_file = models.FileField(upload_to='uploads/sponsored_research/')
     email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.get_category_display() + " " + self.nofa
@@ -447,6 +455,7 @@ class research_journal(models.Model):
     )
     proof_file = models.FileField(upload_to='uploads/research_journal/')
     email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.noj + " " + self.noa
@@ -481,6 +490,7 @@ class research_conference(models.Model):
     )
     proof_file = models.FileField(upload_to='uploads/research_journal/')
     email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.top + " " + self.noa
@@ -514,6 +524,7 @@ class research_book(models.Model):
     )
     proof_file = models.FileField(upload_to="uploads/research_book/")
     email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.tob + " "  + self.noa
@@ -553,6 +564,7 @@ class patents(models.Model):
     link = models.URLField(max_length=500)
     proof_file = models.FileField(upload_to='uploads/patents/')
     email = models.ForeignKey(Faculty,on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.top
@@ -586,6 +598,7 @@ class guided(models.Model):
         choices=session.choices
     )
     email = models.ForeignKey(Faculty,on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.nos + " " + self.tod
@@ -631,6 +644,7 @@ class resource(models.Model):
     venue = models.CharField(max_length=2550)
     proof_file = models.FileField(upload_to='uploads/resource/')
     email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.get_category_display() + ": " + self.toe
@@ -680,6 +694,7 @@ class non_teaching_staff(models.Model):
     higher_degree_certificate = models.FileField(upload_to="uploads/non_tech_staff/higher_degree_certificate/")
     salary_slip = models.FileField(upload_to="uploads/non_tech_staff/salary_slip/")
     certificate = models.FileField(upload_to="uploads/non_tech_staff/certificates/")
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name + " " + self.designation

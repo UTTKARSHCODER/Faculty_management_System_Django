@@ -114,7 +114,6 @@ def forms_listing(request, pk):
                    'rp1': resource_instance, 'sgc1': sponsored_research_instance}
 
         return render(request, 'form_listing.html', context)
-    
     elif pk == "report":
         context = {'faa1': no_of_awards.all(), 'eod1': events_instance.all(),
                    'fdp1': faculty_participation_data.all(), 'mp1': guided_instance.all(),
@@ -125,9 +124,9 @@ def forms_listing(request, pk):
                    'sgc1': sponsored_research_instance.all()}
 
         return render(request, 'form_listing_dir.html', context)
-    
-    elif pk == "patially_filled_forms":
-        return redirect('page_under_construction.html')
 
+    elif pk == "partially_filled_forms" or pk == "more_explore_forms":
+
+        return render(request, 'page_under_construction.html')
     else:
-        return redirect('404.html')
+        return render(request,'404.html')

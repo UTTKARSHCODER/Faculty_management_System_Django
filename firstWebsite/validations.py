@@ -44,13 +44,8 @@ def validate_pan(pan_number):
         return False
 
 def nameValidate(request,key,tag):
-    namepattern = re.compile(r'[^a-zA-Z ]')
     if not key or key == '':
         error_message = f"{tag} cannot be empty"
-        messages.error(request,error_message)
-        return False
-    elif namepattern.search(key):
-        error_message = f"{tag} cannot contains special characters,digits,tabs or newline."
         messages.error(request,error_message)
         return False
     else:
@@ -70,7 +65,7 @@ def alphanumnameValidate(request,key,tag):
         return True
 
 def numberValidate(request,key,tag):
-    if not key or key == 0:
+    if not key:
         error_message = f"{tag} cannot be empty"
         messages.error(request,error_message)
         return False
