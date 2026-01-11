@@ -2201,7 +2201,6 @@ document.addEventListener('submit', function(e) {
         .then(data=> {
             if(data.status === 'success') {
                 curr_count++;
-                alert("Form submitted Successfully");
                 submitButton.innerText = "Saved Successfully!";
                 if(curr_count === total_forms) {
                     window.location.href = '/success';
