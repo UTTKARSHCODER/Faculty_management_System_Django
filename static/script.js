@@ -101,6 +101,10 @@ function getCookie(name) {
 
 const csrfToken = getCookie('csrftoken');
 
+if(!csrfToken) {
+    window.location.href = "/cookie";
+}
+
 // Consider the case where user deselects a checkbox then your value is not reset back to previous sum value or 0 value
 var total_forms = 0;
 checkboxGroup.addEventListener('change', (e) => {

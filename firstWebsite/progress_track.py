@@ -118,7 +118,7 @@ def forms_listing(request, pk):
 
         return render(request, 'form_listing.html', context)
     elif pk == "report":
-        context = {'non_teaching': non_teaching_staff_instance.all(),'faa1': no_of_awards.all(), 'eod1': events_instance.all(),
+        context = {'user': request.session.get('topLeftBar'),'non_teaching': non_teaching_staff_instance.all(),'faa1': no_of_awards.all(), 'eod1': events_instance.all(),
                    'fdp1': faculty_participation_data.all(), 'mp1': guided_instance.all(),
                    'msc1': mooc_course_instance.all(),
                    'patents1': patents_instance.all(), 'rpb1': research_book_instance.all(),

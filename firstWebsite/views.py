@@ -278,3 +278,6 @@ def faq(request):
 
 def page_under_construction(request):
     return render(request,'page_under_construction.html')
+
+def cookie_not_found(request):
+    return render(request,'403.html')

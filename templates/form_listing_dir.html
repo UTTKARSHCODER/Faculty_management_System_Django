@@ -4,10 +4,36 @@
 <link rel="stylesheet" href="/static/dataTable.css">
 <script src="/static/dataTables.js"></script>
 <script src="/static/dataTables.bootstrap5.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
 <style>
      th {
         white-space: nowrap;
      }
+    .tab-hidden {
+        visibility: hidden !important;
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+        display: block !important; /* Keep it 'block' so width is calculated */
+    }
+
+    table.dataTable thead th:last-child {
+        position: sticky;
+        right: 0;
+        z-index: 10; /* Keep on top of other headers */
+        background-color: #000000;
+        box-shadow: -2px 0px 5px rgba(0,0,0,0.1); /* Optional shadow for depth */
+    }
+    
+    /* Fix the Last Column in the Body */
+    table.dataTable tbody td:last-child {
+        position: sticky;
+        right: 0;
+        z-index: 9;
+        background-color: #fff; /* MUST be set, or text will overlap transparently */
+        box-shadow: -2px 0px 5px rgba(0,0,0,0.1); /* Optional shadow */
+    }
 </style>
 <div class="col-10">
     <div class="container ms-5 mt-4 mb-3">
@@ -53,6 +79,9 @@
                         <th>Salary Slip (Recently)</th>
                         <th>If Awards and recognition received for extension activities (Upload Certificate)</th>
                         <th>The above-mentioned information is correct best to my knowledge</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -72,23 +101,26 @@
                         <td>{{value.highest_qual}}</td>
                         <td>{{value.university_name}}</td>
                         <td>{{value.pshd}}</td>
-                        <td>{{value.higher_degree_certificate}}</td>
+                        <td><a href = "/media/{{value.higher_degree_certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td>{{value.professional_course}}</td>
                         <td>{{value.pan_no}}</td>
                         <td>{{value.dob|date:'d-m-Y'}}</td>
                         <td>{{value.joining_date|date:'d-m-Y'}}</td>
                         <td>{{value.promotion_date|date:'d-m-Y'}}</td>
-                        <td>{{value.joining_report}}</td>
-                        <td>{{value.offer_letter}}</td>
-                        <td>{{value.salary_slip}}</td>
-                        <td>{{value.certificate}}</td>
+                        <td><a href = "/media/{{value.joining_report}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        <td><a href = "/media/{{value.offer_letter}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        <td><a href = "/media/{{value.salary_slip}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td>I Agree</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "16" data-pk = "{{value.pk}}" data-emp-id = "{{value.emp_id}}" data-head-main = "Employee Name" data-head-main-entry = "{{value.name}}" data-sub-head = "Employee Email" data-sub-head-entry = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content pt-2" id="fdp" style = "display: none;">
+        <div class="tab-content pt-2 tab-hidden" id="fdp">
             <table class = "table table-hover mt-3" id="form_table_fdp">
                 <thead class = "table-dark">
                     <tr>
@@ -111,6 +143,9 @@
                         <th>No. of Days</th>
                         <th>Proof Enclosed (Yes/No)</th>
                         <th>Uploaded Certificate/Proof</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -134,13 +169,16 @@
                         <td>{{value.session}}</td>
                         <td>{{value.no_of_days}}</td>
                         <td>{{value.get_proof_enclosed_display}}</td>
-                        <td>{{value.proof_file}}</td>
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "1" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Program" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content pt-2" id="msc" style = "display: none;">
+        <div class="tab-content pt-2 tab-hidden" id="msc">
             <table class = "table table-hover mt-3" id="form_table_msc">
                 <thead class = "table-dark">
                     <tr>
@@ -162,6 +200,9 @@
                         <th>Any category from below</th>
                         <th>Uploaded Certificate</th>
                         <th>Remarks(if any)</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -174,7 +215,7 @@
                         <td>{{value.email.name}}</td>
                         <td>{{value.email.emp_id}}</td>
                         <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.category}}</td>
+                        <td>{{value.get_category_display}}</td>
                         <td>{{value.timeline}}</td>
                         <td>{{value.noc}}</td>
                         <td>{{value.get_doc_display}}</td>
@@ -183,14 +224,17 @@
                         <td>{{value.offer}}</td>
                         <td>{{value.get_ctype_display}}</td>
                         <td>{{value.get_topper_in_display}}</td>
-                        <td>{{value.proof_file}}</td>
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td>{{value.remarks}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "2" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the Course" data-sub-head-entry = "{{value.noc}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content pt-2" id="events" style = "display: none;">
+        <div class="tab-content pt-2 tab-hidden" id="events">
             <table class = "table table-hover mt-3" id="form_table_events">
                 <thead class = "table-dark">
                     <tr>
@@ -217,6 +261,9 @@
                         <th>Event report attached in proper format(Yes/No)</th>
                         <th>Upload Event Report</th>
                         <th>Any Other Remark</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -229,7 +276,7 @@
                         <td>{{value.end_date}}</td>
                         <td>{{value.eof_display_list|join:", "}}</td>
                         <td>{{value.get_category_display}}</td>
-                        <td>{{value.email.nofc}}</td>
+                        <td>{{value.nofc}}</td>
                         <td>{{value.topdpo}}</td>
                         <td>{{value.nop}}</td>
                         <td>{{value.adcc}}</td>
@@ -243,14 +290,17 @@
                         <td>{{value.nossp}}</td>
                         <td>{{value.nosmp}}</td>
                         <td>{{value.get_eraipf_display}}</td>
-                        <td>{{value.proof_file}}</td>
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td>{{value.remarks}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "3" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the Faculty Coordinator" data-head-main-entry = "{{value.nofc}}" data-sub-head = "Title of the Professional Development Program Organized" data-sub-head-entry = "{{value.topdpo}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content table-responsive pt-2" id="faa" style="display:none;">
+        <div class="tab-content table-responsive pt-2 tab-hidden" id="faa">
             <table class = "table table-hover mt-3" id="form_table_faa">
                 <thead class = "table-dark">
                     <tr>
@@ -271,6 +321,9 @@
                         <th>Upload Award Certificate/Proof</th>
                         <th>Remark</th>
                         <th>All information filled by me is correct and I will submit proof and other related document whenever is asked</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -290,15 +343,18 @@
                         <td>{{value.ao}}</td>
                         <td>{{value.prize}}</td>
                         <td>{{value.ad}}</td>
-                        <td>{{value.proof_file}}</td>
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td>{{value.remark}}</td>
                         <td>I AGREE</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "4" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Faculty Name" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of Award/Achievement" data-sub-head-entry = "{{value.noaa}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content pt-2" id="sgc" style = "display: none;">
+        <div class="tab-content pt-2 tab-hidden" id="sgc">
             <table class = "table table-hover mt-3" id="form_table_sgc">
                 <thead class = "table-dark">
                     <tr>
@@ -315,6 +371,9 @@
                         <th>Session in which grant/research project/consultancy received </th>
                         <th>Status</th>
                         <th>Upload Proof</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -332,13 +391,16 @@
                         <td>{{value.amount}}</td>
                         <td>{{value.get_session_display}}</td>
                         <td>{{value.get_status_display}}</td>
-                        <td>{{value.proof_file}}</td>
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "5" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Candidate (PI/Co PI)" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the Funding Agency" data-sub-head-entry = "{{value.nofa}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content pt-2" id="rpj" style = "display: none;">
+        <div class="tab-content pt-2 tab-hidden" id="rpj">
             <table class = "table table-hover mt-3" id="form_table_rpj">
                 <thead class = "table-dark">
                     <tr>
@@ -368,6 +430,9 @@
                         <th>Is SKIT student associated?</th>
                         <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name) </th>
                         <th>Uploaded Full Paper</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -398,13 +463,16 @@
                         <td>{{value.get_quartile_display}}</td>
                         <td>{{value.get_ssa_display}}</td>
                         <td>{{value.details}}</td>
-                        <td>{{value.proof_file}}</td>
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "6" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author(s)" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of Paper" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content pt-2" id="rpcp" style = "display: none;">
+        <div class="tab-content pt-2 tab-hidden" id="rpcp">
             <table class = "table table-hover mt-3" id="form_table_rpcp">
                 <thead class = "table-dark">
                     <tr>
@@ -429,6 +497,9 @@
                         <th>Is SKIT student associated?</th>
                         <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
                         <th>Upload Full Paper</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -454,13 +525,16 @@
                         <td>{{value.get_index_by_display}}</td>
                         <td>{{value.get_ssa_display}}</td>
                         <td>{{value.details}}</td>
-                        <td>{{value.proof_file}}</td>
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "7" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author(s)" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of Conference" data-sub-head-entry = "{{value.toc}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content pt-2" id="rpb" style = "display: none;">
+        <div class="tab-content pt-2 tab-hidden" id="rpb">
             <table class = "table table-hover mt-3" id="form_table_rpb">
                 <thead class = "table-dark">
                     <tr>
@@ -484,6 +558,9 @@
                         <th>Is SKIT student associated?</th>
                         <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
                         <th>Uploaded Proof (Book Chapter/Front Page/Document etc.)</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -508,13 +585,16 @@
                         <td>{{value.get_index_by_display}}</td>
                         <td>{{value.get_ssa_display}}</td>
                         <td>{{value.details}}</td>
-                        <td>{{value.proof_file}}</td>
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "8" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author/editor" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of the book" data-sub-head-entry = "{{value.tob}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content pt-2" id="patent" style = "display: none;">
+        <div class="tab-content pt-2 tab-hidden" id="patent">
             <table class = "table table-hover mt-3" id="form_table_patent">
                 <thead class = "table-dark">
                     <tr>
@@ -537,6 +617,9 @@
                         <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
                         <th>Link</th>
                         <th>Upload Proof</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -560,13 +643,16 @@
                         <td>{{value.get_ssa_display}}</td>
                         <td>{{value.details}}</td>
                         <td>{{value.link}}</td>
-                        <td>{{value.proof_file}}</td>
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "9" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Patent" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content pt-2" id="mp" style = "display: none;">
+        <div class="tab-content pt-2 tab-hidden" id="mp">
             <table class = "table table-hover mt-3" id="form_table_mp">
                 <thead class = "table-dark">
                     <tr>
@@ -586,6 +672,9 @@
                         <th>Supervisor / Co-supervisor</th>
                         <th>Date of Viva-Voce</th>
                         <th>Name of external examiner</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -607,12 +696,15 @@
                         <td>{{value.get_visor_display}}</td>
                         <td>{{value.dov}}</td>
                         <td>{{value.noe}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "10" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Faculty Name" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the student Guided" data-sub-head-entry = "{{value.nos}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="tab-content pt-2" id="rp" style = "display: none;">
+        <div class="tab-content pt-2 tab-hidden" id="rp">
             <table class = "table table-hover mt-3" id="form_table_rp">
                 <thead class = "table-dark">
                     <tr>
@@ -632,6 +724,9 @@
                         <th>To Date</th>
                         <th>Venue</th>
                         <th>Proof(Certificate/Mail)</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Delete</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -652,7 +747,10 @@
                         <td>{{value.begi_date}}</td>
                         <td>{{value.end_date}}</td>
                         <td>{{value.venue}}</td>
-                        <td>{{value.proof_file}}</td>
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "11" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Event/ Exam Name" data-sub-head-entry = "{{value.toe}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -670,6 +768,42 @@
         </div>
     </div>
 </div>
+        <!-- The Delete Modal -->
+        <div class="modal fade" id="deleteUser">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-danger">
+                        <h4 class="modal-title text-white">Delete User Permanently</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                  <!-- Modal body -->
+                    <div class="modal-body">
+                        Are you sure you want to delete this entry permanently?
+                        <p class ="mt-2"><strong>Employee Id: <span id = "modal-emp-id"></span></strong></p>
+                        <p><strong><span id = "modal-head-main"></span>: <span id = "modal-entry-main"></span></strong></p>
+                        <p><strong><span id = "modal-sub-head"></span>: <span id = "modal-sub-entry"></span></strong></p>
+                    </div>
+
+                  <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <form action="/deleteformdata/report" method="POST">
+                            {% csrf_token %}
+                            <div class="dflex justify-content-end">
+                                <input type = "hidden" id="pk" name = "pk" value = "">
+                                <input type = "hidden" id="form_no" name = "form_no" value = "">
+                                <button type="button" class = "btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Delete Entry</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Delete Model Ends -->
+
 <script>
     const table = new DataTable('#form_table_non_teaching', {
         paging: false,
@@ -680,13 +814,14 @@
     const table1 = new DataTable('#form_table_faa', {
         paging: false,
         scrollY: '260px',
-        scrollX: true
+        scrollX: true,
     });
 
     const table2 = new DataTable('#form_table_events', {
         paging: false,
         scrollY: '260px',
-        scrollX: true
+        scrollX: true,
+        
     });
 
     const table3 = new DataTable('#form_table_fdp', {
@@ -745,7 +880,9 @@
 
     function openTab(evt, containerId) {
         document.querySelectorAll(".tab-content").forEach(tab => {
-            tab.style.display = "none";
+            tab.style.display = ""; // clear inline style
+            tab.classList.remove("active");
+            tab.classList.add("tab-hidden");
         });
 
         document.querySelectorAll(".nav-link").forEach(btn => {
@@ -753,22 +890,32 @@
         });
 
         const activeContainer = document.getElementById(containerId);
-        activeContainer.style.display = "block";
+        activeContainer.classList.remove("tab-hidden");
+        activeContainer.classList.add("active");
         evt.currentTarget.classList.add("active");
 
-        table.columns.adjust();
-        table1.columns.adjust();
-        table2.columns.adjust();
-        table3.columns.adjust();
-        table4.columns.adjust();
-        table5.columns.adjust();
-        table6.columns.adjust();
-        table7.columns.adjust();
-        table8.columns.adjust();
-        table9.columns.adjust();
-        table10.columns.adjust();
-        table11.columns.adjust();
     }
+
+    $(document).ready(function() {
+        $('#deleteUser').on('show.bs.modal', function(event) {
+            var link =  $(event.relatedTarget);
+            var faculty_id = link.data('empId');
+            var pk = link.data('pk');
+            var form_no = link.data('form_no');
+            var heading_main = link.data('headMain');
+            var heading_main_entry = link.data('headMainEntry');
+            var heading_sub_head = link.data('subHead');
+            var heading_sub_head_entry = link.data('subHeadEntry');
+            var modal = $(this);
+            modal.find('#modal-emp-id').text(faculty_id);
+            modal.find('#modal-head-main').text(heading_main);
+            modal.find('#modal-entry-main').text(heading_main_entry);
+            modal.find('#modal-sub-head').text(heading_sub_head);
+            modal.find('#modal-sub-entry').text(heading_sub_head_entry);
+            modal.find('#pk').val(pk);
+            modal.find('#form_no').val(form_no);
+        });
+    });
 
 </script>
 
