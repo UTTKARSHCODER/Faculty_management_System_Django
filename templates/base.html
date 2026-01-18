@@ -99,7 +99,7 @@
                         <a href="/fdp" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == fdp or 'all_forms' in request.path %} active {% endif %}" id = "faculty_development" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Faculty  Data Collection(FDC) Forms">FDC Forms</li></a>
                         <a href="/directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == directory %} active {% endif %}" id = "directory">Directory</li></a>
                         <a href="/faculty_report" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == faculty_report %} active {% endif %}" id = "faculty_report">Faculty Report</li></a>
-                        <a href="/progress" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == progress %} active {% endif %}" id = "progress">Progress</li></a>
+                        <a href="/progress" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == progress or '/forms_listing/' in request.path %} active {% endif %}" id = "progress">Progress</li></a>
                         {% endif %}
                         {% endif %}
                         <a href="/about" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == about %} active {% endif %}" id = "about_us">About Us</li></a>

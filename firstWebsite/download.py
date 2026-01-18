@@ -1,12 +1,15 @@
 import base64
 import io
 
+import openpyxl
 import pandas as pd
 from django.forms.models import model_to_dict
 from django.http.response import HttpResponse
 from django.shortcuts import render
 
-from firstWebsite.modals import Faculty, Student_Directory
+from firstWebsite.modals import Faculty, Student_Directory, non_teaching_staff, Faculty_participation_data, mooc_course, \
+    awards_and_achievments, events, sponsored_research, research_journal, research_conference, research_book, patents, \
+    guided, resource
 from firstWebsite.views import session_login_required
 
 
@@ -125,6 +128,299 @@ def download_files(request):
 
         elif request.GET.get('file_type') == 'csv_repo' or request.GET.get('file_type') == 'csv_dir' or request.GET.get('file_type') == 'csv_stu_dir':
             return render(request,'page_under_construction.html')
+
+        elif request.GET.get('file_type') == 'fdc_dir_data':
+            workbook = openpyxl.Workbook()
+            default_sheet = workbook.active
+            workbook.remove(default_sheet)
+
+            # --- Non-teaching Staff Details ---
+            sheet1 = workbook.create_sheet("1. Non-Teaching Staff Profile")
+            sheet1.append(['Timestamp','Email address','Session','Name','Mobile No','Department','Lab No','Designation','Employee ID','Highest Qualification','University Name','Passing Year of Highest degree','Higher Degree Certificate(Date of Award)','Professional Courses','PAN No.','Date of Birth','Joining Date (DD, MM, YY)','Promotion Date ( If any)','Joining Report','Offer Letter (Appointment Letter)','Salary Slip (Recently)','If Awards and recognition received for extension activities (Upload Certificate)','The above mentioned information is correct best to my knowledge'])
+
+            for item in non_teaching_staff.objects.all():
+                if item.joining_report:
+                    item.joining_report = item.joining_report.url
+                else:
+                    item.joining_report = "No File"
+
+                if item.offer_letter:
+                    item.offer_letter = item.offer_letter.url
+                else:
+                    item.offer_letter = "No File"
+
+                if item.higher_degree_certificate:
+                    item.higher_degree_certificate = item.higher_degree_certificate.url
+                else:
+                    item.higher_degree_certificate = "No File"
+
+                if item.salary_slip:
+                    item.salary_slip = item.salary_slip.url
+                else:
+                    item.salary_slip = "No File"
+
+                if item.certificate:
+                    item.certificate = item.certificate.url
+                else:
+                    item.certificate = "No File"
+
+                sheet1.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(),
+                               item.name, item.mobile_no, item.get_department_display(), item.Lab_no, item.get_designation_display(),
+                               item.emp_id, item.highest_qual, item.university_name, item.pshd, item.higher_degree_certificate,
+                               item.professional_course, item.pan_no, item.dob, item.joining_date, item.promotion_date, item.joining_report,
+                               item.offer_letter, item.salary_slip, item.certificate, 'I Agree'])
+
+                if item.joining_report:
+                    cell = sheet1.cell(row=sheet1.max_row, column=19)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.joining_report.url
+                    cell.style = "Hyperlink"
+
+                if item.offer_letter:
+                    cell = sheet1.cell(row=sheet1.max_row, column=20)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.offer_letter.url
+                    cell.style = "Hyperlink"
+
+
+                if item.higher_degree_certificate:
+                    cell = sheet1.cell(row=sheet1.max_row, column=13)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.highest_degree_certificate.url
+                    cell.style = "Hyperlink"
+
+
+                if item.salary_slip:
+                    cell = sheet1.cell(row=sheet1.max_row, column=21)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.salary_slip.url
+                    cell.style = "Hyperlink"
+
+
+                if item.certificate:
+                    cell = sheet1.cell(row=sheet1.max_row, column=22)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.certificate.url
+                    cell.style = "Hyperlink"
+
+
+            # --- Faculty Participartion ---
+            sheet2 = workbook.create_sheet("2. Faculty Participation")
+            sheet2.append(['Timestamp','Email address','Employee ID','Department','Name of Faculty Memeber','Title of Program','Conference/FDP/ Workshop/Seminar/ STTP','Mode (Online/Offline)','Level','Organizer','Sponsored By','Grant received from SKIT (Yes/No)','From Date','To Date','Session','No. of Days','Proof Enclosed (Yes/No)','Upload Certificate/Proof'])
+
+            for item in Faculty_participation_data.objects.all():
+                if item.proof_file:
+                    proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                else:
+                    proof_file = "No File"
+
+                sheet2.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.emp_id, item.email.get_department_display(),
+                               item.email.name, item.top, item.get_category_display(), item.get_mode_display(),
+                               item.get_level_display(), item.organizer, item.sponsors, item.get_approval_display(),
+                               item.begi_date.strftime("%d-%m-%Y"), item.end_date.strftime("%d-%m-%Y"), item.get_session_display(),
+                               item.no_of_days, item.get_proof_enclosed_display(), proof_file])
+
+                if item.proof_file:
+                    cell = sheet2.cell(row=sheet2.max_row, column=18)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                    cell.style = "Hyperlink"
+
+            # --- 3. MOOCsShort Term Course ---
+            sheet3 = workbook.create_sheet("3. MOOCsShort Term Course")
+            sheet3.append(['Timestamp', 'Email address', 'Session', 'Name of Faculty Memeber', 'Employee ID' ,'Department',
+                           'Type of Course', 'Timeline of course', 'Name of the Course', 'Duration of Course', 'Start Date of Course',
+                           'End Date of Course', 'Offering Agency / Organizer', 'Certificate Type', 'Any  category from below ',
+                           'Upload Certificate/Proof','Remarks (if any)'])
+
+
+            for item in mooc_course.objects.all():
+                if item.proof_file:
+                    proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                else:
+                    proof_file = "No File"
+
+                sheet3.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.name, item.email.emp_id,
+                               item.email.get_department_display(),
+                               item.get_category_display(), item.timeline, item.noc,
+                               item.get_doc_display(),
+                               item.begi_date.strftime("%d-%m-%Y"), item.end_date.strftime("%d-%m-%Y"), item.offer, item.get_ctype_display(),
+                               item.get_topper_in_display(),
+                               proof_file,item.remarks])
+
+            # --- 4. Events Organized by Department ---
+            sheet4 = workbook.create_sheet("4Events Organized by Department")
+            sheet4.append(['Timestamp', 'Email address', 'Start Date of the Event', 'End Date  the Event ' ,'Event Organized for', 'Type of Event', 'Name of Faculty Coordinator(s)',
+                           'Title of the Professional Development Program Organized', 'No. of participants', 'Academic Department/ Cell / Committees/ Labs /COE',
+                           'Academic Session', 'Sponsored/Non Sponsored', 'Name of Sponsoring Agency (if Sponsored)', 'Collaboration Details', 'Grant Received (YES/NO)', 'Association with professional societies for organization of event', 'Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)s', 'Number of staff member participated(Provide list of staff members with  their EMPLOYEE ID & Certificates)', 'Event report attached in proper format(YES/NO)' ,'Upload Event Report', 'Any Other Remark'])
+
+            for item in events.objects.all():
+                if item.proof_file:
+                    proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                else:
+                    proof_file = "No File"
+
+                sheet4.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.begi_date.strftime("%d-%m-%Y"),
+                               item.end_date.strftime("%d-%m-%Y"), item.eof, item.get_category_display(),
+                               item.nofc, item.topdpo, item.nop,
+                               item.adcc, item.get_session_display(), item.get_ct_display(),
+                               item.nosa, item.cd,
+                               item.get_gr_display(), item.gd, item.awpsfooe, item.nossp, item.nosmp, item.get_eraipf_display(),
+                               proof_file,item.remarks])
+
+            # --- 5. Faculty Awards & Achievement ---
+            sheet5 = workbook.create_sheet("5. Faculty Awards & Achievement")
+            sheet5.append(['Timestamp', 'Email address', 'Session', 'Faculty Name', 'Employee ID',
+                           'Designation', 'Department', 'Name of the Award/Achievement', 'Category','Position / Award For',
+                           'Agency/Organization', 'Prize', 'Upload Award Certificate/Proof', 'Remark', 'All information filled by me is correct and I will submit proof and other related document whenever is asked '])
+
+            for item in awards_and_achievments.objects.all():
+                if item.proof_file:
+                    proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                else:
+                    proof_file = "No File"
+
+                sheet5.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(),
+                               item.email.name, item.email.emp_id, item.email.get_designation_display(), item.email.get_department_display(),
+                               item.noaa, item.get_category_display(), item.paf,
+                               item.ao, item.prize, proof_file,
+                               item.remark, "I AGREE"])
+
+            # --- 6. Sponsored Research/Grant Received/Consultancy ---
+            sheet6 = workbook.create_sheet("6. Sponsored Research, Grant")
+            sheet6.append(['Timestamp', 'Email address', 'Name of Candidate (PI/Co PI)', 'Employee ID', 'Department',
+                           'Category ', ' Name of the funding agency (MSME/DST/CSIR/SERB /Industry etc.)', 'Duration of Project (in Years)',
+                           'Amount in Rs.', 'Session in which grant/research project/consultancy received', 'Status', 'Upload Proof'])
+
+            for item in sponsored_research.objects.all():
+                if item.proof_file:
+                    proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                else:
+                    proof_file = "No File"
+
+                sheet6.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.name,
+                               item.email.emp_id, item.email.get_department_display(), item.get_category_display(),
+                               item.nofa, item.dop,
+                               item.amount, item.get_session_display(), item.get_status_display(),
+                               proof_file])
+
+            # --- 7.1 Research Publication - Journal ---
+            sheet7 = workbook.create_sheet("7.1Research Publication-Journal")
+            sheet7.append(['Timestamp', 'Email address', 'Employee ID', 'Name of the author', 'Department'
+                           'Title of Paper', 'Name of Journal', 'Name of the Publisher', 'Volume, Issue', 'Page No.', 'Published Date'
+                           'Session', 'ISSN number : Print', 'ISSN number : Online', 'Level (National/International)', 'DOI',
+                           'Link to website of the Journal', 'Link to article/paper/abstract of the article (Direct link to the webpage where the abstract of paper is displayed)', 'Link to the recognition in SCOPUS enlistment of the Journal', 'Affiliating Institute at the time of publication', 'Indexed by', 'Quartile', 'Is SKIT student associated ?', 'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)', 'Upload Full Paper'])
+
+            for item in research_journal.objects.all():
+                if item.proof_file:
+                    proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                else:
+                    proof_file = "No File"
+
+                sheet7.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.emp_id,
+                               item.noa, item.email.get_department_display(), item.top,
+                               item.noj, item.nop, item.vi,
+                               item.pn, item.pd, item.get_session_display(),
+                               item.isnp, item.isno, item.get_level_display(), item.doi, item.lwj, item.lap, item.lrsj, item.aiop,
+                               item.get_index_by_display(), item.get_quartile_display(), item.get_ssa_display(), item.details,
+                               proof_file])
+
+            # --- 7.2 Conference Publication ---
+            sheet8 = workbook.create_sheet("7.2 Conference Publication")
+            sheet8.append(['Timestamp', 'Email address', 'Department', 'Employee ID', 'Name of author',
+                           'Title of the Conference', 'Title of paper', 'Title of the proceedings of the conference','Level(National/International)', 'ISBN/ISSN number of the proceeding','Name of the Publisher', 'Published Date', 'Session',
+                           'DOI', 'Web Link', 'Affiliating Institute at the time of publication', 'Indexed by', 'Is SKIT stuacdent associated?', 'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)',
+                           'Upload Full Paper'])
+
+            for item in research_conference.objects.all():
+                if item.proof_file:
+                    proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                else:
+                    proof_file = "No File"
+
+                sheet8.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.get_department_display(),
+                               item.email.emp_id, item.noa, item.toc,
+                               item.top, item.topc, item.get_level_display(),
+                               item.isnp, item.nop, item.pd, item.get_session_display(),
+                               item.doi, item.lwj, item.aitp,
+                               item.get_index_by_display(), item.get_ssa_display(), item.details,
+                               proof_file])
+
+            # --- 7.3 Book and Book Chapters ---
+            sheet9 = workbook.create_sheet("7.3 Book and Book Chapters")
+            sheet9.append(['Timestamp', 'Email address', 'Department', 'Employee ID', 'Name of author/editor',
+                           'Title of the book', 'Title of chapter Published', 'Level (National/International)',
+                           'ISBN', 'Name of the Publisher', 'Published Date', 'Session', 'DOI', 'Web Link', 'Affiliating Institute at the time of publication',
+                           'Indexed By', 'Is SKIT student associated', 'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)', 'Upload Proof (Book Chapter/Front Page/Document etc.)'])
+
+            for item in research_book.objects.all():
+                if item.proof_file:
+                    proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                else:
+                    proof_file = "No File"
+
+                sheet9.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.get_department_display(), item.email.emp_id,
+                               item.noa, item.tob,
+                               item.top, item.get_level_display(), item.isbn,
+                               item.nop, item.pd, item.get_session_display(),
+                               item.doi, item.lwj,
+                               item.aitp, item.get_index_by_display(), item.get_ssa_display(), item.details,
+                               proof_file])
+
+            # --- 7.4 Patents ---
+            sheet10 = workbook.create_sheet("7.4 Patents")
+            sheet10.append(['Timestamp', 'Email address', 'Session', 'Department', 'Employee ID', 'Name of Faculty',
+                           'Status of Patent', 'Application ID', 'Granted ID', 'Type of Patent',
+                           'Title of Patent', 'Granted Country', 'Patent Filed Date', 'Publication Date', 'Is SKIT student associated?',
+                           'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name) ', 'Link', 'Upload Proof'])
+
+            for item in patents.objects.all():
+                if item.proof_file:
+                    proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                else:
+                    proof_file = "No File"
+
+                sheet10.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.get_department_display(), item.email.emp_id,
+                               item.email.name, item.get_sop_display(),
+                               item.ag, item.gi, item.get_pg_display(),
+                               item.top, item.gc, item.pfd,
+                               item.pd.strftime("%d-%m-%Y"), item.get_ssa_display(), item.details,
+                               item.link,
+                               proof_file])
+
+            # --- 8. M.TechPh.D Guided ---
+            sheet11 = workbook.create_sheet("8. M.Tech,Ph.D Guided")
+            sheet11.append(['Timestamp', 'Email address','Session', 'Faculty Name', 'Employee ID', 'Department',
+                           'Name of the student Guided', 'Program of Student', 'Enrollment Number of Student',
+                           'University Roll Number of Student', 'Enrollment Year of Student', 'Title of the Dissertation', 'Supervisor / Co-supervisor', 'Date of Viva-Voce',
+                           'Name of external examiner'])
+
+            for item in guided.objects.all():
+                sheet11.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.name, item.email.emp_id,
+                               item.email.get_department_display(), item.nos,
+                               item.get_category_display(), item.ens, item.urns,
+                               item.get_eys_display(), item.tod, item.get_visor_display(),
+                               item.dov])
+
+            # --- 9. M.TechPh.D Guided ---
+            sheet12 = workbook.create_sheet("9. Resource Person")
+            sheet12.append(['Timestamp', 'Email address','Session', 'Name of Faculty Member', 'Employee ID', 'Department',
+                           'Resource Person in', 'Title of Event/ Exam Name', 'Subject Area/Subject Name/Lab Name/Session Name',
+                           'Resource Person Type', 'Duration of event (in days)', 'Date From', 'Date to', 'Venue',
+                           'Proof (Certificate/Mail)'])
+
+            for item in resource.objects.all():
+                if item.proof_file:
+                    proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                else:
+                    proof_file = "No File"
+
+                sheet12.append([item.created_at.strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.name, item.email.emp_id,
+                               item.email.get_department_display(), item.get_category_display(),
+                               item.toe, item.sa, item.get_rpt_display(),
+                               item.doe, item.begi_date.strftime("%d-%m-%Y"), item.end_date.strftime("%d-%m-%Y"),
+                               item.venue, proof_file])
+
+
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachement; filename=Faculty Data Collection Response Sheet.xlsx'
+
+            workbook.save(response)
+            return response
 
         else:
             return render(request,'404.html')

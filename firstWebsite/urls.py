@@ -1,5 +1,5 @@
 from django.urls import path
-from firstWebsite import views, saveforms, uploadExcel, progress_track, download
+from firstWebsite import views, saveforms, uploadExcel, progress_track, download, deleteFormData
 
 urlpatterns = [
     path('', views.index, name = "home"),
@@ -27,4 +27,6 @@ urlpatterns = [
     path('puc',views.page_under_construction,name="page_under_construction"),
     path('faq',views.faq,name="FaQ"),
     path('forms_listing/<str:pk>',progress_track.forms_listing,name="form_listing"),
+    path('cookie',views.cookie_not_found,name="cookie"),
+    path('deleteformdata/<str:pk>',deleteFormData.deleteformdata,name="deleteEntry"),
 ]
