@@ -31,15 +31,19 @@
                         <th>PAN No.</th>
                         <th>Date of Joining(College)</th>
                         <th>Profile Photo</th>
+                        {% if user == 'ad' or user == 'spa' %}
                         <th>Joining Report Letter</th>
                         <th>Offer Letter</th>
                         <th>Highest Degree Certificate</th>
                         <th>Salary Slip</th>
+                        {% endif %}
                         <th>Date of Promotion</th>
                         <th>Name of PHD University(If pusuing)</th>
                         <th>Date of Registration(for PHD Course)</th>
                         <th>Number of Research Papers</th>
+                        {% if user == 'ad' or user == 'spa' %}
                         <th>Certificate</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -61,15 +65,19 @@
                         <td>{{value.pan_no}}</td>
                         <td>{{value.jd}}</td>
                         <td>{{value.jd}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
                         <td><a href = "/media/{{value.jr}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "/media/{{value.of}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "/media/{{value.hdc}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "/media/{{value.ss}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% endif %}
                         <td>{{value.pd}}</td>
                         <td>{{value.phd_univ}}</td>
                         <td>{{value.phd_dor}}</td>
                         <td>{{value.norp}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
                         <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% endif %}
                      </tr>
                     {% endfor %}
                 </tbody>

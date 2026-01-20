@@ -19,20 +19,24 @@
     }
 
     table.dataTable thead th:last-child {
+        {% if user == 'ad' or user == 'spa' %}
         position: sticky;
         right: 0;
         z-index: 10; /* Keep on top of other headers */
         background-color: #000000;
         box-shadow: -2px 0px 5px rgba(0,0,0,0.1); /* Optional shadow for depth */
+        {% endif %}
     }
     
     /* Fix the Last Column in the Body */
     table.dataTable tbody td:last-child {
+        {% if user == 'ad' or user == 'spa' %}
         position: sticky;
         right: 0;
         z-index: 9;
         background-color: #fff; /* MUST be set, or text will overlap transparently */
         box-shadow: -2px 0px 5px rgba(0,0,0,0.1); /* Optional shadow */
+        {% endif %}
     }
 </style>
 <div class="col-10">
@@ -68,18 +72,18 @@
                         <th>Highest Qualification</th>
                         <th>University Name</th>
                         <th>Passing Year of Highest degree</th>
-                        <th>Higher Degree Certificate(Date of award)</th>
                         <th>Professional Courses</th>
                         <th>PAN No.</th>
                         <th>Date of Birth</th>
                         <th>Joining Date(MM, DD, YYYY)</th>
                         <th>Promotion Date(If any)</th>
-                        <th>Joining Report</th>
-                        <th>Offer Letter (Appointment Letter)</th>
-                        <th>Salary Slip (Recently)</th>
-                        <th>If Awards and recognition received for extension activities (Upload Certificate)</th>
                         <th>The above-mentioned information is correct best to my knowledge</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Joining Report</th>
+                        <th>Offer Letter (Appointment Letter)</th>
+                        <th>Higher Degree Certificate(Date of award)</th>
+                        <th>Salary Slip (Recently)</th>
+                        <th>If Awards and recognition received for extension activities (Upload Certificate)</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -101,18 +105,18 @@
                         <td>{{value.highest_qual}}</td>
                         <td>{{value.university_name}}</td>
                         <td>{{value.pshd}}</td>
-                        <td><a href = "/media/{{value.higher_degree_certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td>{{value.professional_course}}</td>
                         <td>{{value.pan_no}}</td>
                         <td>{{value.dob|date:'d-m-Y'}}</td>
                         <td>{{value.joining_date|date:'d-m-Y'}}</td>
                         <td>{{value.promotion_date|date:'d-m-Y'}}</td>
-                        <td><a href = "/media/{{value.joining_report}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "/media/{{value.offer_letter}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "/media/{{value.salary_slip}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td>I Agree</td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.joining_report}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        <td><a href = "/media/{{value.offer_letter}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        <td><a href = "/media/{{value.higher_degree_certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        <td><a href = "/media/{{value.salary_slip}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "16" data-pk = "{{value.pk}}" data-emp-id = "{{value.emp_id}}" data-head-main = "Employee Name" data-head-main-entry = "{{value.name}}" data-sub-head = "Employee Email" data-sub-head-entry = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -142,8 +146,8 @@
                         <th>Session</th>
                         <th>No. of Days</th>
                         <th>Proof Enclosed (Yes/No)</th>
-                        <th>Uploaded Certificate/Proof</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Uploaded Certificate/Proof</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -169,8 +173,8 @@
                         <td>{{value.session}}</td>
                         <td>{{value.no_of_days}}</td>
                         <td>{{value.get_proof_enclosed_display}}</td>
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "1" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Program" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -198,9 +202,9 @@
                         <th>Offering Agency/ Organizer</th>
                         <th>Certificate Type</th>
                         <th>Any category from below</th>
-                        <th>Uploaded Certificate</th>
                         <th>Remarks(if any)</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Uploaded Certificate</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -224,9 +228,9 @@
                         <td>{{value.offer}}</td>
                         <td>{{value.get_ctype_display}}</td>
                         <td>{{value.get_topper_in_display}}</td>
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td>{{value.remarks}}</td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "2" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the Course" data-sub-head-entry = "{{value.noc}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -259,9 +263,9 @@
                         <th>Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)</th>
                         <th>Number of staff member participated (Provide list of staff members with  their EMPLOYEE ID & Certificates)</th>
                         <th>Event report attached in proper format(Yes/No)</th>
-                        <th>Upload Event Report</th>
                         <th>Any Other Remark</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Upload Event Report</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -290,9 +294,9 @@
                         <td>{{value.nossp}}</td>
                         <td>{{value.nosmp}}</td>
                         <td>{{value.get_eraipf_display}}</td>
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td>{{value.remarks}}</td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "3" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the Faculty Coordinator" data-head-main-entry = "{{value.nofc}}" data-sub-head = "Title of the Professional Development Program Organized" data-sub-head-entry = "{{value.topdpo}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -318,10 +322,10 @@
                         <th>Agency / Organization</th>
                         <th>Prize</th>
                         <th>Award Date</th>
-                        <th>Upload Award Certificate/Proof</th>
                         <th>Remark</th>
                         <th>All information filled by me is correct and I will submit proof and other related document whenever is asked</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Upload Award Certificate/Proof</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -343,10 +347,10 @@
                         <td>{{value.ao}}</td>
                         <td>{{value.prize}}</td>
                         <td>{{value.ad}}</td>
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td>{{value.remark}}</td>
                         <td>I AGREE</td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "4" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Faculty Name" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of Award/Achievement" data-sub-head-entry = "{{value.noaa}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -370,8 +374,8 @@
                         <th>Amount in Rs.</th>
                         <th>Session in which grant/research project/consultancy received </th>
                         <th>Status</th>
-                        <th>Upload Proof</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Upload Proof</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -391,8 +395,8 @@
                         <td>{{value.amount}}</td>
                         <td>{{value.get_session_display}}</td>
                         <td>{{value.get_status_display}}</td>
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "5" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Candidate (PI/Co PI)" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the Funding Agency" data-sub-head-entry = "{{value.nofa}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -429,8 +433,8 @@
                         <th>Quartile</th>
                         <th>Is SKIT student associated?</th>
                         <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name) </th>
-                        <th>Uploaded Full Paper</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Uploaded Full Paper</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -463,8 +467,8 @@
                         <td>{{value.get_quartile_display}}</td>
                         <td>{{value.get_ssa_display}}</td>
                         <td>{{value.details}}</td>
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "6" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author(s)" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of Paper" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -496,8 +500,8 @@
                         <th>Indexed by</th>
                         <th>Is SKIT student associated?</th>
                         <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
-                        <th>Upload Full Paper</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Upload Full Paper</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -525,8 +529,8 @@
                         <td>{{value.get_index_by_display}}</td>
                         <td>{{value.get_ssa_display}}</td>
                         <td>{{value.details}}</td>
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "7" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author(s)" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of Conference" data-sub-head-entry = "{{value.toc}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -557,8 +561,8 @@
                         <th>Indexed by</th>
                         <th>Is SKIT student associated?</th>
                         <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
-                        <th>Uploaded Proof (Book Chapter/Front Page/Document etc.)</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Uploaded Proof (Book Chapter/Front Page/Document etc.)</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -585,8 +589,8 @@
                         <td>{{value.get_index_by_display}}</td>
                         <td>{{value.get_ssa_display}}</td>
                         <td>{{value.details}}</td>
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "8" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author/editor" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of the book" data-sub-head-entry = "{{value.tob}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -616,8 +620,8 @@
                         <th>Is SKIT student associated?</th>
                         <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
                         <th>Link</th>
-                        <th>Upload Proof</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Upload Proof</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -643,8 +647,8 @@
                         <td>{{value.get_ssa_display}}</td>
                         <td>{{value.details}}</td>
                         <td>{{value.link}}</td>
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "9" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Patent" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -723,8 +727,8 @@
                         <th>From Date</th>
                         <th>To Date</th>
                         <th>Venue</th>
-                        <th>Proof(Certificate/Mail)</th>
                         {% if user == 'ad' or user == 'spa' %}
+                        <th>Proof(Certificate/Mail)</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -747,8 +751,8 @@
                         <td>{{value.begi_date}}</td>
                         <td>{{value.end_date}}</td>
                         <td>{{value.venue}}</td>
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "11" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Event/ Exam Name" data-sub-head-entry = "{{value.toe}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
