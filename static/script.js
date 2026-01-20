@@ -219,7 +219,7 @@ function generateSubForms() {
                 subForm.style = 'flex-direction: column';
                 subForm.method  = 'POST';
                 subForm.enctype = 'multipart/form-data'
-                if(form_number == '1') {
+               if(form_number == '1') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -237,8 +237,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Mode (Offline/Online)<span class="ms-1" style="color: red;">*</span></label>
-                                        <div class = "col-sm-8">
+                                        <label class="col-sm-4 col-form-label ">Mode (Offline/Online)<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class = "col-sm-8 mb-3">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input" id="radio1-${i}" name="optradio" value="On" required>
@@ -255,7 +255,7 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Level<span class="ms-1" style="color: red;">*</span></label>
+                                        <label class="col-sm-4 col-form-label gap-2">Level<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">

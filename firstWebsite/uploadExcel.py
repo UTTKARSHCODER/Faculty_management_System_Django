@@ -21,7 +21,7 @@ def upload_excel(request, pk):
                 columns=imported_data.headers
             )
             if pk == 0:
-                df.columns = df.columns.str.lower().str.replace(' ', '_').str.strip()
+                df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_')
                 for data in imported_data.dict:
                     value = Student_Directory(name=data['name'],roll_no=data['roll_no'],college_id=data['college_id'],email=data['email'],student_phone_no=data['student_phone_no'],parent_phone_no=data['parent_phone_no'],address=data['address'])
                     value.save()
@@ -30,7 +30,7 @@ def upload_excel(request, pk):
                 return redirect(reverse('student-directory'))
 
             elif pk == 1:
-                df.columns = df.columns.str.lower().str.replace(' ', '_').str
+                df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_')
                 for data in df.to_dict(orient='records'):
                     if not data['name']:
                         continue

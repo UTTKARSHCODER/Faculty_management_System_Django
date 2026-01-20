@@ -42,16 +42,17 @@
 <!--            {% endfor %}-->
 <!--        </div>-->
 <!--        {% endif %}-->
-        <div class="row">
-            <div class="col-1">
+        <!-- header -->
+ <div class="row">
+            <div class="col-md-1 col-sm-12 text-center">
                 <img src = "/static/skit_logo.png" alt="SKIT LOGO" style = "height:80px; width:96px">
             </div>
-            <div class="col-9 mt-2 ms-5" >
-                <h3 class = "text-white text-nowrap mt-3" style = "font-weight: bold;">Swami Keshvanand Institute of Technology, Management & Gramothan(SKIT)</h3>
+            <div class="col-md-9 col-sm-12 text-center mt-2" >
+                <h3 class = "text-white text-wrap mt-3" style = "font-weight: bold;">Swami Keshvanand Institute of Technology, Management & Gramothan(SKIT)</h3>
             </div>
             <!-- Role-Specifier -->
-            <div class="col-1 ms-5 mt-2">
-                <div class="d-flex justify-content-end">
+             <div class="col-md-1 col-sm-12 text-center mt-2 admin ps-3">
+                <div class="text-center">
                     {% if request.session.topLeftBar is not None %}
 
                     <button type="button" class="text-white dropdown-toggle ms-5 mt-3" data-bs-toggle="dropdown" style = "background: #2F3E46"><i class = "fa-regular fa-user text-white"></i>
@@ -83,12 +84,18 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 <!--    <div class="container-fluid w-100" style="&#45;&#45;bs-gutter-x: 0;">-->
         <!-- left nav sec  -->
     <main class = "d-flex flex-column" style = "min-height: 64.20vh">
-    <div class="row" style = "--bs-gutter-x: 0; flex-grow: 1;">
-        <div class="col-2" style="width: auto">
+
+        <div class="hamburger" id="hamburger">☰</div>
+
+
+    <div class="row" style = "--bs-gutter-x: 0; flex-grow: 1; flex-wrap: nowrap;">
+        <div class="col-2 sidebar" id="sidebar" style="width: auto">
               <nav class="navbar h-100" style = "background-color: #2F3E46; width: 100%; align-content: space-between;">
                     <ul class="navbar-nav text-dark">
                         <a href="/" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == home or '/student/' in request.path or '/faculty/' in request.path or request.path == stu or request.path == fac %} active {% endif %}" id = "home">Home</li></a>
@@ -176,6 +183,12 @@
         </script>
     </main>
     <style>
+        html,body{
+            width: 100%;
+            height: 100%;
+            overflow: scroll;
+        }
+     
         .nav-item{
             padding: 20px;
             font-size: 18px;
@@ -186,7 +199,51 @@
             border-radius: 5px;
             margin: 4px;
         }
+   
+        .hamburger{
+    display:none;
+    font-size:30px;
+    padding:10px 15px;
+    background:#2F3E46;
+    color:white;
+    cursor:pointer;
+    
+}
+
+
+/* Mobile view */
+@media(max-width:768px){
+
+    .hamburger{
+        display:block;
+    }
+
+    .sidebar{
+        position:fixed;
+        top:0;
+        left:-260px;
+        width:250px;
+        height:100vh;
+        background:#2F3E46;
+        transition:0.3s;
+        z-index:1000;
+        
+    }
+
+    .sidebar.active{
+        left:0;
+    }
+}
+
     </style>
+   <script>
+const hamburger = document.getElementById("hamburger");
+const sidebar = document.getElementById("sidebar");
+
+hamburger.addEventListener("click", ()=>{
+    sidebar.classList.toggle("active");
+});
+</script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     {% include 'footer.html' %}

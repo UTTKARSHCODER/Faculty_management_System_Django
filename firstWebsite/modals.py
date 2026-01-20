@@ -700,7 +700,7 @@ class non_teaching_staff(models.Model):
     higher_degree_certificate = models.FileField(upload_to="uploads/non_tech_staff/higher_degree_certificate/")
     salary_slip = models.FileField(upload_to="uploads/non_tech_staff/salary_slip/")
     certificate = models.FileField(upload_to="uploads/non_tech_staff/certificates/")
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name + " " + self.designation

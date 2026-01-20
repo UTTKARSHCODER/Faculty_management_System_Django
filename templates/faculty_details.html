@@ -2,22 +2,91 @@
 
 {% block content %}
 
-<div class="col-10">
-    <div class="container ms-5">
-        <div class="row" style="--bs-gutter-x:0;">
-        {% for detail in fac_data %}
-            <div class="col-2 m-3">
-                <div class="card p-3" style = "width: 202px;">
-                    <img class="card-img-top" src="/media/uploads/faculty_documents/profile_picture/{{detail.profile_picture}}" alt="Profile Picture" style = "width: 150px; height: 150px; margin-left: 10px;">
-                    <div class="card-body text-center">
-                       <h5 class="card-title">{{detail.name}}</h5>
-                       <h5 class="card-title">{{detail.get_designation_display}}</h5>
-                       <p class="card-text">Email: {{detail.email}}</p>
-                       <p>Contact No.: {{detail.contact_number}}</p>
+<style>
+    
+    .faculty-card {
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        background: white;
+        height: 100%;
+        border: none;
+    }
+
+    .faculty-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    .faculty-card .card-img-top {
+        height: 180px;
+        width: 100%;
+        object-fit: cover;
+        background: #e9ecef;
+        border-bottom: 3px solid #3498db;
+    }
+
+    .faculty-card .card-body {
+        padding: 1.25rem;
+        text-align: center;
+    }
+
+    .faculty-card .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .faculty-card .designation {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    .faculty-card .contact-info {
+        font-size: 0.85rem;
+        color: #555;
+        line-height: 1.8;
+    }
+
+    .faculty-card .contact-info p {
+        margin-bottom: 0.3rem;
+        word-break: break-word;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        .faculty-card .card-img-top {
+            height: 150px;
+        }
+    }
+</style>
+
+<div class="col-lg-10 col-md-9">
+    <div class="container-fluid p-4">
+       
+        
+        <div class="row g-4">
+            {% for detail in fac_data %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+                <div class="card faculty-card">
+                    <img class="card-img-top" 
+                         src="/media/uploads/faculty_documents/profile_picture/{{detail.profile_picture}}" 
+                         alt="Profile Picture of {{detail.name}}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{detail.name}}</h5>
+                        <p class="designation">{{detail.get_designation_display}}</p>
+                        <div class="contact-info">
+                            <p><strong>Email:</strong><br>{{detail.email}}</p>
+                            <p><strong>Contact:</strong><br>{{detail.contact_number}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
         </div>
     </div>
 </div>
