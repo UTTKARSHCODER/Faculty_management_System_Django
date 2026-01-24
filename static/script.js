@@ -1985,7 +1985,6 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-<<<<<<< HEAD
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Duration of event (in days)<span class="ms-1" style="color: red;">*</span></label>
@@ -1995,8 +1994,6 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-=======
->>>>>>> 8a25a40b15d8e4fc57c26cd187eb0051f0d55df1
                                 <div class="col-md-12">
                                     <div class="row align-items-center">
                                         <label class="col-sm-2 col-form-label">Resource Person Type<span class="ms-1" style="color: red;">*</span></label>
