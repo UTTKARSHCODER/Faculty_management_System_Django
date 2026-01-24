@@ -1152,11 +1152,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const panInput = document.querySelector('input[name="pan_no"]');
     if (panInput) {
         panInput.addEventListener('input', function() {
-            // Force uppercase and remove spaces
             this.value = this.value.toUpperCase().replace(/\s/g, '');
-            
-            // Check HTML5 pattern validity
-            if (this.checkValidity()) {
+
+            const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+            if (panRegex.test(this.value)) {
                 this.classList.remove('is-invalid');
                 this.classList.add('is-valid');
             } else {
