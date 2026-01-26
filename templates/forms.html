@@ -948,8 +948,8 @@ document.addEventListener('change', function(event) {
 
         // Numeric Fields: Block '-', 'e', 'E', '.', '+' to ensure positive integers only
         const numericNames = [
-            'nossp', 'nosmp', 'dop', 
-            'amount', 'pn'
+            'dop', 
+            'amount'
         ];
         if (target.type === 'number' || numericNames.includes(target.name)) {
             if (['-', 'e', 'E', '.', '+'].includes(event.key)) {
@@ -979,7 +979,7 @@ document.addEventListener('input', function(event) {
         const originalLength = input.value.length;
         const fieldName = input.name;
 
-        const numericNames = ['nossp', 'nosmp', 'dop', 'amount', 'pn'];
+        const numericNames = ['dop', 'amount'];
         if (input.type === 'number' || numericNames.includes(fieldName)) {
             input.value = input.value.replace(/[^0-9]/g, '');
             if (input.getAttribute('min') !== '0') input.setAttribute('min', '0');
@@ -998,7 +998,7 @@ document.addEventListener('input', function(event) {
             'noaa', 'paf', 'ao', 'prize', 'remark', 'nofa', 'noj', 
             'nop', 'vi', 'isnp', 'isno', 'doi', 'num_of_days',
             'aiop', 'aitp', 'details', 'tob', 'ens', 'urns', 
-            'tod', 'nof', 'ag', 'toe', 'sa','noa','top','venue','doe'
+            'tod', 'nof', 'ag', 'toe', 'sa','noa','top','venue','doe','nossp','nosmp','pn'
         ];
         if (mixedNames.includes(fieldName) || fieldName.startsWith('toc') || fieldName.startsWith('noc')) {
             // Allows alphanumeric and standard separators like hyphens, dots, and slashes
