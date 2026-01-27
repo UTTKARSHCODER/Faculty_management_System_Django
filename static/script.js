@@ -321,7 +321,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">To Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "end_date" id = "end_date" required>
-                                            <div class="invalid-feedback">Please provide an end date.</div>
+                                            <div class="invalid-feedback">Please provide an end date begining from 01-01-2000 onwards.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -467,7 +467,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">End Date of Course<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "end_date" required>
-                                            <div class="invalid-feedback">Please provide end date.</div>
+                                            <div class="invalid-feedback">Please provide end date begining from 01-01-2000 onwards.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -585,7 +585,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">End Date of the Event<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "end_date" required>
-                                            <div class="invalid-feedback">Please provide the end date of the event.</div>
+                                            <div class="invalid-feedback">Please provide the end date of the event begining from 01-01-2000 onwards.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2093,7 +2093,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">To Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "end_date" required>
-                                            <div class="invalid-feedback">Please provide To Date.</div>
+                                            <div class="invalid-feedback">Please provide To Date begining from 01-01-2000 onwards.</div>
                                         </div>
                                     </div>
                                 </div>

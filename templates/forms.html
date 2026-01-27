@@ -1082,28 +1082,32 @@ function createLinkField(name, placeholder) {
         }
     });
 
-    document.addEventListener('change', function(event) {
-        const target = event.target;
-        if (target.type === 'date') {
+    document.addEventListener('submit', function(event) {
+        const dateInputs = document.querySelectorAll('input[type="date"]');
+        const today = new Date().toISOString().split('T')[0];
+        const minDate = "2000-01-01";
+        let isFormValid = true;
+
+        dateInputs.forEach(target => {
             const selectedDate = target.value;
-            const minDate = "2000-01-01";
-            const today = new Date().toISOString().split('T')[0];
 
             if (selectedDate && (selectedDate < minDate || selectedDate > today)) {
                 alert("Please select a date between 2000-01-01 and today.");
-                target.value = "";
-                return;
+                isFormValid = false;
             }
-
             const parentBlock = target.closest('.sub-form-fields');
             if (parentBlock) {
                 const start = parentBlock.querySelector('input[name="begi_date"]');
                 const end = parentBlock.querySelector('input[name="end_date"]');
                 if (start?.value && end?.value && end.value < start.value) {
                     alert("The 'End Date' cannot be earlier than the 'Start Date'.");
-                    target.value = "";
+                    isFormValid = false;
                 }
             }
+        });
+        //stop from the fast submission of the date
+        if (!isFormValid) {
+            event.preventDefault();
         }
     });
 </script>
