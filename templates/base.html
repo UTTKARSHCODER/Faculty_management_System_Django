@@ -102,11 +102,11 @@
                         {% if request.session.topLeftBar %}
                         <a href="/profile" style = "text-decoration: none;"><li class = "nav-item text-white {% if request.path == profile or request.path == editProfile %} active {% endif %}" id = "profile">Profile</li></a>
                         {% if request.session.topLeftBar == 'ad' or request.session.topLeftBar == 'fa' or request.session.topLeftBar == 'spa' %}
-                        <a href="/student_directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == student_directory %} active {% endif %}" id = "student_directory">Student Directory</li></a>
                         <a href="/fdp" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == fdp or 'all_forms' in request.path %} active {% endif %}" id = "faculty_development" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Faculty  Data Collection(FDC) Forms">FDC Forms</li></a>
                         <a href="/directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == directory %} active {% endif %}" id = "directory">Directory</li></a>
                         <a href="/faculty_report" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == faculty_report %} active {% endif %}" id = "faculty_report">Faculty Report</li></a>
                         <a href="/progress" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == progress or '/forms_listing/' in request.path %} active {% endif %}" id = "progress">Progress</li></a>
+                        <a href="/student_directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == student_directory %} active {% endif %}" id = "student_directory">Student Directory</li></a>
                         {% endif %}
                         {% endif %}
                         <a href="/about" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == about %} active {% endif %}" id = "about_us">About Us</li></a>
@@ -171,7 +171,6 @@
                     } else {
                         showMessages(msg.text,msg.tag);
                     }
-                    console.log(msg.tag);
                 }, index * 300);
             });
             document.addEventListener("DOMContentLoaded", function(){
@@ -186,7 +185,6 @@
         html,body{
             width: 100%;
             height: 100%;
-            overflow: scroll;
         }
      
         .nav-item{

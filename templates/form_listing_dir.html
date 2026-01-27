@@ -72,18 +72,20 @@
                         <th>Highest Qualification</th>
                         <th>University Name</th>
                         <th>Passing Year of Highest degree</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Higher Degree Certificate(Date of award)</th>
+                        {% endif %}
                         <th>Professional Courses</th>
                         <th>PAN No.</th>
                         <th>Date of Birth</th>
                         <th>Joining Date(MM, DD, YYYY)</th>
                         <th>Promotion Date(If any)</th>
-                        <th>The above-mentioned information is correct best to my knowledge</th>
                         {% if user == 'ad' or user == 'spa' %}
                         <th>Joining Report</th>
                         <th>Offer Letter (Appointment Letter)</th>
-                        <th>Higher Degree Certificate(Date of award)</th>
                         <th>Salary Slip (Recently)</th>
                         <th>If Awards and recognition received for extension activities (Upload Certificate)</th>
+                        <th>The above-mentioned information is correct best to my knowledge</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -101,22 +103,31 @@
                         <td>{{value.Lab_no}}</td>
                         <td>{{value.get_designation_display}}</td>
                         <td>{{value.emp_id}}</td>
-                        <td>{{value.top}}</td>
-                        <td>{{value.highest_qual}}</td>
+                        <td>{{value.get_highest_qual_display}}</td>
                         <td>{{value.university_name}}</td>
                         <td>{{value.pshd}}</td>
-                        <td>{{value.professional_course}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.higher_degree_certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% endif %}
+                        <td>{{value.professional_display_list|join:", "}}</td>
                         <td>{{value.pan_no}}</td>
                         <td>{{value.dob|date:'d-m-Y'}}</td>
                         <td>{{value.joining_date|date:'d-m-Y'}}</td>
                         <td>{{value.promotion_date|date:'d-m-Y'}}</td>
-                        <td>I Agree</td>
                         {% if user == 'ad' or user == 'spa' %}
                         <td><a href = "/media/{{value.joining_report}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "/media/{{value.offer_letter}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "/media/{{value.higher_degree_certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% if value.salary_slip %}
                         <td><a href = "/media/{{value.salary_slip}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% else %}
+                        <td>No File Uploaded</td>
+                        {% endif %}
+                        {% if value.certificate %}
                         <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% else %}
+                        <td>No File Uploaded</td>
+                        {% endif %}
+                        <td>I Agree</td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "16" data-pk = "{{value.pk}}" data-emp-id = "{{value.emp_id}}" data-head-main = "Employee Name" data-head-main-entry = "{{value.name}}" data-sub-head = "Employee Email" data-sub-head-entry = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>

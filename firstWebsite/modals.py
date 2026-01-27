@@ -341,8 +341,8 @@ class events(models.Model):
     )
     gd = models.CharField(max_length=100)
     awpsfooe = models.CharField(max_length=100)
-    nossp = models.IntegerField()
-    nosmp = models.IntegerField()
+    nossp = models.CharField(max_length=255)
+    nosmp = models.CharField(max_length=255)
     eraipf = models.CharField(
         max_length=1,
         choices=accept.choices
@@ -387,7 +387,7 @@ class sponsored_research(models.Model):
         choices=category.choices
     )
     nofa = models.CharField(max_length=100)
-    dop = models.CharField(max_length=100)
+    dop = models.IntegerField()
     amount = models.IntegerField()
     session = models.CharField(
         max_length=7,
@@ -423,8 +423,8 @@ class research_journal(models.Model):
     top = models.CharField(max_length=255)
     noj = models.CharField(max_length=255)
     nop = models.CharField(max_length=100)
-    vi = models.IntegerField()
-    pn = models.IntegerField()
+    vi = models.CharField(max_length=100)
+    pn = models.CharField(max_length=100)
     pd = models.DateField()
     session = models.CharField(
         max_length=7,
@@ -607,7 +607,7 @@ class guided(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.nos + " " + self.tod
+        return self.get_category_display() + " " + self.nos
 
 class resouce_person_type(models.TextChoices):
     EXTERNAL_EXAMINATION_UG = "EE(UG)", "External  Examination(UG)",
@@ -671,6 +671,11 @@ class professional_course(models.TextChoices):
     OTHER = "O", "Other"
 
 class non_teaching_staff(models.Model):
+    session = models.CharField(
+        max_length=7,
+        choices=session.choices,
+        default=session.Y2025_26
+    )
     name = models.CharField(max_length=100)
     mobile_no = models.CharField(max_length=10)
     email = models.ForeignKey(Faculty,on_delete=models.CASCADE)
@@ -691,6 +696,23 @@ class non_teaching_staff(models.Model):
     university_name = models.CharField(max_length=100)
     pshd = models.IntegerField()
     professional_course = models.JSONField(default=list, blank=True)
+    @property
+    def professional_display_list(self):
+        data = self.professional_course
+
+        # If the database accidentally stored a single string instead of a list
+        if isinstance(data, str):
+            data = [data]
+
+        # If it's empty or None
+        if not data:
+            return []
+
+        choice_dict = dict(professional_course.choices)
+
+        # Now 'NTS' stays together as one key
+        return [choice_dict.get(key, key) for key in data]
+
     pan_no = models.CharField(max_length=10)
     dob = models.DateField()
     joining_date = models.DateField()
@@ -698,8 +720,8 @@ class non_teaching_staff(models.Model):
     joining_report = models.FileField(upload_to="uploads/non_tech_staff/joining_report/")
     offer_letter = models.FileField(upload_to="uploads/non_tech_staff/offer_letter/")
     higher_degree_certificate = models.FileField(upload_to="uploads/non_tech_staff/higher_degree_certificate/")
-    salary_slip = models.FileField(upload_to="uploads/non_tech_staff/salary_slip/")
-    certificate = models.FileField(upload_to="uploads/non_tech_staff/certificates/")
+    salary_slip = models.FileField(upload_to="uploads/non_tech_staff/salary_slip/",default=None,null = True)
+    certificate = models.FileField(upload_to="uploads/non_tech_staff/certificates/",default=None,null = True)
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

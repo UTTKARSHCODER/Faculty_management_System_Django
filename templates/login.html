@@ -22,38 +22,38 @@
     />
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-<body>
-    <div class="container">
-        <div class="d-flex align-items-center justify-content-center">
-            <form action="/" method = "POST">
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-center">
-                        <div class="google-login-button">
-                            <h2>Welcome User! Please Log in.</h2>
-                            <div id="g_id_onload"
-                                data-client_id="452004658-dh7oqasukk9hd42g0v09q9ep8ob5pc5i.apps.googleusercontent.com"
-                                data-callback="handleCredentialResponse" data-cancel_on_tap_outside="false"
-                                data-prompt_parent_id="g_id_onload">
-                            </div>
+<style>
+        .google-login-button {
+            width: 300px;
+            height: 175px;
+            padding: 25px;
+            padding-top: 20px;
+            margin-top: 200px;
+            border: 3px solid purple;
+             /* border-color:  3px rgb(191, 92, 191); */
 
-                            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline"
-                                data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left">
-                            </div>
-                        </div>
-                    </div>
+            border-radius: 10px;
+            /* background: linear-gradient(
+      rgba(128, 0, 128, 0.6),
+     rgba(75, 0, 130, 0.6)
+     ); */
+
+    </style>
+<body>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <div class="google-login-button">
+                <h2>Welcome User! Please Log in.</h2>
+                <div id="g_id_onload"
+                    data-client_id="452004658-dh7oqasukk9hd42g0v09q9ep8ob5pc5i.apps.googleusercontent.com"
+                    data-callback="handleCredentialResponse" data-cancel_on_tap_outside="false"
+                    data-prompt_parent_id="g_id_onload">
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-12">
-                        <label for="email" class = "form-label"><b>Email</b></label>
-                        <input type="email" class="form-control custom-back" id="email" placeholder="Enter your Email Adddress" name="email" required>
-                    </div>
-                    <div class="col-12">
-                        <label for="password" class = "form-label"><b>Password</b></label>
-                        <input type="password" class="form-control custom-back" id="password" placeholder="Enter your password" name="password" required>
-                    </div>
+
+                <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline"
+                    data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left">
                 </div>
-            </form>
+            </div>
         </div>
     </div>
     <script>

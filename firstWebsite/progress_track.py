@@ -14,6 +14,8 @@ def progress_bar(request):
 
         label_map = {choice.value: choice.label for choice in cat}
 
+        non_teaching_instance = non_teaching_staff.objects.filter(email=faculty_instance)
+
         no_of_awards = list(awards_and_achievments.objects.filter(email=faculty_instance).values('category').annotate(count=Count('id')))
         for item in no_of_awards:
             item['category_display'] = label_map.get(item['category'], item['category'])
@@ -47,7 +49,7 @@ def progress_bar(request):
 
         total_forms = sum(item['count'] for item in no_of_awards) + sum(item['count'] for item in events_instance) + sum(item['count'] for item in faculty_participartion_data) + guided_instance + sum(item['count'] for item in mooc_course_instance) + patents_instance + research_book_instance + research_conference_instance + research_journal_instance + resource_instance + sum(item['count'] for item in sponsored_research_instance)
 
-        total_remaining_field_forms = 33 - (len(no_of_awards) + len(events_instance) + len(faculty_participartion_data) + (1 if guided_instance > 0 else 0) + len(mooc_course_instance) + (1 if patents_instance > 0 else 0) + (1 if research_book_instance > 0 else 0) + (1 if research_conference_instance > 0 else 0) + (1 if research_journal_instance > 0 else 0) + (1 if resource_instance > 0 else 0) + len(sponsored_research_instance))
+        total_remaining_field_forms = 12 - ((1 if len(non_teaching_instance) > 0 else 0) + (1 if len(no_of_awards) > 0 else 0) + (1 if len(events_instance) > 0 else 0) + (1 if len(faculty_participartion_data) > 0 else 0) + (1 if guided_instance > 0 else 0) + (1 if len(mooc_course_instance) > 0 else 0) + (1 if patents_instance > 0 else 0) + (1 if research_book_instance > 0 else 0) + (1 if research_conference_instance > 0 else 0) + (1 if research_journal_instance > 0 else 0) + (1 if resource_instance > 0 else 0) + (1 if len(sponsored_research_instance) > 0 else 0))
 
         context = {'total_forms': total_forms,'total_rff' : total_remaining_field_forms, 'faa1': no_of_awards, 'eod1': events_instance, 'fdp1': faculty_participartion_data, 'mp1': guided_instance, 'msc1' : mooc_course_instance, 'patents1': patents_instance, 'rpb1': research_book_instance, 'rpcp1': research_conference_instance, 'rpj1': research_journal_instance, 'rp1': resource_instance, 'sgc1': sponsored_research_instance}
         return render(request,'progresschart.html',context)
@@ -89,28 +91,45 @@ def forms_listing(request, pk):
         form_type = pk
         label_map = {choice.value: choice.label for choice in cat}
 
-        no_of_awards = no_of_awards.filter(email=faculty_instance).order_by('category')
+        non_teaching_staff_instance = list(non_teaching_staff_instance.filter(email=faculty_instance).values('id','name','email__email'))
+
+        no_of_awards = list(no_of_awards.filter(email=faculty_instance).values('category','noaa','id'))
         for item in no_of_awards:
-            item.category_display = label_map.get(item.category, item.category)
+            item["category_display"] = label_map.get(item["category"], item["category"])
 
-        events_instance = events_instance.filter(email=faculty_instance).order_by('category')
+        events_instance = list(events_instance.filter(email=faculty_instance).values('category','topdpo','id'))
         for item in events_instance:
-            item.category_display = label_map.get(item.category, item.category)
+            item["category_display"] = label_map.get(item["category"], item["category"])
 
-        faculty_participation_data = faculty_participation_data.filter(email=faculty_instance).order_by('category')
+        faculty_participation_data = list(faculty_participation_data.filter(email=faculty_instance).values('category','top','id'))
         for item in faculty_participation_data:
-            item.category_display = label_map.get(item.category, item.category)
+            item["category_display"] = label_map.get(item["category"], item["category"])
 
-        mooc_course_instance = mooc_course_instance.filter(email=faculty_instance).order_by('category')
+        guided_instance = list(guided_instance.filter(email=faculty_instance).values('category','nos','id'))
+        for item in guided_instance:
+            item["category_display"] = label_map.get(item["category"], item["category"])
+
+        mooc_course_instance = list(mooc_course_instance.filter(email=faculty_instance).values('category','noc','id'))
         for item in mooc_course_instance:
-            item.category_display = label_map.get(item.category, item.category)
+            item["category_display"] = label_map.get(item["category"], item["category"])
 
-        sponsored_research_instance = sponsored_research_instance.filter(email=faculty_instance).order_by(
-            'category')
+        patents_instance = list(patents_instance.filter(email=faculty_instance).values('id','gc','top'))
+
+        research_book_instance = list(research_book_instance.filter(email=faculty_instance).values('id','noa','tob'))
+
+        research_conference_instance = list(research_conference_instance.filter(email=faculty_instance).values('id','noa','top'))
+
+        research_journal_instance = list(research_journal_instance.filter(email=faculty_instance).values('id','noa','noj'))
+
+        resource_instance = list(resource_instance.filter(email=faculty_instance).values('category','toe','id'))
+        for item in resource_instance:
+            item["category_display"] = label_map.get(item["category"], item["category"])
+
+        sponsored_research_instance = list(sponsored_research_instance.filter(email=faculty_instance).values('category','nofa','id'))
         for item in sponsored_research_instance:
-            item.category_display = label_map.get(item.category, item.category)
+            item["category_display"] = label_map.get(item["category"], item["category"])
 
-        context = {'form_type': form_type, 'faa1': no_of_awards, 'eod1': events_instance,
+        context = {'form_type': form_type, 'nts': non_teaching_staff_instance ,'faa1': no_of_awards, 'eod1': events_instance,
                    'fdp1': faculty_participation_data, 'mp1': guided_instance, 'msc1': mooc_course_instance,
                    'patents1': patents_instance, 'rpb1': research_book_instance,
                    'rpcp1': research_conference_instance, 'rpj1': research_journal_instance,

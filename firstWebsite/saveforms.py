@@ -58,7 +58,7 @@ def save_all_forms(request, pk):
                 if not va.numberValidate(request,pshd,"Passing Year of Highest Degree"):
                     return redirect('all_forms', pk=pk)
 
-                professional_course = request.POST.getlist('optradio').strip()
+                professional_course = request.POST.getlist('professional_courses')
                 if not va.radiocheck(request,professional_course,"Professional Course"):
                     return redirect('all_forms',pk=pk)
 
@@ -104,29 +104,44 @@ def save_all_forms(request, pk):
                     joining_report = request.FILES['jr']
                     if not va.fileValidate(request,joining_report,"Joining Report"):
                         return redirect('all_forms', pk=pk)
+                else:
+                    messages.error(request,"No file selected for joining report. Please select one!")
+                    return redirect('all_forms',pk=pk)
 
                 if request.FILES.get('ol'):
                     offer_letter = request.FILES['jr']
                     if not va.fileValidate(request,offer_letter,"Offer Letter"):
                         return redirect('all_forms', pk=pk)
+                else:
+                    messages.error(request,"No file selected for joining report. Please select one!")
+                    return redirect('all_forms',pk=pk)
 
                 if request.FILES.get('hdc'):
                     higher_degree_certificate = request.FILES['hdc']
                     if not va.fileValidate(request,higher_degree_certificate,"Higher Degree Certificate"):
                         return redirect('all_forms', pk=pk)
+                else:
+                    messages.error(request,"No file selected for joining report. Please select one!")
+                    return redirect('all_forms',pk=pk)
 
                 if request.FILES.get('ss'):
                     salary_slip = request.FILES['ss']
                     if not va.fileValidate(request,salary_slip,"Salary Slip"):
                         return redirect('all_forms', pk=pk)
+                else:
+                    salary_slip = None
 
                 if request.FILES.get('awards'):
                     certificate = request.FILES['awards']
                     if not va.fileValidate(request,certificate,"Co-curricular Certificate"):
                         return redirect('all_forms', pk=pk)
+                else:
+                    certificate = None
 
-                obj = non_teaching_staff(name=name, mobile_no=mobile_no, email=faculty_instance, department=department, Lab_no=lab_no, designation=designation, emp_id=emp_id, highest_qual=highest_qual, university_name=university_name, pshd=pshd, professional_course=professional_course, pan_no=pan_no,dob=dob, joining_date=joining_date, promotion_date=promotion_date, joining_report=joining_report, offer_letter=offer_letter, higher_degree_certificate=higher_degree_certificate, salary_slip=salary_slip, certificate=certificate)
+                obj = non_teaching_staff(session=session, name=name, mobile_no=mobile_no, email=faculty_instance, department=department, Lab_no=lab_no, designation=designation, emp_id=emp_id, highest_qual=highest_qual, university_name=university_name, pshd=pshd, professional_course=professional_course, pan_no=pan_no,dob=dob, joining_date=joining_date, promotion_date=promotion_date, joining_report=joining_report, offer_letter=offer_letter, higher_degree_certificate=higher_degree_certificate, salary_slip=salary_slip, certificate=certificate)
                 obj.save()
+                messages.success(request, 'Form filled successfully!')
+                return redirect(reverse('home'))
 
             elif pk == 1:
                 category = request.POST.get('category').strip()
@@ -265,7 +280,7 @@ def save_all_forms(request, pk):
                 if not va.nameValidate(request,category,"Category"):
                     return redirect('all_forms',pk=pk)
 
-                eof = request.POST.get('optradio3').strip()
+                eof = request.POST.getlist('optradio3')
                 if not va.radiocheck(request,eof,"Event organized for"):
                     return redirect('all_forms',pk=pk)
 
@@ -333,12 +348,12 @@ def save_all_forms(request, pk):
                 if not va.nameValidate(request,gr,"Association with professional societies for organization of event"):
                     return redirect('all_forms',pk=pk)
 
-                nossp = int(request.POST.get('nossp') or 0)
-                if not va.numberValidate(request,gr,"Number of SKIT students participated"):
+                nossp = request.POST.get('nossp').strip()
+                if not va.nameValidate(request,gr,"Number of SKIT students participated"):
                     return redirect('all_forms',pk=pk)
 
-                nosmp = int(request.POST.get('nosmp') or 0)
-                if not va.numberValidate(request,nosmp,"Number of staff member participated"):
+                nosmp = request.POST.get('nosmp').strip()
+                if not va.nameValidate(request,nosmp,"Number of staff member participated"):
                     return redirect('all_forms', pk=pk)
 
                 eraipf = request.POST.get('optradio4').strip()
@@ -407,8 +422,8 @@ def save_all_forms(request, pk):
                 if not va.nameValidate(request, nofa, "Name of Funding Agency"):
                     return redirect('all_forms', pk=pk)
 
-                dop = str(request.POST.get('dop'))
-                if not va.nameValidate(request,dop,"Duration of project"):
+                dop = int(request.POST.get('dop') or 0)
+                if not va.numberValidate(request,dop,"Duration of project"):
                     return redirect('all_forms',pk=pk)
 
                 amount = int(request.POST.get('amount') or 0)
@@ -444,12 +459,12 @@ def save_all_forms(request, pk):
                 if not va.nameValidate(request,nop,"Name of the Publisher"):
                     return redirect('all_forms',pk=pk)
 
-                vi = int(request.POST.get('vi') or 0)
-                if not va.numberValidate(request,vi,"Volumne, Issue"):
+                vi = request.POST.get('vi').strip()
+                if not va.nameValidate(request,vi,"Volumne, Issue"):
                     return redirect('all_forms',pk=pk)
 
-                pn = int(request.POST.get('pn') or 0)
-                if not va.numberValidate(request,pn,"Page Number"):
+                pn = request.POST.get('pn').strip()
+                if not va.nameValidate(request,pn,"Page Number"):
                     return redirect('all_forms',pk=pk)
 
                 pd = request.POST.get('begi_date')
@@ -926,9 +941,10 @@ def save_all_forms(request, pk):
                     return redirect('all_forms', pk=pk)
 
                 if request.FILES.get('profile_picture'):
-                    faculty_instance.profile_picture = request.FILES.get('profile_picture')
-                    if not va.imageFileValidate(request, faculty_instance.profile_picture, "Profile Picture"):
+                    profile_picture = request.FILES.get('profile_picture')
+                    if not va.imageFileValidate(request, profile_picture, "Profile Picture"):
                         return redirect('all_forms', pk=pk)
+                    faculty_instance.profile_picture = profile_picture
 
                 if request.FILES.get('jr'):
                     faculty_instance.jr = request.FILES.get('jr')
@@ -980,6 +996,8 @@ def save_all_forms(request, pk):
                 faculty_instance.status = "R"
 
                 faculty_instance.save()
+                messages.success(request,'Profile updated successfully!')
+                return redirect(reverse('editProfile'))
 
             elif pk == 14:
 
@@ -1020,7 +1038,14 @@ def save_all_forms(request, pk):
                     return redirect(reverse('directory'))
 
                 email = request.POST.get('new_email').strip()
+
+                email_exist = Faculty.objects.get(email=email)
+
                 if not va.emailValidate(request, email):
+                    return redirect(reverse('directory'))
+
+                if email_exist:
+                    messages.error(request, "Email Already Exist")
                     return redirect(reverse('directory'))
 
                 department = request.POST.get('selected_department').strip()
@@ -1028,7 +1053,7 @@ def save_all_forms(request, pk):
                 role = request.POST.get('selected_role').strip()
 
                 con_no = request.POST.get('contact_number').strip()
-                if not va.mobileNumberValidate(request, emp_id):
+                if not va.mobileNumberValidate(request, con_no):
                     return redirect(reverse('directory'))
 
                 status = request.POST.get('selected_status').strip()
@@ -1039,7 +1064,7 @@ def save_all_forms(request, pk):
                 return redirect(reverse('directory'))
 
             return JsonResponse({'status': 'success'})
-        # Method not allowed
+        # Method not allowed or error saving form
         return render(request, '404.html')
 
     return render(request,'404.html')

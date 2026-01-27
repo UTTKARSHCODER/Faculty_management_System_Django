@@ -82,7 +82,7 @@ def radiocheck(request,key,tag):
 
 def fileValidate(request,key,tag):
 
-    limit_mb = 10
+    limit_mb = 2
     if key.size > limit_mb * 1024 * 1024:
         messages.error(request, f"{tag} exceeded the file upload limit(10mb)")
         return False
@@ -117,7 +117,7 @@ def addressValidate(request,key,tag):
 
 def imageFileValidate(request,key,tag):
 
-    limit_mb = 10
+    limit_mb = 2
     if key.size > limit_mb * 1024 * 1024:
         messages.error(request, f"{tag} exceeded the file upload limit(10mb)")
         return False

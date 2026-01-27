@@ -6,7 +6,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from MyFirstDjangoWebsite import settings
-from firstWebsite.modals import Faculty
+from firstWebsite.modals import Faculty, Faculty_participation_data, mooc_course, events, awards_and_achievments, \
+    sponsored_research, research_journal, research_conference, research_book, patents, guided, resource, \
+    non_teaching_staff
 from .modals import Student_Directory
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -45,7 +47,7 @@ def gsi_verify_login(request):
                         User = Faculty
                         user = Faculty.objects.get(email=email,role__iexact=users_post)
                     elif users_post == 'student':
-                        User =Student_Directory
+                        User = Student_Directory
                         user = Student_Directory.objects.get(email=email)
                     else:
                         User = None
@@ -281,3 +283,43 @@ def page_under_construction(request):
 
 def cookie_not_found(request):
     return render(request,'403.html')
+
+def progressdetails(request,pk,key_id):
+    if pk == "0":
+        non_teaching = non_teaching_staff.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk, 'data': non_teaching})
+    elif pk == "1":
+        faculty_participation_instance = Faculty_participation_data.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': faculty_participation_instance})
+    elif pk == "2":
+        mooc_instance = mooc_course.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': mooc_instance})
+    elif pk == "3":
+        events_instance = events.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': events_instance})
+    elif pk == "4":
+        awards = awards_and_achievments.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': awards})
+    elif pk == "5":
+        sponsor = sponsored_research.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': sponsor})
+    elif pk == "6":
+        research_journal_instance = research_journal.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_journal_instance})
+    elif pk == "7":
+        research_confernce_instance = research_conference.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_confernce_instance})
+    elif pk == "8":
+        research_book_instance = research_book.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_book_instance})
+    elif pk == "9":
+        patents1 = patents.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': patents1})
+    elif pk == "10":
+        guided1 = guided.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': guided1})
+    elif pk == "11":
+        resouce_person = resource.objects.get(pk=key_id)
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': resouce_person})
+    else:
+        return render(request,'404.html')

@@ -1,0 +1,173 @@
+//Sample data
+const dataMap = {
+  fp: [9, 5, 1, 3],
+  msc: [7, 3, 2, 3],
+  eod: [10, 7, 3, 9],
+  faa: [10, 7, 3, 9],
+  sgc: [10, 7, 3, 9],
+  rpj: [10, 7, 3, 9],
+  rpcp: [10, 7, 3, 9],
+  rpb: [10, 7, 3, 9],
+  patents: [10, 7, 3, 9],
+  mp: [10, 7, 3, 9],
+  rp: [10, 7, 3, 9]
+};
+//Sample Labels
+const label = {
+  fp: ["FDP", "Workshop", "Conference", "Sttp", "Seminar", "Webinar", "Lecture Series", "Symposium", "Other"]
+};
+
+const categoryColors = {
+    // Education & Academic Degrees (Blues)
+    'mp': 'rgba(44, 127, 184, 0.7)',
+    'EE(PG)': 'rgba(100, 143, 255, 0.7)',
+    'EE(UG)': 'rgba(174, 199, 232, 0.7)',
+    'EDU': 'rgba(158, 218, 229, 0.7)',
+
+    // Research & Publications (Oranges/Purples)
+    'RP': 'rgba(255, 127, 14, 0.7)',
+    'REA': 'rgba(255, 187, 120, 0.7)',
+    'IP': 'rgba(148, 103, 189, 0.7)',
+    'JOU': 'rgba(197, 176, 213, 0.7)',
+
+    // Training & Workshops (Greens)
+    'FDP': 'rgba(44, 160, 44, 0.7)',
+    'WKP': 'rgba(152, 223, 138, 0.7)',
+    'STTP': 'rgba(34, 139, 34, 0.7)',
+    'STC': 'rgba(102, 194, 165, 0.7)',
+    'TRA': 'rgba(122, 163, 84, 0.7)',
+
+    // Events & Conferences (Reds/Browns)
+    'SEM': 'rgba(214, 39, 40, 0.7)',
+    'SYM': 'rgba(255, 152, 150, 0.7)',
+    'WEB': 'rgba(140, 86, 75, 0.7)',
+    'CON': 'rgba(196, 156, 148, 0.7)',
+
+    // Technical & Professional (Yellows/Teals)
+    'MOOC': 'rgba(188, 189, 34, 0.7)',
+    'EL': 'rgba(219, 219, 141, 0.7)',
+    'ET': 'rgba(225, 225, 0, 0.7)',
+    'CONS': 'rgba(23, 190, 207, 0.7)',
+    'INT': 'rgba(158, 218, 229, 0.7)',
+
+    // Administration & Committees (Pinks/Greys)
+    'BOS': 'rgba(227, 119, 194, 0.7)',
+    'DRC': 'rgba(247, 182, 210, 0.7)',
+    'HAT': 'rgba(127, 127, 127, 0.7)',
+
+    // Extra-Curricular (Vibrant)
+    'SPO': 'rgba(255, 215, 0, 0.7)',
+    'SG': 'rgba(255, 69, 0, 0.7)',
+    'LS': 'rgba(173, 255, 47, 0.7)',
+
+    'PATENTS': 'rgba(255, 215, 0, 0.7)',   // Gold (Signifies value/innovation)
+    'RPJ':     'rgba(106, 90, 205, 0.7)',  // Slate Blue (Academic Journal feel)
+    'RPCP':    'rgba(72, 61, 139, 0.7)',   // Dark Slate Blue (Conference distinction)
+    'RPB':     'rgba(123, 104, 238, 0.7)',  // Medium Slate Blue (Book chapter)
+    'RP':      'rgba(255, 140, 0, 0.7)',   // Dark Orange (Project energy)
+
+    // Fallback
+    'OTH': 'rgba(179, 179, 179, 0.7)',
+    'DEFAULT': 'rgba(210, 210, 210, 0.7)'
+};
+
+const ctx = document.getElementById('pieChart').getContext('2d');
+
+//let pieChart = new Chart(ctx, {
+//  type: 'pie',
+//  data: {
+//    labels: ['Done', 'Due', 'Partial', 'Incomplete'],
+//    datasets: [{
+//      data: dataMap.forms,
+//      backgroundColor: ['#4CAF50', '#FFC107', '#DC143C', '#FF7F50'],
+//      borderWidth: 1,
+//      borderColor: '#fff'
+//    }]
+//  },
+//  options: {
+//    responsive: true,
+//    maintainAspectRatio: false,
+//    plugins: {
+//      legend: { position: 'top' },
+//      title: { display: true, text: 'Activity Progress' }
+//    }
+//  }
+//});
+
+let barChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ["FDP", "Workshop", "Conference", "Sttp", "Seminar", "Webinar", "Lecture Series", "Symposium", "Other"],
+      datasets: [{
+        label: 'No. of Forms Filled',
+        data: dataMap.fp,
+        barThickness: 40,
+        maxBarThickness: 50,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+
+document.getElementById('activityDropdown').addEventListener('change', function () {
+  const selected = this.value;
+  const data = JSON.parse(document.getElementById(`my-data-${selected}1`).textContent);
+  let dy_list_count = [];
+  let dy_list_label = [];
+  let dy_list_short_label = [];
+  if (Array.isArray(data)) {
+      data.forEach(element => {
+        dy_list_count.push(element.count);
+        dy_list_label.push(element.category_display);
+        dy_list_short_label.push(element.category);
+      });
+  } else {
+      dy_list_count.push(data);
+      if (selected === 'rpj') {
+        dy_list_label.push('Research Publication - Journals');
+        dy_list_short_label.push('RPJ');
+      } else if(selected === 'rpcp') {
+        dy_list_label.push('Research Publication - Conference Publication');
+        dy_list_short_label.push('RPCP');
+      } else if(selected === 'rpb') {
+        dy_list_label.push('Research Publication - Book and Book Chapters');
+        dy_list_short_label.push('RPB');
+      } else if(selected === 'patents') {
+        dy_list_label.push('Patents');
+        dy_list_short_label.push('PATENTS');
+      } else if(selected === 'mp') {
+        dy_list_label.push('M.Tech/Ph.D Guided');
+        dy_list_short_label.push(selected);
+      } else if(selected === 'rp') {
+        dy_list_label.push('Resource Person');
+        dy_list_short_label.push('RP');
+      }
+
+  }
+  const target = "Other";
+  const paired = dy_list_label.map((item, i) => ({ item, value: dy_list_count[i] }));
+  const others = paired.filter(p => p.item !== target);
+  const targets = paired.filter(p => p.item === target);
+  const sortedPairs = [...others, ...targets];
+
+  const updated_labelList = sortedPairs.map(p => p.item);
+  const updated_countList = sortedPairs.map(p => p.value);
+
+  dataMap[selected] = updated_countList;
+  label[selected] = updated_labelList;
+  const backgroundColors = dy_list_short_label.map(item => categoryColors[item] || categoryColors['DEFAULT']);
+  const borderColors = backgroundColors.map(color => color.replace('0.7', '1.0'));
+
+  barChart.data.datasets[0].backgroundColor = backgroundColors;
+  barChart.data.datasets[0].borderColor = borderColors;
+  barChart.data.datasets[0].data = dataMap[selected];
+  barChart.data.labels = label[selected];
+  barChart.update();
+});

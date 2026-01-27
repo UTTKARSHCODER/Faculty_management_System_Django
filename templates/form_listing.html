@@ -114,6 +114,29 @@
 .sub-row.open .rotate {
     transform: rotate(180deg);
 }
+
+.bg-indigo-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(224 231 255 / var(--tw-bg-opacity));
+}
+.rounded-full {
+    border-radius: 9999px;
+}
+.justify-center {
+    justify-content: center;
+}
+.items-center {
+    align-items: center;
+}
+.w-12 {
+    width: 3rem;
+}
+.h-12 {
+    height: 3rem;
+}
+.flex {
+    display: flex;
+}
 </style>
 
 <div class="col-10 ms-4 mt-3">
@@ -126,73 +149,19 @@
         <div id="masterContainer"></div>
     </div> -->
 </div>
-<script>
-const forms = [
-    { title: "Non-teaching Staff Profile Details", color: "#64748b" },
-    { title: "Faculty Participation", color: "#22c55e" },
-    { title: "MOOC's/Short Term Course/Course Completion", color: "#eab308" },
-    { title: "Events Organized by Department", color: "#ef4444" },
-    { title: "Faculty Awards and Achievements", color: "#06b6d4" },
-    { title: "Sponsored Research/Grant Received/Consultancy", color: "#8b5cf6" },
-    { title: "Research Publication - Journals", color: "#0ea5e9" },
-    { title: "Research Publication - Conference Publication", color: "#3b82f6" },
-    { title: "Research Publication - Book and Book Chapters", color: "#f59e0b" },
-    { title: "Patents", color: "#14b8a6" },
-    { title: "M.Tech/Ph.D Guided", color: "#06b6d4" },
-    { title: "Resource Person", color: "#ec4899" }
-];
-
-document.getElementById("app").innerHTML = forms.map(f => `
-<div class="primary-card" style="--card-color:${f.color}">
-    <div class="primary-header">
-        <div>
-            <h5>${f.title}</h5>
-            <small>3 forms filled</small>
-        </div>
-        <i class="fas fa-chevron-down rotate"></i>
-    </div>
-
-    <div class="primary-body">
-        <div class="inner-content">
-            ${["Recent Activity", "General Records"].map(s => `
-            <div class="sub-row">
-                <div class="sub-header">
-                    <span>${s}</span>
-                    <i class="fas fa-plus rotate fa-xs"></i>
-                </div>
-
-                <div class="entry-wrapper">
-                    <div>
-                        <div class="entry-padding">
-                            <div class="entry-item">Verified Entry 01</div>
-                            <div class="entry-item">Verified Entry 02</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            `).join("")}
-        </div>
-    </div>
-</div>
-`).join("");
-
-/* EVENTS */
-document.querySelectorAll(".primary-header").forEach(h => {
-    h.onclick = () => {
-        document.querySelectorAll(".primary-card").forEach(c => {
-            if (c !== h.parentElement) c.classList.remove("open");
-        });
-        h.parentElement.classList.toggle("open");
-    };
-});
-
-document.querySelectorAll(".sub-header").forEach(h => {
-    h.onclick = e => {
-        e.stopPropagation();
-        const row = h.parentElement;
-        row.classList.toggle("open");
-    };
-});
-</script>
+{{ nts|json_script:"my-data-nts" }}
+{{ fdp1|json_script:"my-data-fdp1" }}
+{{ msc1|json_script:"my-data-msc1" }}
+{{ eod1|json_script:"my-data-eod1" }}
+{{ faa1|json_script:"my-data-faa1" }}
+{{ sgc1|json_script:"my-data-sgc1" }}
+{{ rpj1|json_script:"my-data-rpj1" }}
+{{ rpcp1|json_script:"my-data-rpcp1" }}
+{{ rpb1|json_script:"my-data-rpb1" }}
+{{ patents1|json_script:"my-data-patents1" }}
+{{ mp1|json_script:"my-data-mp1" }}
+{{ rp1|json_script:"my-data-rp1" }}
+{{ form_type|json_script:"my-data-formtype" }}
+<script src = "/static/form_listing.js"></script>
 
 {% endblock %}
