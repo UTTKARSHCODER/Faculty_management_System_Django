@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="../static/progresschart.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <div class="row g-2 mb-3 justify-content-center text-center mt-2">
             <div class="col-6 col-md-3 ">
                 <a href="/forms_listing/filled_forms" style="text-decoration:none;"><div class="boxes">
@@ -53,7 +54,7 @@
                 <h3 class="mb-3">Faculty Activity Progress</h3>
 
                 <select id="activityDropdown" class="form-select w-75 mx-md-0 mx-auto">
-                    <option value="" selected disabled>Select any category(Sample Form)</option>
+                    <option value="" selected>Cumulative Data</option>
                     <option value="fdp">Faculty Participation</option>
                     <option value="msc">MOOC's/Short Term Course/Course Completion</option>
                     <option value="eod">Events Organized by Department</option>
@@ -78,6 +79,7 @@
 
     </div>
 
+{{ form_wise_count|json_script:"my-data-form_wise_count" }}
 {{ fdp1|json_script:"my-data-fdp1" }}
 {{ msc1|json_script:"my-data-msc1" }}
 {{ eod1|json_script:"my-data-eod1" }}

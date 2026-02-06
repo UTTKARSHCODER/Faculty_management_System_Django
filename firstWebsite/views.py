@@ -8,7 +8,7 @@ from django.urls import reverse
 from MyFirstDjangoWebsite import settings
 from firstWebsite.modals import Faculty, Faculty_participation_data, mooc_course, events, awards_and_achievments, \
     sponsored_research, research_journal, research_conference, research_book, patents, guided, resource, \
-    non_teaching_staff
+    non_teaching_staff, category
 from .modals import Student_Directory
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -287,39 +287,50 @@ def cookie_not_found(request):
 def progressdetails(request,pk,key_id):
     if pk == "0":
         non_teaching = non_teaching_staff.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk, 'data': non_teaching})
+        return render(request, 'progressDetails.html', context={'form_number': pk, 'data': non_teaching,'key_id':int(key_id), 'category' : category})
     elif pk == "1":
         faculty_participation_instance = Faculty_participation_data.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': faculty_participation_instance})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': faculty_participation_instance,'key_id':int(key_id), 'category' : category})
     elif pk == "2":
         mooc_instance = mooc_course.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': mooc_instance})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': mooc_instance,'key_id':int(key_id), 'category' : category})
     elif pk == "3":
         events_instance = events.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': events_instance})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': events_instance,'key_id':int(key_id), 'category' : category})
     elif pk == "4":
         awards = awards_and_achievments.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': awards})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': awards,'key_id':int(key_id), 'category' : category})
     elif pk == "5":
         sponsor = sponsored_research.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': sponsor})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': sponsor,'key_id':int(key_id), 'category' : category})
     elif pk == "6":
         research_journal_instance = research_journal.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_journal_instance})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_journal_instance,'key_id':int(key_id), 'category' : category})
     elif pk == "7":
         research_confernce_instance = research_conference.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_confernce_instance})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_confernce_instance,'key_id':int(key_id), 'category' : category})
     elif pk == "8":
         research_book_instance = research_book.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_book_instance})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_book_instance,'key_id':int(key_id), 'category' : category})
     elif pk == "9":
         patents1 = patents.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': patents1})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': patents1,'key_id':int(key_id), 'category' : category})
     elif pk == "10":
         guided1 = guided.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': guided1})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': guided1,'key_id':int(key_id), 'category' : category})
     elif pk == "11":
         resouce_person = resource.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': resouce_person})
+        return render(request, 'progressDetails.html', context={'form_number': pk,'data': resouce_person,'key_id':int(key_id), 'category' : category})
+    else:
+        return render(request,'404.html')
+
+def add_student(request):
+    if request.method == "POST":
+        new_mail = request.POST.get('new_email')
+        if Student_Directory.objects.filter(email=new_mail).exists():
+            messages.error(request, "Email already exists!")
+            return redirect(reverse("student-directory"))
+
+        return render(request, 'page_under_construction.html')
     else:
         return render(request,'404.html')

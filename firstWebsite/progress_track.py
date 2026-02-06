@@ -14,7 +14,7 @@ def progress_bar(request):
 
         label_map = {choice.value: choice.label for choice in cat}
 
-        non_teaching_instance = non_teaching_staff.objects.filter(email=faculty_instance)
+        non_teaching_instance = non_teaching_staff.objects.filter(email=faculty_instance).count()
 
         no_of_awards = list(awards_and_achievments.objects.filter(email=faculty_instance).values('category').annotate(count=Count('id')))
         for item in no_of_awards:
@@ -41,17 +41,22 @@ def progress_bar(request):
         research_conference_instance = research_conference.objects.filter(email=faculty_instance).count()
 
         research_journal_instance = research_journal.objects.filter(email=faculty_instance).count()
-        resource_instance = resource.objects.filter(email=faculty_instance).count()
+
+        resource_instance = list(resource.objects.filter(email=faculty_instance).values('category').annotate(count=Count('id')))
+        for item in resource_instance:
+            item['category_display'] = label_map.get(item['category'], item['category'])
 
         sponsored_research_instance = list(sponsored_research.objects.filter(email=faculty_instance).values('category').annotate(count=Count('id')))
         for item in sponsored_research_instance:
             item['category_display'] = label_map.get(item['category'], item['category'])
 
-        total_forms = sum(item['count'] for item in no_of_awards) + sum(item['count'] for item in events_instance) + sum(item['count'] for item in faculty_participartion_data) + guided_instance + sum(item['count'] for item in mooc_course_instance) + patents_instance + research_book_instance + research_conference_instance + research_journal_instance + resource_instance + sum(item['count'] for item in sponsored_research_instance)
+        total_forms = non_teaching_instance + sum(item['count'] for item in no_of_awards) + sum(item['count'] for item in events_instance) + sum(item['count'] for item in faculty_participartion_data) + guided_instance + sum(item['count'] for item in mooc_course_instance) + patents_instance + research_book_instance + research_conference_instance + research_journal_instance + sum(item['count'] for item in resource_instance) + sum(item['count'] for item in sponsored_research_instance)
 
-        total_remaining_field_forms = 12 - ((1 if len(non_teaching_instance) > 0 else 0) + (1 if len(no_of_awards) > 0 else 0) + (1 if len(events_instance) > 0 else 0) + (1 if len(faculty_participartion_data) > 0 else 0) + (1 if guided_instance > 0 else 0) + (1 if len(mooc_course_instance) > 0 else 0) + (1 if patents_instance > 0 else 0) + (1 if research_book_instance > 0 else 0) + (1 if research_conference_instance > 0 else 0) + (1 if research_journal_instance > 0 else 0) + (1 if resource_instance > 0 else 0) + (1 if len(sponsored_research_instance) > 0 else 0))
+        total_remaining_field_forms = 12 - ((1 if non_teaching_instance > 0 else 0) + (1 if len(no_of_awards) > 0 else 0) + (1 if len(events_instance) > 0 else 0) + (1 if len(faculty_participartion_data) > 0 else 0) + (1 if guided_instance > 0 else 0) + (1 if len(mooc_course_instance) > 0 else 0) + (1 if patents_instance > 0 else 0) + (1 if research_book_instance > 0 else 0) + (1 if research_conference_instance > 0 else 0) + (1 if research_journal_instance > 0 else 0) + (1 if len(resource_instance) > 0 else 0) + (1 if len(sponsored_research_instance) > 0 else 0))
 
-        context = {'total_forms': total_forms,'total_rff' : total_remaining_field_forms, 'faa1': no_of_awards, 'eod1': events_instance, 'fdp1': faculty_participartion_data, 'mp1': guided_instance, 'msc1' : mooc_course_instance, 'patents1': patents_instance, 'rpb1': research_book_instance, 'rpcp1': research_conference_instance, 'rpj1': research_journal_instance, 'rp1': resource_instance, 'sgc1': sponsored_research_instance}
+        form_wise_count = [sum(item['count'] for item in faculty_participartion_data), sum(item['count'] for item in mooc_course_instance), sum(item['count'] for item in events_instance), sum(item['count'] for item in no_of_awards), sum(item['count'] for item in sponsored_research_instance), research_journal_instance, research_conference_instance, research_book_instance, patents_instance, guided_instance, sum(item['count'] for item in resource_instance)]
+
+        context = {'total_forms': total_forms,'total_rff' : total_remaining_field_forms, 'faa1': no_of_awards, 'eod1': events_instance, 'fdp1': faculty_participartion_data, 'mp1': guided_instance, 'msc1' : mooc_course_instance, 'patents1': patents_instance, 'rpb1': research_book_instance, 'rpcp1': research_conference_instance, 'rpj1': research_journal_instance, 'rp1': resource_instance, 'sgc1': sponsored_research_instance,'form_wise_count' : form_wise_count}
         return render(request,'progresschart.html',context)
     except Faculty.DoesNotExist:
         error_message = f"User does not exist in database."

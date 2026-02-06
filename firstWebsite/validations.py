@@ -65,7 +65,7 @@ def alphanumnameValidate(request,key,tag):
         return True
 
 def numberValidate(request,key,tag):
-    if not key:
+    if key is None or key == "":
         error_message = f"{tag} cannot be empty"
         messages.error(request,error_message)
         return False
