@@ -978,19 +978,18 @@ def save_all_forms(request, pk):
                     faculty_instance.certificate = certificate
 
                 faculty_instance.phd_univ = request.POST.get('phd_univ').strip()
-                if not va.nameValidate(request, faculty_instance.phd_univ, "PHD University Name"):
-                    return redirect('all_forms', pk=pk)
 
                 phd_dor = request.POST.get('phd_dor')
                 if phd_dor == '':
                     faculty_instance.phd_dor = None
                 else:
                     try:
-                        selected_date = datetime.strptime(faculty_instance.pd, '%Y-%m-%d').date()
+                        selected_date = datetime.strptime(phd_dor, '%Y-%m-%d').date()
 
                         if selected_date > timezone.now().date():
                             messages.error(request, "Date cannot be in future")
                             return redirect('all_forms', pk=pk)
+                        faculty_instance.phd_dor = phd_dor
 
                     except(ValueError, TypeError):
                         messages.error(request, "Please select/enter a valid date")

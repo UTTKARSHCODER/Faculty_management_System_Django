@@ -84,7 +84,7 @@ def fileValidate(request,key,tag):
 
     limit_mb = 2
     if key.size > limit_mb * 1024 * 1024:
-        messages.error(request, f"{tag} exceeded the file upload limit(10mb)")
+        messages.error(request, f'{tag} exceeded the file upload limit(2 mb).\nPlease compress the file under 2 MB.\nCompressor link:- <a href="https://www.ilovepdf.com/compress_pdf" target="_blank">Click Here</a>')
         return False
 
     allowed_extension = ['.pdf']
@@ -119,7 +119,7 @@ def imageFileValidate(request,key,tag):
 
     limit_mb = 2
     if key.size > limit_mb * 1024 * 1024:
-        messages.error(request, f"{tag} exceeded the file upload limit(10mb)")
+        messages.error(request, f"{tag} exceeded the file upload limit(2 mb).\nPlease compress the file under 2 MB.\nCompressor link:- https://squoosh.app/")
         return False
 
     allowed_extension = ['.jpg','.jpeg','.png']

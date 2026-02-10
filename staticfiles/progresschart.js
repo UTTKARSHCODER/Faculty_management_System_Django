@@ -1,22 +1,16 @@
 //Sample data
+const data = JSON.parse(document.getElementById(`my-data-form_wise_count`).textContent);
 const dataMap = {
-  fp: [9, 5, 1, 3],
-  msc: [7, 3, 2, 3],
-  eod: [10, 7, 3, 9],
-  faa: [10, 7, 3, 9],
-  sgc: [10, 7, 3, 9],
-  rpj: [10, 7, 3, 9],
-  rpcp: [10, 7, 3, 9],
-  rpb: [10, 7, 3, 9],
-  patents: [10, 7, 3, 9],
-  mp: [10, 7, 3, 9],
-  rp: [10, 7, 3, 9]
+  cum: []
 };
-//Sample Labels
-const label = {
-  fp: ["FDP", "Workshop", "Conference", "Sttp", "Seminar", "Webinar", "Lecture Series", "Symposium", "Other"]
-};
-
+dataMap.cum = data;
+const color = {
+    cum: ['rgba(44, 160, 44, 0.7)','rgba(188, 189, 34, 0.7)','rgba(214, 39, 40, 0.7)',
+    'rgba(23, 190, 207, 0.7)','rgba(255, 127, 14, 0.7)','rgba(106, 90, 205, 0.7)',
+    'rgba(72, 61, 139, 0.7)','rgba(123, 104, 238, 0.7)','rgba(255, 215, 0, 0.7)'
+    ,'rgba(173, 255, 47, 0.7)','rgba(255, 140, 0, 0.7)']
+}
+const label = []
 const categoryColors = {
     // Education & Academic Degrees (Blues)
     'mp': 'rgba(44, 127, 184, 0.7)',
@@ -93,23 +87,36 @@ const ctx = document.getElementById('pieChart').getContext('2d');
 //    }
 //  }
 //});
-
+Chart.register(ChartDataLabels);
 let barChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ["FDP", "Workshop", "Conference", "Sttp", "Seminar", "Webinar", "Lecture Series", "Symposium", "Other"],
+      labels: ["Faculty Participation", "MOOC/Short-term Course", "Events", "Faculty Awards", "Sponsored Research", "Research Publication - Journal", "Research Publication - Confernece", "Research Publication - Books", "Patents", "M.Tech/Ph.D Guided", "Resource Person"],
       datasets: [{
-        label: 'No. of Forms Filled',
-        data: dataMap.fp,
+        data: dataMap.cum,
+        borderColor: color.cum,
+        backgroundColor: color.cum,
         barThickness: 40,
         maxBarThickness: 50,
-        borderWidth: 1
+        borderWidth: 1,
+        datalabels: {
+            color: 'black',
+            anchor: 'end',
+            align: 'top'
+        }
       }]
     },
+    plugins: [ChartDataLabels],
     options: {
       scales: {
         y: {
-          beginAtZero: true
+          beginAtZero: true,
+          grace: '10%'
+        }
+      },
+      plugins: {
+        legend: {
+            display: false
         }
       }
     }
@@ -118,6 +125,9 @@ let barChart = new Chart(ctx, {
 
 document.getElementById('activityDropdown').addEventListener('change', function () {
   const selected = this.value;
+  if (selected === "") {
+    window.location.reload();
+  }
   const data = JSON.parse(document.getElementById(`my-data-${selected}1`).textContent);
   let dy_list_count = [];
   let dy_list_label = [];
@@ -145,11 +155,7 @@ document.getElementById('activityDropdown').addEventListener('change', function 
       } else if(selected === 'mp') {
         dy_list_label.push('M.Tech/Ph.D Guided');
         dy_list_short_label.push(selected);
-      } else if(selected === 'rp') {
-        dy_list_label.push('Resource Person');
-        dy_list_short_label.push('RP');
       }
-
   }
   const target = "Other";
   const paired = dy_list_label.map((item, i) => ({ item, value: dy_list_count[i] }));
@@ -168,6 +174,7 @@ document.getElementById('activityDropdown').addEventListener('change', function 
   barChart.data.datasets[0].backgroundColor = backgroundColors;
   barChart.data.datasets[0].borderColor = borderColors;
   barChart.data.datasets[0].data = dataMap[selected];
+//  barChart.data.datasets[0].label = dy_list_label[0];
   barChart.data.labels = label[selected];
   barChart.update();
 });
