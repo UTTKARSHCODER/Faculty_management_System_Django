@@ -1123,7 +1123,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to website of the Journal<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter DOI(Digital Object Identifier)" name = "lwj" required>
-                                            <div class="invalid-feedback">Please provide Link to website of the Journal starting with www., http://, or https://.</div>
+                                            <div class="invalid-feedback">Please provide Link to website of the Journal starting with www., http://, or https://. or write NA</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1132,7 +1132,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to article/paper/ abstract of the article<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to article/paper/abstract of the article']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to article/paper/abstract of the article " name = "lap" required>
-                                            <div class="invalid-feedback">Please provide Link to article/paper/ abstract of the article starting with www., http://, or https://.</div>
+                                            <div class="invalid-feedback">Please provide Link to article/paper/ abstract of the article starting with www., http://, or https://. or write NA</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1141,7 +1141,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to the recognition in SCOPUS enlistment of the Journal<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to the recognition in SCOPUS enlistment of the Journal" name = "lrsj" required>
-                                            <div class="invalid-feedback">Please provide Link to the recognition in SCOPUS enlistment of the Journal starting with www., http://, or https://.</div>
+                                            <div class="invalid-feedback">Please provide Link to the recognition in SCOPUS enlistment of the Journal starting with www., http://, or https://. or write NA</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2152,11 +2152,11 @@ function generateSubForms() {
 function attachLinkValidation() {
     const linkFields = document.querySelectorAll('input[name="link"], input[name="lwj"], input[name="lrsj"], input[name="lap"]');
     // Updated pattern: REQUIRES either http://, https://, or www. at the start
-    const urlPattern = /^(https?:\/\/|www\.)[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*(\.[a-zA-Z]{2,})?([\/\?#].*)?$/;
+    const urlPattern = /^((https?:\/\/|www\.)[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*(\.[a-zA-Z]{2,})?([\/\?#].*)?|NA|na)$/;
     
     linkFields.forEach(field => {
         // Set HTML5 pattern attribute for native validation
-        field.setAttribute('pattern', '^(https?:\\/\\/|www\\.)[a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?)*(\\.\\[a-zA-Z]{2,})?([\\/?#].*)?$');
+        field.setAttribute('pattern', '/^((https?:\\/\\/|www\\.)[a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?)*(\\.\\[a-zA-Z]{2,})?([\\/?#].*)?|NA|na)$');
         
         field.addEventListener('blur', function() {
             validateLinkField(this, urlPattern);
@@ -2181,7 +2181,7 @@ function validateLinkField(field, pattern) {
     } else {
         field.classList.add('is-invalid');
         field.classList.remove('is-valid');
-        field.setCustomValidity("URL must start with http://, https://, or www. (e.g., https://example.com or www.example.com)");
+        field.setCustomValidity("URL must start with http://, https://, or www. (e.g., https://example.com or www.example.com) or write NA ");
     }
 }
 
