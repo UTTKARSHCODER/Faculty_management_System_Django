@@ -277,13 +277,13 @@
                                 <select class = "form-control" id="role_selection_new" name="selected_role">
                                     <option value = "" selected disabled>Select Role</option>
                                     <option value="SPA">SuperAdmin</option>
-                                    <option value=AD">Admin</option>
+                                    <option value="AD">Admin</option>
                                     <option value="FA">Faculty</option>
                                 </select>
                             </div>
                             <label for = "contact_number" class = "form-label mt-2"><b>Enter Contact Number</b></label>
                             <div class = "d-flex">
-                                <input class = "form-control" type="text" id = "contact_number" name="contact_number" maxlength = "10" required>
+                                <input class = "form-control" type="tel" id = "contact_number" maxlength="10" pattern="[6789][0-9]{9}" name="contact_number" required>
                             </div>
                             <label for = "status_selection_new" class = "form-label mt-2"><b>Status</b></label>
                             <div class = "d-flex">

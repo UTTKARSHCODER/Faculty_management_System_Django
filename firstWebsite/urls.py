@@ -29,4 +29,7 @@ urlpatterns = [
     path('forms_listing/<str:pk>',progress_track.forms_listing,name="form_listing"),
     path('cookie',views.cookie_not_found,name="cookie"),
     path('deleteformdata/<str:pk>',deleteFormData.deleteformdata,name="deleteEntry"),
+    path('forms_listing/progressdetails/<str:pk>/<str:key_id>',views.progressdetails,name="progressDetails"),
+    path('add_student',views.add_student,name="addStudent"),
+    path('edit_form/<int:pk>/<int:key_id>',saveforms.editforms,name="editForms"),
 ]

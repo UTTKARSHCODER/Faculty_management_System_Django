@@ -21,7 +21,7 @@
 
     .faculty-card .card-img-top {
         height: 180px;
-        width: 100%;
+        width: 54%;
         object-fit: cover;
         background: #e9ecef;
         border-bottom: 3px solid #3498db;
@@ -73,9 +73,11 @@
             {% for detail in fac_data %}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
                 <div class="card faculty-card">
-                    <img class="card-img-top" 
-                         src="/media/uploads/faculty_documents/profile_picture/{{detail.profile_picture}}" 
-                         alt="Profile Picture of {{detail.name}}">
+                    <div class="d-flex justify-content-center">
+                        <img class="card-img-top"
+                             src="/media/{{detail.profile_picture}}"
+                             alt="Profile Picture of {{detail.name}}">
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">{{detail.name}}</h5>
                         <p class="designation">{{detail.get_designation_display}}</p>

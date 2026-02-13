@@ -60,7 +60,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Session</th>
                         <th>Name</th>
@@ -72,18 +74,20 @@
                         <th>Highest Qualification</th>
                         <th>University Name</th>
                         <th>Passing Year of Highest degree</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Higher Degree Certificate(Date of award)</th>
+                        {% endif %}
                         <th>Professional Courses</th>
                         <th>PAN No.</th>
                         <th>Date of Birth</th>
                         <th>Joining Date(MM, DD, YYYY)</th>
                         <th>Promotion Date(If any)</th>
-                        <th>The above-mentioned information is correct best to my knowledge</th>
                         {% if user == 'ad' or user == 'spa' %}
                         <th>Joining Report</th>
                         <th>Offer Letter (Appointment Letter)</th>
-                        <th>Higher Degree Certificate(Date of award)</th>
                         <th>Salary Slip (Recently)</th>
                         <th>If Awards and recognition received for extension activities (Upload Certificate)</th>
+                        <th>The above-mentioned information is correct best to my knowledge</th>
                         <th>Delete</th>
                         {% endif %}
                     </tr>
@@ -92,7 +96,9 @@
                     {% for value in non_teaching %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/0/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.session}}</td>
                         <td>{{value.name}}</td>
@@ -101,22 +107,31 @@
                         <td>{{value.Lab_no}}</td>
                         <td>{{value.get_designation_display}}</td>
                         <td>{{value.emp_id}}</td>
-                        <td>{{value.top}}</td>
-                        <td>{{value.highest_qual}}</td>
+                        <td>{{value.get_highest_qual_display}}</td>
                         <td>{{value.university_name}}</td>
                         <td>{{value.pshd}}</td>
-                        <td>{{value.professional_course}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.higher_degree_certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% endif %}
+                        <td>{{value.professional_display_list|join:", "}}</td>
                         <td>{{value.pan_no}}</td>
                         <td>{{value.dob|date:'d-m-Y'}}</td>
                         <td>{{value.joining_date|date:'d-m-Y'}}</td>
                         <td>{{value.promotion_date|date:'d-m-Y'}}</td>
-                        <td>I Agree</td>
                         {% if user == 'ad' or user == 'spa' %}
                         <td><a href = "/media/{{value.joining_report}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "/media/{{value.offer_letter}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "/media/{{value.higher_degree_certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% if value.salary_slip %}
                         <td><a href = "/media/{{value.salary_slip}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% else %}
+                        <td>No File Uploaded</td>
+                        {% endif %}
+                        {% if value.certificate %}
                         <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                        {% else %}
+                        <td>No File Uploaded</td>
+                        {% endif %}
+                        <td>I Agree</td>
                         <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "16" data-pk = "{{value.pk}}" data-emp-id = "{{value.emp_id}}" data-head-main = "Employee Name" data-head-main-entry = "{{value.name}}" data-sub-head = "Employee Email" data-sub-head-entry = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                         {% endif %}
                     </tr>
@@ -129,7 +144,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Employee ID</th>
                         <th>Department</th>
@@ -156,7 +173,9 @@
                     {% for value in fdp1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/1/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.email.emp_id}}</td>
                         <td>{{value.email.get_department_display}}</td>
@@ -187,7 +206,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Session</th>
                         <th>Name of Faculty Member</th>
@@ -213,7 +234,9 @@
                     {% for value in msc1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/2/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.get_session_display}}</td>
                         <td>{{value.email.name}}</td>
@@ -243,7 +266,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Start Date of the Event</th>
                         <th>End Date of the Event</th>
@@ -274,7 +299,9 @@
                     {% for value in eod1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/3/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.begi_date}}</td>
                         <td>{{value.end_date}}</td>
@@ -309,7 +336,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Session</th>
                         <th>Faculty Name</th>
@@ -334,7 +363,9 @@
                     {% for value in faa1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/4/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.get_session_display}}</td>
                         <td>{{value.email.name}}</td>
@@ -363,7 +394,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Name of Candidate (PI/Co PI) </th>
                         <th>Employee ID</th>
@@ -384,7 +417,9 @@
                     {% for value in sgc1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/5/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.email.name}}</td>
                         <td>{{value.email.emp_id}}</td>
@@ -409,7 +444,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Employee ID</th>
                         <th>Name of the author(s)</th>
@@ -443,7 +480,9 @@
                     {% for value in rpj1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/6/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.email.emp_id}}</td>
                         <td>{{value.noa}}</td>
@@ -481,7 +520,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Department</th>
                         <th>Employee ID</th>
@@ -510,7 +551,9 @@
                     {% for value in rpcp1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/7/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.email.get_department_display}}</td>
                         <td>{{value.email.emp_id}}</td>
@@ -543,7 +586,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Department</th>
                         <th>Employee ID</th>
@@ -571,7 +616,9 @@
                     {% for value in rpb1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/8/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.email.get_department_display}}</td>
                         <td>{{value.email.emp_id}}</td>
@@ -603,7 +650,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Session</th>
                         <th>Department</th>
@@ -630,7 +679,9 @@
                     {% for value in patents1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/9/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.get_session_display}}</td>
                         <td>{{value.email.get_department_display}}</td>
@@ -661,7 +712,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Session</th>
                         <th>Faculty Name</th>
@@ -685,7 +738,9 @@
                     {% for value in mp1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/10/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.session}}</td>
                         <td>{{value.email.name}}</td>
@@ -713,7 +768,9 @@
                 <thead class = "table-dark">
                     <tr>
                         <th>S.No</th>
-                        <th>Timestamp</th>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <th>Edit</th>
+                        {% endif %}
                         <th>Email address</th>
                         <th>Session</th>
                         <th>Name of Faculty Member</th>
@@ -737,7 +794,9 @@
                     {% for value in rp1 %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td>{{value.created_at|date:"d-m-Y H:i:s"}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "progressdetails/11/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                        {% endif %}
                         <td>{{value.email.email}}</td>
                         <td>{{value.get_session_display}}</td>
                         <td>{{value.email.name}}</td>

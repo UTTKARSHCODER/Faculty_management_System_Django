@@ -370,7 +370,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
@@ -539,7 +540,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate(MOOC)']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate(MOOC)']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
@@ -739,7 +741,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter details" name = "nossp" required>
+                                            <input type="text" class="form-control" placeholder="Enter details" name = "nossp" required>
                                             <div class="invalid-feedback">Please provide number of SKIT students participated.</div>
                                         </div>
                                     </div>
@@ -748,7 +750,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Number of staff member participated(Provide list of staff members with  their EMPLOYEE ID & Certificates)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter details" name = "nosmp" required>
+                                            <input type="text" class="form-control" placeholder="Enter details" name = "nosmp" required>
                                             <div class="invalid-feedback">Please provide number of staff members participated.</div>
                                         </div>
                                     </div>
@@ -773,7 +775,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Event Report']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Event Report']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
@@ -868,7 +871,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
@@ -972,7 +976,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Proof']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Proof']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
@@ -1034,7 +1039,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Volume, Issue<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter volumn, issue" name = "vi" required>
+                                            <input type="text" class="form-control" placeholder="Enter volumne, issue" name = "vi" required>
                                             <div class="invalid-feedback">Please provide volume, issue.</div>
                                         </div>
                                     </div>
@@ -1043,7 +1048,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Page No.<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter page no." name = "pn" required>
+                                            <input type="text" class="form-control" placeholder="Enter page no." name = "pn" required>
                                             <div class="invalid-feedback">Please provide page no.</div>
                                         </div>
                                     </div>
@@ -1176,7 +1181,7 @@ function generateSubForms() {
                                                     <label class="form-check-label" for="radio6-${i}">UGC</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="Other">
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="O">
                                                     <label class="form-check-label" for="radio7-${i}">Other</label>
                                                 </div>
                                             </div>
@@ -1243,7 +1248,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
@@ -1276,7 +1282,7 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Title of Conference<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the Conference']}"></label>
+                                        <label class="col-sm-4 col-form-label">Title of Conference<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the Conference']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Title of the conference" name = "toc" required>
                                             <div class="invalid-feedback">Please provide Title of Conference.</div>
@@ -1294,7 +1300,7 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Title of the proceedings of the conference<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the proceedings of the conference']}"></label>
+                                        <label class="col-sm-4 col-form-label">Title of the proceedings of the conference<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the proceedings of the conference']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Title of the proceedings of the conference" name = "topc" required>
                                             <div class="invalid-feedback">Please provide Title of the proceedings of the conference.</div>
@@ -1403,15 +1409,15 @@ function generateSubForms() {
                                                     <label class="form-check-label" for="radio4-${i}">Scopus</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="NS">
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="ES">
                                                     <label class="form-check-label" for="radio5-${i}">ESCI</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="NS">
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="UGC">
                                                     <label class="form-check-label" for="radio6-${i}">UGC</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="NS">
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="O">
                                                     <label class="form-check-label" for="radio7-${i}">Other</label>
                                                 </div>
                                             </div>
@@ -1448,7 +1454,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
@@ -1644,7 +1651,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Proof (Book Chapter/Front Page/Document etc.)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Proof (Book Chapter/Front Page/Document etc.)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
@@ -1704,7 +1712,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Application ID<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter ID" name = "ag" required>
+                                            <input type="text" class="form-control" placeholder="Enter Application ID" name = "ag" required>
                                             <div class="invalid-feedback">Please provide Application ID.</div>
                                         </div>
                                     </div>
@@ -1713,7 +1721,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label for="top" class="col-sm-4 col-form-label">Granted ID<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
-                                            <input type="text" class="form-control" id="toc" placeholder="Enter " name="nof" required>
+                                            <input type="text" class="form-control" id="toc" placeholder="Enter Granted ID" name="nof" required>
                                             <div class="invalid-feedback">Please provide Granted ID.</div>
                                         </div>
                                     </div>
@@ -1810,7 +1818,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Proof<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Proof<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>
@@ -1985,15 +1994,6 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Duration of event (in days)<span class="ms-1" style="color: red;">*</span></label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter no. of days" name = "doe" required>
-                                            <div class="invalid-feedback">Please enter Duration of event.</div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-12">
                                     <div class="row align-items-center">
                                         <label class="col-sm-2 col-form-label">Resource Person Type<span class="ms-1" style="color: red;">*</span></label>
@@ -2108,7 +2108,8 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6 mt-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-5 col-form-label">Proof(Certificate/Mail)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Proof (Certificate/Mail)']}"></span></label>
+                                        <label class="col-sm-5 col-form-label">Proof(Certificate/Mail)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Proof (Certificate/Mail)']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-7">
                                             <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
                                             <div class="invalid-feedback">Please upload a PDF file.</div>

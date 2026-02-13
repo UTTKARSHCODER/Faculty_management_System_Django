@@ -11,6 +11,7 @@ from django.urls import reverse
 from firstWebsite.modals import Faculty, non_teaching_staff, Faculty_participation_data, mooc_course, events, \
     awards_and_achievments, sponsored_research, research_journal, research_conference, research_book, patents, guided, \
     resource
+from firstWebsite.validations import nameValidate, radiocheck
 from firstWebsite.views import session_login_required
 
 
@@ -58,7 +59,7 @@ def save_all_forms(request, pk):
                 if not va.numberValidate(request,pshd,"Passing Year of Highest Degree"):
                     return redirect('all_forms', pk=pk)
 
-                professional_course = request.POST.getlist('optradio').strip()
+                professional_course = request.POST.getlist('professional_courses')
                 if not va.radiocheck(request,professional_course,"Professional Course"):
                     return redirect('all_forms',pk=pk)
 
@@ -104,29 +105,44 @@ def save_all_forms(request, pk):
                     joining_report = request.FILES['jr']
                     if not va.fileValidate(request,joining_report,"Joining Report"):
                         return redirect('all_forms', pk=pk)
+                else:
+                    messages.error(request,"No file selected for joining report. Please select one!")
+                    return redirect('all_forms',pk=pk)
 
                 if request.FILES.get('ol'):
                     offer_letter = request.FILES['jr']
                     if not va.fileValidate(request,offer_letter,"Offer Letter"):
                         return redirect('all_forms', pk=pk)
+                else:
+                    messages.error(request,"No file selected for joining report. Please select one!")
+                    return redirect('all_forms',pk=pk)
 
                 if request.FILES.get('hdc'):
                     higher_degree_certificate = request.FILES['hdc']
                     if not va.fileValidate(request,higher_degree_certificate,"Higher Degree Certificate"):
                         return redirect('all_forms', pk=pk)
+                else:
+                    messages.error(request,"No file selected for joining report. Please select one!")
+                    return redirect('all_forms',pk=pk)
 
                 if request.FILES.get('ss'):
                     salary_slip = request.FILES['ss']
                     if not va.fileValidate(request,salary_slip,"Salary Slip"):
                         return redirect('all_forms', pk=pk)
+                else:
+                    salary_slip = None
 
                 if request.FILES.get('awards'):
                     certificate = request.FILES['awards']
                     if not va.fileValidate(request,certificate,"Co-curricular Certificate"):
                         return redirect('all_forms', pk=pk)
+                else:
+                    certificate = None
 
-                obj = non_teaching_staff(name=name, mobile_no=mobile_no, email=faculty_instance, department=department, Lab_no=lab_no, designation=designation, emp_id=emp_id, highest_qual=highest_qual, university_name=university_name, pshd=pshd, professional_course=professional_course, pan_no=pan_no,dob=dob, joining_date=joining_date, promotion_date=promotion_date, joining_report=joining_report, offer_letter=offer_letter, higher_degree_certificate=higher_degree_certificate, salary_slip=salary_slip, certificate=certificate)
+                obj = non_teaching_staff(session=session, name=name, mobile_no=mobile_no, email=faculty_instance, department=department, Lab_no=lab_no, designation=designation, emp_id=emp_id, highest_qual=highest_qual, university_name=university_name, pshd=pshd, professional_course=professional_course, pan_no=pan_no,dob=dob, joining_date=joining_date, promotion_date=promotion_date, joining_report=joining_report, offer_letter=offer_letter, higher_degree_certificate=higher_degree_certificate, salary_slip=salary_slip, certificate=certificate)
                 obj.save()
+                messages.success(request, 'Form filled successfully!')
+                return redirect(reverse('home'))
 
             elif pk == 1:
                 category = request.POST.get('category').strip()
@@ -265,7 +281,7 @@ def save_all_forms(request, pk):
                 if not va.nameValidate(request,category,"Category"):
                     return redirect('all_forms',pk=pk)
 
-                eof = request.POST.get('optradio3').strip()
+                eof = request.POST.getlist('optradio3')
                 if not va.radiocheck(request,eof,"Event organized for"):
                     return redirect('all_forms',pk=pk)
 
@@ -333,12 +349,12 @@ def save_all_forms(request, pk):
                 if not va.nameValidate(request,gr,"Association with professional societies for organization of event"):
                     return redirect('all_forms',pk=pk)
 
-                nossp = int(request.POST.get('nossp') or 0)
-                if not va.numberValidate(request,gr,"Number of SKIT students participated"):
+                nossp = request.POST.get('nossp').strip()
+                if not va.nameValidate(request,gr,"Number of SKIT students participated"):
                     return redirect('all_forms',pk=pk)
 
-                nosmp = int(request.POST.get('nosmp') or 0)
-                if not va.numberValidate(request,nosmp,"Number of staff member participated"):
+                nosmp = request.POST.get('nosmp').strip()
+                if not va.nameValidate(request,nosmp,"Number of staff member participated"):
                     return redirect('all_forms', pk=pk)
 
                 eraipf = request.POST.get('optradio4').strip()
@@ -407,8 +423,8 @@ def save_all_forms(request, pk):
                 if not va.nameValidate(request, nofa, "Name of Funding Agency"):
                     return redirect('all_forms', pk=pk)
 
-                dop = str(request.POST.get('dop'))
-                if not va.nameValidate(request,dop,"Duration of project"):
+                dop = int(request.POST.get('dop') or 0)
+                if not va.numberValidate(request,dop,"Duration of project"):
                     return redirect('all_forms',pk=pk)
 
                 amount = int(request.POST.get('amount') or 0)
@@ -444,12 +460,12 @@ def save_all_forms(request, pk):
                 if not va.nameValidate(request,nop,"Name of the Publisher"):
                     return redirect('all_forms',pk=pk)
 
-                vi = int(request.POST.get('vi') or 0)
-                if not va.numberValidate(request,vi,"Volumne, Issue"):
+                vi = request.POST.get('vi').strip()
+                if not va.nameValidate(request,vi,"Volumne, Issue"):
                     return redirect('all_forms',pk=pk)
 
-                pn = int(request.POST.get('pn') or 0)
-                if not va.numberValidate(request,pn,"Page Number"):
+                pn = request.POST.get('pn').strip()
+                if not va.nameValidate(request,pn,"Page Number"):
                     return redirect('all_forms',pk=pk)
 
                 pd = request.POST.get('begi_date')
@@ -926,49 +942,54 @@ def save_all_forms(request, pk):
                     return redirect('all_forms', pk=pk)
 
                 if request.FILES.get('profile_picture'):
-                    faculty_instance.profile_picture = request.FILES.get('profile_picture')
-                    if not va.imageFileValidate(request, faculty_instance.profile_picture, "Profile Picture"):
+                    profile_picture = request.FILES.get('profile_picture')
+                    if not va.imageFileValidate(request, profile_picture, "Profile Picture"):
                         return redirect('all_forms', pk=pk)
+                    faculty_instance.profile_picture = profile_picture
 
                 if request.FILES.get('jr'):
-                    faculty_instance.jr = request.FILES.get('jr')
-                    if not va.fileValidate(request, faculty_instance.jr, "Joining Report"):
+                    jr = request.FILES.get('jr')
+                    if not va.fileValidate(request, jr, "Joining Report"):
                         return redirect('all_forms', pk=pk)
+                    faculty_instance.jr = jr
 
                 if request.FILES.get('ol'):
-                    faculty_instance.of = request.FILES.get('ol')
-                    if not va.fileValidate(request, faculty_instance.of, "Offer Letter"):
+                    of = request.FILES.get('ol')
+                    if not va.fileValidate(request, of, "Offer Letter"):
                         return redirect('all_forms', pk=pk)
+                    faculty_instance.of = of
 
                 if request.FILES.get('hdc'):
-                    faculty_instance.hdc = request.FILES.get('hdc')
-                    if not va.fileValidate(request, faculty_instance.hdc, "Higher Degree Certificate"):
+                    hdc = request.FILES.get('hdc')
+                    if not va.fileValidate(request, hdc, "Higher Degree Certificate"):
                         return redirect('all_forms', pk=pk)
+                    faculty_instance.hdc = hdc
 
                 if request.FILES.get('ss'):
-                    faculty_instance.ss = request.FILES.get('ss')
-                    if not va.fileValidate(request, faculty_instance.ss, "Salary Slip"):
+                    ss = request.FILES.get('ss')
+                    if not va.fileValidate(request, ss, "Salary Slip"):
                         return redirect('all_forms', pk=pk)
+                    faculty_instance.ss = ss
 
                 if request.FILES.get('awards'):
-                    faculty_instance.certificate = request.FILES.get('awards')
-                    if not va.fileValidate(request, faculty_instance.certificate, "Co-curricular Certificate"):
+                    certificate = request.FILES.get('awards')
+                    if not va.fileValidate(request, certificate, "Co-curricular Certificate"):
                         return redirect('all_forms', pk=pk)
+                    faculty_instance.certificate = certificate
 
                 faculty_instance.phd_univ = request.POST.get('phd_univ').strip()
-                if not va.nameValidate(request, faculty_instance.phd_univ, "PHD University Name"):
-                    return redirect('all_forms', pk=pk)
 
                 phd_dor = request.POST.get('phd_dor')
                 if phd_dor == '':
                     faculty_instance.phd_dor = None
                 else:
                     try:
-                        selected_date = datetime.strptime(faculty_instance.pd, '%Y-%m-%d').date()
+                        selected_date = datetime.strptime(phd_dor, '%Y-%m-%d').date()
 
                         if selected_date > timezone.now().date():
                             messages.error(request, "Date cannot be in future")
                             return redirect('all_forms', pk=pk)
+                        faculty_instance.phd_dor = phd_dor
 
                     except(ValueError, TypeError):
                         messages.error(request, "Please select/enter a valid date")
@@ -980,6 +1001,8 @@ def save_all_forms(request, pk):
                 faculty_instance.status = "R"
 
                 faculty_instance.save()
+                messages.success(request,'Profile updated successfully!')
+                return redirect(reverse('editProfile'))
 
             elif pk == 14:
 
@@ -1020,7 +1043,12 @@ def save_all_forms(request, pk):
                     return redirect(reverse('directory'))
 
                 email = request.POST.get('new_email').strip()
+
                 if not va.emailValidate(request, email):
+                    return redirect(reverse('directory'))
+
+                if Faculty.objects.filter(email=email).exists():
+                    messages.error(request, "Email Already Exist")
                     return redirect(reverse('directory'))
 
                 department = request.POST.get('selected_department').strip()
@@ -1028,7 +1056,7 @@ def save_all_forms(request, pk):
                 role = request.POST.get('selected_role').strip()
 
                 con_no = request.POST.get('contact_number').strip()
-                if not va.mobileNumberValidate(request, emp_id):
+                if not va.mobileNumberValidate(request, con_no):
                     return redirect(reverse('directory'))
 
                 status = request.POST.get('selected_status').strip()
@@ -1039,7 +1067,905 @@ def save_all_forms(request, pk):
                 return redirect(reverse('directory'))
 
             return JsonResponse({'status': 'success'})
-        # Method not allowed
+        # Method not allowed or error saving form
         return render(request, '404.html')
 
     return render(request,'404.html')
+
+def editforms(request,pk,key_id):
+    if request.method == "POST":
+        redirect_url = f"/forms_listing/progressdetails/{pk}/{key_id}"
+        if pk == 0:
+            instance = non_teaching_staff.objects.get(pk=key_id)
+
+            instance.name = request.POST.get('name')
+            if not va.nameValidate(request, instance.name, "Name"):
+                return redirect(redirect_url)
+
+            instance.mobile_no = request.POST.get('mobile_no')
+            if not va.nameValidate(request, instance.mobile_no, "Mobile No"):
+                return redirect(redirect_url)
+
+            instance.email = request.POST.get('email')
+            if not va.nameValidate(request, instance.email, "Email"):
+                return redirect(redirect_url)
+
+            instance.department = request.POST.get('department')
+            if not va.radiocheck(request, instance.department, "department"):
+                return redirect(redirect_url)
+
+            instance.Lab_no = request.POST.get('Lab_no')
+            if not va.numberValidate(request, instance.Lab_no, "Lab No"):
+                return redirect(redirect_url)
+
+            instance.designation = request.POST.get('designation')
+            if not va.nameValidate(request, instance.designation, "Designation"):
+                return redirect(redirect_url)
+
+            instance.emp_id = request.POST.get('emp_id')
+            if not va.numberValidate(request, instance.emp_id, "Employee ID"):
+                return redirect(redirect_url)
+
+            instance.highest_qual = request.POST.get('highest_qual')
+            if not va.radiocheck(request, instance.designation, "Highest Qualification"):
+                return redirect(redirect_url)
+
+            instance.university_name = request.POST.get('univ_name')
+            if not va.nameValidate(request, instance.emp_id, "University Name"):
+                return redirect(redirect_url)
+
+            instance.pshd = request.POST.get('pshd')
+            if not va.numberValidate(request, instance.pshd, "Passing Year of Highest Degree"):
+                return redirect(redirect_url)
+
+            instance.professional_courses = request.POST.getlist('professional_courses')
+            if not va.radiocheck(request, instance.professional_courses, "Professional Courses"):
+                return redirect(redirect_url)
+
+            instance.pan_no = request.POST.getlist('pan_no')
+            if not va.validate_pan(instance.pan_no):
+                return redirect(redirect_url)
+
+            instance.dob = request.POST.get('dob')
+            try:
+                selected_date = datetime.strptime(instance.dob, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.joining_date = request.POST.get('joining_date')
+            try:
+                selected_date = datetime.strptime(instance.joining_date, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.promotion_date = request.POST.get('promotion_date')
+
+            if request.FILES.get('joining_report'):
+                joining_report = request.FILES.get('joining_report')
+                if not va.fileValidate(request, joining_report, "Joining Report"):
+                    return redirect(redirect_url)
+                instance.joining_report = joining_report
+
+            if request.FILES.get('offer_letter'):
+                offer_letter = request.FILES.get('offer_letter')
+                if not va.fileValidate(request, offer_letter, "Offer Letter"):
+                    return redirect(redirect_url)
+                instance.offer_letter = offer_letter
+
+            if request.FILES.get('higher_degree_certificate'):
+                higher_degree_certificate = request.FILES.get('higher_degree_certificate')
+                if not va.fileValidate(request, higher_degree_certificate, "Higher Degree Certificate"):
+                    return redirect(redirect_url)
+                instance.higher_degree_certificate = higher_degree_certificate
+
+            if request.FILES.get('salary_slip'):
+                salary_slip = request.FILES.get('salary_slip')
+                if not va.fileValidate(request, salary_slip, "Salary Slip"):
+                    return redirect(redirect_url)
+                instance.salary_slip = salary_slip
+
+            if request.FILES.get('certificate'):
+                certificate = request.FILES.get('certificate')
+                if not va.fileValidate(request, certificate, "Certificate"):
+                    return redirect(redirect_url)
+                instance.salary_slip = certificate
+
+            instance.save()
+
+        elif pk == 1:
+            instance = Faculty_participation_data.objects.get(pk=key_id)
+
+            instance.category = request.POST.get('category').strip()
+            if not va.radiocheck(request, instance.category, "Category"):
+                return redirect(redirect_url)
+
+            instance.top = request.POST.get('top').strip()
+            if not va.nameValidate(request, instance.top, "Title of Program"):
+                return redirect(redirect_url)
+
+            instance.mode = request.POST.get('optradio').strip()
+            if not va.radiocheck(request, instance.mode, "Mode"):
+                return redirect(redirect_url)
+
+            instance.level = request.POST.get('optradio1').strip()
+            if not va.radiocheck(request, instance.level, "Level"):
+                return redirect(redirect_url)
+
+            instance.organizer = request.POST.get('organizer').strip()
+            if not va.nameValidate(request, instance.organizer, "Organizer"):
+                return redirect(redirect_url)
+
+            instance.sponsors = request.POST.get('sponsor').strip()
+            if not va.nameValidate(request, instance.sponsors, "Sponsors"):
+                return redirect(redirect_url)
+
+            instance.approval = request.POST.get('optradio2').strip()
+            if not va.radiocheck(request, instance.approval, "Grant"):
+                return redirect(redirect_url)
+
+            instance.begi_date = request.POST.get('begi_date').strip()
+            try:
+                selected_date = datetime.strptime(instance.begi_date, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.end_date = request.POST.get('end_date').strip()
+            try:
+                selected_date = datetime.strptime(instance.end_date, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Session Year"):
+                return redirect(redirect_url)
+
+            instance.no_of_days = request.POST.get('num_of_days')
+            if not va.numberValidate(request, instance.no_of_days, "Number of Days"):
+                return redirect(redirect_url)
+
+            instance.proof_enclosed = request.POST.get('optradio3').strip()
+            if not va.radiocheck(request, instance.proof_enclosed, "Proof Enclosed"):
+                return redirect(redirect_url)
+
+            if request.FILES.get('proof_file'):
+                proof_file = request.FILES.get('proof_file')
+                if not va.fileValidate(request, proof_file, "Proof File"):
+                    return redirect(redirect_url)
+                instance.proof_file = proof_file
+
+            instance.save()
+
+        elif pk == 2:
+            instance = mooc_course.objects.get(pk=key_id)
+
+            instance.category = request.POST.get('category').strip()
+            if not va.radiocheck(request, instance.category, "Category"):
+                return redirect(redirect_url)
+
+            instance.timeline = request.POST.get('toc').strip()
+            if not va.nameValidate(request, instance.timeline, "Timeline of course"):
+                return redirect(redirect_url)
+
+            instance.noc = request.POST.get('noc').strip()
+            if not va.nameValidate(request, instance.noc, "Name of the Course"):
+                return redirect(redirect_url)
+
+            instance.doc = request.POST.get('optradio3').strip()
+            if not va.radiocheck(request, instance.noc, "Duration of Course"):
+                return redirect(redirect_url)
+
+            instance.begi_date = request.POST.get('begi_date')
+            try:
+                selected_date = datetime.strptime(instance.begi_date, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.end_date = request.POST.get('end_date')
+            try:
+                selected_date = datetime.strptime(instance.end_date, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.offer = request.POST.get('ofo').strip()
+            if not va.nameValidate(request, instance.offer, "Offering Agency/ Organizer"):
+                return redirect(redirect_url)
+
+            instance.ctype = request.POST.get('optradio1').strip()
+            if not va.radiocheck(request, instance.ctype, "Certificate Type"):
+                return redirect(redirect_url)
+
+            instance.topper_in = request.POST.get('optradio2').strip()
+            if not va.radiocheck(request, instance.topper_in, "Any category from below"):
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Session"):
+                return redirect(redirect_url)
+
+            instance.remarks = request.POST.get('remarks')
+
+            if request.FILES.get('proof_file'):
+                proof_file = request.FILES.get('proof_file')
+                if not va.fileValidate(request, proof_file, "Proof File"):
+                    return redirect(redirect_url)
+                instance.proof_file = proof_file
+
+            instance.save()
+
+        elif pk == 3:
+            instance = events.objects.get(pk=key_id)
+
+            instance.category = request.POST.get('category').strip()
+            if not va.radiocheck(request, instance.category, "Category"):
+                return redirect(redirect_url)
+
+            instance.begi_date = request.POST.get('begi_date')
+            try:
+                selected_date = datetime.strptime(instance.begi_date, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.end_date = request.POST.get('end_date')
+            try:
+                selected_date = datetime.strptime(instance.end_date, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.nofc = request.POST.get('nofc').strip()
+            if not va.nameValidate(request,instance.nofc,"Name of Faculty Coordinator(s)"):
+                return redirect(redirect_url)
+
+            instance.eof = request.POST.getlist('optradio3').strip()
+            if not va.radiocheck(request,instance.eof,"Event organized for"):
+                return redirect(redirect_url)
+
+            instance.topdpo = request.POST.get('topdpo').strip()
+            if not va.nameValidate(request,instance.topdpo,"Title of the Professional Development Program Organized"):
+                return redirect(redirect_url)
+
+            instance.nop = request.POST.get('nop').strip()
+            if not va.nameValidate(request, instance.nop, "No. of participants"):
+                return redirect(redirect_url)
+
+            instance.adcc = request.POST.get('acclc').strip()
+            if not va.nameValidate(request, instance.adcc, "Academic Department/ Cell/ Committees/ Labs/ COE"):
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Academic Session"):
+                return redirect(redirect_url)
+
+            instance.ct = request.POST.get('optradio1').strip()
+            if not va.radiocheck(request, instance.ct, "Sponsored/Non Sponsored"):
+                return redirect(redirect_url)
+
+            instance.nosa = request.POST.get('nosa').strip()
+            if not va.nameValidate(request, instance.nosa, "Name of Sponsoring Agency(if Sponsored)"):
+                return redirect(redirect_url)
+
+            instance.cd = request.POST.get('cd').strip()
+            if not va.nameValidate(request, instance.cd, "Collaboration Details"):
+                return redirect(redirect_url)
+
+            instance.gr = request.POST.get('optradio2').strip()
+            if not va.radiocheck(request, instance.gr, "Grant Received(YES/NO)"):
+                return redirect(redirect_url)
+
+            instance.gd = request.POST.get('gd').strip()
+            if not va.nameValidate(request, instance.gd, "Grant Details"):
+                return redirect(redirect_url)
+
+            instance.awpsfooe = request.POST.get('awpsfooe').strip()
+            if not va.nameValidate(request, instance.gd, "Association with professional societies for organization of event"):
+                return redirect(redirect_url)
+
+            instance.nossp = request.POST.get('nossp').strip()
+            if not va.nameValidate(request, instance.nossp,"Number of SKIT students participated"):
+                return redirect(redirect_url)
+
+            instance.nosmp = request.POST.get('nosmp').strip()
+            if not va.nameValidate(request, instance.nosmp, "Number of staff member participated"):
+                return redirect(redirect_url)
+
+            instance.eraipf = request.POST.get('optradio4').strip()
+            if not va.radiocheck(request, instance.eraipf, "Event report attached in proper format(YES/NO)"):
+                return redirect(redirect_url)
+
+            if request.FILES.get('proof_file'):
+                proof_file = request.FILES.get('proof_file')
+                if not va.fileValidate(request, proof_file, "Proof File"):
+                    return redirect(redirect_url)
+                instance.proof_file = proof_file
+
+            instance.remarks = request.POST.get('remarks')
+
+            instance.save()
+
+        elif pk == 4:
+            instance = awards_and_achievments.objects.get(pk=key_id)
+
+            instance.category = request.POST.get('category').strip()
+            if not va.radiocheck(request, instance.category, "Category"):
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Academic Session"):
+                return redirect(redirect_url)
+
+            instance.noaa = request.POST.get('noaa').strip()
+            if not va.nameValidate(request, instance.noaa, "Name of the Award/   Achievement"):
+                return redirect(redirect_url)
+
+            instance.paf = request.POST.get('paf').strip()
+            if not va.nameValidate(request, instance.paf, "Position / Award For"):
+                return redirect(redirect_url)
+
+            instance.ao = request.POST.get('ao').strip()
+            if not va.nameValidate(request, instance.ao, "Agency / Organization"):
+                return redirect(redirect_url)
+
+            instance.prize = request.POST.get('prize').strip()
+            if not va.nameValidate(request, instance.ao, "Prize"):
+                return redirect(redirect_url)
+
+            instance.ad = request.POST.get('prize').strip()
+            if not va.nameValidate(request, instance.ad, "Date of Award"):
+                return redirect(redirect_url)
+
+            instance.remark = request.POST.get('remark')
+
+            if request.FILES.get('proof_file'):
+                proof_file = request.FILES.get('proof_file')
+                if not va.fileValidate(request, proof_file, "Proof File"):
+                    return redirect(redirect_url)
+                instance.proof_file = proof_file
+
+            instance.save()
+
+        elif pk == 5:
+            instance = sponsored_research.objects.get(pk=key_id)
+
+            instance.category = request.POST.get('category').strip()
+            if not va.radiocheck(request, instance.category, "Category"):
+                return redirect(redirect_url)
+
+            instance.nofa = request.POST.get('nofa').strip()
+            if not va.nameValidate(request, instance.nofa, "Name of the Funding Agency"):
+                return redirect(redirect_url)
+
+            instance.dop = request.POST.get('dop').strip()
+            if not va.nameValidate(request, instance.nofa, "Duration of Project"):
+                return redirect(redirect_url)
+
+            instance.amount = request.POST.get('amount').strip()
+            if not va.nameValidate(request, instance.amount, "Amount in Rs."):
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Academic Session"):
+                return redirect(redirect_url)
+
+            instance.status = request.POST.get('optradio2').strip()
+            if not va.radiocheck(request, instance.session, "Status"):
+                return redirect(redirect_url)
+
+            if request.FILES.get('proof_file'):
+                proof_file = request.FILES.get('proof_file')
+                if not va.fileValidate(request, proof_file, "Proof File"):
+                    return redirect(redirect_url)
+                instance.proof_file = proof_file
+
+            instance.save()
+
+        elif pk == 6:
+            instance = research_journal.objects.get(pk=key_id)
+
+            instance.noa = request.POST.get('noa').strip()
+            if not nameValidate(request,instance.noa,"Name of author"):
+                return redirect(redirect_url)
+
+            instance.top = request.POST.get('top').strip()
+            if not nameValidate(request, instance.top, "Title of Paper"):
+                return redirect(redirect_url)
+
+            instance.noj = request.POST.get('noj').strip()
+            if not nameValidate(request, instance.noj, "Name of Journal"):
+                return redirect(redirect_url)
+
+            instance.nop = request.POST.get('nop').strip()
+            if not nameValidate(request, instance.nop, "Name of the Publisher"):
+                return redirect(redirect_url)
+
+            instance.vi = request.POST.get('vi').strip()
+            if not nameValidate(request, instance.vi, "Volume, Issue"):
+                return redirect(redirect_url)
+
+            instance.pn = request.POST.get('pn').strip()
+            if not nameValidate(request, instance.pn, "Page No."):
+                return redirect(redirect_url)
+
+            instance.pd = request.POST.get('pd')
+            try:
+                selected_date = datetime.strptime(instance.pd, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Session"):
+                return redirect(redirect_url)
+
+            instance.isnp = request.POST.get('isnp').strip()
+            if not nameValidate(request, instance.isnp, "ISSN number : Print"):
+                return redirect(redirect_url)
+
+            instance.isno = request.POST.get('isno').strip()
+            if not nameValidate(request, instance.isno, "ISSN number : Online"):
+                return redirect(redirect_url)
+
+            instance.level = request.POST.get('optradio3').strip()
+            if not va.radiocheck(request, instance.level, "Level"):
+                return redirect(redirect_url)
+
+            instance.doi = request.POST.get('doi').strip()
+            if not nameValidate(request, instance.doi, "DOI(Digital Object Identifier)"):
+                return redirect(redirect_url)
+
+            instance.lwj = request.POST.get('lwj').strip()
+            if not nameValidate(request, instance.lwj, "Link to website of the Journal"):
+                return redirect(redirect_url)
+
+            instance.lap = request.POST.get('lap').strip()
+            if not nameValidate(request, instance.lap, "Link to article"):
+                return redirect(redirect_url)
+
+            instance.lrsj = request.POST.get('lrsj').strip()
+            if not nameValidate(request, instance.lrsj, "Link to the recognition"):
+                return redirect(redirect_url)
+
+            instance.aiop = request.POST.get('aiop').strip()
+            if not nameValidate(request, instance.aiop, "Affiliating Institute"):
+                return redirect(redirect_url)
+
+            instance.index_by = request.POST.get('optradio1').strip()
+            if not va.radiocheck(request, instance.index_by, "Indexed By"):
+                return redirect(redirect_url)
+
+            instance.quartile = request.POST.get('optradio').strip()
+            if not va.radiocheck(request, instance.quartile, "Quartile"):
+                return redirect(redirect_url)
+
+            instance.ssa = request.POST.get('optradio2').strip()
+            if not va.radiocheck(request, instance.index_by, "Is SKIT student associated?"):
+                return redirect(redirect_url)
+
+            instance.details = request.POST.get('details').strip()
+            if not nameValidate(request, instance.details, "Write student(s) details"):
+                return redirect(redirect_url)
+
+            if request.FILES.get('proof_file'):
+                proof_file = request.FILES.get('proof_file')
+                if not va.fileValidate(request, proof_file, "Proof File"):
+                    return redirect(redirect_url)
+                instance.proof_file = proof_file
+
+            instance.save()
+
+        elif pk == 7:
+            instance = research_conference.objects.get(pk=key_id)
+
+            instance.noa = request.POST.get('noa').strip()
+            if not nameValidate(request, instance.noa, "Name of author"):
+                return redirect(redirect_url)
+
+            instance.toc = request.POST.get('toc').strip()
+            if not nameValidate(request, instance.toc, "Title of Conference"):
+                return redirect(redirect_url)
+
+            instance.top = request.POST.get('top').strip()
+            if not nameValidate(request, instance.top, "Title of Paper"):
+                return redirect(redirect_url)
+
+            instance.topc = request.POST.get('topc').strip()
+            if not nameValidate(request, instance.topc, "Title of the proceedings of the conference"):
+                return redirect(redirect_url)
+
+            instance.level = request.POST.get('optradio3').strip()
+            if not radiocheck(request, instance.level, "Level"):
+                return redirect(redirect_url)
+
+            instance.ispn = request.POST.get('isbn').strip()
+            if not radiocheck(request, instance.level, "ISBN/ISSN number of the proceeding"):
+                return redirect(redirect_url)
+
+            instance.nop = request.POST.get('nop').strip()
+            if not radiocheck(request, instance.nop, "Name of the Publisher"):
+                return redirect(redirect_url)
+
+            instance.pd = request.POST.get('pd')
+            try:
+                selected_date = datetime.strptime(instance.pd, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Academic Session"):
+                return redirect(redirect_url)
+
+            instance.doi = request.POST.get('doi').strip()
+            if not nameValidate(request, instance.doi, "DOI(Digital Object Identifier)"):
+                return redirect(redirect_url)
+
+            instance.lwj = request.POST.get('link').strip()
+            if not nameValidate(request, instance.lwj, "Web Link"):
+                return redirect(redirect_url)
+
+            instance.aitp = request.POST.get('aiop').strip()
+            if not nameValidate(request, instance.aitp, "Affiliating Institute at the time of publication"):
+                return redirect(redirect_url)
+
+            instance.ssa = request.POST.get('optradio2').strip()
+            if not va.radiocheck(request, instance.index_by, "Is SKIT student associated?"):
+                return redirect(redirect_url)
+
+            instance.details = request.POST.get('details').strip()
+            if not nameValidate(request, instance.details, "Write student(s) details"):
+                return redirect(redirect_url)
+
+            instance.index_by = request.POST.get('optradio1').strip()
+            if not va.radiocheck(request, instance.index_by, "Indexed By"):
+                return redirect(redirect_url)
+
+            if request.FILES.get('proof_file'):
+                proof_file = request.FILES.get('proof_file')
+                if not va.fileValidate(request, proof_file, "Proof File"):
+                    return redirect(redirect_url)
+                instance.proof_file = proof_file
+
+            instance.save()
+
+        elif pk == 8:
+            instance = research_book.objects.get(pk=key_id)
+
+            instance.noa = request.POST.get('noa').strip()
+            if not nameValidate(request, instance.noa, "Name of the author/editor"):
+                return redirect(redirect_url)
+
+            instance.tob = request.POST.get('tob').strip()
+            if not nameValidate(request, instance.tob, "Title of the book"):
+                return redirect(redirect_url)
+
+            instance.top = request.POST.get('tocp').strip()
+            if not nameValidate(request, instance.top, "Title of the chapter Published"):
+                return redirect(redirect_url)
+
+            instance.level = request.POST.get('optradio3').strip()
+            if not radiocheck(request, instance.level, "Level"):
+                return redirect(redirect_url)
+
+            instance.isbn = request.POST.get('isbn').strip()
+            if not nameValidate(request, instance.isbn, "ISBN"):
+                return redirect(redirect_url)
+
+            instance.nop = request.POST.get('nop').strip()
+            if not nameValidate(request, instance.isbn, "Name of the Publisher"):
+                return redirect(redirect_url)
+
+            instance.pd = request.POST.get('pd')
+            try:
+                selected_date = datetime.strptime(instance.pd, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Academic Session"):
+                return redirect(redirect_url)
+
+            instance.doi = request.POST.get('doi').strip()
+            if not nameValidate(request, instance.doi, "DOI(Digital Object Identifier)"):
+                return redirect(redirect_url)
+
+            instance.lwj = request.POST.get('link').strip()
+            if not nameValidate(request, instance.lwj, "Web Link"):
+                return redirect(redirect_url)
+
+            instance.aitp = request.POST.get('aiop').strip()
+            if not nameValidate(request, instance.aitp, "Affiliating Institute at the time of publication"):
+                return redirect(redirect_url)
+
+            instance.ssa = request.POST.get('optradio2').strip()
+            if not va.radiocheck(request, instance.ssa, "Is SKIT student associated?"):
+                return redirect(redirect_url)
+
+            instance.details = request.POST.get('details').strip()
+            if not nameValidate(request, instance.details, "Write student(s) details"):
+                return redirect(redirect_url)
+
+            instance.index_by = request.POST.get('optradio1').strip()
+            if not va.radiocheck(request, instance.index_by, "Indexed By"):
+                return redirect(redirect_url)
+
+            if request.FILES.get('proof_file'):
+                proof_file = request.FILES.get('proof_file')
+                if not va.fileValidate(request, proof_file, "Proof File"):
+                    return redirect(redirect_url)
+                instance.proof_file = proof_file
+
+            instance.save()
+
+        elif pk == 9:
+            instance = patents.objects.get(pk=key_id)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Academic Session"):
+                return redirect(redirect_url)
+
+            instance.sop = request.POST.get('optradio1').strip()
+            if not va.radiocheck(request, instance.sop, "Status of Patent"):
+                return redirect(redirect_url)
+
+            instance.ag = request.POST.get('aid').strip()
+            if not nameValidate(request, instance.ag, "Application ID"):
+                return redirect(redirect_url)
+
+            instance.gi = request.POST.get('gd').strip()
+            if not nameValidate(request, instance.gi, "Granted ID"):
+                return redirect(redirect_url)
+
+            instance.pg = request.POST.get('optradio2').strip()
+            if not radiocheck(request, instance.pg, "Type of Patent"):
+                return redirect(redirect_url)
+
+            instance.top = request.POST.get('top').strip()
+            if not nameValidate(request, instance.details, "Title of Patent"):
+                return redirect(redirect_url)
+
+            instance.gc = request.POST.get('gc').strip()
+            if not nameValidate(request, instance.gc, "Granted Country"):
+                return redirect(redirect_url)
+
+            instance.pfd = request.POST.get('pfd')
+            try:
+                selected_date = datetime.strptime(instance.pfd, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.pd = request.POST.get('pd')
+            try:
+                selected_date = datetime.strptime(instance.pd, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Academic Session"):
+                return redirect(redirect_url)
+
+            instance.ssa = request.POST.get('optradio2').strip()
+            if not va.radiocheck(request, instance.ssa, "Is SKIT student associated?"):
+                return redirect(redirect_url)
+
+            instance.details = request.POST.get('details').strip()
+            if not nameValidate(request, instance.details, "Write student(s) details"):
+                return redirect(redirect_url)
+
+            instance.link = request.POST.get('link').strip()
+            if not nameValidate(request, instance.link, "Web Link"):
+                return redirect(redirect_url)
+
+            if request.FILES.get('proof_file'):
+                proof_file = request.FILES.get('proof_file')
+                if not va.fileValidate(request, proof_file, "Proof File"):
+                    return redirect(redirect_url)
+                instance.proof_file = proof_file
+
+        elif pk == 10:
+            instance = guided.objects.get(pk=key_id)
+
+            instance.category = request.POST.get('category').strip()
+            if not va.radiocheck(request, instance.category, "Category"):
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Academic Session"):
+                return redirect(redirect_url)
+
+            instance.nos = request.POST.get('nos').strip()
+            if not nameValidate(request, instance.nos, "Name of the student Guided"):
+                return redirect(redirect_url)
+
+            instance.ens = request.POST.get('ens').strip()
+            if not va.nameValidate(request, instance.ens, "Enrollment Number of Student"):
+                return redirect(redirect_url)
+
+            instance.urns = request.POST.get('urns').strip()
+            if not va.nameValidate(request, instance.urns, "University Roll Number of Student"):
+                return redirect(redirect_url)
+
+            instance.eys = request.POST.get('eys').strip()
+            if not va.nameValidate(request, instance.urns, "Enrollment Year of Student"):
+                return redirect(redirect_url)
+
+            instance.tod = request.POST.get('tod').strip()
+            if not va.nameValidate(request, instance.tod, "Title of the Dissertation"):
+                return redirect(redirect_url)
+
+            instance.visor = request.POST.get('optradio2').strip()
+            if not va.nameValidate(request, instance.tod, "Supervisor / Co-supervisor"):
+                return redirect(redirect_url)
+
+            instance.dov = request.POST.get('dov')
+            try:
+                selected_date = datetime.strptime(instance.dov, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.noe = request.POST.get('noe').strip()
+            if not va.nameValidate(request, instance.noe, "Name of external examiner"):
+                return redirect(redirect_url)
+
+            instance.save()
+
+        elif pk == 11:
+            instance = resource.objects.get(pk=key_id)
+
+            instance.category = request.POST.get('category').strip()
+            if not va.radiocheck(request, instance.category, "Category"):
+                return redirect(redirect_url)
+
+            instance.toe = request.POST.get('toe').strip()
+            if not va.nameValidate(request, instance.toe, "Title of Event/ Exam Name"):
+                return redirect(redirect_url)
+
+            instance.sa = request.POST.get('sa').strip()
+            if not va.nameValidate(request, instance.sa, "Subject Area/Subject Name/Lab Name/Session Name"):
+                return redirect(redirect_url)
+
+            instance.rpt = request.POST.get('rpt').strip()
+            if not va.radiocheck(request, instance.rpt, "Resource Person Type"):
+                return redirect(redirect_url)
+
+            instance.doe = request.POST.get('doe').strip()
+            if not va.nameValidate(request, instance.doe, "Duration of event (in days)"):
+                return redirect(redirect_url)
+
+            instance.begi_date = request.POST.get('begi_date')
+            try:
+                selected_date = datetime.strptime(instance.begi_date, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.end_date = request.POST.get('end_date')
+            try:
+                selected_date = datetime.strptime(instance.end_date, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
+                return redirect(redirect_url)
+
+            instance.session = request.POST.get('sessionyear').strip()
+            if not va.radiocheck(request, instance.session, "Academic Session"):
+                return redirect(redirect_url)
+
+            instance.venue = request.POST.get('venue').strip()
+            if not va.nameValidate(request, instance.sa, "Venue"):
+                return redirect(redirect_url)
+
+            if request.FILES.get('proof_file'):
+                proof_file = request.FILES.get('proof_file')
+                if not va.fileValidate(request, proof_file, "Proof File"):
+                    return redirect(redirect_url)
+                instance.proof_file = proof_file
+
+            instance.save()
+
+        messages.success(request,"Entry Updated Successfully!")
+        return redirect(redirect_url)
