@@ -235,7 +235,9 @@ document.getElementById("app").innerHTML = forms.map(f => {
                                                     const catMatch = data.category_display || data.email__email || data.noj || data.top || data.tob || data.top;
                                                     const value = Object.values(data)[1];
                                                     if(catMatch === s.category_display) {
-                                                        return `<a href = 'progressdetails/${f.form_number}/${id}' style = "text-decoration: none;"><div class="entry-item">${value}</div></a>`;
+                                                        return `<a href = 'progressdetails/${f.form_number}/${id}' style = "text-decoration: none;">
+                                                                    <div class="entry-item">${value}</div>
+                                                                </a>`;
                                                     }
                                                 }).join("")}
                                             </div>

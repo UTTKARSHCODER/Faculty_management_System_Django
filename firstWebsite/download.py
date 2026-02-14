@@ -3,6 +3,8 @@ import io
 
 import openpyxl
 import pandas as pd
+from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
 from django.utils import timezone
 from django.forms.models import model_to_dict
 from django.http.response import HttpResponse
@@ -150,6 +152,9 @@ def download_files(request):
                 headers_1.insert(21,'If Awards and recognition received for extension activities (Upload Certificate)')
 
             sheet1.append(headers_1)
+            # for making text bold 
+            for cell in sheet1[1]:
+                cell.font = Font(bold=True)
 
             for item in non_teaching_staff.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(),
@@ -219,6 +224,19 @@ def download_files(request):
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.certificate.url
                     cell.style = "Hyperlink"
 
+            for col in sheet1.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet1.column_dimensions[column_letter].width = min(adjusted_width, 60)
 
             # --- Faculty Participartion ---
             sheet2 = workbook.create_sheet("2. Faculty Participation")
@@ -242,10 +260,28 @@ def download_files(request):
 
                 sheet2.append(row_data)
 
+                # for making text bold 
+                for cell in sheet2[1]:
+                    cell.font = Font(bold=True)
+
                 if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                     cell = sheet2.cell(row=sheet2.max_row, column=18)
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     cell.style = "Hyperlink"
+            
+            for col in sheet2.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet2.column_dimensions[column_letter].width = min(adjusted_width, 60)
 
             # --- 3. MOOCsShort Term Course ---
             sheet3 = workbook.create_sheet("3. MOOCsShort Term Course")
@@ -257,6 +293,9 @@ def download_files(request):
                 headers_3.insert(15,'Upload Certificate/Proof')
             sheet3.append(headers_3)
 
+            # for making text bold 
+            for cell in sheet3[1]:
+                cell.font = Font(bold=True)
 
             for item in mooc_course.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.name, item.email.emp_id,
@@ -280,6 +319,20 @@ def download_files(request):
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     cell.style = "Hyperlink"
 
+            for col in sheet3.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet3.column_dimensions[column_letter].width = min(adjusted_width, 60)
+
             # --- 4. Events Organized by Department ---
             sheet4 = workbook.create_sheet("4Events Organized by Department")
             headers_4 = ['Timestamp', 'Email address', 'Start Date of the Event', 'End Date  the Event ' ,'Event Organized for', 'Type of Event', 'Name of Faculty Coordinator(s)',
@@ -292,6 +345,10 @@ def download_files(request):
             if user_type == 'ad' or user_type == 'spa':
                 headers_4.insert(19,'Upload Event Report')
             sheet4.append(headers_4)
+
+            # for making text bold 
+            for cell in sheet4[1]:
+                cell.font = Font(bold=True)
 
             for item in events.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.begi_date.strftime("%d-%m-%Y"),
@@ -315,6 +372,20 @@ def download_files(request):
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     cell.style = "Hyperlink"
 
+            for col in sheet4.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet4.column_dimensions[column_letter].width = min(adjusted_width, 60)
+
             # --- 5. Faculty Awards & Achievement ---
             sheet5 = workbook.create_sheet("5. Faculty Awards & Achievement")
             headers_5 = ['Timestamp', 'Email address', 'Session', 'Faculty Name', 'Employee ID',
@@ -324,6 +395,10 @@ def download_files(request):
             if user_type == 'ad' or user_type == 'spa':
                 headers_5.insert(12,'Upload Award Certificate/Proof')
             sheet5.append(headers_5)
+
+            # for making text bold 
+            for cell in sheet5[1]:
+                cell.font = Font(bold=True)
 
             for item in awards_and_achievments.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(),
@@ -345,6 +420,20 @@ def download_files(request):
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     cell.style = "Hyperlink"
 
+            for col in sheet5.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet5.column_dimensions[column_letter].width = min(adjusted_width, 60)
+
             # --- 6. Sponsored Research/Grant Received/Consultancy ---
             sheet6 = workbook.create_sheet("6. Sponsored Research, Grant")
             headers_6 = ['Timestamp', 'Email address', 'Name of Candidate (PI/Co PI)', 'Employee ID', 'Department',
@@ -354,6 +443,10 @@ def download_files(request):
                 headers_6.append('Upload Proof')
 
             sheet6.append(headers_6)
+
+            # for making text bold 
+            for cell in sheet6[1]:
+                cell.font = Font(bold=True)
 
             for item in sponsored_research.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.name,
@@ -375,6 +468,20 @@ def download_files(request):
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     cell.style = "Hyperlink"
 
+            for col in sheet6.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet6.column_dimensions[column_letter].width = min(adjusted_width, 60)
+
             # --- 7.1 Research Publication - Journal ---
             sheet7 = workbook.create_sheet("7.1Research Publication-Journal")
             headers_7 = ['Timestamp', 'Email address', 'Employee ID', 'Name of the author', 'Department',
@@ -386,6 +493,10 @@ def download_files(request):
             if user_type == 'ad' or user_type == 'spa':
                 headers_7.append('Upload Full Paper')
             sheet7.append(headers_7)
+
+            # for making text bold 
+            for cell in sheet7[1]:
+                cell.font = Font(bold=True)
 
             for item in research_journal.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.emp_id,
@@ -409,6 +520,20 @@ def download_files(request):
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     cell.style = "Hyperlink"
 
+            for col in sheet7.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet7.column_dimensions[column_letter].width = min(adjusted_width, 60)
+
             # --- 7.2 Conference Publication ---
             sheet8 = workbook.create_sheet("7.2 Conference Publication")
             headers_8 = ['Timestamp', 'Email address', 'Department', 'Employee ID', 'Name of author',
@@ -417,6 +542,10 @@ def download_files(request):
             if user_type == 'ad' or user_type == 'spa':
                 headers_8.append('Upload Full Paper')
             sheet8.append(headers_8)
+
+            # for making text bold 
+            for cell in sheet8[1]:
+                cell.font = Font(bold=True)
 
             for item in research_conference.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.get_department_display(),
@@ -440,6 +569,20 @@ def download_files(request):
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     cell.style = "Hyperlink"
 
+            for col in sheet8.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet8.column_dimensions[column_letter].width = min(adjusted_width, 60)
+
             # --- 7.3 Book and Book Chapters ---
             sheet9 = workbook.create_sheet("7.3 Book and Book Chapters")
             headers_9 = ['Timestamp', 'Email address', 'Department', 'Employee ID', 'Name of author/editor',
@@ -449,6 +592,10 @@ def download_files(request):
             if user_type == 'ad' or user_type == 'spa':
                 headers_9.append('Upload Proof (Book Chapter/Front Page/Document etc.)')
             sheet9.append(headers_9)
+
+            # for making text bold 
+            for cell in sheet9[1]:
+                cell.font = Font(bold=True)
 
             for item in research_book.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.get_department_display(), item.email.emp_id,
@@ -471,6 +618,20 @@ def download_files(request):
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     cell.style = "Hyperlink"
 
+            for col in sheet9.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet9.column_dimensions[column_letter].width = min(adjusted_width, 60)
+
             # --- 7.4 Patents ---
             sheet10 = workbook.create_sheet("7.4 Patents")
             headers_10 = ['Timestamp', 'Email address', 'Session', 'Department', 'Employee ID', 'Name of Faculty',
@@ -480,6 +641,10 @@ def download_files(request):
             if user_type == 'ad' or user_type == 'spa':
                 headers_10.append('Upload Proof')
             sheet10.append(headers_10)
+
+            # for making text bold 
+            for cell in sheet10[1]:
+                cell.font = Font(bold=True)
 
             for item in patents.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.get_department_display(), item.email.emp_id,
@@ -502,6 +667,20 @@ def download_files(request):
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     cell.style = "Hyperlink"
 
+            for col in sheet10.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet10.column_dimensions[column_letter].width = min(adjusted_width, 60)
+
             # --- 8. M.TechPh.D Guided ---
             sheet11 = workbook.create_sheet("8. M.Tech,Ph.D Guided")
             sheet11.append(['Timestamp', 'Email address','Session', 'Faculty Name', 'Employee ID', 'Department',
@@ -509,12 +688,30 @@ def download_files(request):
                            'University Roll Number of Student', 'Enrollment Year of Student', 'Title of the Dissertation', 'Supervisor / Co-supervisor', 'Date of Viva-Voce',
                            'Name of external examiner'])
 
+            # for making text bold 
+            for cell in sheet11[1]:
+                cell.font = Font(bold=True)
+
             for item in guided.objects.all():
                 sheet11.append([timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.name, item.email.emp_id,
                                item.email.get_department_display(), item.nos,
                                item.get_category_display(), item.ens, item.urns,
                                item.get_eys_display(), item.tod, item.get_visor_display(),
                                item.dov,item.noe])
+
+            for col in sheet11.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet11.column_dimensions[column_letter].width = min(adjusted_width, 60)
 
             # --- 9. M.TechPh.D Guided ---
             sheet12 = workbook.create_sheet("9. Resource Person")
@@ -524,6 +721,10 @@ def download_files(request):
             if user_type == 'ad' or user_type == 'spa':
                 headers_12.append('Proof (Certificate/Mail)')
             sheet12.append(headers_12)
+
+            # for making text bold 
+            for cell in sheet12[1]:
+                cell.font = Font(bold=True)
 
             for item in resource.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.name, item.email.emp_id,
@@ -544,6 +745,20 @@ def download_files(request):
                     cell = sheet12.cell(row=sheet12.max_row, column=15)
                     cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     cell.style = "Hyperlink"
+
+            for col in sheet12.columns:
+                max_length = 15
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len + 2
+                
+                adjusted_width = (max_length * 1.3) + 2
+
+                sheet12.column_dimensions[column_letter].width = min(adjusted_width, 60)
 
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachement; filename=Faculty Data Collection Response Sheet.xlsx'

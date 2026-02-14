@@ -159,19 +159,19 @@ def all_forms(request,pk):
 @session_login_required
 def fdp(request):
     forms = [
-        {'no': '1.1','no_': '1.1', 'form': "Faculty Profile Details"},
-        {'no': '16','no_': '1.2', 'form': "Non-teaching Staff Profile Details"},
-        {'no': '1', 'no_': '2','form': "Faculty Participation"},
-        {'no': '2', 'no_': '3','form': "MOOC's/Short Term Course/Course Completion"},
-        {'no': '3', 'no_': '4','form': "Events Organized by Department"},
-        {'no': '4', 'no_': '5', 'form': "Faculty Awards and Achievements"},
-        {'no': '5', 'no_': '6','form': "Sponsored Research/Grant Received/Consultancy"},
-        {'no': '6', 'no_': '7.1','form': "Research Publication - Journals"},
-        {'no': '7', 'no_': '7.2','form': "Research Publication - Conference Publication"},
-        {'no': '8', 'no_': '7.3','form': "Research Publication - Book and Book Chapters"},
-        {'no': '9', 'no_': '7.4','form': "Patents"},
-        {'no': '10', 'no_': '8','form': "M.Tech/Ph.D Guided"},
-        {'no': '11', 'no_': '9','form': "Resource Person"},
+        {'no': '1.1','no_': '1.1', 'form': "Faculty Profile Details", 'tooltip': "Faculty basic details, higher studies, personal file information."},
+        {'no': '16','no_': '1.2', 'form': "Non-teaching Staff Profile Details", 'tooltip': "Non-Teaching Staff basic details, higher studies, personal file information."},
+        {'no': '1', 'no_': '2','form': "Faculty Participation", 'tooltip': "Faculty participation in FDP, Conference, Workshop, STTP, Seminar etc."},
+        {'no': '2', 'no_': '3','form': "MOOC's/Short Term Course/Course Completion", 'tooltip': "MOOCs (Swayam/NPTEL),courses from Infosys Springboard, Coursera, edX, Udemy etc. and other certifications."},
+        {'no': '3', 'no_': '4','form': "Events Organized by Department", 'tooltip': "Sponsored/Non Sponsored events organized by department for students, faculty and non- teaching staff."},
+        {'no': '4', 'no_': '5', 'form': "Faculty Awards and Achievements", 'tooltip': "Award in Education/Research/Sports, Best paper award, Topper/Gold/Sliver/Elite in SWAYAM/NPTEL courses, Top performing mentors etc."},
+        {'no': '5', 'no_': '6','form': "Sponsored Research/Grant Received/Consultancy", 'tooltip': "Sponsored Research/Grant Received/Consultancy"},
+        {'no': '6', 'no_': '7.1','form': "Research Publication - Journals", 'tooltip': "Publication in Journal (Faculty and SKIT student)"},
+        {'no': '7', 'no_': '7.2','form': "Research Publication - Conference Publication", 'tooltip': "Publication in Conference (Faculty and SKIT student )"},
+        {'no': '8', 'no_': '7.3','form': "Research Publication - Book and Book Chapters", 'tooltip': "Author/Editor of a book or author of book chapter (Faculty and SKIT student)"},
+        {'no': '9', 'no_': '7.4','form': "Patents", 'tooltip': "Details of Patents published and granted (Faculty and SKIT student)"},
+        {'no': '10', 'no_': '8','form': "M.Tech/Ph.D Guided", 'tooltip': "Details of Ph.D and M.Tech students guided by faculty members."},
+        {'no': '11', 'no_': '9','form': "Resource Person", 'tooltip': "Session chair or keynote speaker in conference, delivered expert lecture, speaker in FDP, trainer etc."},
     ]
     return render(request, 'fdp_forms.html',context={'values': forms})
 
