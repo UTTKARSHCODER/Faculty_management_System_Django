@@ -159,18 +159,19 @@ def all_forms(request,pk):
 @session_login_required
 def fdp(request):
     forms = [
-        {'no': '16', 'form': "Non-teaching Staff Profile Details"},
-        {'no': '1', 'form': "Faculty Participation"},
-        {'no': '2', 'form': "MOOC's/Short Term Course/Course Completion"},
-        {'no': '3', 'form': "Events Organized by Department"},
-        {'no': '4', 'form': "Faculty Awards and Achievements"},
-        {'no': '5', 'form': "Sponsored Research/Grant Received/Consultancy"},
-        {'no': '6', 'form': "Research Publication - Journals"},
-        {'no': '7', 'form': "Research Publication - Conference Publication"},
-        {'no': '8', 'form': "Research Publication - Book and Book Chapters"},
-        {'no': '9', 'form': "Patents"},
-        {'no': '10', 'form': "M.Tech/Ph.D Guided"},
-        {'no': '11', 'form': "Resource Person"}
+        {'no': '1.1','no_': '1.1', 'form': "Faculty Profile Details"},
+        {'no': '16','no_': '1.2', 'form': "Non-teaching Staff Profile Details"},
+        {'no': '1', 'no_': '2','form': "Faculty Participation"},
+        {'no': '2', 'no_': '3','form': "MOOC's/Short Term Course/Course Completion"},
+        {'no': '3', 'no_': '4','form': "Events Organized by Department"},
+        {'no': '4', 'no_': '5', 'form': "Faculty Awards and Achievements"},
+        {'no': '5', 'no_': '6','form': "Sponsored Research/Grant Received/Consultancy"},
+        {'no': '6', 'no_': '7.1','form': "Research Publication - Journals"},
+        {'no': '7', 'no_': '7.2','form': "Research Publication - Conference Publication"},
+        {'no': '8', 'no_': '7.3','form': "Research Publication - Book and Book Chapters"},
+        {'no': '9', 'no_': '7.4','form': "Patents"},
+        {'no': '10', 'no_': '8','form': "M.Tech/Ph.D Guided"},
+        {'no': '11', 'no_': '9','form': "Resource Person"},
     ]
     return render(request, 'fdp_forms.html',context={'values': forms})
 

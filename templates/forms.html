@@ -1040,7 +1040,7 @@ function createLinkField(name, placeholder) {
 
             if (file) {
                 // Check if the file is a PDF
-                if (file.type !== "application/pdf") {
+                if (file.type !== "application/pdf" && file.type !== "image/jpeg") {
                     input.classList.add('is-invalid');
                     input.classList.remove('is-valid');
                     input.value = ""; // Reset the input so the wrong file isn't submitted

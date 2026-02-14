@@ -370,11 +370,11 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span>
-                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF, JPEG)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File or JPEG Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf, .jpg, .jpeg, image/jpeg, application/pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload either a PDF file or JPEG file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -540,11 +540,11 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate(MOOC)']}"></span>
-                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF, JPEG)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate(MOOC)']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File or in JPEG Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf, .jpg, .jpeg, image/jpeg, application/pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file or JPEF file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -775,11 +775,11 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Event Report']}"></span>
-                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF, JPEG)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Event Report']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File or JPEG file Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf, .jpg, .jpeg, image/jpeg, application/pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file or JPEG.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -871,11 +871,11 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span>
-                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF, JPEG)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File or JPEG file Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf, .jpg, .jpeg, image/jpeg, application/pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file or JPEG.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -976,11 +976,11 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Proof']}"></span>
-                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <label class="col-sm-4 col-form-label">Upload Proof(Only PDF, JPEG)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Proof']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File or JPEG Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf, .jpg, .jpeg, image/jpeg, application/pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file or JPEG.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1249,10 +1249,10 @@ function generateSubForms() {
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
-                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File or in JPEG file Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" accept=".pdf, .jpg, .jpeg, image/jpeg, application/pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file or in JPEG.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1455,10 +1455,10 @@ function generateSubForms() {
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
-                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File or JPEG Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" accept=".pdf, .jpg, .jpeg, image/jpeg, application/pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file or JPEG.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1652,10 +1652,10 @@ function generateSubForms() {
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Upload Proof (Book Chapter/Front Page/Document etc.)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
-                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format or JPEG(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" accept=".pdf, .jpg, .jpeg, image/jpeg, application/pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file or JPEG.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1819,10 +1819,10 @@ function generateSubForms() {
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Upload Proof<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
-                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File or JPEG Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" accept=".pdf, .jpg, .jpeg, image/jpeg, application/pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file or JPEG.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2109,10 +2109,10 @@ function generateSubForms() {
                                 <div class="col-md-6 mt-4">
                                     <div class="row align-items-center">
                                         <label class="col-sm-5 col-form-label">Proof(Certificate/Mail)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Proof (Certificate/Mail)']}"></span>
-                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File or JPEG Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-7">
-                                            <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" accept=".pdf, .jpg, .jpeg, image/jpeg, application/pdf" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF file or JPEG.</div>
                                         </div>
                                     </div>
                                 </div>
