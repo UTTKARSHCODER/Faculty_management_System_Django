@@ -225,18 +225,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
 
             for col in sheet1.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet1.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet1.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- Faculty Participartion ---
             sheet2 = workbook.create_sheet("2. Faculty Participation")
@@ -270,18 +273,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
             
             for col in sheet2.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet2.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet2.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 3. MOOCsShort Term Course ---
             sheet3 = workbook.create_sheet("3. MOOCsShort Term Course")
@@ -320,18 +326,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
 
             for col in sheet3.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet3.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet3.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 4. Events Organized by Department ---
             sheet4 = workbook.create_sheet("4Events Organized by Department")
@@ -373,18 +382,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
 
             for col in sheet4.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet4.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet4.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 5. Faculty Awards & Achievement ---
             sheet5 = workbook.create_sheet("5. Faculty Awards & Achievement")
@@ -421,18 +433,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
 
             for col in sheet5.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet5.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet5.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 6. Sponsored Research/Grant Received/Consultancy ---
             sheet6 = workbook.create_sheet("6. Sponsored Research, Grant")
@@ -469,18 +484,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
 
             for col in sheet6.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet6.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet6.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 7.1 Research Publication - Journal ---
             sheet7 = workbook.create_sheet("7.1Research Publication-Journal")
@@ -521,18 +539,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
 
             for col in sheet7.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet7.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet7.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 7.2 Conference Publication ---
             sheet8 = workbook.create_sheet("7.2 Conference Publication")
@@ -570,18 +591,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
 
             for col in sheet8.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet8.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet8.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 7.3 Book and Book Chapters ---
             sheet9 = workbook.create_sheet("7.3 Book and Book Chapters")
@@ -619,18 +643,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
 
             for col in sheet9.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet9.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet9.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 7.4 Patents ---
             sheet10 = workbook.create_sheet("7.4 Patents")
@@ -668,18 +695,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
 
             for col in sheet10.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet10.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet10.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 8. M.TechPh.D Guided ---
             sheet11 = workbook.create_sheet("8. M.Tech,Ph.D Guided")
@@ -700,19 +730,21 @@ def download_files(request):
                                item.dov,item.noe])
 
             for col in sheet11.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet11.column_dimensions[column_letter].width = min(adjusted_width, 60)
-
+                sheet11.column_dimensions[column_letter].width = min(adjusted_width, 100)
             # --- 9. M.TechPh.D Guided ---
             sheet12 = workbook.create_sheet("9. Resource Person")
             headers_12 = ['Timestamp', 'Email address','Session', 'Name of Faculty Member', 'Employee ID', 'Department',
@@ -747,18 +779,21 @@ def download_files(request):
                     cell.style = "Hyperlink"
 
             for col in sheet12.columns:
-                max_length = 15
+                # selecting the row1 
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
                 column_letter = col[0].column_letter
 
                 for cell in col[1:]:
                     if cell.value:
                         val_len = len(str(cell.value))
                         if val_len > max_length:
-                            max_length = val_len + 2
+                            max_length = val_len
                 
-                adjusted_width = (max_length * 1.3) + 2
+                adjusted_width = (max_length) + 4
 
-                sheet12.column_dimensions[column_letter].width = min(adjusted_width, 60)
+                sheet12.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachement; filename=Faculty Data Collection Response Sheet.xlsx'

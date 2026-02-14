@@ -235,7 +235,16 @@ document.getElementById("app").innerHTML = forms.map(f => {
                                                     const catMatch = data.category_display || data.email__email || data.noj || data.top || data.tob || data.top;
                                                     const value = Object.values(data)[1];
                                                     if(catMatch === s.category_display) {
-                                                        return `<a href = 'progressdetails/${f.form_number}/${id}' style = "text-decoration: none;"><div class="entry-item">${value}</div></a>`;
+                                                        return `
+                                                            <div class="entry-item d-flex ms-auto justify-content-between align-items-center" style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                                                                <div style="flex: 1;" class="ms-3">${value}</div>
+                                                                <div style="margin-left: 10px;">
+                                                                    <a href="progressdetails/${f.form_number}/${id}" style="text-decoration: none; color: #007bff;">
+                                                                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold"><button type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i> <b>Edit </b> </button></span> 
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        `;
                                                     }
                                                 }).join("")}
                                             </div>
