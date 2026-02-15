@@ -81,22 +81,21 @@ def radiocheck(request,key,tag):
         return True
 
 def fileValidate(request,key,tag):
-
     limit_mb = 2
     if key.size > limit_mb * 1024 * 1024:
-        messages.error(request, f'{tag} exceeded the file upload limit(2 mb).\nPlease compress the file under 2 MB.\nCompressor link:- <a href="https://www.ilovepdf.com/compress_pdf" target="_blank">Click Here</a>')
+        messages.error(request, f'{tag} exceeded the file upload limit(2 mb).\nPlease compress the file under 2 MB.\nCompressor link(PDF):- <a href="https://www.ilovepdf.com/compress_pdf" target="_blank">Click Here</a>.\nCompressor link(Image):- <a href="https://squoosh.app/" target="_blank">Click Here</a>.')
         return False
 
-    allowed_extension = ['.pdf']
+    allowed_extension = ['.pdf','.jpg','.jpeg','.png']
     extenstion = os.path.splitext(key.name)[1].lower()
 
     if extenstion not in allowed_extension:
-        messages.error(request, f"{tag} should be of .pdf format")
+        messages.error(request, f"{tag} should be of .pdf,'.jpg','.jpeg','.png' format")
         return False
 
-    allowed_mime_types = ['application/pdf']
+    allowed_mime_types = ['application/pdf','image/jpeg','image/png']
     if key.content_type not in allowed_mime_types:
-        messages.error(request, f"{tag} should be of content type pdf")
+        messages.error(request, f"{tag} should be of content type pdf, jpg, png")
         return False
 
     return True
@@ -116,22 +115,21 @@ def addressValidate(request,key,tag):
         return True
 
 def imageFileValidate(request,key,tag):
-
     limit_mb = 2
     if key.size > limit_mb * 1024 * 1024:
-        messages.error(request, f"{tag} exceeded the file upload limit(2 mb).\nPlease compress the file under 2 MB.\nCompressor link:- https://squoosh.app/")
+        messages.error(request, f'{tag} exceeded the file upload limit(2 mb).\nPlease compress the file under 2 MB.\nCompressor link:- <a href="https://squoosh.app/" target="_blank">Click Here</a>.')
         return False
 
     allowed_extension = ['.jpg','.jpeg','.png']
     extenstion = os.path.splitext(key.name)[1].lower()
 
     if extenstion not in allowed_extension:
-        messages.error(request, f"{tag} should be of .pdf format")
+        messages.error(request, f"{tag} should be of .png, .jpeg, .jpg format")
         return False
 
     allowed_mime_types = ['image/jpeg','image/png']
     if key.content_type not in allowed_mime_types:
-        messages.error(request, f"{tag} should be of content type pdf")
+        messages.error(request, f"{tag} should be of content type image/jpeg or image/png")
         return False
 
     return True

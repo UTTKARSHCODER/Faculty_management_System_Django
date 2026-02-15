@@ -12,18 +12,6 @@ const color = {
 }
 const label = []
 const categoryColors = {
-  // Education & Academic Degrees (Blues)
-    'FPD': 'rgba(44, 127, 184, 0.7)',
-    'EE(PG)': 'rgba(100, 143, 255, 0.7)',
-    'EE(UG)': 'rgba(174, 199, 232, 0.7)',
-    'EDU': 'rgba(158, 218, 229, 0.7)',
-
-    // Education & Academic Degrees (Blues)
-    'NTSPD': 'rgba(44, 127, 184, 0.7)',
-    'EE(PG)': 'rgba(100, 143, 255, 0.7)',
-    'EE(UG)': 'rgba(174, 199, 232, 0.7)',
-    'EDU': 'rgba(158, 218, 229, 0.7)',
-
     // Education & Academic Degrees (Blues)
     'mp': 'rgba(44, 127, 184, 0.7)',
     'EE(PG)': 'rgba(100, 143, 255, 0.7)',
@@ -48,6 +36,7 @@ const categoryColors = {
     'SYM': 'rgba(255, 152, 150, 0.7)',
     'WEB': 'rgba(140, 86, 75, 0.7)',
     'CON': 'rgba(196, 156, 148, 0.7)',
+    'NTS': 'rgba(127, 127, 127, 0.7)',
 
     // Technical & Professional (Yellows/Teals)
     'MOOC': 'rgba(188, 189, 34, 0.7)',
@@ -71,8 +60,6 @@ const categoryColors = {
     'RPCP':    'rgba(72, 61, 139, 0.7)',   // Dark Slate Blue (Conference distinction)
     'RPB':     'rgba(123, 104, 238, 0.7)',  // Medium Slate Blue (Book chapter)
     'RP':      'rgba(255, 140, 0, 0.7)',   // Dark Orange (Project energy)
-    'FPD': 'rgba(127, 127, 127, 0.7)',
-    'NTSPD': 'rgba(227, 147, 127, 0.7)',
 
     // Fallback
     'OTH': 'rgba(179, 179, 179, 0.7)',
@@ -105,7 +92,7 @@ Chart.register(ChartDataLabels);
 let barChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ["Faculty Profile Details","Non-teaching Staff Profile Details","Faculty Participation", "MOOC/Short-term Course", "Events", "Faculty Awards", "Sponsored Research", "Research Publication - Journal", "Research Publication - Confernece", "Research Publication - Books", "Patents", "M.Tech/Ph.D Guided", "Resource Person"],
+      labels: ["Faculty Profile Details", "Non-teaching Staff", "Faculty Participation", "MOOC/Short-term Course", "Events", "Faculty Awards", "Sponsored Research", "Research Publication - Journal", "Research Publication - Confernece", "Research Publication - Books", "Patents", "M.Tech/Ph.D Guided", "Resource Person"],
       datasets: [{
         data: dataMap.cum,
         borderColor: color.cum,
@@ -142,6 +129,7 @@ document.getElementById('activityDropdown').addEventListener('change', function 
   if (selected === "") {
     window.location.reload();
   }
+  console.log(selected);
   const data = JSON.parse(document.getElementById(`my-data-${selected}1`).textContent);
   let dy_list_count = [];
   let dy_list_label = [];
@@ -168,14 +156,13 @@ document.getElementById('activityDropdown').addEventListener('change', function 
         dy_list_short_label.push('PATENTS');
       } else if(selected === 'mp') {
         dy_list_label.push('M.Tech/Ph.D Guided');
-        dy_list_short_label.push(mp);
-      }else if(selected === 'fpd') {
+        dy_list_short_label.push(selected);
+      } else if(selected === 'ntspd') {
+        dy_list_label.push('Non-Teaching Staff');
+        dy_list_short_label.push('NTS');
+      } else if(selected === 'fpd') {
         dy_list_label.push('Faculty Profile Details');
-        dy_list_short_label.push(FPD);
-      }
-      else if(selected === 'ntspd') {
-        dy_list_label.push('Non-teaching Staff Profile Details');
-        dy_list_short_label.push(NTSPD);
+        dy_list_short_label.push(selected);
       }
   }
   const target = "Other";

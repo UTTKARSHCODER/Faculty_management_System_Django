@@ -90,6 +90,11 @@ class gender(models.TextChoices):
     OTHER  = 'O', "Other"
 
 class Faculty(models.Model):
+    session=models.CharField(
+        max_length=7,
+        choices=session.choices,
+        default=session.Y2025_26
+    )
     name = models.CharField(max_length=100)
     contact_number = models.CharField(max_length=10)
     email = models.EmailField(max_length=254,unique=True)
@@ -493,10 +498,7 @@ class research_conference(models.Model):
         choices=accept.choices
     )
     details = models.CharField(max_length=100)
-    index_by = models.CharField(
-        max_length=3,
-        choices=index_by.choices
-    )
+    index_by = models.CharField(max_length=100)
     proof_file = models.FileField(upload_to='uploads/research_journal/')
     email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -528,10 +530,7 @@ class research_book(models.Model):
         choices=accept.choices
     )
     details = models.CharField(max_length=255)
-    index_by = models.CharField(
-        max_length=3,
-        choices=index_by.choices
-    )
+    index_by = models.CharField(max_length=100)
     proof_file = models.FileField(upload_to="uploads/research_book/")
     email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)

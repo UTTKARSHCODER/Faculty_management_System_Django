@@ -143,6 +143,7 @@
             </div>
         </div>
         <!-- Delete Model Ends -->
+        <script src="/static/dynamic_message.js"></script>
         <script>
             document.getElementById('forceLogoutRedirect').addEventListener('click', function(event) {
                 // 1. Let Bootstrap do its thing (close the dropdown menu)
@@ -157,6 +158,25 @@
                     window.location.href = targetUrl;
                 }, 50); // 50 milliseconds is usually enough
             });
+            let toastContainer = document.getElementById('toast-container');
+
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+
+                // Position the CONTAINER, not the messages
+                toastContainer.style.position = "fixed";
+                toastContainer.style.top = "20px";
+                toastContainer.style.right = "20px";
+                toastContainer.style.zIndex = "1050";
+
+                // Ensure messages stack vertically
+                toastContainer.style.display = "flex";
+                toastContainer.style.flexDirection = "column";
+                toastContainer.style.gap = "0px"; // Space between messages
+
+                document.body.appendChild(toastContainer);
+            }
 
             // Create an empty array
             let djangoMessages = [];
@@ -170,22 +190,24 @@
             {% endfor %}
             console.log(djangoMessages);
             // Example: Trigger your alert for each message
-            djangoMessages.forEach((msg) => {
+            djangoMessages.forEach((msg, index) => {
                 $(document).ready(function() {
-                    $('#messageModal').on('show.bs.modal', function(event) {
-                        var modal = $(this);
-                        if(msg.tag.includes('error')) {
+                    if(msg.tag.includes('error')) {
+                        $('#messageModal').on('show.bs.modal', function(event) {
+                            var modal = $(this);
                             modal.find('#icon').addClass('fa-solid fa-triangle-exclamation text-dark mt-1 me-2');
                             modal.find('#header').css('background-color','#FEC901');
                             modal.find('#modal-title').text('Warning');
-                        } else {
-                            modal.find('#icon').addClass('fa-solid fa-circle-info text-dark mt-1 me-2');
-                            modal.find('#header').addClass(`bg-${msg.tag}`);
-                        }
-                        modal.find('#message').html(msg.text);
-                    });
-                    $('#messageModal').modal('toggle');
+                            modal.find('#message').html(msg.text);
+                        });
+                        $('#messageModal').modal('toggle');
+                    }
                 });
+                setTimeout(() => {
+                    if(!msg.tag.includes('error')) {
+                        showMessages(msg.text,msg.tag);
+                    }
+                }, index * 300);
             });
             document.addEventListener("DOMContentLoaded", function(){
                 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

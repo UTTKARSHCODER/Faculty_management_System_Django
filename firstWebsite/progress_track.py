@@ -54,9 +54,9 @@ def progress_bar(request):
 
         total_remaining_field_forms = 12 - ((1 if non_teaching_instance > 0 else 0) + (1 if len(no_of_awards) > 0 else 0) + (1 if len(events_instance) > 0 else 0) + (1 if len(faculty_participartion_data) > 0 else 0) + (1 if guided_instance > 0 else 0) + (1 if len(mooc_course_instance) > 0 else 0) + (1 if patents_instance > 0 else 0) + (1 if research_book_instance > 0 else 0) + (1 if research_conference_instance > 0 else 0) + (1 if research_journal_instance > 0 else 0) + (1 if len(resource_instance) > 0 else 0) + (1 if len(sponsored_research_instance) > 0 else 0))
 
-        form_wise_count = [sum(item['count'] for item in faculty_participartion_data), sum(item['count'] for item in mooc_course_instance), sum(item['count'] for item in events_instance), sum(item['count'] for item in no_of_awards), sum(item['count'] for item in sponsored_research_instance), research_journal_instance, research_conference_instance, research_book_instance, patents_instance, guided_instance, sum(item['count'] for item in resource_instance)]
+        form_wise_count = [1, non_teaching_instance, sum(item['count'] for item in faculty_participartion_data), sum(item['count'] for item in mooc_course_instance), sum(item['count'] for item in events_instance), sum(item['count'] for item in no_of_awards), sum(item['count'] for item in sponsored_research_instance), research_journal_instance, research_conference_instance, research_book_instance, patents_instance, guided_instance, sum(item['count'] for item in resource_instance)]
 
-        context = {'total_forms': total_forms,'total_rff' : total_remaining_field_forms, 'faa1': no_of_awards, 'eod1': events_instance, 'fdp1': faculty_participartion_data, 'mp1': guided_instance, 'msc1' : mooc_course_instance, 'patents1': patents_instance, 'rpb1': research_book_instance, 'rpcp1': research_conference_instance, 'rpj1': research_journal_instance, 'rp1': resource_instance, 'sgc1': sponsored_research_instance,'form_wise_count' : form_wise_count}
+        context = {'total_forms': total_forms,'total_rff' : total_remaining_field_forms, 'fpd1': 1, 'ntspd1' : non_teaching_instance, 'faa1': no_of_awards, 'eod1': events_instance, 'fdp1': faculty_participartion_data, 'mp1': guided_instance, 'msc1' : mooc_course_instance, 'patents1': patents_instance, 'rpb1': research_book_instance, 'rpcp1': research_conference_instance, 'rpj1': research_journal_instance, 'rp1': resource_instance, 'sgc1': sponsored_research_instance,'form_wise_count' : form_wise_count}
         return render(request,'progresschart.html',context)
     except Faculty.DoesNotExist:
         error_message = f"User does not exist in database."
@@ -134,7 +134,7 @@ def forms_listing(request, pk):
         for item in sponsored_research_instance:
             item["category_display"] = label_map.get(item["category"], item["category"])
 
-        context = {'form_type': form_type, 'nts': non_teaching_staff_instance ,'faa1': no_of_awards, 'eod1': events_instance,
+        context = {'form_type': form_type ,'nts': non_teaching_staff_instance ,'faa1': no_of_awards, 'eod1': events_instance,
                    'fdp1': faculty_participation_data, 'mp1': guided_instance, 'msc1': mooc_course_instance,
                    'patents1': patents_instance, 'rpb1': research_book_instance,
                    'rpcp1': research_conference_instance, 'rpj1': research_journal_instance,
@@ -142,7 +142,7 @@ def forms_listing(request, pk):
 
         return render(request, 'form_listing.html', context)
     elif pk == "report":
-        context = {'user': request.session.get('topLeftBar'),'non_teaching': non_teaching_staff_instance.all(),'faa1': no_of_awards.all(), 'eod1': events_instance.all(),
+        context = {'user': request.session.get('topLeftBar'),'fac_ins': Faculty.objects.filter(status="R"), 'non_teaching': non_teaching_staff_instance.all(),'faa1': no_of_awards.all(), 'eod1': events_instance.all(),
                    'fdp1': faculty_participation_data.all(), 'mp1': guided_instance.all(),
                    'msc1': mooc_course_instance.all(),
                    'patents1': patents_instance.all(), 'rpb1': research_book_instance.all(),
@@ -150,7 +150,7 @@ def forms_listing(request, pk):
                    'rpj1': research_journal_instance.all(), 'rp1': resource_instance.all(),
                    'sgc1': sponsored_research_instance.all()}
 
-        return render(request, 'form_listing_dir.html', context)
+        return render(request, 'entire_report.html', context)
 
     elif pk == "partially_filled_forms" or pk == "more_explore_forms":
 

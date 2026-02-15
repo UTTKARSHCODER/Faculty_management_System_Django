@@ -138,8 +138,117 @@ def download_files(request):
             workbook.remove(default_sheet)
             user_type = request.session.get('topLeftBar')
 
+            # --- Faculty Profile Details ---
+            sheet0 = workbook.create_sheet("1.1 Faculty Profile Details")
+            headers_0 = ['Timestamp', 'Email address', 'Session', 'Name', 'Mobile No', 'Department', 'Designation',
+                         'Area of specialization', 'Employee ID', 'Highest Qualification', 'University Name',
+                         'Passing Year of Highest degree', 'PAN No.', 'Date of Birth',
+                         'Joining Date (DD, MM, YY)', 'Promotion Date ( If any)','If PhD pursuing (mention University Name)',
+                         'If PhD pursuing (mention Date of Registration)','No of Research Paper publication','If Awards and recognition received for extension activities(Upload Certificate)'
+                         'The above mentioned information is correct best to my knowledge']
+
+            if user_type == 'ad' or user_type == 'spa':
+                headers_0.insert(16, 'Joining Report')
+                headers_0.insert(17, 'Offer Letter (Appointment Letter)')
+                headers_0.insert(18, 'Salary Slip (Recently)')
+                headers_0.insert(19, 'Higher Degree Certificate(Date of Award)')
+                headers_0.insert(23, 'If Awards and recognition received for extension activities (Upload Certificate)')
+
+            sheet0.append(headers_0)
+            # for making text bold
+            for cell in sheet0[1]:
+                cell.font = Font(name='Arial', size=11, bold=True)
+
+            for item in Faculty.objects.filter(status="R"):
+                row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email,
+                            item.get_session_display(),
+                            item.name, item.contact_number, item.get_department_display(),
+                            item.get_designation_display(), item.get_aos_display(),
+                            item.emp_id, item.get_hq_display(), item.univ_name, item.pshd,
+                            item.pan_no, item.dob, item.jd,
+                            item.pd, item.phd_univ, item.phd_dor, item.norp,
+                            'I Agree']
+                if item.jr and (user_type == 'ad' or user_type == 'spa'):
+                    joining_report = "https://uttkarsh007.pythonanywhere.com/" + item.jr.url
+                    row_data.insert(16, joining_report)
+                elif not item.jr and (user_type == 'ad' or user_type == 'spa'):
+                    joining_report = "No File"
+                    row_data.insert(16, joining_report)
+
+                if item.of and (user_type == 'ad' or user_type == 'spa'):
+                    offer_letter = "https://uttkarsh007.pythonanywhere.com/" + item.of.url
+                    row_data.insert(17, offer_letter)
+                elif not item.of and (user_type == 'ad' or user_type == 'spa'):
+                    offer_letter = "No File"
+                    row_data.insert(17, offer_letter)
+
+                if item.ss and (user_type == 'ad' or user_type == 'spa'):
+                    salary_slip = "https://uttkarsh007.pythonanywhere.com/" + item.ss.url
+                    row_data.insert(18, salary_slip)
+                elif not item.ss and (user_type == 'ad' or user_type == 'spa'):
+                    salary_slip = "No File"
+                    row_data.insert(18, salary_slip)
+
+                if item.hdc and (user_type == 'ad' or user_type == 'spa'):
+                    higher_degree_certificate = "https://uttkarsh007.pythonanywhere.com/" + item.hdc.url
+                    row_data.insert(19, higher_degree_certificate)
+                elif not item.hdc and (user_type == 'ad' or user_type == 'spa'):
+                    higher_degree_certificate = "No File"
+                    row_data.insert(19, higher_degree_certificate)
+
+                if item.certificate and (user_type == 'ad' or user_type == 'spa'):
+                    certificate = "https://uttkarsh007.pythonanywhere.com/" + item.certificate.url
+                    row_data.insert(23, certificate)
+                elif not item.certificate and (user_type == 'ad' or user_type == 'spa'):
+                    certificate = "No File"
+                    row_data.insert(23, certificate)
+
+                sheet0.append(row_data)
+
+                if item.jr and (user_type == 'ad' or user_type == 'spa'):
+                    cell = sheet0.cell(row=sheet0.max_row, column=17)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.jr.url
+                    cell.style = "Hyperlink"
+
+                if item.of and (user_type == 'ad' or user_type == 'spa'):
+                    cell = sheet0.cell(row=sheet0.max_row, column=18)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.of.url
+                    cell.style = "Hyperlink"
+
+                if item.ss and (user_type == 'ad' or user_type == 'spa'):
+                    cell = sheet0.cell(row=sheet0.max_row, column=19)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.ss.url
+                    cell.style = "Hyperlink"
+
+                if item.hdc and (user_type == 'ad' or user_type == 'spa'):
+                    cell = sheet0.cell(row=sheet0.max_row, column=20)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.hdc.url
+                    cell.style = "Hyperlink"
+
+                if item.certificate and (user_type == 'ad' or user_type == 'spa'):
+                    cell = sheet0.cell(row=sheet0.max_row, column=24)
+                    cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.certificate.url
+                    cell.style = "Hyperlink"
+
+            for col in sheet0.columns:
+                # selecting the row1
+                header_cell = col[0]
+                header_value = str(col[0].value) if col[0].value else ""
+                max_length = len(header_value)
+                column_letter = col[0].column_letter
+
+                for cell in col[1:]:
+                    if cell.value:
+                        val_len = len(str(cell.value))
+                        if val_len > max_length:
+                            max_length = val_len
+
+                adjusted_width = max_length + 4
+
+                sheet0.column_dimensions[column_letter].width = min(adjusted_width, 100)
+
             # --- Non-teaching Staff Details ---
-            sheet1 = workbook.create_sheet("1. Non-Teaching Staff Profile")
+            sheet1 = workbook.create_sheet("1.2 Non-Teaching Staff Profile")
             headers_1 = ['Timestamp','Email address','Session','Name','Mobile No','Department','Lab No','Designation','Employee ID','Highest Qualification','University Name',
                          'Passing Year of Highest degree','Professional Courses','PAN No.','Date of Birth','Joining Date (DD, MM, YY)','Promotion Date ( If any)',
                          'The above mentioned information is correct best to my knowledge']
@@ -154,7 +263,7 @@ def download_files(request):
             sheet1.append(headers_1)
             # for making text bold 
             for cell in sheet1[1]:
-                cell.font = Font(bold=True)
+                cell.font = Font(name='Arial', size=11, bold=True)
 
             for item in non_teaching_staff.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(),
@@ -237,7 +346,7 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet1.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
@@ -265,7 +374,7 @@ def download_files(request):
 
                 # for making text bold 
                 for cell in sheet2[1]:
-                    cell.font = Font(bold=True)
+                    cell.font = Font(name='Arial', size=11, bold=True)
 
                 if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                     cell = sheet2.cell(row=sheet2.max_row, column=18)
@@ -285,12 +394,12 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet2.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 3. MOOCsShort Term Course ---
-            sheet3 = workbook.create_sheet("3. MOOCsShort Term Course")
+            sheet3 = workbook.create_sheet("3. MOOC's／Short Term Course")
             headers_3 = ['Timestamp', 'Email address', 'Session', 'Name of Faculty Memeber', 'Employee ID' ,'Department',
                            'Type of Course', 'Timeline of course', 'Name of the Course', 'Duration of Course', 'Start Date of Course',
                            'End Date of Course', 'Offering Agency / Organizer', 'Certificate Type', 'Any  category from below ',
@@ -301,7 +410,7 @@ def download_files(request):
 
             # for making text bold 
             for cell in sheet3[1]:
-                cell.font = Font(bold=True)
+                cell.font = Font(name='Arial', size=11, bold=True)
 
             for item in mooc_course.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.name, item.email.emp_id,
@@ -338,12 +447,12 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet3.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
             # --- 4. Events Organized by Department ---
-            sheet4 = workbook.create_sheet("4Events Organized by Department")
+            sheet4 = workbook.create_sheet("4. Events Organized by Dept")
             headers_4 = ['Timestamp', 'Email address', 'Start Date of the Event', 'End Date  the Event ' ,'Event Organized for', 'Type of Event', 'Name of Faculty Coordinator(s)',
                          'Title of the Professional Development Program Organized', 'No. of participants', 'Academic Department/ Cell / Committees/ Labs /COE',
                          'Academic Session', 'Sponsored/Non Sponsored', 'Name of Sponsoring Agency (if Sponsored)', 'Collaboration Details', 'Grant Received (YES/NO)', 'Grant Details',
@@ -357,7 +466,7 @@ def download_files(request):
 
             # for making text bold 
             for cell in sheet4[1]:
-                cell.font = Font(bold=True)
+                cell.font = Font(name='Arial', size=11, bold=True)
 
             for item in events.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.begi_date.strftime("%d-%m-%Y"),
@@ -394,7 +503,7 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet4.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
@@ -410,7 +519,7 @@ def download_files(request):
 
             # for making text bold 
             for cell in sheet5[1]:
-                cell.font = Font(bold=True)
+                cell.font = Font(name='Arial', size=11, bold=True)
 
             for item in awards_and_achievments.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(),
@@ -445,7 +554,7 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet5.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
@@ -461,7 +570,7 @@ def download_files(request):
 
             # for making text bold 
             for cell in sheet6[1]:
-                cell.font = Font(bold=True)
+                cell.font = Font(name='Arial', size=11, bold=True)
 
             for item in sponsored_research.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.name,
@@ -496,7 +605,7 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet6.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
@@ -514,7 +623,7 @@ def download_files(request):
 
             # for making text bold 
             for cell in sheet7[1]:
-                cell.font = Font(bold=True)
+                cell.font = Font(name='Arial', size=11, bold=True)
 
             for item in research_journal.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.emp_id,
@@ -551,7 +660,7 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet7.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
@@ -566,7 +675,7 @@ def download_files(request):
 
             # for making text bold 
             for cell in sheet8[1]:
-                cell.font = Font(bold=True)
+                cell.font = Font(name='Arial', size=11, bold=True)
 
             for item in research_conference.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.get_department_display(),
@@ -574,7 +683,7 @@ def download_files(request):
                                item.top, item.topc, item.get_level_display(),
                                item.isnp, item.nop, item.pd, item.get_session_display(),
                                item.doi, item.lwj, item.aitp,
-                               item.get_index_by_display(), item.get_ssa_display(), item.details,
+                               item.index_by, item.get_ssa_display(), item.details,
                                ]
                 if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                     proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
@@ -603,7 +712,7 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet8.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
@@ -619,7 +728,7 @@ def download_files(request):
 
             # for making text bold 
             for cell in sheet9[1]:
-                cell.font = Font(bold=True)
+                cell.font = Font(name='Arial', size=11, bold=True)
 
             for item in research_book.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.get_department_display(), item.email.emp_id,
@@ -627,7 +736,7 @@ def download_files(request):
                                item.top, item.get_level_display(), item.isbn,
                                item.nop, item.pd, item.get_session_display(),
                                item.doi, item.lwj,
-                               item.aitp, item.get_index_by_display(), item.get_ssa_display(), item.details]
+                               item.aitp, item.index_by, item.get_ssa_display(), item.details]
                 if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                     proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
                     row_data.append(proof_file)
@@ -655,7 +764,7 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet9.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
@@ -671,7 +780,7 @@ def download_files(request):
 
             # for making text bold 
             for cell in sheet10[1]:
-                cell.font = Font(bold=True)
+                cell.font = Font(name='Arial', size=11, bold=True)
 
             for item in patents.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.get_department_display(), item.email.emp_id,
@@ -707,7 +816,7 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet10.column_dimensions[column_letter].width = min(adjusted_width, 100)
 
@@ -742,7 +851,7 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet11.column_dimensions[column_letter].width = min(adjusted_width, 100)
             # --- 9. M.TechPh.D Guided ---
@@ -756,7 +865,7 @@ def download_files(request):
 
             # for making text bold 
             for cell in sheet12[1]:
-                cell.font = Font(bold=True)
+                cell.font = Font(name='Arial', size=11, bold=True)
 
             for item in resource.objects.all():
                 row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.name, item.email.emp_id,
@@ -791,7 +900,7 @@ def download_files(request):
                         if val_len > max_length:
                             max_length = val_len
                 
-                adjusted_width = (max_length) + 4
+                adjusted_width = max_length + 4
 
                 sheet12.column_dimensions[column_letter].width = min(adjusted_width, 100)
 

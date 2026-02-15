@@ -203,100 +203,100 @@
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
                             <div class="row align-items-center">
-                                <label class="col-sm-4 col-form-label">Joining Report</label>
+                                <label class="col-sm-4 col-form-label">Joining Report<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                 <div class="col-sm-8">
-                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="joining_report" {% if not data.joining_report %}required{% endif %}>
-                                    <div class="invalid-feedback">Please upload a PDF file.</div>
+                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="joining_report" {% if not data.joining_report %}required{% endif %}>
+                                    <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 mt-3">
+                        <div class="col-md-6 mt-4">
                             <div class="row align-items-center">
                                 <div class="col-sm-8">
                                     {% if data.joining_report %}
-                                    <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                    <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                     {% else %}
-                                    <h5>No File was uploaded</h5>
+                                    <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="row align-items-center">
-                                <label class="col-sm-4 col-form-label">Offer Letter     (Appointment Letter)</label>
+                                <label class="col-sm-4 col-form-label">Offer Letter     (Appointment Letter)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                 <div class="col-sm-8">
-                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="offer_letter" {% if not data.offer_letter %}required{% endif %}>
-                                    <div class="invalid-feedback">Please upload a PDF file.</div>
+                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="offer_letter" {% if not data.offer_letter %}required{% endif %}>
+                                    <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 mt-3">
+                        <div class="col-md-6 mt-4">
                             <div class="row align-items-center">
                                 <div class="col-sm-8">
                                     {% if data.offer_letter %}
-                                    <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                    <button type = "button" class="btn btn-primary" style="margin-top: 36px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                     {% else %}
-                                    <h5>No File was uploaded</h5>
+                                    <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="row align-items-center">
-                                <label class="col-sm-4 col-form-label">Higher Degree Certificate(Date of Award)</label>
+                                <label class="col-sm-4 col-form-label">Higher Degree Certificate(Date of Award)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                 <div class="col-sm-8">
-                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="higher_degree_certificate" {% if not data.joining_report.higher_degree_certificate %}required{% endif %}>
-                                    <div class="invalid-feedback">Please upload a PDF file.</div>
+                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="higher_degree_certificate" {% if not data.joining_report.higher_degree_certificate %}required{% endif %}>
+                                    <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 mt-3">
+                        <div class="col-md-6 mt-4">
                             <div class="row align-items-center">
                                 <div class="col-sm-8">
                                     {% if data.higher_degree_certificate %}
-                                    <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                    <button type = "button" class="btn btn-primary" style="margin-top: 48px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                     {% else %}
-                                    <h5>No File was uploaded</h5>
+                                    <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="row align-items-center">
-                                <label class="col-sm-4 col-form-label">Salary Slip (Recently)</label>
+                                <label class="col-sm-4 col-form-label">Salary Slip (Recently)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                 <div class="col-sm-8">
-                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="salary_slip" {% if not data.salary_slip %}required{% endif %}>
-                                    <div class="invalid-feedback">Please upload a PDF file.</div>
+                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="salary_slip" {% if not data.salary_slip %}required{% endif %}>
+                                    <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 mt-3">
+                        <div class="col-md-6 mt-4">
                             <div class="row align-items-center">
                                 <div class="col-sm-8">
                                     {% if data.salary_slip %}
-                                    <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                    <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                     {% else %}
-                                    <h5>No File was uploaded</h5>
+                                    <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="row align-items-center">
-                                <label class="col-sm-4 col-form-label">If Awards and recognition received for extension activities (Upload Certificate)</label>
+                                <label class="col-sm-4 col-form-label">If Awards and recognition received for extension activities (Upload Certificate)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                 <div class="col-sm-8">
-                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="certificate" {% if not data.certificate %}required{% endif %}>
-                                    <div class="invalid-feedback">Please upload a PDF file.</div>
+                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="certificate" {% if not data.certificate %}required{% endif %}>
+                                    <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 mt-3">
+                        <div class="col-md-6 mt-4">
                             <div class="row align-items-center">
                                 <div class="col-sm-8">
                                     {% if data.certificate %}
-                                    <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                    <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                     {% else %}
-                                    <h5>No File was uploaded</h5>
+                                    <h5 style="margin-top: 68px;">No File was uploaded previously.</h5>
                                     {% endif %}
                                 </div>
                             </div>
@@ -460,20 +460,20 @@
                         </div>
                         <div class="col-md-6">
                             <div class="row align-items-center">
-                                <label class="col-sm-4 col-form-label">Uploaded Certificate/Proof(Only PDF)</label>
+                                <label class="col-sm-4 col-form-label">Uploaded Certificate/Proof<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                 <div class="col-sm-6">
-                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" {% if not data.proof_file %}required{% endif %}>
-                                    <div class="invalid-feedback">Please upload a PDF file.</div>
+                                    <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" {% if not data.proof_file %}required{% endif %}>
+                                    <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 mt-3">
+                        <div class="col-md-6 mt-5">
                             <div class="row align-items-center">
                                 <div class="col-sm-8">
                                     {% if data.proof_file %}
-                                    <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                    <button type = "button" class="btn btn-primary" style="margin-top: 14px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                     {% else %}
-                                    <h5>No File was uploaded</h5>
+                                    <h5 style="margin-top: 16px;">No File was uploaded previously.</h5>
                                     {% endif %}
                                 </div>
                             </div>
@@ -572,7 +572,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mt-4">
                                 <div class="row align-items-center">
                                     <label class="col-sm-4 col-form-label">End Date of Course</label>
                                     <div class="col-sm-8">
@@ -644,20 +644,20 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="row align-items-center">
-                                    <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)</label>
+                                    <label class="col-sm-4 col-form-label">Upload Certificate<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                     <div class="col-sm-6">
-                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" {% if not data.proof_file %}required{% endif %}>
-                                        <div class="invalid-feedback">Please upload a PDF file.</div>
+                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" {% if not data.proof_file %}required{% endif %}>
+                                        <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 mt-3">
+                            <div class="col-md-6 mt-5">
                                 <div class="row align-items-center">
                                     <div class="col-sm-8">
                                         {% if data.proof_file %}
-                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                        <button type = "button" class="btn btn-primary" style="margin-top: 14px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                         {% else %}
-                                        <h5>No File was uploaded</h5>
+                                        <h5 style="margin-top: 16px;">No File was uploaded previously.</h5>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -884,20 +884,20 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="row align-items-center">
-                                    <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)</label>
+                                    <label class="col-sm-4 col-form-label">Upload Event Report<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                     <div class="col-sm-6">
-                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" {% if not data.proof_file %}required{% endif %}>
-                                        <div class="invalid-feedback">Please upload a PDF file.</div>
+                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" {% if not data.proof_file %}required{% endif %}>
+                                        <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 mt-3">
+                            <div class="col-md-6 mt-4">
                                 <div class="row align-items-center">
                                     <div class="col-sm-8">
                                         {% if data.proof_file %}
-                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                         {% else %}
-                                        <h5>No File was uploaded</h5>
+                                        <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -984,7 +984,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="row align-items-center">
                                     <label class="col-sm-4 col-form-label">Date of Award</label>
                                     <div class="col-sm-8">
@@ -992,22 +992,22 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <div class="row align-items-center">
-                                    <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)</label>
+                                    <label class="col-sm-4 col-form-label">Upload Award Certificate/Proof<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                     <div class="col-sm-6">
-                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" {% if not data.proof_file %}required{% endif %}>
-                                        <div class="invalid-feedback">Please upload a PDF file.</div>
+                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" {% if not data.proof_file %}required{% endif %}>
+                                        <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 mt-3">
+                            <div class="col-md-4 mt-3">
                                 <div class="row align-items-center">
                                     <div class="col-sm-8">
                                         {% if data.proof_file %}
-                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                         {% else %}
-                                        <h5>No File was uploaded</h5>
+                                        <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -1113,10 +1113,10 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="row align-items-center">
-                                    <label class="col-sm-4 col-form-label">Upload Proof(Only PDF)</label>
+                                    <label class="col-sm-4 col-form-label">Upload Proof<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                     <div class="col-sm-6">
-                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" {% if not data.proof_file %}required{% endif %}>
-                                        <div class="invalid-feedback">Please upload a PDF file.</div>
+                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" {% if not data.proof_file %}required{% endif %}>
+                                        <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                     </div>
                                 </div>
                             </div>
@@ -1124,9 +1124,9 @@
                                 <div class="row align-items-center">
                                     <div class="col-sm-8">
                                         {% if data.proof_file %}
-                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                         {% else %}
-                                        <h5>No File was uploaded</h5>
+                                        <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -1373,22 +1373,23 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-8"></div>
                             <div class="col-md-6">
-                                <div class="row align-items-center mt-5">
-                                    <label class="col-sm-4 col-form-label mt-4">Upload Full Paper</label>
-                                    <div class="col-sm-6 mt-4">
-                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" {% if not data.proof_file %}required{% endif %}>
-                                        <div class="invalid-feedback">Please upload a PDF file.</div>
+                                <div class="row align-items-center">
+                                    <label class="col-sm-4 col-form-label">Upload Full Paper<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
+                                    <div class="col-sm-6">
+                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" {% if not data.proof_file %}required{% endif %}>
+                                        <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 mt-3">
+                            <div class="col-md-6 mt-4">
                                 <div class="row align-items-center">
                                     <div class="col-sm-8">
                                         {% if data.proof_file %}
-                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                         {% else %}
-                                        <h5>No File was uploaded</h5>
+                                        <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -1522,30 +1523,10 @@
                             </div>
                             <div class="col-md-7">
                                 <div class="row align-items-center">
-                                    <label class="col-sm-3 col-form-label">Indexed by</label>
-                                    <div class="col-sm-9">
-                                        <div class="d-flex column-gap-4">
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio1" value="S" {% if data.index_by == 'S' %}checked{% endif %}>
-                                                <label class="form-check-label" for="radio3-${i}">SCI/SCIE/SSCI</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio1" value="NS" {% if data.index_by == 'NS' %}checked{% endif %}>
-                                                <label class="form-check-label" for="radio4-${i}">Scopus</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="ES" {% if data.index_by == 'ES' %}checked{% endif %}>
-                                                <label class="form-check-label" for="radio5-${i}">ESCI</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="UGC" {% if data.index_by == 'UGC' %}checked{% endif %}>
-                                                <label class="form-check-label" for="radio6-${i}">UGC</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="O" {% if data.index_by == 'O' %}checked{% endif %}>
-                                                <label class="form-check-label" for="radio7-${i}">Other</label>
-                                            </div>
-                                        </div>
+                                    <label class="col-sm-4 col-form-label">Indexed by</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" placeholder="Enter indexed by" name = "index_by" required>
+                                        <div class="invalid-feedback">Please provide Indexed by.</div>
                                     </div>
                                 </div>
                             </div>
@@ -1576,20 +1557,20 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="row align-items-center mt-5">
-                                    <label class="col-sm-4 col-form-label mt-4">Upload Full Paper</label>
+                                    <label class="col-sm-4 col-form-label mt-4">Upload Full Paper<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                     <div class="col-sm-6 mt-4">
-                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" {% if not data.proof_file %}required{% endif %}>
-                                        <div class="invalid-feedback">Please upload a PDF file.</div>
+                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" {% if not data.proof_file %}required{% endif %}>
+                                        <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <div class="row align-items-center">
                                     <div class="col-sm-8">
                                         {% if data.proof_file %}
-                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                         {% else %}
-                                        <h5>No File was uploaded</h5>
+                                        <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -1713,32 +1694,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-6">
                                 <div class="row align-items-center">
                                     <label class="col-sm-3 col-form-label">Indexed by</label>
-                                    <div class="col-sm-9">
-                                        <div class="d-flex column-gap-4">
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio1" value="S" {% if data.index_by == 'S' %}checked{% endif %}>
-                                                <label class="form-check-label" for="radio3-${i}">SCI/SCIE/SSCI</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio1" value="NS" {% if data.index_by == 'NS' %}checked{% endif %}>
-                                                <label class="form-check-label" for="radio4-${i}">Scopus</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="ES" {% if data.index_by == 'ES' %}checked{% endif %}>
-                                                <label class="form-check-label" for="radio5-${i}">ESCI</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="UGC" {% if data.index_by == 'UGC' %}checked{% endif %}>
-                                                <label class="form-check-label" for="radio6-${i}">UGC</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="O" {% if data.index_by == 'O' %}checked{% endif %}>
-                                                <label class="form-check-label" for="radio7-${i}">Other</label>
-                                            </div>
-                                        </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" placeholder="Enter indexed by" name = "index_by" required>
+                                        <div class="invalid-feedback">Please provide Indexed by.</div>
                                     </div>
                                 </div>
                             </div>
@@ -1759,7 +1720,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <div class="row align-items-center">
                                     <label class="col-sm-4 col-form-label">If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</label>
                                     <div class = "col-sm-8">
@@ -1769,20 +1730,20 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="row align-items-center">
-                                    <label class="col-sm-4 col-form-label">Upload Proof (Book Chapter/Front Page/Document etc.)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
+                                    <label class="col-sm-4 col-form-label">Upload Proof (Book Chapter/Front Page/Document etc.)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                     <div class="col-sm-6">
-                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" {% if not data.proof_file %}required{% endif %}>
-                                        <div class="invalid-feedback">Please upload a PDF file.</div>
+                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" {% if not data.proof_file %}required{% endif %}>
+                                        <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 mt-3">
+                            <div class="col-md-6 mt-4">
                                 <div class="row align-items-center">
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-8 mt-4">
                                         {% if data.proof_file %}
-                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                         {% else %}
-                                        <h5>No File was uploaded</h5>
+                                        <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -1935,10 +1896,10 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="row align-items-center">
-                                    <label class="col-sm-4 col-form-label">Upload Proof</label>
+                                    <label class="col-sm-4 col-form-label">Upload Proof<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                     <div class="col-sm-6">
-                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" {% if not data.proof_file %}required{% endif %}>
-                                        <div class="invalid-feedback">Please upload a PDF file.</div>
+                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" {% if not data.proof_file %}required{% endif %}>
+                                        <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                     </div>
                                 </div>
                             </div>
@@ -1946,9 +1907,9 @@
                                 <div class="row align-items-center">
                                     <div class="col-sm-8">
                                         {% if data.proof_file %}
-                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                         {% else %}
-                                        <h5>No File was uploaded</h5>
+                                        <h5>No File was uploaded previously.</h5>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -2235,20 +2196,20 @@
                             </div>
                             <div class="col-md-6 mt-4">
                                 <div class="row align-items-center">
-                                    <label class="col-sm-5 col-form-label">Proof(Certificate/Mail)</label>
+                                    <label class="col-sm-5 col-form-label">Proof(Certificate/Mail)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                                     <div class="col-sm-7">
-                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" {% if not data.proof_file %}required{% endif %}>
-                                        <div class="invalid-feedback">Please upload a PDF file.</div>
+                                        <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" {% if not data.proof_file %}required{% endif %}>
+                                        <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 mt-3">
+                            <div class="col-md-6 mt-4">
                                 <div class="row align-items-center">
                                     <div class="col-sm-8">
                                         {% if data.proof_file %}
-                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View</button>
+                                        <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                         {% else %}
-                                        <h5>No File was uploaded</h5>
+                                        <h5>No File was uploaded previously.</h5>
                                         {% endif %}
                                     </div>
                                 </div>

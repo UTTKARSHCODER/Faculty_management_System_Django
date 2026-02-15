@@ -91,7 +91,7 @@ Chart.register(ChartDataLabels);
 let barChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ["Faculty Participation", "MOOC/Short-term Course", "Events", "Faculty Awards", "Sponsored Research", "Research Publication - Journal", "Research Publication - Confernece", "Research Publication - Books", "Patents", "M.Tech/Ph.D Guided", "Resource Person"],
+      labels: ["Faculty Profile Details", "Non-teaching Staff", "Faculty Participation", "MOOC/Short-term Course", "Events", "Faculty Awards", "Sponsored Research", "Research Publication - Journal", "Research Publication - Confernece", "Research Publication - Books", "Patents", "M.Tech/Ph.D Guided", "Resource Person"],
       datasets: [{
         data: dataMap.cum,
         borderColor: color.cum,
@@ -128,6 +128,7 @@ document.getElementById('activityDropdown').addEventListener('change', function 
   if (selected === "") {
     window.location.reload();
   }
+  console.log(selected);
   const data = JSON.parse(document.getElementById(`my-data-${selected}1`).textContent);
   let dy_list_count = [];
   let dy_list_label = [];
@@ -154,6 +155,12 @@ document.getElementById('activityDropdown').addEventListener('change', function 
         dy_list_short_label.push('PATENTS');
       } else if(selected === 'mp') {
         dy_list_label.push('M.Tech/Ph.D Guided');
+        dy_list_short_label.push(selected);
+      } else if(selected === 'ntspd') {
+        dy_list_label.push('Non-Teaching Staff');
+        dy_list_short_label.push(selected);
+      } else if(selected === 'fpd') {
+        dy_list_label.push('Faculty Profile Details');
         dy_list_short_label.push(selected);
       }
   }
