@@ -1253,7 +1253,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf, image/jpeg, image/png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF file or .jpeg or .png file.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1438,7 +1438,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf, image/jpeg, image/png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF file  or .jpeg or .png file..</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1614,7 +1614,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf, image/jpeg, image/png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF file  or .jpeg or .png file..</div>
                                         </div>
                                     </div>
                                 </div>
