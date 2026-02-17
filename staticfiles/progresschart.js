@@ -36,6 +36,7 @@ const categoryColors = {
     'SYM': 'rgba(255, 152, 150, 0.7)',
     'WEB': 'rgba(140, 86, 75, 0.7)',
     'CON': 'rgba(196, 156, 148, 0.7)',
+    'NTS': 'rgba(127, 127, 127, 0.7)',
 
     // Technical & Professional (Yellows/Teals)
     'MOOC': 'rgba(188, 189, 34, 0.7)',
@@ -158,7 +159,7 @@ document.getElementById('activityDropdown').addEventListener('change', function 
         dy_list_short_label.push(selected);
       } else if(selected === 'ntspd') {
         dy_list_label.push('Non-Teaching Staff');
-        dy_list_short_label.push(selected);
+        dy_list_short_label.push('NTS');
       } else if(selected === 'fpd') {
         dy_list_label.push('Faculty Profile Details');
         dy_list_short_label.push(selected);
