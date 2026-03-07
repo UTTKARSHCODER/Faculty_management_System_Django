@@ -9,6 +9,7 @@
 {% url 'faculty_report' as faculty_report %}
 {% url 'faculty' as fac %}
 {% url 'student' as stu %}
+{% url 'report' as report %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -62,11 +63,10 @@
                          Admin
                         {% elif request.session.topLeftBar ==  'fa' %}
                         Faculty
-                        {% elif request.session.topLeftBar ==  'student' %}
-                        Student
                         {% else %}
-                        Unknown</button>
+                        Unknown
                         {% endif %}
+                    </button>
                     <ul class = "dropdown-menu">
                         <li><span style = "display: flex;"><i class = "fa-solid fa-right-from-bracket" style = "margin-top: 11px; margin-left: 15px;"></i><a class="dropdown-item" href="{% url 'logout' %}" id = "forceLogoutRedirect" style = "padding-left: 5px;">Logout</a></span></li>
                     </ul>
@@ -78,7 +78,7 @@
                         <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=spa">SuperAdmin</a></span></li>
                         <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=ad">Admin</a></span></li>
                         <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=fa">Faculty</a></span></li>
-                        <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=student">Student</a></span></li>
+                    <!--    <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=student">Student</a></span></li> -->
                     </ul>
                     {% endif %}
                 </div>
@@ -104,9 +104,10 @@
                         {% if request.session.topLeftBar == 'ad' or request.session.topLeftBar == 'fa' or request.session.topLeftBar == 'spa' %}
                         <a href="/fdp" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == fdp or 'all_forms' in request.path %} active {% endif %}" id = "faculty_development" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Faculty  Data Collection(FDC) Forms">FDC Forms</li></a>
                         <a href="/directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == directory %} active {% endif %}" id = "directory">Directory</li></a>
-                        <a href="/faculty_report" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == faculty_report %} active {% endif %}" id = "faculty_report">Faculty Report</li></a>
-                        <a href="/progress" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == progress or '/forms_listing/' in request.path %} active {% endif %}" id = "progress">Progress</li></a>
-                        <a href="/student_directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == student_directory %} active {% endif %}" id = "student_directory">Student Directory</li></a>
+                        <a href="/faculty_report" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == faculty_report %} active {% endif %}" id = "faculty_report">Faculty Details</li></a>
+                        <a href="/progress" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == progress or '/forms_listing/' in request.path %} active {% endif %}" id = "progress">Form Progress</li></a>
+                        <a href="/report" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == report %} active {% endif %}" id = "report">Report download</li></a>
+                        <!-- <a href="/student_directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == student_directory %} active {% endif %}" id = "student_directory">Student Directory</li></a> -->
                         {% endif %}
                         {% endif %}
                         <a href="/about" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == about %} active {% endif %}" id = "about_us">About Us</li></a>
@@ -145,19 +146,6 @@
         <!-- Delete Model Ends -->
         <script src="/static/dynamic_message.js"></script>
         <script>
-            document.getElementById('forceLogoutRedirect').addEventListener('click', function(event) {
-                // 1. Let Bootstrap do its thing (close the dropdown menu)
-                // event.preventDefault(); // You don't need this if Bootstrap already uses it
-
-                // 2. Immediately force the browser to navigate to the desired URL.
-                // Use the href attribute of the link you just clicked.
-                const targetUrl = this.getAttribute('href');
-
-                // Use a small delay for maximum compatibility, ensuring the dropdown closes visually
-                setTimeout(function() {
-                    window.location.href = targetUrl;
-                }, 50); // 50 milliseconds is usually enough
-            });
             let toastContainer = document.getElementById('toast-container');
 
             if (!toastContainer) {

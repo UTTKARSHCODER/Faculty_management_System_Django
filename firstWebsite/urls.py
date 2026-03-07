@@ -27,6 +27,7 @@ urlpatterns = [
     path('puc',views.page_under_construction,name="page_under_construction"),
     path('faq',views.faq,name="FaQ"),
     path('forms_listing/<str:pk>',progress_track.forms_listing,name="form_listing"),
+    path('report',progress_track.report,name="report"),
     path('cookie',views.cookie_not_found,name="cookie"),
     path('deleteformdata/<str:pk>',deleteFormData.deleteformdata,name="deleteEntry"),
     path('forms_listing/progressdetails/<str:pk>/<str:key_id>',views.progressdetails,name="progressDetails"),

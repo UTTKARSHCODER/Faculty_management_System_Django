@@ -36,7 +36,8 @@ def gsi_verify_login(request):
             idinfo = id_token.verify_oauth2_token(
                 id_token_jwt,
                 google_requests.Request(),
-                CLIENT_ID  # Use your Client ID here
+                CLIENT_ID,  # Use your Client ID here
+                clock_skew_in_seconds = 10
             )
 
             email = idinfo.get('email')

@@ -141,19 +141,23 @@ def forms_listing(request, pk):
                    'rp1': resource_instance, 'sgc1': sponsored_research_instance}
 
         return render(request, 'form_listing.html', context)
-    elif pk == "report":
-        context = {'user': request.session.get('topLeftBar'),'fac_ins': Faculty.objects.filter(status="R"), 'non_teaching': non_teaching_staff_instance.all(),'faa1': no_of_awards.all(), 'eod1': events_instance.all(),
-                   'fdp1': faculty_participation_data.all(), 'mp1': guided_instance.all(),
-                   'msc1': mooc_course_instance.all(),
-                   'patents1': patents_instance.all(), 'rpb1': research_book_instance.all(),
-                   'rpcp1': research_conference_instance.all(),
-                   'rpj1': research_journal_instance.all(), 'rp1': resource_instance.all(),
-                   'sgc1': sponsored_research_instance.all()}
-
-        return render(request, 'entire_report.html', context)
 
     elif pk == "partially_filled_forms" or pk == "more_explore_forms":
 
         return render(request, 'page_under_construction.html')
     else:
         return render(request,'404.html')
+    
+@session_login_required
+def report(request):
+    context = {'user': request.session.get('topLeftBar'), 'fac_ins': Faculty.objects.filter(status="R"),
+               'non_teaching': non_teaching_staff.objects.all(), 'faa1': awards_and_achievments.objects.all(),
+               'eod1': events.objects.all(),
+               'fdp1': Faculty_participation_data.objects.all(), 'mp1': guided.objects.all(),
+               'msc1': mooc_course.objects.all(),
+               'patents1': patents.objects.all(), 'rpb1': research_book.objects.all(),
+               'rpcp1': research_conference.objects.all(),
+               'rpj1': research_journal.objects.all(), 'rp1': resource.objects.all(),
+               'sgc1': sponsored_research.objects.all()}
+
+    return render(request, 'entire_report.html', context)

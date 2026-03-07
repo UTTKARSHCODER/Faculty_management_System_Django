@@ -21,27 +21,25 @@
                         <th>Designation</th>
                         <th>Department</th>
                         <th>Contact Number</th>
+                        <th>Area of Specialization</th>
+                        <th>Highest Qualfication</th>
+                        <th>Employee ID</th>
+                        <th>Date of Joining(College)</th>
+                        <th>Number of Research Papers</th>
+                        <th>Name of PHD University(If pusuing)</th>
+                        {% if user == 'ad' or user == 'spa' %}
                         <th>DOB</th>
                         <th>Gender</th>
                         <th>Address</th>
-                        <th>Area of Specialization</th>
-                        <th>Highest Qualfication</th>
                         <th>Year of Passing</th>
-                        <th>Employee ID</th>
                         <th>PAN No.</th>
-                        <th>Date of Joining(College)</th>
                         <th>Profile Photo</th>
-                        {% if user == 'ad' or user == 'spa' %}
                         <th>Joining Report Letter</th>
                         <th>Offer Letter</th>
                         <th>Highest Degree Certificate</th>
                         <th>Salary Slip</th>
-                        {% endif %}
                         <th>Date of Promotion</th>
-                        <th>Name of PHD University(If pusuing)</th>
                         <th>Date of Registration(for PHD Course)</th>
-                        <th>Number of Research Papers</th>
-                        {% if user == 'ad' or user == 'spa' %}
                         <th>Certificate</th>
                         {% endif %}
                     </tr>
@@ -55,27 +53,25 @@
                         <td>{{value.get_designation_display}}</td>
                         <td>{{value.get_department_display}}</td>
                         <td>{{value.contact_number}}</td>
+                        <td>{{value.get_aos_display}}</td>
+                        <td>{{value.get_hq_display}}</td>
+                        <td>{{value.emp_id}}</td>
+                        <td>{{value.jd}}</td>
+                        <td>{{value.norp}}</td>
+                        <td>{{value.phd_univ}}</td>
+                        {% if user == 'ad' or user == 'spa' %}
                         <td>{{value.dob}}</td>
                         <td>{{value.get_gender_display}}</td>
                         <td>{{value.address}}</td>
-                        <td>{{value.get_aos_display}}</td>
-                        <td>{{value.get_hq_display}}</td>
                         <td>{{value.pshd}}</td>
-                        <td>{{value.emp_id}}</td>
                         <td>{{value.pan_no}}</td>
-                        <td>{{value.jd}}</td>
-                        <td>{{value.jd}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
+                        <td><a href = "/media/{{value.profile_picture}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "/media/{{value.jr}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "/media/{{value.of}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "/media/{{value.hdc}}" target = "_blank" class = "text-info">Click Here</a></td>
                         <td><a href = "/media/{{value.ss}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        {% endif %}
                         <td>{{value.pd}}</td>
-                        <td>{{value.phd_univ}}</td>
                         <td>{{value.phd_dor}}</td>
-                        <td>{{value.norp}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
                         <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
                         {% endif %}
                      </tr>

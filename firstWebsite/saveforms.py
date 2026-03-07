@@ -598,7 +598,7 @@ def save_all_forms(request, pk):
                     return redirect('all_forms', pk=pk)
 
                 index_by = request.POST.get('index_by').strip()
-                if not va.radiocheck(request, index_by, "Indexed by"):
+                if not va.nameValidate(request, index_by, "Indexed by"):
                     return redirect('all_forms', pk=pk)
 
                 if request.FILES.get('proof_file'):
