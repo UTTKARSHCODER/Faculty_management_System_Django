@@ -187,7 +187,11 @@ def custom_logout(request):
 # Create your views here.
 
 def index(request):
-    return render(request,'index.html')
+    fac_dir_instance = Faculty.objects.values('department').annotate(
+        count=Count('id')
+    ).order_by('department')
+    context = {'dir_ins': fac_dir_instance}
+    return render(request, 'index.html', context=context)
 
 def student(request):
     stu_dir_instance = Student_Directory.objects.values('batch').annotate(
@@ -195,13 +199,6 @@ def student(request):
     ).order_by('batch')
     context = {'dir_ins':stu_dir_instance}
     return render(request, 'student_card_details.html',context = context)
-
-def faculty(request):
-    fac_dir_instance = Faculty.objects.values('department').annotate(
-        count=Count('id')
-    ).order_by('department')
-    context = {'dir_ins':fac_dir_instance}
-    return render(request, 'faculty_card_details.html',context = context)
 
 @session_login_required
 def profile(request):

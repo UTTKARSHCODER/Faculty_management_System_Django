@@ -4,7 +4,7 @@ from firstWebsite import views, saveforms, uploadExcel, progress_track, download
 urlpatterns = [
     path('', views.index, name = "home"),
     path('student', views.student, name = "student"),
-    path('faculty', views.faculty, name = "faculty"),
+    # path('faculty', views.faculty, name = "faculty"),
     path('profile', views.profile, name = "profile"),
     path('student_directory', views.student_directory, name = "student-directory"),
     path('about', views.about, name = "about"),
