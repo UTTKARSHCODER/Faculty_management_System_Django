@@ -48,12 +48,12 @@
             <div class="col-md-1 col-sm-12 text-center">
                 <img src = "/static/skit_logo.png" alt="SKIT LOGO" style = "height:80px; width:96px">
             </div>
-            <div class="col-md-9 col-sm-12 text-center mt-2" >
+            <div class="col-md-10 col-sm-12 text-center mt-2" >
                 <h3 class = "text-white text-wrap mt-3" style = "font-weight: bold;">Swami Keshvanand Institute of Technology, Management & Gramothan(SKIT)</h3>
             </div>
             <!-- Role-Specifier -->
-             <div class="col-md-1 col-sm-12 text-center mt-2 admin ps-3">
-                <div class="text-center">
+             <div class="col-md-1 col-sm-12 admin position-relative">
+                <div class="position-absolute end-50" style="top: 10%;">
                     {% if request.session.topLeftBar is not None %}
 
                     <button type="button" class="text-white dropdown-toggle ms-5 mt-3" data-bs-toggle="dropdown" style = "background: #2F3E46"><i class = "fa-regular fa-user text-white"></i>
@@ -71,15 +71,10 @@
                         <li><span style = "display: flex;"><i class = "fa-solid fa-right-from-bracket" style = "margin-top: 11px; margin-left: 15px;"></i><a class="dropdown-item" href="{% url 'logout' %}" id = "forceLogoutRedirect" style = "padding-left: 5px;">Logout</a></span></li>
                     </ul>
                     {% else %}
-                    <button type="button" class="btn btn-primary dropdown-toggle text-center ms-5 mt-3" data-bs-toggle="dropdown">
-                        User
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=spa">SuperAdmin</a></span></li>
-                        <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=ad">Admin</a></span></li>
-                        <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=fa">Faculty</a></span></li>
-                    <!--    <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=student">Student</a></span></li> -->
-                    </ul>
+                    <a type="button" class="btn btn-primary text-center ms-5 mt-3" href="/login">
+                        Login
+                    </a>
+
                     {% endif %}
                 </div>
             </div>

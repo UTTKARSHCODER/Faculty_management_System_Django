@@ -47,9 +47,6 @@ def gsi_verify_login(request):
                     if users_post == 'spa' or users_post == 'ad' or users_post == 'fa':
                         User = Faculty
                         user = Faculty.objects.get(email=email,role__iexact=users_post)
-                    elif users_post == 'student':
-                        User = Student_Directory
-                        user = Student_Directory.objects.get(email=email)
                     else:
                         User = None
                         user = None
@@ -237,7 +234,6 @@ def stu_card_details(request,pk):
             return render(request,'index.html')
     return render(request,'404.html')
 
-@session_login_required
 def fac_card_details(request,pk):
     if pk:
         department = Faculty.objects.filter(department = pk)
