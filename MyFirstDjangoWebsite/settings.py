@@ -9,22 +9,25 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4*c&nw0ueh_56=j8(8xxpweaq0#oi^!%_tuv^aa5=_9%8sz$!7'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 #Remove localhost before committing
-ALLOWED_HOSTS = ['uttkarsh007.pythonanywhere.com','127.0.0.1','localhost']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 SITE_ID = 2
 # Application definition
@@ -45,11 +48,14 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google'
 ]
 
+GOOGLE_OAUTH_CLIENT_ID = os.getenv('GOOGLE_OAUTH_CLIENT_ID')
+GOOGLE_OAUTH_CLIENT_SECRET = os.getenv('GOOGLE_OAUTH_CLIENT_SECRET')
+
 SOCIALACCOUNT_PROVIDERS = {
     "google" : {
         'APP': {
-            'client_id': '452004658-dh7oqasukk9hd42g0v09q9ep8ob5pc5i.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': GOOGLE_OAUTH_CLIENT_ID,
+            'secret': GOOGLE_OAUTH_CLIENT_SECRET,
             'key': '',
         },
         "SCOPE": [
