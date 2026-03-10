@@ -1,7 +1,7 @@
 import datetime
 
 from django.db import models
-from django.db.models import DO_NOTHING
+from django.db.models import CASCADE
 from django.utils import timezone
 
 class batch(models.TextChoices):
@@ -236,7 +236,7 @@ class Faculty_participation_data(models.Model):
         choices=accept.choices
     )
     proof_file = models.FileField(upload_to='uploads/fdp_certificate/')
-    email = models.ForeignKey(Faculty,on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty,on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -292,7 +292,7 @@ class mooc_course(models.Model):
     )
     remarks = models.CharField(max_length=255,null=True)
     proof_file = models.FileField(upload_to='uploads/mooc_certificate/')
-    email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -358,7 +358,7 @@ class events(models.Model):
     )
     proof_file = models.FileField(upload_to='uploads/events/')
     remarks = models.CharField(max_length=255, null = True)
-    email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -381,7 +381,7 @@ class awards_and_achievments(models.Model):
         max_length=7,
         choices=session.choices
     )
-    email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -409,7 +409,7 @@ class sponsored_research(models.Model):
         choices=status.choices
     )
     proof_file = models.FileField(upload_to='uploads/sponsored_research/')
-    email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -467,7 +467,7 @@ class research_journal(models.Model):
         choices=quartile.choices
     )
     proof_file = models.FileField(upload_to='uploads/research_journal/')
-    email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -500,7 +500,7 @@ class research_conference(models.Model):
     details = models.CharField(max_length=100)
     index_by = models.CharField(max_length=100)
     proof_file = models.FileField(upload_to='uploads/research_journal/')
-    email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -532,7 +532,7 @@ class research_book(models.Model):
     details = models.CharField(max_length=255)
     index_by = models.CharField(max_length=100)
     proof_file = models.FileField(upload_to="uploads/research_book/")
-    email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -573,7 +573,7 @@ class patents(models.Model):
     details = models.CharField(max_length=255)
     link = models.URLField(max_length=500)
     proof_file = models.FileField(upload_to='uploads/patents/')
-    email = models.ForeignKey(Faculty,on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty,on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -613,7 +613,7 @@ class guided(models.Model):
         max_length=7,
         choices=session.choices
     )
-    email = models.ForeignKey(Faculty,on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty,on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -660,7 +660,7 @@ class resource(models.Model):
     )
     venue = models.CharField(max_length=255)
     proof_file = models.FileField(upload_to='uploads/resource/')
-    email = models.ForeignKey(Faculty, on_delete=DO_NOTHING)
+    email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
