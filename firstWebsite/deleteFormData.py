@@ -81,4 +81,4 @@ def deleteformdata(request, pk):
             messages.success(request,"Entry deleted successfully!")
         else:
             return render(request,'404.html')
-    return redirect('form_listing',pk=pk)
+    return redirect('report')
