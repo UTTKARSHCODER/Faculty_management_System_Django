@@ -319,6 +319,10 @@ def progressdetails(request,pk,key_id):
     else:
         return render(request,'404.html')
 
+def detailed_info_profile(request, faculty_id):
+    faculty = get_object_or_404(Faculty, pk=faculty_id)
+    return render(request, 'detailed-info-profile.html', {'faculty': faculty})
+
 def add_student(request):
     if request.method == "POST":
         new_mail = request.POST.get('new_email')

@@ -457,7 +457,15 @@ document.addEventListener('change', function(event) {
         </div>
     {% else %}
         <div class="row form-row m-3">
-            <div class = "section-title">Step1: Verify Basic Details(read-only)<button class = "btn text-white ms-3" onclick="window.location.href = '{% url 'home' %}';" style = "background-color: rgb(79 70 229);"><i class = "fa-solid fa-pen me-2"></i>Edit Profie</button></div><!--Add Edit Profile Page-->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class = "section-title">Step1: Verify Basic Details(read-only)<button class = "btn text-white ms-3" onclick="window.location.href = '{% url 'home' %}';"></button></div><!--Add Edit Profile Page-->
+                </div>
+                <div class="col-md-4">
+                    <a href="/forms_listing/filled_forms" class="btn" style = "background-color: rgb(79 70 229); color: white;">View Filled Forms</a>
+                </div>
+            </div>
+            
             <div class="col mt-4">
                 <span>
                     <i class="fa-solid fa-envelope"></i>

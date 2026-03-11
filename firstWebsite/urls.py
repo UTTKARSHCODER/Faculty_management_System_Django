@@ -33,4 +33,5 @@ urlpatterns = [
     path('forms_listing/progressdetails/<str:pk>/<str:key_id>',views.progressdetails,name="progressDetails"),
     path('add_student',views.add_student,name="addStudent"),
     path('edit_form/<int:pk>/<int:key_id>',saveforms.editforms,name="editForms"),
+    path('faculty/<int:faculty_id>/detailed-info-profile/', views.detailed_info_profile, name='detailed-info-profile'),
 ]

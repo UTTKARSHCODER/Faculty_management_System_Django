@@ -12,6 +12,7 @@
         background: white;
         height: 100%;
         border: none;
+        cursor: pointer;
     }
 
     .faculty-card:hover {
@@ -72,7 +73,7 @@
         <div class="row g-4">
             {% for detail in fac_data %}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-                <div class="card faculty-card">
+                <div class="card faculty-card" data-faculty-id="{{detail.id}}">
                     <div class="d-flex justify-content-center">
                         <img class="card-img-top"
                              src="/media/{{detail.profile_picture}}"
@@ -91,5 +92,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    const cards = document.querySelectorAll('.faculty-card');
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            const facultyId = card.getAttribute('data-faculty-id');
+            window.location.href = `/faculty/${facultyId}/detailed-info-profile/`;
+        });
+    });
+</script>
 
 {% endblock %}

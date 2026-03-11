@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .card{
+        border: 0px solid white;
+        box-shadow: 5px 5px 10px 5px lightgray;
+    }
+    .card-image-custom{
+        width: 119px;
+        height: 126px;
+    }
+    .small-font{
+        font-size: 14px;
+        color: gray;
+    }
+</style>
+<div class="col-10">
+    <div class="container-fluid mt-3 h-100 mb-3">
+        <div class="card p-3 " style = "width: 60%;">
+            <div class="d-flex flex-wrap ">
+                <div class="card-image-custom ms-2">
+                    <img src = "/media/{{faculty.profile_picture}}" alt = "Profile Picture" style = "height: 170px; width: 150px;">
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class = "small-font mt-5"><i data-lucide="mail" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{faculty.email}}</h5>
+                <h5 class = "small-font mt-3"><i data-lucide="phone" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{faculty.contact_number}}</h5>
+                <h5 class = "small-font mt-3"><i data-lucide="map-pin" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>Address</h5>
+                <p class = "small font mt-3" style="margin-bottom: 0px;">Specilization</p>
+                <h5 style="font-size: 15px;"><strong>{{faculty.get_aos_display}}</strong></h5>
+                <p class = "small font mt-3" style="margin-bottom: 0px;">Highest Qualification</p>
+                <h5 style="font-size: 15px;"><strong>{{faculty.get_hq_display}}</strong></h5>
+                <p class = "small font mt-3" style="margin-bottom: 0px;">Publications</p>
+                <h5 style="font-size: 15px;"><strong>{{faculty.norp}}</strong></h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

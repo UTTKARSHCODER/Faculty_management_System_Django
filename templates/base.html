@@ -56,7 +56,7 @@
                 <div class="position-absolute end-50" style="top: 10%;">
                     {% if request.session.topLeftBar is not None %}
 
-                    <button type="button" class="text-white dropdown-toggle ms-5 mt-3" data-bs-toggle="dropdown" style = "background: #2F3E46"><i class = "fa-regular fa-user text-white"></i>
+                    <button type="button" class="btn text-white dropdown-toggle ms-5 mt-3" data-bs-toggle="dropdown" ><i class = "fa-regular fa-user text-white"></i>
                         {% if request.session.topLeftBar ==  'spa' %}
                         SuperAdmin
                         {% elif request.session.topLeftBar ==  'ad' %}
