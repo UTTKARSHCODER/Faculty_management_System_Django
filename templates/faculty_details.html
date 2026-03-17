@@ -69,10 +69,19 @@
 <div class="col-lg-10 col-md-9">
     <div class="container-fluid p-4">
        
-        
+        <div class="mb-4" style="display: flex; justify-content: flex-end; align-items: center;">
+            <!-- search can be done on any field like name, designation or email -->
+            <label for="searchInput" ><b>Search:</b></label>
+            <input 
+                type="text" 
+                id="searchInput"
+                class="form-control"
+                style="max-width: 200px; margin-left: 10px;">
+        </div>
+
         <div class="row g-4">
             {% for detail in fac_data %}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 faculty-col">
                 <div class="card faculty-card" data-faculty-id="{{detail.id}}">
                     <div class="d-flex justify-content-center">
                         <img class="card-img-top"
@@ -99,6 +108,23 @@
         card.addEventListener('click', () => {
             const facultyId = card.getAttribute('data-faculty-id');
             window.location.href = `/faculty/${facultyId}/detailed-info-profile/`;
+        });
+    });
+
+    // js for serach box
+    document.getElementById("searchInput").addEventListener("input", function() {
+        const query = this.value.toLowerCase().trim();
+
+        document.querySelectorAll(".faculty-col").forEach(col => {
+            const name        = col.querySelector(".card-title").innerText.toLowerCase();
+            const designation = col.querySelector(".designation").innerText.toLowerCase();
+            const email       = col.querySelector(".contact-info").innerText.toLowerCase();
+
+            const matches = name.includes(query) || 
+                            designation.includes(query) || 
+                            email.includes(query);
+
+            col.style.display = matches ? "" : "none"; 
         });
     });
 </script>
