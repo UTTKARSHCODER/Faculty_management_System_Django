@@ -1770,7 +1770,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Link<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
-                                            <input type="text" class="form-control" pattern="^(https?:\/\/|www\.).+" placeholder="Enter Link to website of the Journal" name = "link" required>
+                                            <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "link" required>
                                             <div class="invalid-feedback">Please provide a valid link starting with www., http://, or https:// or write na</div>
                                         </div>
                                     </div>
@@ -2112,11 +2112,11 @@ function generateSubForms() {
 function attachLinkValidation() {
     const linkFields = document.querySelectorAll('input[name="link"], input[name="lwj"], input[name="lrsj"], input[name="lap"]');
     // Updated pattern: REQUIRES either http://, https://, or www. at the start
-    const urlPattern = /^((https?:\/\/|www\.)[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*(\\.\\[a-zA-Z]{2,})?([\/\?#].*)?$|^(na|NA)$)/;
+    const urlPattern = /^(https?:\/\/|www\.)[^\s]{2,}$|^(na|NA)$/i;
 
     linkFields.forEach(field => {
-        // Set HTML5 pattern attribute for native validation
-        field.setAttribute('pattern', '^((https?:\/\/|www\.)[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*(\\.\\[a-zA-Z]{2,})?([\/\?#].*)?$|^(na|NA)$)');
+
+        field.removeAttribute('pattern'); // Remove pattern attribute to prevent HTML5 validation conflicts
 
         field.addEventListener('blur', function() {
             validateLinkField(this, urlPattern);
@@ -2129,19 +2129,12 @@ function attachLinkValidation() {
 }
 
 function validateLinkField(field, pattern) {
-    const val = field.value.trim();
-
-    if (val === "") {
-        field.classList.remove('is-valid', 'is-invalid');
-        field.setCustomValidity("");
-    } else if (pattern.test(val)) {
-        field.classList.add('is-valid');
-        field.classList.remove('is-invalid');
-        field.setCustomValidity("");
+    if (!pattern.test(field.value)) {
+        field.classList.add("is-invalid");
+        field.classList.remove("is-valid");
     } else {
-        field.classList.add('is-invalid');
-        field.classList.remove('is-valid');
-        field.setCustomValidity("URL must start with http://, https://, or www. (e.g., https://example.com or www.example.com)");
+        field.classList.add("is-valid");
+        field.classList.remove("is-invalid");
     }
 }
 

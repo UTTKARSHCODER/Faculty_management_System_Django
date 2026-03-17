@@ -1003,9 +1003,10 @@ function createLinkField(name, placeholder) {
     input.name = name;
     input.placeholder = placeholder;
     input.required = true;
+    input.removeAttribute('pattern');
     
     // ADD VALIDATION IMMEDIATELY
-    const urlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}(\/.*)?$/;
+    const urlPattern = /^(https?:\/\/|www\.)[^\s]{2,}$|^(na|NA)$/i;
     
     input.addEventListener('input', function() {
         const val = this.value.trim();
