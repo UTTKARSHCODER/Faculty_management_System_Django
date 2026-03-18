@@ -52,7 +52,7 @@ def progress_bar(request):
         for item in sponsored_research_instance:
             item['category_display'] = label_map.get(item['category'], item['category'])
 
-        total_forms = non_teaching_instance + sum(item['count'] for item in no_of_awards) + sum(item['count'] for item in events_instance) + sum(item['count'] for item in faculty_participartion_data) + sum(item['count'] for item in guided_instance) + sum(item['count'] for item in mooc_course_instance) + patents_instance + research_book_instance + research_conference_instance + research_journal_instance + sum(item['count'] for item in resource_instance) + sum(item['count'] for item in sponsored_research_instance)
+        total_forms = sum(item['count'] for item in no_of_awards) + sum(item['count'] for item in events_instance) + sum(item['count'] for item in faculty_participartion_data) + sum(item['count'] for item in guided_instance) + sum(item['count'] for item in mooc_course_instance) + patents_instance + research_book_instance + research_conference_instance + research_journal_instance + sum(item['count'] for item in resource_instance) + sum(item['count'] for item in sponsored_research_instance)
 
         total_remaining_field_forms = 12 - ((1 if non_teaching_instance > 0 else 0) + (1 if len(no_of_awards) > 0 else 0) + (1 if len(events_instance) > 0 else 0) + (1 if len(faculty_participartion_data) > 0 else 0) + (1 if len(guided_instance) > 0 else 0) + (1 if len(mooc_course_instance) > 0 else 0) + (1 if patents_instance > 0 else 0) + (1 if research_book_instance > 0 else 0) + (1 if research_conference_instance > 0 else 0) + (1 if research_journal_instance > 0 else 0) + (1 if len(resource_instance) > 0 else 0) + (1 if len(sponsored_research_instance) > 0 else 0))
 
