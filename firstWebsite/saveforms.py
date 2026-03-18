@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 from django.http.response import JsonResponse
@@ -941,6 +942,16 @@ def save_all_forms(request, pk):
                         messages.error(request, "Please select/enter a valid date")
                         return redirect('all_forms', pk=pk)
 
+                faculty_instance.google_scholar = request.POST.get('google_scholar').strip()
+                if not va.nameValidate(request, faculty_instance.google_scholar, "Google Scholar"):
+                    return redirect('all_forms', pk=pk)
+
+                faculty_instance.vidwan_profile = request.POST.get('vidwan_profile').strip()
+                if not va.nameValidate(request, faculty_instance.vidwan_profile, "Vidwan Profile"):
+                    return redirect('all_forms', pk=pk)
+
+                faculty_instance.personal_website_link = request.POST.get('website_link').strip()
+
                 faculty_instance.address = request.POST.get('address').strip()
                 if not va.addressValidate(request, faculty_instance.address, "Address"):
                     return redirect('all_forms', pk=pk)
@@ -1014,61 +1025,68 @@ def save_all_forms(request, pk):
 
                 faculty_instance.name = request.POST.get('updated_name').strip()
                 if not va.nameValidate(request, faculty_instance.name, "Name"):
-                    return redirect(reverse('directory'))
+                    return redirect(reverse('manage_access'))
+
+                if request.POST.getlist('form_number'):
+                    faculty_instance.form_alloted = request.POST.getlist('form_number')
 
                 faculty_instance.contact_number = request.POST.get('updated_number').strip()
                 if not va.mobileNumberValidate(request, faculty_instance.contact_number):
-                    return redirect(reverse('directory'))
+                    return redirect(reverse('manage_access'))
 
                 faculty_instance.email = request.POST.get('updated_email').strip()
                 if not va.emailValidate(request,faculty_instance.email):
-                    return redirect(reverse('directory'))
+                    return redirect(reverse('manage_access'))
 
                 faculty_instance.department = request.POST.get('updated_department').strip()
-
-                faculty_instance.role = request.POST.get('updated_role').strip()
+                if request.POST.get('updated_role'):
+                    faculty_instance.role = request.POST.get('updated_role').strip()
+                    faculty_instance.session_version = uuid.uuid4()
 
                 faculty_instance.emp_id = int(request.POST.get('updated_id') or 0)
                 if not va.numberValidate(request, faculty_instance.name, "Employee ID"):
-                    return redirect(reverse('directory'))
+                    return redirect(reverse('manage_access'))
 
                 faculty_instance.status = request.POST.get('updated_status').strip()
 
                 faculty_instance.save()
-                return redirect(reverse('directory'))
+                return redirect(reverse('manage_access'))
 
             elif pk == 15:
                 emp_id = int(request.POST.get('emp_id') or 0)
                 if not va.numberValidate(request, emp_id, "Employee ID"):
-                    return redirect(reverse('directory'))
+                    return redirect(reverse('manage_access'))
 
                 emp_name = request.POST.get('name_per').strip()
                 if not va.nameValidate(request, emp_id, "Name"):
-                    return redirect(reverse('directory'))
+                    return redirect(reverse('manage_access'))
 
                 email = request.POST.get('new_email').strip()
 
                 if not va.emailValidate(request, email):
-                    return redirect(reverse('directory'))
+                    return redirect(reverse('manage_access'))
 
                 if Faculty.objects.filter(email=email).exists():
                     messages.error(request, "Email Already Exist")
-                    return redirect(reverse('directory'))
+                    return redirect(reverse('manage_access'))
 
                 department = request.POST.get('selected_department').strip()
 
                 role = request.POST.get('selected_role').strip()
 
+                if request.POST.getlist('form_number'):
+                    faculty_instance.form_alloted = request.POST.getlist('form_number')
+
                 con_no = request.POST.get('contact_number').strip()
                 if not va.mobileNumberValidate(request, con_no):
-                    return redirect(reverse('directory'))
+                    return redirect(reverse('manage_access'))
 
                 status = request.POST.get('selected_status').strip()
 
                 obj12 = Faculty(name=emp_name,emp_id=emp_id,email=email,department=department,role=role,contact_number=con_no,status=status)
                 obj12.save()
 
-                return redirect(reverse('directory'))
+                return redirect(reverse('manage_access'))
 
             return JsonResponse({'status': 'success'})
         # Method not allowed or error saving form
@@ -1685,7 +1703,7 @@ def editforms(request,pk,key_id):
             if not nameValidate(request, instance.details, "Write student(s) details"):
                 return redirect(redirect_url)
 
-            instance.index_by = request.POST.get('optradio1').strip()
+            instance.index_by = request.POST.get('index_by').strip()
             if not va.radiocheck(request, instance.index_by, "Indexed By"):
                 return redirect(redirect_url)
 
@@ -1761,7 +1779,7 @@ def editforms(request,pk,key_id):
             if not nameValidate(request, instance.details, "Write student(s) details"):
                 return redirect(redirect_url)
 
-            instance.index_by = request.POST.get('optradio1').strip()
+            instance.index_by = request.POST.get('index_by').strip()
             if not va.radiocheck(request, instance.index_by, "Indexed By"):
                 return redirect(redirect_url)
 

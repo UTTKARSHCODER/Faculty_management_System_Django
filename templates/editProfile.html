@@ -89,11 +89,11 @@
                             <div class="col-sm-8">
                                 <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                     <option value="" selected disabled>Select your Session</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
+                                    <option value="2025-26" {% if key.session == '2025-26' %}selected{% endif %}>2025-26</option>
+                                    <option value="2026-27" {% if key.session == '2026-27' %}selected{% endif %}>2026-27</option>
+                                    <option value="2027-28" {% if key.session == '2027-28' %}selected{% endif %}>2027-28</option>
+                                    <option value="2028-29" {% if key.session == '2028-29' %}selected{% endif %}>2028-29</option>
+                                    <option value="2029-30" {% if key.session == '2029-30' %}selected{% endif %}>2029-30</option>
                                 </select>
                                 <div class="invalid-feedback">Please select an option.</div>
                             </div>
@@ -313,6 +313,33 @@
                             <div class="col-sm-8">
                                 <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of promotion" name = "pd" value = "{{ key.pd|date:'Y-m-d' }}">
                                 <div class="invalid-feedback">Please enter your promotion date.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label" for = "go_sc">Google Scholar Link<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id = "go_sc" placeholder="Enter google scholar link" name = "google_scholar" value = "{{ key.google_scholar }}" required>
+                                <div class="invalid-feedback">Please enter your Google Scholar link.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label" for = "vi_pr">Vidwan Profile Link<span class="ms-1" style="color: red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id = "vi_pr" placeholder="Enter vidwan profile link" name = "vidwan_profile" value = "{{ key.vidwan_profile }}" required>
+                                <div class="invalid-feedback">Please enter your Vidwan Profile link.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label" for = "website_link">Your Website Link</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id = "website_link" placeholder="Enter your website link" name = "website_link" value = "{{ key.google_scholar }}">
+                                <div class="invalid-feedback">Please enter your Website link.</div>
                             </div>
                         </div>
                     </div>

@@ -15,13 +15,11 @@
 <!--            <div class = "check">-->
 <!--            </div>-->
 <!--        </div>-->
-        {% if user == 'ad' or user == 'spa' %}
         <div class="row d-flex justify-content-end">
             <button type="button" class="btn btn-success mt-2 me-2 d-flex" data-bs-toggle="modal"
                 data-bs-target="#add_email" style="width: 117px;"><i
                     class="fa-solid fa-add mt-1"></i>Add Email</button>
         </div>
-        {% endif %}
 <!--        <div class = "d-flex justify-content-end">-->
 <!--            <div class = "col-4">-->
 <!--                <h5 style="font-size: 13px;">NR = "Not Registered"</h5>-->
@@ -31,39 +29,47 @@
             <thead class = "table-dark">
                 <tr>
                   <th>S.No</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
                   <th>Emp ID</th>
                   <th>Name</th>
                   <th>Email ID</th>
                   <th>Department</th>
                   <th>Contact Number</th>
-                  {% if user == 'ad' or user == 'spa' %}
                   <th>Role</th>
+                  <th>Form Alloted</th>
                   <th>Status</th>
-                  <th>Edit</th>
-                  <th>Delete</th>
-                  {% endif %}
                 </tr>
             </thead>
             <tbody>
                 {% for value in data %}
                 <tr>
                   <td>{{forloop.counter}}</td>
+                  {% if value.pk == request.session.user_id %}
+                  <td></td>
+                  <td></td>
+                  {% else %}
+                  <td><a href = "#" data-bs-toggle="modal" data-bs-target="#editDetails" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" data-contact-number="{{value.contact_number}}" data-status="{{value.status}}" data-department = "{{value.department}}" data-role = "{{value.role}}" data-form="{{value.form_alloted}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                  <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                  {% endif %}
                   <td>{{value.emp_id}}</td>
                   <td>{{value.name}}</td>
                   <td>{{value.email}}</td>
                   <td>{{value.get_department_display}}</td>
                   <td>{{value.contact_number}}</td>
-                  {% if user == 'ad' or user == 'spa' %}
                   <td>{{value.get_role_display}}</td>
+                  <td>
+                      {% for form_name in value.form_alloted_display_list %}
+                        <span class="badge badge-primary text-dark" style="font-size: 14px;">{{ form_name }}</span>
+                      {% empty %}
+                        <span>No forms allotted</span>
+                      {% endfor %}
+                  </td>
                   <td>{{value.get_status_display}}</td>
-                  <td><a href = "#" data-bs-toggle="modal" data-bs-target="#editDetails" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" data-contact-number="{{value.contact_number}}" data-status="{{value.status}}" data-department = "{{value.department}}" data-role = "{{value.role}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                  <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                  {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        {% if user == 'ad' or user == 'spa' %}
         <div class="d-flex justify-content-center mb-3 mt-3">
             <div class="dropdown">
                 <!-- <i class = "fa-solid fa-file-arrow-down dropdown-toggle" data-bs-toggle="dropdown"></i> -->
@@ -75,9 +81,9 @@
                     <li id="csv-download"><a class="dropdown-item" href="/download?file_type=csv_dir">CSV</a>
                     </li>
                 </ul>
+
             </div>
         </div>
-        {% endif %}
         <form action="/upload_excel/1" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
             <div class="modal fade" id="upload_file" tabindex="-1">
@@ -141,7 +147,7 @@
             </div>
         </div>
         <!-- Delete Model Ends -->
-        <!-- Edit Modal Begind-->
+        <!-- Edit Modal Begins-->
         <div class="modal fade" id="editDetails">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -203,8 +209,6 @@
                                 </div>
                             </div>
                             <div class="mb-2">
-                                
-
                                 <div id="allow-change" style="
                                     border: 1.5px solid #dee2e6;
                                     border-radius: 10px;
@@ -219,7 +223,7 @@
                                     <label class="form-label fw-semibold">Form Number Co-ordinator<span style="color:red;">*</span></label>
                                     <!-- Form 1.1 -->
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="updated_role" value="1.1" id="form1_1">
+                                        <input class="form-check-input" type="checkbox" name="form_number" value="1_1" id="form1_1">
                                         <label class="form-check-label" for="form1_1">
                                             <strong>Form 1.1</strong> — Faculty Profile Details
                                         </label>
@@ -227,7 +231,7 @@
 
                                     <!-- Form 1.2 -->
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="updated_role" value="1.2" id="form1_2">
+                                        <input class="form-check-input" type="checkbox" name="form_number" value="1_2" id="form1_2">
                                         <label class="form-check-label" for="form1_2">
                                             <strong>Form 1.2</strong> — Non-teaching Staff Profile Details
                                         </label>
@@ -237,7 +241,7 @@
 
                                     <!-- Form 2 -->
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="updated_role" value="2" id="form2">
+                                        <input class="form-check-input" type="checkbox" name="form_number" value="2" id="form2">
                                         <label class="form-check-label" for="form2">
                                             <strong>Form 2</strong> — Faculty Participation
                                         </label>
@@ -245,7 +249,7 @@
 
                                     <!-- Form 3 -->
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="updated_role" value="3" id="form3">
+                                        <input class="form-check-input" type="checkbox" name="form_number" value="3" id="form3">
                                         <label class="form-check-label" for="form3">
                                             <strong>Form 3</strong> — MOOC's/Short Term Course/Course Completion
                                         </label>
@@ -253,7 +257,7 @@
 
                                     <!-- Form 4 -->
                                     <div class="form-check">
-                                        <input class="form-check-input mt-3" type="checkbox" name="updated_role" value="4" id="form4">
+                                        <input class="form-check-input mt-3" type="checkbox" name="form_number" value="4" id="form4">
                                         <label class="form-check-label mt-3" for="form4">
                                             <strong>Form 4</strong> — Events Organized by Department
                                         </label>
@@ -261,7 +265,7 @@
 
                                     <!-- Form 5 -->
                                     <div class="form-check">
-                                        <input class="form-check-input mt-2" type="checkbox" name="updated_role" value="5" id="form5">
+                                        <input class="form-check-input mt-2" type="checkbox" name="form_number" value="5" id="form5">
                                         <label class="form-check-label mt-2" for="form5">
                                             <strong>Form 5</strong> — Faculty Awards and Achievements
                                         </label>
@@ -269,7 +273,7 @@
 
                                     <!-- Form 6 -->
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="updated_role" value="6" id="form6">
+                                        <input class="form-check-input" type="checkbox" name="form_number" value="6" id="form6">
                                         <label class="form-check-label" for="form6">
                                             <strong>Form 6</strong> — Sponsored Research/Grant Received/Consultancy
                                         </label>
@@ -279,7 +283,7 @@
 
                                     <!-- Form 7.1 -->
                                     <div class="form-check">
-                                        <input class="form-check-input mt-3" type="checkbox" name="updated_role" value="7.1" id="form7_1">
+                                        <input class="form-check-input mt-3" type="checkbox" name="form_number" value="7_1" id="form7_1">
                                         <label class="form-check-label mt-3" for="form7_1">
                                             <strong>Form 7.1</strong> — Research Publication - Journals
                                         </label>
@@ -287,7 +291,7 @@
 
                                     <!-- Form 7.2 -->
                                     <div class="form-check">
-                                        <input class="form-check-input mt-2" type="checkbox" name="updated_role" value="7.2" id="form7_2">
+                                        <input class="form-check-input mt-2" type="checkbox" name="form_number" value="7_2" id="form7_2">
                                         <label class="form-check-label mt-2" for="form7_2">
                                             <strong>Form 7.2</strong> — Research Publication - Conference Publication
                                         </label>
@@ -295,7 +299,7 @@
 
                                     <!-- Form 7.3 -->
                                     <div class="form-check">
-                                        <input class="form-check-input mt-4" type="checkbox" name="updated_role" value="7.3" id="form7_3">
+                                        <input class="form-check-input mt-4" type="checkbox" name="form_number" value="7_3" id="form7_3">
                                         <label class="form-check-label mt-4" for="form7_3">
                                             <strong>Form 7.3</strong> — Research Publication - Book and Book Chapters
                                         </label>
@@ -303,7 +307,7 @@
 
                                     <!-- Form 7.4 -->
                                     <div class="form-check">
-                                        <input class="form-check-input mt-5" type="checkbox" name="updated_role" value="7.4" id="form7_4">
+                                        <input class="form-check-input mt-5" type="checkbox" name="form_number" value="7_4" id="form7_4">
                                         <label class="form-check-label mt-5" for="form7_4">
                                             <strong>Form 7.4</strong> — Patents
                                         </label>
@@ -313,7 +317,7 @@
 
                                     <!-- Form 8 -->
                                     <div class="form-check">
-                                        <input class="form-check-input mt-5" type="checkbox" name="updated_role" value="8" id="form8">
+                                        <input class="form-check-input mt-5" type="checkbox" name="form_number" value="8" id="form8">
                                         <label class="form-check-label mt-5" for="form8">
                                             <strong>Form 8</strong> — M.Tech/Ph.D Guided
                                         </label>
@@ -321,7 +325,7 @@
 
                                     <!-- Form 9 -->
                                     <div class="form-check">
-                                        <input class="form-check-input mt-5" type="checkbox" name="updated_role" value="9" id="form9">
+                                        <input class="form-check-input mt-5" type="checkbox" name="form_number" value="9" id="form9">
                                         <label class="form-check-label mt-5" for="form9">
                                             <strong>Form 9</strong> — Resource Person
                                         </label>
@@ -395,21 +399,149 @@
                             <label for = "department_selection_new" class = "form-label mt-2"><b>Department</b></label>
                             <div class = "d-flex">
                                 <select class = "form-control" id="department_selection_new" name="selected_department">
-                                    <option value = "" selected disabled>Select Department</option>
-                                    <option value="Computer Science & Engineering">Computer Science & Engineering</option>
-                                    <option value="Computer Science & Engineering(AI)">Computer Science & Engineering(AI)</option>
-                                    <option value="Computer Science & Engineering(DS)">Computer Science & Engineering(DS)</option>
-                                    <option value="Computer Science & Engineering(IOT)">Computer Science & Engineering(IOT)</option>
+                                    <option value="" selected disabled>Select Department</option>
+                                    <option value="CSE">Computer Science & Engineering</option>
+                                    <option value="CSE(AI)">Computer Science & Engineering(AI)</option>
+                                    <option value="CSE(DS)">Computer Science & Engineering(DS)</option>
+                                    <option value="CSE(IOT)">Computer Science & Engineering(IOT)</option>
                                 </select>
                             </div>
-                            <label for = "role_selection_new" class = "form-label mt-2"><b>Role</b></label>
+                            <label for = "new_role" class = "form-label mt-2"><b>Role</b></label>
                             <div class = "d-flex">
-                                <select class = "form-control" id="role_selection_new" name="selected_role">
+                                <select class = "form-control" id="new_role" name="selected_role">
                                     <option value = "" selected disabled>Select Role</option>
                                     <option value="SPA">SuperAdmin</option>
                                     <option value="AD">Admin</option>
                                     <option value="FA">Faculty</option>
                                 </select>
+                            </div>
+                            <div class="d-flex mt-2">
+                                <div id="allow-change_new" style="
+                                    border: 1.5px solid #dee2e6;
+                                    border-radius: 10px;
+                                    padding: 14px 18px;
+                                    max-height: 220px;
+                                    overflow-y: auto;
+                                    background: #fafafa;
+                                    display: none;
+                                    flex-direction: column;
+                                    gap: 8px;
+                                ">
+                                    <label class="form-label fw-semibold">Form Number Co-ordinator<span style="color:red;">*</span></label>
+                                    <!-- Form 1.1 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="form_number" value="1_1" id="form1_1">
+                                        <label class="form-check-label" for="form1_1">
+                                            <strong>Form 1.1</strong> — Faculty Profile Details
+                                        </label>
+                                    </div>
+
+                                    <!-- Form 1.2 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="form_number" value="1_2" id="form1_2">
+                                        <label class="form-check-label" for="form1_2">
+                                            <strong>Form 1.2</strong> — Non-teaching Staff Profile Details
+                                        </label>
+                                    </div>
+
+                                    <!-- <hr style="margin: 2px 0; border-color: #e9ecef;"> -->
+
+                                    <!-- Form 2 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="form_number" value="2" id="form2">
+                                        <label class="form-check-label" for="form2">
+                                            <strong>Form 2</strong> — Faculty Participation
+                                        </label>
+                                    </div>
+
+                                    <!-- Form 3 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="form_number" value="3" id="form3">
+                                        <label class="form-check-label" for="form3">
+                                            <strong>Form 3</strong> — MOOC's/Short Term Course/Course Completion
+                                        </label>
+                                    </div>
+
+                                    <!-- Form 4 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input mt-3" type="checkbox" name="form_number" value="4" id="form4">
+                                        <label class="form-check-label mt-3" for="form4">
+                                            <strong>Form 4</strong> — Events Organized by Department
+                                        </label>
+                                    </div>
+
+                                    <!-- Form 5 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input mt-2" type="checkbox" name="form_number" value="5" id="form5">
+                                        <label class="form-check-label mt-2" for="form5">
+                                            <strong>Form 5</strong> — Faculty Awards and Achievements
+                                        </label>
+                                    </div>
+
+                                    <!-- Form 6 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="form_number" value="6" id="form6">
+                                        <label class="form-check-label" for="form6">
+                                            <strong>Form 6</strong> — Sponsored Research/Grant Received/Consultancy
+                                        </label>
+                                    </div>
+
+                                    <!-- <hr style="margin: 2px 0; border-color: #e9ecef;"> -->
+
+                                    <!-- Form 7.1 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input mt-3" type="checkbox" name="form_number" value="7_1" id="form7_1">
+                                        <label class="form-check-label mt-3" for="form7_1">
+                                            <strong>Form 7.1</strong> — Research Publication - Journals
+                                        </label>
+                                    </div>
+
+                                    <!-- Form 7.2 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input mt-2" type="checkbox" name="form_number" value="7_2" id="form7_2">
+                                        <label class="form-check-label mt-2" for="form7_2">
+                                            <strong>Form 7.2</strong> — Research Publication - Conference Publication
+                                        </label>
+                                    </div>
+
+                                    <!-- Form 7.3 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input mt-4" type="checkbox" name="form_number" value="7_3" id="form7_3">
+                                        <label class="form-check-label mt-4" for="form7_3">
+                                            <strong>Form 7.3</strong> — Research Publication - Book and Book Chapters
+                                        </label>
+                                    </div>
+
+                                    <!-- Form 7.4 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input mt-5" type="checkbox" name="form_number" value="7.4" id="form7_4">
+                                        <label class="form-check-label mt-5" for="form7_4">
+                                            <strong>Form 7.4</strong> — Patents
+                                        </label>
+                                    </div>
+
+                                    <!-- <hr style="margin: 2px 0; border-color: #e9ecef;"> -->
+
+                                    <!-- Form 8 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input mt-5" type="checkbox" name="form_number" value="8" id="form8">
+                                        <label class="form-check-label mt-5" for="form8">
+                                            <strong>Form 8</strong> — M.Tech/Ph.D Guided
+                                        </label>
+                                    </div>
+
+                                    <!-- Form 9 -->
+                                    <div class="form-check">
+                                        <input class="form-check-input mt-5" type="checkbox" name="form_number" value="9" id="form9">
+                                        <label class="form-check-label mt-5" for="form9">
+                                            <strong>Form 9</strong> — Resource Person
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="invalid-feedback d-block" id="formCheckError" style="display:none !important;">
+                                    Please select at least one form.
+                                </div>
                             </div>
                             <label for = "contact_number" class = "form-label mt-2"><b>Enter Contact Number</b></label>
                             <div class = "d-flex">
@@ -461,6 +593,8 @@
             var status = link.data('status');
             var department = link.data('department');
             var role = link.data('role');
+            var form_id = link.data('form');
+            console.log(form_id);
             var modal = $(this);
             modal.find('#existing_email').val(email);
             modal.find('#updated_id').val(faculty_id);
@@ -470,6 +604,18 @@
             modal.find('#status_selection').val(status);
             modal.find('#department_selection').val(department);
             modal.find('#role').val(role);
+            // 1. Uncheck all first (to reset the modal state)
+            modal.find('input[name="form_number"]').prop('checked', false);
+
+            // 2. Loop through each checkbox and check it if its value is in the list
+            modal.find('input[name="form_number"]').each(function() {
+                var checkboxValue = $(this).val();
+
+                // Check if the value exists in your form_id array
+                if (form_id.includes(checkboxValue)) {
+                    $(this).prop('checked', true);
+                }
+            });
         });
     });
 
@@ -517,6 +663,15 @@
     }
 })();
 
+const myEditModal = document.getElementById('editDetails');
+myEditModal.addEventListener('shown.bs.modal', () => {
+    const role = myEditModal.querySelector('[name="updated_role"]');
+    if(role.value === "AD"){
+        allowChangeDiv.style.display = "flex";
+    }else{
+        allowChangeDiv.style.display = "none";
+    }
+});
 const role = document.getElementById('role');
 const allowChangeDiv = document.getElementById('allow-change');
 role.addEventListener('change', function() {
@@ -525,8 +680,16 @@ role.addEventListener('change', function() {
     }else{
         allowChangeDiv.style.display = "none";
     }
-}); 
-
+});
+const new_role = document.getElementById('new_role');
+const allowChangeDiv1 = document.getElementById('allow-change_new');
+new_role.addEventListener('change', function() {
+    if(new_role.value === "AD"){
+        allowChangeDiv1.style.display = "flex";
+    }else{
+        allowChangeDiv1.style.display = "none";
+    }
+});
 </script>
 
 {% endblock %}

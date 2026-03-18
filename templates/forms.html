@@ -459,13 +459,12 @@ document.addEventListener('change', function(event) {
         <div class="row form-row m-3">
             <div class="row">
                 <div class="col-md-8">
-                    <div class = "section-title">Step1: Verify Basic Details(read-only)<button class = "btn text-white ms-3" onclick="window.location.href = '{% url 'home' %}';"></button></div><!--Add Edit Profile Page-->
+                    <div class = "section-title">Step1: Verify Basic Details(read-only)</div>
                 </div>
                 <div class="col-md-4">
                     <a href="/forms_listing/filled_forms" class="btn" style = "background-color: rgb(79 70 229); color: white;">View Filled Forms</a>
                 </div>
             </div>
-            
             <div class="col mt-4">
                 <span>
                     <i class="fa-solid fa-envelope"></i>
@@ -894,7 +893,7 @@ document.addEventListener('change', function(event) {
         <!-- Step 2: Dynamic Input Fields -->
         <div class="section m-3">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-8 col-sm-8">
                     <label class="section-title">
                         Step 2: Enter Quantities
                         <span class="badge" id="inputCount">0 fields</span>
@@ -903,10 +902,12 @@ document.addEventListener('change', function(event) {
                         <div class="empty-state">Select checkboxes above to generate input fields</div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <img src="../static/i-btn-hover.png" style="height: 120px; margin-top: -19px; margin-left: -180px" alt="hoverInfo">
+                <div class="col-md-4">
+                    <div class="info-icon">
+                        <img src="../static/i-btn-hover.png" style="height: 120px;" alt="hoverInfo">
+                    </div>
+                    <div class="info-desc"><p><b>For More Information of the Field Please <u><span style="color: #dc3545;">*</span>Hover<span style="color: #dc3545;">*</span></u> on i tab as Shown in Figure<span style="color: #dc3545;">*</span></b></p></div>
                 </div>
-                <div class="col-md-2"><p style="text-align: center; margin-left: -160px;"><b>For More Information of the Field Please <u><span style="color: #dc3545;">*</span>Hover<span style="color: #dc3545;">*</span></u> on i tab as Shown in Figure<span style="color: #dc3545;">*</span></b></p></div>
             </div>
             
         </div>

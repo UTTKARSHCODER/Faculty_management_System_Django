@@ -2115,13 +2115,11 @@ function attachLinkValidation() {
     const urlPattern = /^(https?:\/\/|www\.)[^\s]{2,}$|^(na|NA)$/i;
 
     linkFields.forEach(field => {
-
-        field.removeAttribute('pattern'); // Remove pattern attribute to prevent HTML5 validation conflicts
+       field.removeAttribute('pattern'); // Remove pattern attribute to prevent HTML5 validation conflicts
 
         field.addEventListener('blur', function() {
             validateLinkField(this, urlPattern);
         });
-
         field.addEventListener('input', function() {
             validateLinkField(this, urlPattern);
         });
@@ -2129,6 +2127,8 @@ function attachLinkValidation() {
 }
 
 function validateLinkField(field, pattern) {
+    const val = field.value.trim();
+
     if (!pattern.test(field.value)) {
         field.classList.add("is-invalid");
         field.classList.remove("is-valid");

@@ -6,6 +6,9 @@
 <script src="/static/dataTables.bootstrap5.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
      th {
         white-space: nowrap;
@@ -41,865 +44,886 @@
 </style>
 <div class="col-10">
     <div class="container ms-5 mt-4 mb-3">
-        <ul class="nav nav-tabs" role="tablist">
-            <li><button class="nav-link active" onclick="openTab(event, 'faculty_details')">1.1  Faculty Profile Details</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'non-teaching')">1.2 Non-Teaching Staff Profile Details</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'fdp')">2. Faculty Participation</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'msc')">3. MOOC's/Short Term Course/Course Completion</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'events')">4. Events Organized by Department</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'faa')">5. Faculty Awards and Achievements</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'sgc')">6. Sponsored Research/Grant Received/Consultancy</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'rpj')">7.1 Research Publication - Journals</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'rpcp')">7.2 Research Publication - Conference</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'rpb')">7.3 Research Publication - Book and Book Chapters</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'patent')">7.4 Patents</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'mp')">8. M.Tech/Ph.D Guided</button></li>
-            <li><button class="nav-link" onclick="openTab(event, 'rp')">9. Resource Person</button></li>
-        </ul>
-        <div class="tab-content table-responsive pt-2" id="faculty_details">
-            <table class = "table table-hover table-striped mt-3" id="form_table_faculty_details">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Designation</th>
-                        <th>Department</th>
-                        <th>Contact Number</th>
-                        <th>DOB</th>
-                        <th>Gender</th>
-                        <th>Address</th>
-                        <th>Area of Specialization</th>
-                        <th>Highest Qualfication</th>
-                        <th>Year of Passing</th>
-                        <th>Employee ID</th>
-                        <th>PAN No.</th>
-                        <th>Date of Joining(College)</th>
-                        <th>Profile Photo</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Joining Report Letter</th>
-                        <th>Offer Letter</th>
-                        <th>Highest Degree Certificate</th>
-                        <th>Salary Slip</th>
-                        {% endif %}
-                        <th>Date of Promotion</th>
-                        <th>Name of PHD University(If pusuing)</th>
-                        <th>Date of Registration(for PHD Course)</th>
-                        <th>Number of Research Papers</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Certificate</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in fac_ins %}
-                     <tr>
-                        <td>{{forloop.counter}}</td>
-                        <td>{{value.name}}</td>
-                        <td>{{value.email}}</td>
-                        <td>{{value.get_designation_display}}</td>
-                        <td>{{value.get_department_display}}</td>
-                        <td>{{value.contact_number}}</td>
-                        <td>{{value.dob}}</td>
-                        <td>{{value.get_gender_display}}</td>
-                        <td>{{value.address}}</td>
-                        <td>{{value.get_aos_display}}</td>
-                        <td>{{value.get_hq_display}}</td>
-                        <td>{{value.pshd}}</td>
-                        <td>{{value.emp_id}}</td>
-                        <td>{{value.pan_no}}</td>
-                        <td>{{value.jd}}</td>
-                        <td>{{value.jd}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.jr}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "/media/{{value.of}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "/media/{{value.hdc}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "/media/{{value.ss}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        {% endif %}
-                        <td>{{value.pd}}</td>
-                        <td>{{value.phd_univ}}</td>
-                        <td>{{value.phd_dor}}</td>
-                        <td>{{value.norp}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        {% endif %}
-                     </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="non-teaching">
-            <table class = "table table-hover mt-3" id="form_table_non_teaching">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Session</th>
-                        <th>Name</th>
-                        <th>Mobile No.</th>
-                        <th>Department</th>
-                        <th>Lab No.</th>
-                        <th>Designation</th>
-                        <th>Employee ID</th>
-                        <th>Highest Qualification</th>
-                        <th>University Name</th>
-                        <th>Passing Year of Highest degree</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Higher Degree Certificate(Date of award)</th>
-                        {% endif %}
-                        <th>Professional Courses</th>
-                        <th>PAN No.</th>
-                        <th>Date of Birth</th>
-                        <th>Joining Date(MM, DD, YYYY)</th>
-                        <th>Promotion Date(If any)</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Joining Report</th>
-                        <th>Offer Letter (Appointment Letter)</th>
-                        <th>Salary Slip (Recently)</th>
-                        <th>If Awards and recognition received for extension activities (Upload Certificate)</th>
-                        <th>The above-mentioned information is correct best to my knowledge</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in non_teaching %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/0/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.session}}</td>
-                        <td>{{value.name}}</td>
-                        <td>{{value.mobile_no}}</td>
-                        <td>{{value.get_department_display}}</td>
-                        <td>{{value.Lab_no}}</td>
-                        <td>{{value.get_designation_display}}</td>
-                        <td>{{value.emp_id}}</td>
-                        <td>{{value.get_highest_qual_display}}</td>
-                        <td>{{value.university_name}}</td>
-                        <td>{{value.pshd}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.higher_degree_certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        {% endif %}
-                        <td>{{value.professional_display_list|join:", "}}</td>
-                        <td>{{value.pan_no}}</td>
-                        <td>{{value.dob|date:'d-m-Y'}}</td>
-                        <td>{{value.joining_date|date:'d-m-Y'}}</td>
-                        <td>{{value.promotion_date|date:'d-m-Y'}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.joining_report}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "/media/{{value.offer_letter}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        {% if value.salary_slip %}
-                        <td><a href = "/media/{{value.salary_slip}}" target = "_blank" class = "text-info">Click Here</a></td>
+        <div class="d-flex">
+            <div class="col-md-7">
+                <ul class="nav nav-tabs" role="tablist">
+                    {% for form_no, form_name in form_to_show %}
+                        {% if forloop.first %}
+                        <li><button class="nav-link active" id="{{ form_no }}" onclick="openTab(event, '{{ form_no }}')">{{ form_no }} {{ form_name }}</button></li>
                         {% else %}
-                        <td>No File Uploaded</td>
+                        <li><button class="nav-link" id="{{ form_no }}" onclick="openTab(event, '{{ form_no }}')">{{ form_no }} {{ form_name }}</button></li>
                         {% endif %}
-                        {% if value.certificate %}
-                        <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        {% else %}
-                        <td>No File Uploaded</td>
-                        {% endif %}
-                        <td>I Agree</td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "16" data-pk = "{{value.pk}}" data-emp-id = "{{value.emp_id}}" data-head-main = "Employee Name" data-head-main-entry = "{{value.name}}" data-sub-head = "Employee Email" data-sub-head-entry = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="fdp">
-            <table class = "table table-hover mt-3" id="form_table_fdp">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Employee ID</th>
-                        <th>Department</th>
-                        <th>Name of Faculty Member</th>
-                        <th>Title Of Program</th>
-                        <th>Conference/FDP/ Workshop/Seminar/ STTP</th>
-                        <th>Mode</th>
-                        <th>Level</th>
-                        <th>Organizer</th>
-                        <th>Sponsored By</th>
-                        <th>Grant Recieved from SKIT (Yes/No)</th>
-                        <th>From Date</th>
-                        <th>To Date</th>
-                        <th>Session</th>
-                        <th>No. of Days</th>
-                        <th>Proof Enclosed (Yes/No)</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Uploaded Certificate/Proof</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in fdp1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/1/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.email.emp_id}}</td>
-                        <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.email.name}}</td>
-                        <td>{{value.top}}</td>
-                        <td>{{value.get_category_display}}</td>
-                        <td>{{value.get_mode_display}}</td>
-                        <td>{{value.get_level_display}}</td>
-                        <td>{{value.organizer}}</td>
-                        <td>{{value.sponsors}}</td>
-                        <td>{{value.get_approval_display}}</td>
-                        <td>{{value.begi_date}}</td>
-                        <td>{{value.end_date}}</td>
-                        <td>{{value.session}}</td>
-                        <td>{{value.no_of_days}}</td>
-                        <td>{{value.get_proof_enclosed_display}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "1" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Program" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="msc">
-            <table class = "table table-hover mt-3" id="form_table_msc">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Session</th>
-                        <th>Name of Faculty Member</th>
-                        <th>Employee ID</th>
-                        <th>Department</th>
-                        <th>Type of Course</th>
-                        <th>Timeline of course</th>
-                        <th>Name of the Course</th>
-                        <th>Duration of Course</th>
-                        <th>Start Date of Course</th>
-                        <th>End Date of Course</th>
-                        <th>Offering Agency/ Organizer</th>
-                        <th>Certificate Type</th>
-                        <th>Any category from below</th>
-                        <th>Remarks(if any)</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Uploaded Certificate</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in msc1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/2/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.get_session_display}}</td>
-                        <td>{{value.email.name}}</td>
-                        <td>{{value.email.emp_id}}</td>
-                        <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.get_category_display}}</td>
-                        <td>{{value.timeline}}</td>
-                        <td>{{value.noc}}</td>
-                        <td>{{value.get_doc_display}}</td>
-                        <td>{{value.begi_date}}</td>
-                        <td>{{value.end_date}}</td>
-                        <td>{{value.offer}}</td>
-                        <td>{{value.get_ctype_display}}</td>
-                        <td>{{value.get_topper_in_display}}</td>
-                        <td>{{value.remarks}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "2" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the Course" data-sub-head-entry = "{{value.noc}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="events">
-            <table class = "table table-hover mt-3" id="form_table_events">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Start Date of the Event</th>
-                        <th>End Date of the Event</th>
-                        <th>Event organized for</th>
-                        <th>Type of Event</th>
-                        <th>Name of Faculty Coordinator(s)</th>
-                        <th>Title of the Professional Development Program Organized</th>
-                        <th>No. of participants</th>
-                        <th>Academic Department/ Cell / Committees/ Labs /COE </th>
-                        <th>Academic Session</th>
-                        <th>Sponsored/Non Sponsored</th>
-                        <th>Name of Sponsoring Agency(if Sponsored)</th>
-                        <th>Collaboration Details</th>
-                        <th>Grant Received(Yes/No)</th>
-                        <th>Grant Details</th>
-                        <th>Association with professional societies for organization of event</th>
-                        <th>Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)</th>
-                        <th>Number of staff member participated (Provide list of staff members with  their EMPLOYEE ID & Certificates)</th>
-                        <th>Event report attached in proper format(Yes/No)</th>
-                        <th>Any Other Remark</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Upload Event Report</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in eod1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/3/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.begi_date}}</td>
-                        <td>{{value.end_date}}</td>
-                        <td>{{value.eof_display_list|join:", "}}</td>
-                        <td>{{value.get_category_display}}</td>
-                        <td>{{value.nofc}}</td>
-                        <td>{{value.topdpo}}</td>
-                        <td>{{value.nop}}</td>
-                        <td>{{value.adcc}}</td>
-                        <td>{{value.get_session_display}}</td>
-                        <td>{{value.get_ct_display}}</td>
-                        <td>{{value.nosa}}</td>
-                        <td>{{value.cd}}</td>
-                        <td>{{value.get_gr_display}}</td>
-                        <td>{{value.gd}}</td>
-                        <td>{{value.awpsfooe}}</td>
-                        <td>{{value.nossp}}</td>
-                        <td>{{value.nosmp}}</td>
-                        <td>{{value.get_eraipf_display}}</td>
-                        <td>{{value.remarks}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "3" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the Faculty Coordinator" data-head-main-entry = "{{value.nofc}}" data-sub-head = "Title of the Professional Development Program Organized" data-sub-head-entry = "{{value.topdpo}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content table-responsive pt-2 tab-hidden" id="faa">
-            <table class = "table table-hover mt-3" id="form_table_faa">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Session</th>
-                        <th>Faculty Name</th>
-                        <th>Employee ID</th>
-                        <th>Designation</th>
-                        <th>Department</th>
-                        <th>Name of Award/Achievement</th>
-                        <th>Category</th>
-                        <th>Position / Award For</th>
-                        <th>Agency / Organization</th>
-                        <th>Prize</th>
-                        <th>Award Date</th>
-                        <th>Remark</th>
-                        <th>All information filled by me is correct and I will submit proof and other related document whenever is asked</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Upload Award Certificate/Proof</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in faa1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/4/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.get_session_display}}</td>
-                        <td>{{value.email.name}}</td>
-                        <td>{{value.email.emp_id}}</td>
-                        <td>{{value.email.get_designation_display}}</td>
-                        <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.noaa}}</td>
-                        <td>{{value.get_category_display}}</td>
-                        <td>{{value.paf}}</td>
-                        <td>{{value.ao}}</td>
-                        <td>{{value.prize}}</td>
-                        <td>{{value.ad}}</td>
-                        <td>{{value.remark}}</td>
-                        <td>I AGREE</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "4" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Faculty Name" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of Award/Achievement" data-sub-head-entry = "{{value.noaa}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="sgc">
-            <table class = "table table-hover mt-3" id="form_table_sgc">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Name of Candidate (PI/Co PI) </th>
-                        <th>Employee ID</th>
-                        <th>Department</th>
-                        <th>Category</th>
-                        <th>Name of the Funding Agency(MSME/DST/CSIR/SERB /Industry etc.) </th>
-                        <th>Duration of Project (in Years)</th>
-                        <th>Amount in Rs.</th>
-                        <th>Session in which grant/research project/consultancy received </th>
-                        <th>Status</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Upload Proof</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in sgc1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/5/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.email.name}}</td>
-                        <td>{{value.email.emp_id}}</td>
-                        <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.get_category_display}}</td>
-                        <td>{{value.nofa}}</td>
-                        <td>{{value.dop}}</td>
-                        <td>{{value.amount}}</td>
-                        <td>{{value.get_session_display}}</td>
-                        <td>{{value.get_status_display}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "5" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Candidate (PI/Co PI)" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the Funding Agency" data-sub-head-entry = "{{value.nofa}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="rpj">
-            <table class = "table table-hover mt-3" id="form_table_rpj">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Employee ID</th>
-                        <th>Name of the author(s)</th>
-                        <th>Department</th>
-                        <th>Title of Paper</th>
-                        <th>Name of Journal</th>
-                        <th>Name of the Publisher</th>
-                        <th>Volume, Issue</th>
-                        <th>Page No.</th>
-                        <th>Published Date</th>
-                        <th>Session</th>
-                        <th>ISSN number : Print</th>
-                        <th>ISSN number : Online</th>
-                        <th>Level (National/ International)</th>
-                        <th>DOI(Digital Object Identifier)</th>
-                        <th>Link to website of the Journal</th>
-                        <th>Link to article/paper/abstract of the article (Direct link to the webpage where the abstract of paper is displayed)</th>
-                        <th>Link to the recognition in SCOPUS enlistment of the Journal</th>
-                        <th>Affiliating Institute at the time of publication</th>
-                        <th>Indexed by</th>
-                        <th>Quartile</th>
-                        <th>Is SKIT student associated?</th>
-                        <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name) </th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Uploaded Full Paper</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in rpj1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/6/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.email.emp_id}}</td>
-                        <td>{{value.noa}}</td>
-                        <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.top}}</td>
-                        <td>{{value.noj}}</td>
-                        <td>{{value.nop}}</td>
-                        <td>{{value.vi}}</td>
-                        <td>{{value.pn}}</td>
-                        <td>{{value.pd}}</td>
-                        <td>{{value.get_session_display}}</td>
-                        <td>{{value.isnp}}</td>
-                        <td>{{value.isno}}</td>
-                        <td>{{value.get_level_display}}</td>
-                        <td>{{value.doi}}</td>
-                        <td>{{value.lwj}}</td>
-                        <td>{{value.lap}}</td>
-                        <td>{{value.lrsj}}</td>
-                        <td>{{value.aiop}}</td>
-                        <td>{{value.get_index_by_display}}</td>
-                        <td>{{value.get_quartile_display}}</td>
-                        <td>{{value.get_ssa_display}}</td>
-                        <td>{{value.details}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "6" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author(s)" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of Paper" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="rpcp">
-            <table class = "table table-hover mt-3" id="form_table_rpcp">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Department</th>
-                        <th>Employee ID</th>
-                        <th>Name of the author(s)</th>
-                        <th>Title of Conference</th>
-                        <th>Title of Paper</th>
-                        <th>Title of the proceedings of the conference</th>
-                        <th>Level (National/ International)</th>
-                        <th>ISBN/ISSN number of the proceeding</th>
-                        <th>Name of the Publisher</th>
-                        <th>Published Date</th>
-                        <th>Session</th>
-                        <th>DOI(Digital Object Identifier)</th>
-                        <th>Web Link</th>
-                        <th>Affiliating Institute at the time of publication</th>
-                        <th>Indexed by</th>
-                        <th>Is SKIT student associated?</th>
-                        <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Upload Full Paper</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in rpcp1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/7/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.email.emp_id}}</td>
-                        <td>{{value.noa}}</td>
-                        <td>{{value.toc}}</td>
-                        <td>{{value.top}}</td>
-                        <td>{{value.topc}}</td>
-                        <td>{{value.get_level_display}}</td>
-                        <td>{{value.isnp}}</td>
-                        <td>{{value.nop}}</td>
-                        <td>{{value.pd}}</td>
-                        <td>{{value.get_session_display}}</td>
-                        <td>{{value.doi}}</td>
-                        <td>{{value.lwj}}</td>
-                        <td>{{value.aitp}}</td>
-                        <td>{{value.get_index_by_display}}</td>
-                        <td>{{value.get_ssa_display}}</td>
-                        <td>{{value.details}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "7" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author(s)" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of Conference" data-sub-head-entry = "{{value.toc}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="rpb">
-            <table class = "table table-hover mt-3" id="form_table_rpb">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Department</th>
-                        <th>Employee ID</th>
-                        <th>Name of the author/editor</th>
-                        <th>Title of the book</th>
-                        <th>Title of the chapter Published</th>
-                        <th>Level (National/ International)</th>
-                        <th>ISBN</th>
-                        <th>Name of the Publisher</th>
-                        <th>Published Date</th>
-                        <th>Session</th>
-                        <th>DOI(Digital Object Identifier)</th>
-                        <th>Web Link</th>
-                        <th>Affiliating Institute at the time of publication</th>
-                        <th>Indexed by</th>
-                        <th>Is SKIT student associated?</th>
-                        <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Uploaded Proof (Book Chapter/Front Page/Document etc.)</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in rpb1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/8/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.email.emp_id}}</td>
-                        <td>{{value.noa}}</td>
-                        <td>{{value.tob}}</td>
-                        <td>{{value.top}}</td>
-                        <td>{{value.get_level_display}}</td>
-                        <td>{{value.isbn}}</td>
-                        <td>{{value.nop}}</td>
-                        <td>{{value.pd}}</td>
-                        <td>{{value.get_session_display}}</td>
-                        <td>{{value.doi}}</td>
-                        <td>{{value.lwj}}</td>
-                        <td>{{value.aitp}}</td>
-                        <td>{{value.get_index_by_display}}</td>
-                        <td>{{value.get_ssa_display}}</td>
-                        <td>{{value.details}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "8" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author/editor" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of the book" data-sub-head-entry = "{{value.tob}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="patent">
-            <table class = "table table-hover mt-3" id="form_table_patent">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Session</th>
-                        <th>Department</th>
-                        <th>Employee ID</th>
-                        <th>Name of Faculty</th>
-                        <th>Status of Patent</th>
-                        <th>Application ID</th>
-                        <th>Granted ID</th>
-                        <th>Type of Patent</th>
-                        <th>Title of Patent</th>
-                        <th>Granted Country</th>
-                        <th>Patent Filed Date</th>
-                        <th>Publication Date</th>
-                        <th>Is SKIT student associated?</th>
-                        <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
-                        <th>Link</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Upload Proof</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in patents1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/9/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.get_session_display}}</td>
-                        <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.email.emp_id}}</td>
-                        <td>{{value.email.name}}</td>
-                        <td>{{value.get_sop_display}}</td>
-                        <td>{{value.ag}}</td>
-                        <td>{{value.gi}}</td>
-                        <td>{{value.get_pg_display}}</td>
-                        <td>{{value.top}}</td>
-                        <td>{{value.gc}}</td>
-                        <td>{{value.pfd}}</td>
-                        <td>{{value.pd}}</td>
-                        <td>{{value.get_ssa_display}}</td>
-                        <td>{{value.details}}</td>
-                        <td>{{value.link}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "9" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Patent" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="mp">
-            <table class = "table table-hover mt-3" id="form_table_mp">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Session</th>
-                        <th>Faculty Name</th>
-                        <th>Employee ID</th>
-                        <th>Department</th>
-                        <th>Name of the student Guided</th>
-                        <th>Program of Student</th>
-                        <th>Enrollment Number of Student</th>
-                        <th>University Roll Number of Student</th>
-                        <th>Enrollment Year of Student</th>
-                        <th>Title of the Dissertation</th>
-                        <th>Supervisor / Co-supervisor</th>
-                        <th>Date of Viva-Voce</th>
-                        <th>Name of external examiner</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in mp1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/10/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.session}}</td>
-                        <td>{{value.email.name}}</td>
-                        <td>{{value.email.emp_id}}</td>
-                        <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.nos}}</td>
-                        <td>{{value.get_category_display}}</td>
-                        <td>{{value.ens}}</td>
-                        <td>{{value.urns}}</td>
-                        <td>{{value.get_eys_display}}</td>
-                        <td>{{value.tod}}</td>
-                        <td>{{value.get_visor_display}}</td>
-                        <td>{{value.dov}}</td>
-                        <td>{{value.noe}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "10" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Faculty Name" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the student Guided" data-sub-head-entry = "{{value.nos}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-content pt-2 tab-hidden" id="rp">
-            <table class = "table table-hover mt-3" id="form_table_rp">
-                <thead class = "table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Edit</th>
-                        {% endif %}
-                        <th>Email address</th>
-                        <th>Session</th>
-                        <th>Name of Faculty Member</th>
-                        <th>Employee ID</th>
-                        <th>Department</th>
-                        <th>Resource Person in</th>
-                        <th>Title of Event/ Exam Name</th>
-                        <th>Subject Area/Subject Name/Lab Name/Session Name</th>
-                        <th>Resource Person Type</th>
-                        <th>Duration of event (in days)</th>
-                        <th>From Date</th>
-                        <th>To Date</th>
-                        <th>Venue</th>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <th>Proof(Certificate/Mail)</th>
-                        <th>Delete</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for value in rp1 %}
-                    <tr>
-                        <td>{{forloop.counter}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "progressdetails/11/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                        {% endif %}
-                        <td>{{value.email.email}}</td>
-                        <td>{{value.get_session_display}}</td>
-                        <td>{{value.email.name}}</td>
-                        <td>{{value.email.emp_id}}</td>
-                        <td>{{value.email.get_department_display}}</td>
-                        <td>{{value.get_category_display}}</td>
-                        <td>{{value.toe}}</td>
-                        <td>{{value.sa}}</td>
-                        <td>{{value.get_rpt_display}}</td>
-                        <td>{{value.doe}}</td>
-                        <td>{{value.begi_date}}</td>
-                        <td>{{value.end_date}}</td>
-                        <td>{{value.venue}}</td>
-                        {% if user == 'ad' or user == 'spa' %}
-                        <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
-                        <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "11" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Event/ Exam Name" data-sub-head-entry = "{{value.toe}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="d-flex justify-content-center mb-3 mt-3">
-            <div class="dropdown">
-                <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">Download</button>
-                <ul class="dropdown-menu">
-                    <li id="excel-download"><a class="dropdown-item" href = "/download?file_type=fdc_dir_data">Excel</a></li>
-                    <li id="csv-download"><a class="dropdown-item" href="/download?file_type=fdc_dir_data">CSV</a>
-                    </li>
                 </ul>
+                <div class="tab-content tab-hidden table-responsive pt-2" id="fn_1_1">
+                    <table class = "table table-hover table-striped mt-3" id="form_table_faculty_details">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Designation</th>
+                                <th>Department</th>
+                                <th>Contact Number</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Address</th>
+                                <th>Area of Specialization</th>
+                                <th>Highest Qualfication</th>
+                                <th>Year of Passing</th>
+                                <th>Employee ID</th>
+                                <th>PAN No.</th>
+                                <th>Date of Joining(College)</th>
+                                <th>Profile Photo</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Joining Report Letter</th>
+                                <th>Offer Letter</th>
+                                <th>Highest Degree Certificate</th>
+                                <th>Salary Slip</th>
+                                {% endif %}
+                                <th>Date of Promotion</th>
+                                <th>Name of PHD University(If pusuing)</th>
+                                <th>Date of Registration(for PHD Course)</th>
+                                <th>Number of Research Papers</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Certificate</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in fac_ins %}
+                             <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{value.name}}</td>
+                                <td>{{value.email}}</td>
+                                <td>{{value.get_designation_display}}</td>
+                                <td>{{value.get_department_display}}</td>
+                                <td>{{value.contact_number}}</td>
+                                <td>{{value.dob}}</td>
+                                <td>{{value.get_gender_display}}</td>
+                                <td>{{value.address}}</td>
+                                <td>{{value.get_aos_display}}</td>
+                                <td>{{value.get_hq_display}}</td>
+                                <td>{{value.pshd}}</td>
+                                <td>{{value.emp_id}}</td>
+                                <td>{{value.pan_no}}</td>
+                                <td>{{value.jd}}</td>
+                                <td>{{value.jd}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.jr}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "/media/{{value.of}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "/media/{{value.hdc}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "/media/{{value.ss}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                {% endif %}
+                                <td>{{value.pd}}</td>
+                                <td>{{value.phd_univ}}</td>
+                                <td>{{value.phd_dor}}</td>
+                                <td>{{value.norp}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                {% endif %}
+                             </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_1_2">
+                    <table class = "table table-hover mt-3" id="form_table_non_teaching">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Session</th>
+                                <th>Name</th>
+                                <th>Mobile No.</th>
+                                <th>Department</th>
+                                <th>Lab No.</th>
+                                <th>Designation</th>
+                                <th>Employee ID</th>
+                                <th>Highest Qualification</th>
+                                <th>University Name</th>
+                                <th>Passing Year of Highest degree</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Higher Degree Certificate(Date of award)</th>
+                                {% endif %}
+                                <th>Professional Courses</th>
+                                <th>PAN No.</th>
+                                <th>Date of Birth</th>
+                                <th>Joining Date(MM, DD, YYYY)</th>
+                                <th>Promotion Date(If any)</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Joining Report</th>
+                                <th>Offer Letter (Appointment Letter)</th>
+                                <th>Salary Slip (Recently)</th>
+                                <th>If Awards and recognition received for extension activities (Upload Certificate)</th>
+                                <th>The above-mentioned information is correct best to my knowledge</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in non_teaching %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/0/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.session}}</td>
+                                <td>{{value.name}}</td>
+                                <td>{{value.mobile_no}}</td>
+                                <td>{{value.get_department_display}}</td>
+                                <td>{{value.Lab_no}}</td>
+                                <td>{{value.get_designation_display}}</td>
+                                <td>{{value.emp_id}}</td>
+                                <td>{{value.get_highest_qual_display}}</td>
+                                <td>{{value.university_name}}</td>
+                                <td>{{value.pshd}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.higher_degree_certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                {% endif %}
+                                <td>{{value.professional_display_list|join:", "}}</td>
+                                <td>{{value.pan_no}}</td>
+                                <td>{{value.dob|date:'d-m-Y'}}</td>
+                                <td>{{value.joining_date|date:'d-m-Y'}}</td>
+                                <td>{{value.promotion_date|date:'d-m-Y'}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.joining_report}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "/media/{{value.offer_letter}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                {% if value.salary_slip %}
+                                <td><a href = "/media/{{value.salary_slip}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                {% else %}
+                                <td>No File Uploaded</td>
+                                {% endif %}
+                                {% if value.certificate %}
+                                <td><a href = "/media/{{value.certificate}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                {% else %}
+                                <td>No File Uploaded</td>
+                                {% endif %}
+                                <td>I Agree</td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "1_2" data-pk = "{{value.pk}}" data-emp-id = "{{value.emp_id}}" data-head-main = "Employee Name" data-head-main-entry = "{{value.name}}" data-sub-head = "Employee Email" data-sub-head-entry = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_2">
+                    <table class = "table table-hover mt-3" id="form_table_fdp">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Employee ID</th>
+                                <th>Department</th>
+                                <th>Name of Faculty Member</th>
+                                <th>Title Of Program</th>
+                                <th>Conference/FDP/ Workshop/Seminar/ STTP</th>
+                                <th>Mode</th>
+                                <th>Level</th>
+                                <th>Organizer</th>
+                                <th>Sponsored By</th>
+                                <th>Grant Recieved from SKIT (Yes/No)</th>
+                                <th>From Date</th>
+                                <th>To Date</th>
+                                <th>Session</th>
+                                <th>No. of Days</th>
+                                <th>Proof Enclosed (Yes/No)</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Uploaded Certificate/Proof</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in fdp1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/1/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.email.emp_id}}</td>
+                                <td>{{value.email.get_department_display}}</td>
+                                <td>{{value.email.name}}</td>
+                                <td>{{value.top}}</td>
+                                <td>{{value.get_category_display}}</td>
+                                <td>{{value.get_mode_display}}</td>
+                                <td>{{value.get_level_display}}</td>
+                                <td>{{value.organizer}}</td>
+                                <td>{{value.sponsors}}</td>
+                                <td>{{value.get_approval_display}}</td>
+                                <td>{{value.begi_date}}</td>
+                                <td>{{value.end_date}}</td>
+                                <td>{{value.session}}</td>
+                                <td>{{value.no_of_days}}</td>
+                                <td>{{value.get_proof_enclosed_display}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "2" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Program" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_3">
+                    <table class = "table table-hover mt-3" id="form_table_msc">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Session</th>
+                                <th>Name of Faculty Member</th>
+                                <th>Employee ID</th>
+                                <th>Department</th>
+                                <th>Type of Course</th>
+                                <th>Timeline of course</th>
+                                <th>Name of the Course</th>
+                                <th>Duration of Course</th>
+                                <th>Start Date of Course</th>
+                                <th>End Date of Course</th>
+                                <th>Offering Agency/ Organizer</th>
+                                <th>Certificate Type</th>
+                                <th>Any category from below</th>
+                                <th>Remarks(if any)</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Uploaded Certificate</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in msc1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/2/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.get_session_display}}</td>
+                                <td>{{value.email.name}}</td>
+                                <td>{{value.email.emp_id}}</td>
+                                <td>{{value.email.get_department_display}}</td>
+                                <td>{{value.get_category_display}}</td>
+                                <td>{{value.timeline}}</td>
+                                <td>{{value.noc}}</td>
+                                <td>{{value.get_doc_display}}</td>
+                                <td>{{value.begi_date}}</td>
+                                <td>{{value.end_date}}</td>
+                                <td>{{value.offer}}</td>
+                                <td>{{value.get_ctype_display}}</td>
+                                <td>{{value.get_topper_in_display}}</td>
+                                <td>{{value.remarks}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "3" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the Course" data-sub-head-entry = "{{value.noc}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_4">
+                    <table class = "table table-hover mt-3" id="form_table_events">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Start Date of the Event</th>
+                                <th>End Date of the Event</th>
+                                <th>Event organized for</th>
+                                <th>Type of Event</th>
+                                <th>Name of Faculty Coordinator(s)</th>
+                                <th>Title of the Professional Development Program Organized</th>
+                                <th>No. of participants</th>
+                                <th>Academic Department/ Cell / Committees/ Labs /COE </th>
+                                <th>Academic Session</th>
+                                <th>Sponsored/Non Sponsored</th>
+                                <th>Name of Sponsoring Agency(if Sponsored)</th>
+                                <th>Collaboration Details</th>
+                                <th>Grant Received(Yes/No)</th>
+                                <th>Grant Details</th>
+                                <th>Association with professional societies for organization of event</th>
+                                <th>Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)</th>
+                                <th>Number of staff member participated (Provide list of staff members with  their EMPLOYEE ID & Certificates)</th>
+                                <th>Event report attached in proper format(Yes/No)</th>
+                                <th>Any Other Remark</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Upload Event Report</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in eod1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/3/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.begi_date}}</td>
+                                <td>{{value.end_date}}</td>
+                                <td>{{value.eof_display_list|join:", "}}</td>
+                                <td>{{value.get_category_display}}</td>
+                                <td>{{value.nofc}}</td>
+                                <td>{{value.topdpo}}</td>
+                                <td>{{value.nop}}</td>
+                                <td>{{value.adcc}}</td>
+                                <td>{{value.get_session_display}}</td>
+                                <td>{{value.get_ct_display}}</td>
+                                <td>{{value.nosa}}</td>
+                                <td>{{value.cd}}</td>
+                                <td>{{value.get_gr_display}}</td>
+                                <td>{{value.gd}}</td>
+                                <td>{{value.awpsfooe}}</td>
+                                <td>{{value.nossp}}</td>
+                                <td>{{value.nosmp}}</td>
+                                <td>{{value.get_eraipf_display}}</td>
+                                <td>{{value.remarks}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "4" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the Faculty Coordinator" data-head-main-entry = "{{value.nofc}}" data-sub-head = "Title of the Professional Development Program Organized" data-sub-head-entry = "{{value.topdpo}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_5">
+                    <table class = "table table-hover mt-3" id="form_table_faa">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Session</th>
+                                <th>Faculty Name</th>
+                                <th>Employee ID</th>
+                                <th>Designation</th>
+                                <th>Department</th>
+                                <th>Name of Award/Achievement</th>
+                                <th>Category</th>
+                                <th>Position / Award For</th>
+                                <th>Agency / Organization</th>
+                                <th>Prize</th>
+                                <th>Award Date</th>
+                                <th>Remark</th>
+                                <th>All information filled by me is correct and I will submit proof and other related document whenever is asked</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Upload Award Certificate/Proof</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in faa1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/4/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.get_session_display}}</td>
+                                <td>{{value.email.name}}</td>
+                                <td>{{value.email.emp_id}}</td>
+                                <td>{{value.email.get_designation_display}}</td>
+                                <td>{{value.email.get_department_display}}</td>
+                                <td>{{value.noaa}}</td>
+                                <td>{{value.get_category_display}}</td>
+                                <td>{{value.paf}}</td>
+                                <td>{{value.ao}}</td>
+                                <td>{{value.prize}}</td>
+                                <td>{{value.ad}}</td>
+                                <td>{{value.remark}}</td>
+                                <td>I AGREE</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "5" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Faculty Name" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of Award/Achievement" data-sub-head-entry = "{{value.noaa}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_6">
+                    <table class = "table table-hover mt-3" id="form_table_sgc">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Name of Candidate (PI/Co PI) </th>
+                                <th>Employee ID</th>
+                                <th>Department</th>
+                                <th>Category</th>
+                                <th>Name of the Funding Agency(MSME/DST/CSIR/SERB /Industry etc.) </th>
+                                <th>Duration of Project (in Years)</th>
+                                <th>Amount in Rs.</th>
+                                <th>Session in which grant/research project/consultancy received </th>
+                                <th>Status</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Upload Proof</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in sgc1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/5/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.email.name}}</td>
+                                <td>{{value.email.emp_id}}</td>
+                                <td>{{value.email.get_department_display}}</td>
+                                <td>{{value.get_category_display}}</td>
+                                <td>{{value.nofa}}</td>
+                                <td>{{value.dop}}</td>
+                                <td>{{value.amount}}</td>
+                                <td>{{value.get_session_display}}</td>
+                                <td>{{value.get_status_display}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "6" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Candidate (PI/Co PI)" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the Funding Agency" data-sub-head-entry = "{{value.nofa}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_7_1">
+                    <table class = "table table-hover mt-3" id="form_table_rpj">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Employee ID</th>
+                                <th>Name of the author(s)</th>
+                                <th>Department</th>
+                                <th>Title of Paper</th>
+                                <th>Name of Journal</th>
+                                <th>Name of the Publisher</th>
+                                <th>Volume, Issue</th>
+                                <th>Page No.</th>
+                                <th>Published Date</th>
+                                <th>Session</th>
+                                <th>ISSN number : Print</th>
+                                <th>ISSN number : Online</th>
+                                <th>Level (National/ International)</th>
+                                <th>DOI(Digital Object Identifier)</th>
+                                <th>Link to website of the Journal</th>
+                                <th>Link to article/paper/abstract of the article (Direct link to the webpage where the abstract of paper is displayed)</th>
+                                <th>Link to the recognition in SCOPUS enlistment of the Journal</th>
+                                <th>Affiliating Institute at the time of publication</th>
+                                <th>Indexed by</th>
+                                <th>Quartile</th>
+                                <th>Is SKIT student associated?</th>
+                                <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name) </th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Uploaded Full Paper</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in rpj1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/6/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.email.emp_id}}</td>
+                                <td>{{value.noa}}</td>
+                                <td>{{value.email.get_department_display}}</td>
+                                <td>{{value.top}}</td>
+                                <td>{{value.noj}}</td>
+                                <td>{{value.nop}}</td>
+                                <td>{{value.vi}}</td>
+                                <td>{{value.pn}}</td>
+                                <td>{{value.pd}}</td>
+                                <td>{{value.get_session_display}}</td>
+                                <td>{{value.isnp}}</td>
+                                <td>{{value.isno}}</td>
+                                <td>{{value.get_level_display}}</td>
+                                <td>{{value.doi}}</td>
+                                <td>{{value.lwj}}</td>
+                                <td>{{value.lap}}</td>
+                                <td>{{value.lrsj}}</td>
+                                <td>{{value.aiop}}</td>
+                                <td>{{value.get_index_by_display}}</td>
+                                <td>{{value.get_quartile_display}}</td>
+                                <td>{{value.get_ssa_display}}</td>
+                                <td>{{value.details}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "7_1" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author(s)" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of Paper" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_7_2">
+                    <table class = "table table-hover mt-3" id="form_table_rpcp">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Department</th>
+                                <th>Employee ID</th>
+                                <th>Name of the author(s)</th>
+                                <th>Title of Conference</th>
+                                <th>Title of Paper</th>
+                                <th>Title of the proceedings of the conference</th>
+                                <th>Level (National/ International)</th>
+                                <th>ISBN/ISSN number of the proceeding</th>
+                                <th>Name of the Publisher</th>
+                                <th>Published Date</th>
+                                <th>Session</th>
+                                <th>DOI(Digital Object Identifier)</th>
+                                <th>Web Link</th>
+                                <th>Affiliating Institute at the time of publication</th>
+                                <th>Indexed by</th>
+                                <th>Is SKIT student associated?</th>
+                                <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Upload Full Paper</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in rpcp1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/7/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.email.get_department_display}}</td>
+                                <td>{{value.email.emp_id}}</td>
+                                <td>{{value.noa}}</td>
+                                <td>{{value.toc}}</td>
+                                <td>{{value.top}}</td>
+                                <td>{{value.topc}}</td>
+                                <td>{{value.get_level_display}}</td>
+                                <td>{{value.isnp}}</td>
+                                <td>{{value.nop}}</td>
+                                <td>{{value.pd}}</td>
+                                <td>{{value.get_session_display}}</td>
+                                <td>{{value.doi}}</td>
+                                <td>{{value.lwj}}</td>
+                                <td>{{value.aitp}}</td>
+                                <td>{{value.get_index_by_display}}</td>
+                                <td>{{value.get_ssa_display}}</td>
+                                <td>{{value.details}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "7_2" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author(s)" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of Conference" data-sub-head-entry = "{{value.toc}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_7_3">
+                    <table class = "table table-hover mt-3" id="form_table_rpb">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Department</th>
+                                <th>Employee ID</th>
+                                <th>Name of the author/editor</th>
+                                <th>Title of the book</th>
+                                <th>Title of the chapter Published</th>
+                                <th>Level (National/ International)</th>
+                                <th>ISBN</th>
+                                <th>Name of the Publisher</th>
+                                <th>Published Date</th>
+                                <th>Session</th>
+                                <th>DOI(Digital Object Identifier)</th>
+                                <th>Web Link</th>
+                                <th>Affiliating Institute at the time of publication</th>
+                                <th>Indexed by</th>
+                                <th>Is SKIT student associated?</th>
+                                <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Uploaded Proof (Book Chapter/Front Page/Document etc.)</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in rpb1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/8/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.email.get_department_display}}</td>
+                                <td>{{value.email.emp_id}}</td>
+                                <td>{{value.noa}}</td>
+                                <td>{{value.tob}}</td>
+                                <td>{{value.top}}</td>
+                                <td>{{value.get_level_display}}</td>
+                                <td>{{value.isbn}}</td>
+                                <td>{{value.nop}}</td>
+                                <td>{{value.pd}}</td>
+                                <td>{{value.get_session_display}}</td>
+                                <td>{{value.doi}}</td>
+                                <td>{{value.lwj}}</td>
+                                <td>{{value.aitp}}</td>
+                                <td>{{value.index_by}}</td>
+                                <td>{{value.get_ssa_display}}</td>
+                                <td>{{value.details}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "7_3" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of the author/editor" data-head-main-entry = "{{value.noa}}" data-sub-head = "Title of the book" data-sub-head-entry = "{{value.tob}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_7_4">
+                    <table class = "table table-hover mt-3" id="form_table_patent">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Session</th>
+                                <th>Department</th>
+                                <th>Employee ID</th>
+                                <th>Name of Faculty</th>
+                                <th>Status of Patent</th>
+                                <th>Application ID</th>
+                                <th>Granted ID</th>
+                                <th>Type of Patent</th>
+                                <th>Title of Patent</th>
+                                <th>Granted Country</th>
+                                <th>Patent Filed Date</th>
+                                <th>Publication Date</th>
+                                <th>Is SKIT student associated?</th>
+                                <th>If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)</th>
+                                <th>Link</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Upload Proof</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in patents1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/9/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.get_session_display}}</td>
+                                <td>{{value.email.get_department_display}}</td>
+                                <td>{{value.email.emp_id}}</td>
+                                <td>{{value.email.name}}</td>
+                                <td>{{value.get_sop_display}}</td>
+                                <td>{{value.ag}}</td>
+                                <td>{{value.gi}}</td>
+                                <td>{{value.get_pg_display}}</td>
+                                <td>{{value.top}}</td>
+                                <td>{{value.gc}}</td>
+                                <td>{{value.pfd}}</td>
+                                <td>{{value.pd}}</td>
+                                <td>{{value.get_ssa_display}}</td>
+                                <td>{{value.details}}</td>
+                                <td>{{value.link}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "7_4" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Patent" data-sub-head-entry = "{{value.top}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_8">
+                    <table class = "table table-hover mt-3" id="form_table_mp">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Session</th>
+                                <th>Faculty Name</th>
+                                <th>Employee ID</th>
+                                <th>Department</th>
+                                <th>Name of the student Guided</th>
+                                <th>Program of Student</th>
+                                <th>Enrollment Number of Student</th>
+                                <th>University Roll Number of Student</th>
+                                <th>Enrollment Year of Student</th>
+                                <th>Title of the Dissertation</th>
+                                <th>Supervisor / Co-supervisor</th>
+                                <th>Date of Viva-Voce</th>
+                                <th>Name of external examiner</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in mp1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/10/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.session}}</td>
+                                <td>{{value.email.name}}</td>
+                                <td>{{value.email.emp_id}}</td>
+                                <td>{{value.email.get_department_display}}</td>
+                                <td>{{value.nos}}</td>
+                                <td>{{value.get_category_display}}</td>
+                                <td>{{value.ens}}</td>
+                                <td>{{value.urns}}</td>
+                                <td>{{value.get_eys_display}}</td>
+                                <td>{{value.tod}}</td>
+                                <td>{{value.get_visor_display}}</td>
+                                <td>{{value.dov}}</td>
+                                <td>{{value.noe}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "8" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Faculty Name" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Name of the student Guided" data-sub-head-entry = "{{value.nos}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content tab-hidden table-responsive pt-2 " id="fn_9">
+                    <table class = "table table-hover mt-3" id="form_table_rp">
+                        <thead class = "table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Edit</th>
+                                {% endif %}
+                                <th>Email address</th>
+                                <th>Session</th>
+                                <th>Name of Faculty Member</th>
+                                <th>Employee ID</th>
+                                <th>Department</th>
+                                <th>Resource Person in</th>
+                                <th>Title of Event/ Exam Name</th>
+                                <th>Subject Area/Subject Name/Lab Name/Session Name</th>
+                                <th>Resource Person Type</th>
+                                <th>Duration of event (in days)</th>
+                                <th>From Date</th>
+                                <th>To Date</th>
+                                <th>Venue</th>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <th>Proof(Certificate/Mail)</th>
+                                <th>Delete</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for value in rp1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "forms_listing/progressdetails/11/{{value.pk}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
+                                {% endif %}
+                                <td>{{value.email.email}}</td>
+                                <td>{{value.get_session_display}}</td>
+                                <td>{{value.email.name}}</td>
+                                <td>{{value.email.emp_id}}</td>
+                                <td>{{value.email.get_department_display}}</td>
+                                <td>{{value.get_category_display}}</td>
+                                <td>{{value.toe}}</td>
+                                <td>{{value.sa}}</td>
+                                <td>{{value.get_rpt_display}}</td>
+                                <td>{{value.doe}}</td>
+                                <td>{{value.begi_date}}</td>
+                                <td>{{value.end_date}}</td>
+                                <td>{{value.venue}}</td>
+                                {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.proof_file}}" target = "_blank" class = "text-info">Click Here</a></td>
+                                <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "9" data-pk = "{{value.pk}}" data-emp-id = "{{value.email.emp_id}}" data-head-main = "Name of Faculty Member" data-head-main-entry = "{{value.email.name}}" data-sub-head = "Title of Event/ Exam Name" data-sub-head-entry = "{{value.toe}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class = "mt-3" id = "filter">
+                    <h5 style = "color: gray; text-align: center;">Select the filter:</h5>
+                    <div class = "d-flex justify-content-center" id = "checkBoxGroup"></div>
+                </div>
+                <div class="d-flex justify-content-center mx-3">
+                    <div class="dropdown">
+                        <button class="btn btn-success dropdown-toggle" id="download-button" data-bs-toggle="dropdown" disabled>Download Filtered Data</button>
+                        <ul class="dropdown-menu">
+                            <!-- href = "/download?file_type=fdc_dir_data&{% for form_no in f_no %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}" -->
+                            <li id="excel"><a class="dropdown-item" id="excel-download" href = "/download?file_type=fdc_dir_data_excel_filtered">Excel</a></li>
+                            <li id="csv-download"><a class="dropdown-item" href="/download?file_type=fdc_dir_data_csv_filtered">CSV</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dropdown ms-3">
+                        <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Download MasterSheet</button>
+                        <ul class="dropdown-menu">
+                            <!-- href = "/download?file_type=fdc_dir_data&{% for form_no in f_no %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}" -->
+                            <li id="excel-full"><a class="dropdown-item" id="excel-download-full" href = "/download?file_type=fdc_dir_data_excel_full&{% for form_no in f_no %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}">Excel</a></li>
+                            <li id="csv-download-full"><a class="dropdown-item" href="/download?file_type=fdc_dir_data_csv_full">CSV</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="vr mx-3" style="width: 1px;"></div>
+            <div class="col-md-4 d-flex align-items-center justify-content-center" style="flex-direction: column;">
+                <div class="chart-container">
+                    <canvas id="pieChart" width="400" height="450"></canvas>
+                </div>
+                <div class="total_count mt-2">
+                    <h5 id="total_count"></h5>
+                </div>
             </div>
         </div>
     </div>
@@ -911,7 +935,7 @@
 
                     <!-- Modal Header -->
                     <div class="modal-header bg-danger">
-                        <h4 class="modal-title text-white">Delete User Permanently</h4>
+                        <h4 class="modal-title text-white">Delete Entry Permanently</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
@@ -925,7 +949,7 @@
 
                   <!-- Modal footer -->
                     <div class="modal-footer">
-                        <form action="/deleteformdata/report" method="POST">
+                        <form id="deleteForm" method="POST">
                             {% csrf_token %}
                             <div class="dflex justify-content-end">
                                 <input type = "hidden" id="pk" name = "pk" value = "">
@@ -939,7 +963,20 @@
             </div>
         </div>
         <!-- Delete Model Ends -->
-
+{{ f_no|json_script:"data-form-no" }}
+{{ f_1_1|json_script:"data-form-1_1" }}
+{{ f_1_2|json_script:"data-form-1_2" }}
+{{ f_2|json_script:"data-form-2" }}
+{{ f_3|json_script:"data-form-3" }}
+{{ f_4|json_script:"data-form-4" }}
+{{ f_5|json_script:"data-form-5" }}
+{{ f_6|json_script:"data-form-6" }}
+{{ f_7_1|json_script:"data-form-7_1" }}
+{{ f_7_2|json_script:"data-form-7_2" }}
+{{ f_7_3|json_script:"data-form-7_3" }}
+{{ f_7_4|json_script:"data-form-7_4" }}
+{{ f_8|json_script:"data-form-8" }}
+{{ f_9|json_script:"data-form-9" }}
 <script>
     const table = new DataTable('#form_table_faculty_details', {
         paging: false,
@@ -1018,7 +1055,20 @@
         paging: false,
         scrollY: '260px',
         scrollX: true
-    });
+    }); 
+    const form_number = JSON.parse(document.getElementById('data-form-no').textContent);
+    if (form_number.length > 0) {
+        const f_value = form_number[0];
+        document.getElementById('fn_'+f_value).classList.remove("tab-hidden");
+        document.getElementById('fn_'+f_value).classList.add("active");
+        const downloadButton = document.querySelector('[id^="download-button"]');
+        downloadButton.disabled = true;
+        downloadButton.id = 'download-button-'+f_value;
+    }
+
+    const firstContainer = document.getElementById(`fn_${form_number[0]}`);
+    firstContainer.classList.remove("tab-hidden");
+    firstContainer.classList.add("active");
 
     function openTab(evt, containerId) {
         document.querySelectorAll(".tab-content").forEach(tab => {
@@ -1031,11 +1081,14 @@
             btn.classList.remove("active");
         });
 
-        const activeContainer = document.getElementById(containerId);
+        const activeContainer = document.getElementById(`fn_${containerId}`);
         activeContainer.classList.remove("tab-hidden");
         activeContainer.classList.add("active");
         evt.currentTarget.classList.add("active");
 
+        const downloadButton = document.querySelector('[id^="download-button"]');
+        downloadButton.disabled = true;
+        downloadButton.id = 'download-button-'+containerId;
     }
 
     $(document).ready(function() {
@@ -1056,9 +1109,27 @@
             modal.find('#modal-sub-entry').text(heading_sub_head_entry);
             modal.find('#pk').val(pk);
             modal.find('#form_no').val(form_no);
+            modal.find('#deleteForm').attr('action', '/deleteformdata/' + form_no);
         });
     });
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Get the ID from the URL
+        const params = new URLSearchParams(window.location.search);
+        const button_form_no = params.get('tab');
 
+        if (button_form_no) {
+            // 2. Find the button that matches this ID
+            const targetButton = document.getElementById(button_form_no);
+
+            // 3. If the button exists on the page, natively click it
+            if (targetButton) {
+                targetButton.click(); // This automatically sends the 'event' to openTab!
+            } else {
+                console.warn("Tab with ID " + button_form_no + " not found.");
+            }
+        }
+    });
 </script>
+<script src="../static/reportChart.js"></script>
 
 {% endblock %}

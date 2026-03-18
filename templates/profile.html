@@ -32,13 +32,19 @@
             <div class="card-body">
                 <h5 class = "small-font mt-3"><i data-lucide="mail" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{data.email}}</h5>
                 <h5 class = "small-font mt-3"><i data-lucide="phone" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{data.contact_number}}</h5>
-                <h5 class = "small-font mt-3"><i data-lucide="map-pin" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>Address</h5>
+                <h5 class = "small-font mt-3"><i data-lucide="map-pin" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{data.address}}</h5>
                 <p class = "small font mt-3" style="margin-bottom: 0px;">Specilization</p>
                 <h5 style="font-size: 15px;"><strong>{{data.get_aos_display}}</strong></h5>
                 <p class = "small font mt-3" style="margin-bottom: 0px;">Highest Qualification</p>
                 <h5 style="font-size: 15px;"><strong>{{data.get_hq_display}}</strong></h5>
                 <p class = "small font mt-3" style="margin-bottom: 0px;">Publications</p>
                 <h5 style="font-size: 15px;"><strong>{{data.norp}}</strong></h5>
+                <p class = "small font mt-3" style="margin-bottom: 0px;">Goggle Scholar Link</p>
+                <h5 style = "font-size: 15px;"><strong>{% if data.google_scholar != "NULL" %}<a href="{{data.google_scholar}}" target="_blank">Click Here</a>{% else %}Not Uploaded Yet{% endif %}</strong></h5>
+                <p class = "small font mt-3" style="margin-bottom: 0px;">Vidwan Profile Link</p>
+                <h5 style = "font-size: 15px;"><strong>{% if data.vidwan_profile != "NULL" %}<a href="{{data.vidwan_profile}}" target="_blank">Click Here</a>{% else %}Not Uploaded Yet{% endif %}</strong></h5>
+                <p class = "small font mt-3" style="margin-bottom: 0px;">Website Link</p>
+                <h5 style = "font-size: 15px;"><strong>{% if data.personal_website_link is not None %}<a href="{{data.personal_website_link}}" target="_blank">Click Here</a>{% else %}Not Uploaded Yet{% endif %}</strong></h5>
             </div>
         </div>
     </div>

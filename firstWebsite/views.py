@@ -53,6 +53,7 @@ def gsi_verify_login(request):
                     # If login is successful:
                     request.session['user_id'] = user.pk
                     request.session['topLeftBar'] = users_post
+                    request.session['session_version'] = str(user.session_version)
                     messages.success(request,"Logged in successfully!")
                     return JsonResponse({
                         'success': True,
@@ -140,15 +141,8 @@ def deleteuser(request):
 def all_forms(request,pk):
     if pk:
         if 12 > pk > 0 or pk == 16:
-            value = request.session.get('topLeftBar')
-            if value == 'ad' or value == 'spa' or value == 'fa':
-                data = Faculty.objects.get(pk=request.session.get('user_id'))
-            elif value == 'student':
-                data = Student_Directory.objects.get(pk=request.session.get('user_id'))
-            else:
-                data = None
             form_number = pk
-            secret_key = data
+            secret_key = Faculty.objects.get(pk=request.session.get('user_id'))
             return render(request,'forms.html',{'form_number': form_number, 'value': secret_key})
         else:
             return render(request, '404.html')
@@ -199,13 +193,7 @@ def student(request):
 
 @session_login_required
 def profile(request):
-    if 'user_id' in request.session and 'topLeftBar' in request.session:
-        modal = request.session.get('topLeftBar')
-        if modal == 'ad' or modal == 'spa' or modal == 'fa':
-            user = Faculty
-        else:
-            user = Student_Directory
-    value = user.objects.get(pk=request.session.get('user_id'))
+    value = Faculty.objects.get(pk=request.session.get('user_id'))
     if value.status == "NR":
         messages.info(request,"Welcome Abroad! Please complete your profile to explore more.")
     context = {'data': value}
@@ -238,7 +226,11 @@ def fac_card_details(request,pk):
     if pk:
         department = Faculty.objects.filter(department = pk)
         if department:
-            context = {'fac_data': department }
+            if 'topLeftBar' in request.session:
+                user = request.session.get('topLeftBar')
+            else:
+                user = None
+            context = {'fac_data': department,'user': user }
             return render(request,'faculty_details.html',context=context)
         else:
             return render(request,'index.html')
@@ -249,16 +241,15 @@ def login_page(request):
 
 
 @session_login_required
-def directory(request):
+def manage_access(request):
     if 'user_id' in request.session and 'topLeftBar' in request.session:
         modal = request.session.get('topLeftBar')
-        if modal == 'ad' or modal == 'spa' or modal == 'fa':
+        if modal == 'spa':
             value = Faculty.objects.all()
-            context = { 'data': value, 'user': modal }
-            return render(request,'directory.html',context=context)
+            context = { 'data': value }
+            return render(request,'manage_access.html',context=context)
         else:
-            messages.info(request,'Students are not allowed to access this tab')
-            return render(request,'index.html')
+            return render(request,'404.html')
     messages.info(request,"User does not exist!")
     return render(request,'index.html')
 
@@ -279,45 +270,49 @@ def page_under_construction(request):
 def cookie_not_found(request):
     return render(request,'403.html')
 
+@session_login_required
 def progressdetails(request,pk,key_id):
-    if pk == "0":
-        non_teaching = non_teaching_staff.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk, 'data': non_teaching,'key_id':int(key_id), 'category' : category})
-    elif pk == "1":
-        faculty_participation_instance = Faculty_participation_data.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': faculty_participation_instance,'key_id':int(key_id), 'category' : category})
-    elif pk == "2":
-        mooc_instance = mooc_course.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': mooc_instance,'key_id':int(key_id), 'category' : category})
-    elif pk == "3":
-        events_instance = events.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': events_instance,'key_id':int(key_id), 'category' : category})
-    elif pk == "4":
-        awards = awards_and_achievments.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': awards,'key_id':int(key_id), 'category' : category})
-    elif pk == "5":
-        sponsor = sponsored_research.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': sponsor,'key_id':int(key_id), 'category' : category})
-    elif pk == "6":
-        research_journal_instance = research_journal.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_journal_instance,'key_id':int(key_id), 'category' : category})
-    elif pk == "7":
-        research_confernce_instance = research_conference.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_confernce_instance,'key_id':int(key_id), 'category' : category})
-    elif pk == "8":
-        research_book_instance = research_book.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_book_instance,'key_id':int(key_id), 'category' : category})
-    elif pk == "9":
-        patents1 = patents.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': patents1,'key_id':int(key_id), 'category' : category})
-    elif pk == "10":
-        guided1 = guided.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': guided1,'key_id':int(key_id), 'category' : category})
-    elif pk == "11":
-        resouce_person = resource.objects.get(pk=key_id)
-        return render(request, 'progressDetails.html', context={'form_number': pk,'data': resouce_person,'key_id':int(key_id), 'category' : category})
+    if request.session.get('topLeftBar') == 'spa' or request.session.get('topLeftBar') == 'ad':
+        if pk == "0":
+            non_teaching = non_teaching_staff.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk, 'data': non_teaching,'key_id':int(key_id), 'category' : category})
+        elif pk == "1":
+            faculty_participation_instance = Faculty_participation_data.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': faculty_participation_instance,'key_id':int(key_id), 'category' : category})
+        elif pk == "2":
+            mooc_instance = mooc_course.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': mooc_instance,'key_id':int(key_id), 'category' : category})
+        elif pk == "3":
+            events_instance = events.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': events_instance,'key_id':int(key_id), 'category' : category})
+        elif pk == "4":
+            awards = awards_and_achievments.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': awards,'key_id':int(key_id), 'category' : category})
+        elif pk == "5":
+            sponsor = sponsored_research.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': sponsor,'key_id':int(key_id), 'category' : category})
+        elif pk == "6":
+            research_journal_instance = research_journal.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_journal_instance,'key_id':int(key_id), 'category' : category})
+        elif pk == "7":
+            research_confernce_instance = research_conference.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_confernce_instance,'key_id':int(key_id), 'category' : category})
+        elif pk == "8":
+            research_book_instance = research_book.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_book_instance,'key_id':int(key_id), 'category' : category})
+        elif pk == "9":
+            patents1 = patents.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': patents1,'key_id':int(key_id), 'category' : category})
+        elif pk == "10":
+            guided1 = guided.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': guided1,'key_id':int(key_id), 'category' : category})
+        elif pk == "11":
+            resouce_person = resource.objects.get(pk=key_id)
+            return render(request, 'progressDetails.html', context={'form_number': pk,'data': resouce_person,'key_id':int(key_id), 'category' : category})
+        else:
+            return render(request,'404.html')
     else:
-        return render(request,'404.html')
+        return render(request, '404.html')
 
 def detailed_info_profile(request, faculty_id):
     faculty = get_object_or_404(Faculty, pk=faculty_id)
@@ -333,3 +328,10 @@ def add_student(request):
         return render(request, 'page_under_construction.html')
     else:
         return render(request,'404.html')
+
+def detailed_info_profile(request, faculty_id):
+    if 'user_id' in request.session and 'topLeftBar' in request.session:
+        faculty = get_object_or_404(Faculty, pk=faculty_id)
+        return render(request, 'detailed-info-profile.html', {'faculty': faculty})
+    else:
+        return render(request, '404.html')

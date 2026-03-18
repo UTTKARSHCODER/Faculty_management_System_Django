@@ -2,13 +2,14 @@ from django.urls import path
 from firstWebsite import views, saveforms, uploadExcel, progress_track, download, deleteFormData
 
 urlpatterns = [
-    path('', views.index, name = "home"),
-    path('student', views.student, name = "student"),
+    path('',views.index,name = "home"),
+    path('dashboard', progress_track.progress_bar, name="progress"),
+    # path('student', views.student, name = "student"),
     # path('faculty', views.faculty, name = "faculty"),
     path('profile', views.profile, name = "profile"),
-    path('student_directory', views.student_directory, name = "student-directory"),
+    # path('student_directory', views.student_directory, name = "student-directory"),
     path('about', views.about, name = "about"),
-    path('student/<str:pk>', views.stu_card_details, name = "batch"),
+    # path('student/<str:pk>', views.stu_card_details, name = "batch"),
     path('faculty/<str:pk>', views.fac_card_details, name = "fac"),
     path('login', views.login_page, name = "login"),
     path('auth/google/gsi-verify/', views.gsi_verify_login, name='gsi_verify_login'),
@@ -18,11 +19,10 @@ urlpatterns = [
     path('all_forms/<int:pk>', views.all_forms, name='all_forms'),
     path('save_all_forms/<int:pk>',saveforms.save_all_forms, name="save_all_forms"),
     path('success',views.successfulsubmission, name="success"),
-    path('progress',progress_track.progress_bar,name="progress"),
+    # path('progress',,name="progress"),
     path('edit_profile',views.edit_profile,name="editProfile"),
-    path('directory',views.directory,name="directory"),
+    path('manage_access',views.manage_access,name="manage_access"),
     path('deleteUser',views.deleteuser,name="deleteUser"),
-    path('faculty_report',views.faculty_report,name="faculty_report"),
     path('download',download.download_files,name="download"),
     path('puc',views.page_under_construction,name="page_under_construction"),
     path('faq',views.faq,name="FaQ"),
@@ -33,5 +33,5 @@ urlpatterns = [
     path('forms_listing/progressdetails/<str:pk>/<str:key_id>',views.progressdetails,name="progressDetails"),
     path('add_student',views.add_student,name="addStudent"),
     path('edit_form/<int:pk>/<int:key_id>',saveforms.editforms,name="editForms"),
-    path('faculty/<int:faculty_id>/detailed-info-profile/', views.detailed_info_profile, name='detailed-info-profile'),
+    path('faculty/<int:faculty_id>/detailed-info-profile/',views.detailed_info_profile,name="detailed-info-profile")
 ]

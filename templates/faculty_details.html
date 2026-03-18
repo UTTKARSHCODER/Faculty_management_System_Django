@@ -12,7 +12,8 @@
         background: white;
         height: 100%;
         border: none;
-        cursor: pointer;
+        {% if user is not None %}cursor: pointer;{% endif %}
+
     }
 
     .faculty-card:hover {
@@ -82,7 +83,7 @@
         <div class="row g-4">
             {% for detail in fac_data %}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 faculty-col">
-                <div class="card faculty-card" data-faculty-id="{{detail.id}}">
+                <a class="card faculty-card" {% if user is not None %}href="/faculty/{{detail.id}}/detailed-info-profile/"{% endif %} style="text-decoration: none;">
                     <div class="d-flex justify-content-center">
                         <img class="card-img-top"
                              src="/media/{{detail.profile_picture}}"
@@ -93,9 +94,12 @@
                         <p class="designation">{{detail.get_designation_display}}</p>
                         <div class="contact-info">
                             <p><strong>Email:</strong><br>{{detail.email}}</p>
+                            {% if user %}
+                            <p><strong>Contact:</strong><br>{{detail.contact_number}}</p>
+                            {% endif %}
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             {% endfor %}
         </div>

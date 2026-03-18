@@ -1,8 +1,9 @@
 import datetime
+import uuid
 
 from django.db import models
 from django.db.models import CASCADE
-from django.utils import timezone
+from multiselectfield import MultiSelectField
 
 class batch(models.TextChoices):
     CS_A = "3CS-A",
@@ -89,12 +90,42 @@ class gender(models.TextChoices):
     FEMALE = 'F', "Female",
     OTHER  = 'O', "Other"
 
+class forms(models.TextChoices):
+    FORM_1_1 = "1_1", "Faculty Profile Details",
+    FORM_1_2 = "1_2", "Non-teaching Staff Profile Details",
+    FORM_2 = "2", "Faculty Participation",
+    FORM_3 = "3", "MOOC's/Short Term Course/Course Completion",
+    FORM_4 = "4", "Events Organized by Department",
+    FORM_5 = "5", "Faculty Awards and Achievements",
+    FORM_6 = "6", "Sponsored Research/Grant Received/Consultancy",
+    FORM_7_1 = "7_1", "Research Publication - Journals",
+    FORM_7_2 = "7_2", "Research Publication - Conference Publication",
+    FORM_7_3 = "7_3", "Research Publication - Book and Book Chapters",
+    FORM_7_4 = "7_4", "Patents",
+    FORM_8 = "8", "M.Tech/Ph.D Guided",
+    FORM_9 = "9", "Resource Person",
+    NO_FORM = "0", "No Form"
+
 class Faculty(models.Model):
+    session_version = models.UUIDField(default=uuid.uuid4, editable=False)
     session=models.CharField(
         max_length=7,
         choices=session.choices,
         default=session.Y2025_26
     )
+    form_alloted = MultiSelectField(
+        max_length=40,
+        choices=forms.choices,
+        default=forms.NO_FORM
+    )
+
+    @property
+    def form_alloted_display_list(self):
+        # Grabs the choices dictionary from the field
+        choices_dict = dict(forms.choices)
+
+        # Returns a clean Python list of the human-readable names
+        return [str(choices_dict.get(choice, choice)) for choice in self.form_alloted]
     name = models.CharField(max_length=100)
     contact_number = models.CharField(max_length=10)
     email = models.EmailField(max_length=254,unique=True)
@@ -114,6 +145,19 @@ class Faculty(models.Model):
         choices=Role.choices,
         default=Role.FACULTY
     )
+
+    def save(self, *args, **kwargs):
+        if self.role == "SPA":
+            # Get all keys from MY_CHOICES except the restricted one
+            all_except_one = [val for val in forms.values if val != forms.NO_FORM]
+
+            # Force the field to contain these values
+            self.form_alloted = all_except_one
+        elif self.role == "FA":
+            only_one = [forms.NO_FORM]
+            self.form_alloted = only_one
+
+        super().save(*args, **kwargs)
     status = models.CharField(
         max_length=2,
         choices=Status.choices,
@@ -137,6 +181,9 @@ class Faculty(models.Model):
     univ_name = models.CharField(max_length=100,default='Unknown')
     pshd = models.IntegerField(default=0)
     pan_no = models.CharField(max_length=10,default='AAAEE875AE')
+    google_scholar = models.CharField(max_length=255,default="NULL")
+    vidwan_profile = models.CharField(max_length=255,default="NULL")
+    personal_website_link = models.CharField(max_length=255,null=True)
     dob = models.DateField(default=datetime.date(1970, 1, 1))
     jd = models.DateField(default=datetime.date(1970, 1, 1))
     pd = models.DateField(null=True,blank=True)
@@ -151,7 +198,6 @@ class Faculty(models.Model):
     norp = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
 
     def __str__(self):
         return self.email
@@ -241,7 +287,7 @@ class Faculty_participation_data(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.get_category_display() + ": " + self.top
+        return f"{self.get_category_display()} + {self.top} + {self.pk}"
 
 class doc(models.TextChoices):
     WEEK_4 = "4", "4 Weeks",
