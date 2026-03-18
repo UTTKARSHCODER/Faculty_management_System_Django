@@ -71,7 +71,7 @@ Chart.register(ChartDataLabels);
 let barChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ["Faculty Profile Details", "Non-teaching Staff", "Faculty Participation", "MOOC/Short-term Course", "Events", "Faculty Awards", "Sponsored Research", "Research Publication - Journal", "Research Publication - Confernece", "Research Publication - Books", "Patents", "M.Tech/Ph.D Guided", "Resource Person"],
+      labels: ["Faculty Participation", "MOOC/Short-term Course", "Events", "Faculty Awards", "Sponsored Research", "Research Publication - Journal", "Research Publication - Confernece", "Research Publication - Books", "Patents", "M.Tech/Ph.D Guided", "Resource Person"],
       datasets: [{
         data: dataMap.cum,
         borderColor: color.cum,
@@ -133,12 +133,6 @@ document.getElementById('activityDropdown').addEventListener('change', function 
       } else if(selected === '7_4') {
         dy_list_label.push('Patents');
         dy_list_short_label.push('PATENTS');
-      } else if(selected === '1_2') {
-        dy_list_label.push('Non-Teaching Staff');
-        dy_list_short_label.push('NTS');
-      } else if(selected === '1_1') {
-        dy_list_label.push('Faculty Profile Details');
-        dy_list_short_label.push(selected);
       }
   }
   const target = "Other";

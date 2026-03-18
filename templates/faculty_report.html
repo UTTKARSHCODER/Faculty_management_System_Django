@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <link rel="stylesheet" href="/static/dataTable.css">
 <style>
@@ -9,8 +9,8 @@
 </style>
 <div class="col-10">
     <div class="container ms-5 mt-4 mb-3">
-        <script src="/static/dataTables.js"></script>
-        <script src="/static/dataTables.bootstrap5.js"></script>
+        <script src="{% static 'dataTables.js' %}"></script>
+        <script src="{% static 'dataTables.bootstrap5.js' %}"></script>
         <div class = "table-responsive">
             <table class="table table-striped mt-3" id = "faculty_report1">
                 <thead class="table-dark">

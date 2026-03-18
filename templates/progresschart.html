@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 
 <div class="col-10">
@@ -44,8 +44,6 @@
 
                             <select id="activityDropdown" class="form-select w-100 ms-1">
                                 <option value="" selected>Cumulative Data</option>
-                                <option value="1_1">Faculty Profile Details</option>
-                                <option value="1_2">Non-teaching Staff Profile Details</option>
                                 <option value="2">Faculty Participation</option>
                                 <option value="3">MOOC's/Short Term Course/Course Completion</option>
                                 <option value="4">Events Organized by Department</option>
@@ -93,8 +91,6 @@
     </div>
 
 {{ form_wise_count|json_script:"my-data-form_wise_count" }}
-{{ fpd1|json_script:"my-data-1_1" }}
-{{ ntspd1|json_script:"my-data-1_2" }}
 {{ fdp1|json_script:"my-data-2" }}
 {{ msc1|json_script:"my-data-3" }}
 {{ eod1|json_script:"my-data-4" }}
@@ -107,6 +103,6 @@
 {{ mp1|json_script:"my-data-8" }}
 {{ rp1|json_script:"my-data-9" }}
 
-<script src="../static/progresschart.js"></script>
+<script src="{% static 'progresschart.js' %}"></script>
 </div>
 {% endblock %}

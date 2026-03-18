@@ -66,33 +66,12 @@ const categoryColors = {
     'DEFAULT': 'rgba(210, 210, 210, 0.7)'
 };
 
-const ctx = document.getElementById('pieChart').getContext('2d');
-
-//let pieChart = new Chart(ctx, {
-//  type: 'pie',
-//  data: {
-//    labels: ['Done', 'Due', 'Partial', 'Incomplete'],
-//    datasets: [{
-//      data: dataMap.forms,
-//      backgroundColor: ['#4CAF50', '#FFC107', '#DC143C', '#FF7F50'],
-//      borderWidth: 1,
-//      borderColor: '#fff'
-//    }]
-//  },
-//  options: {
-//    responsive: true,
-//    maintainAspectRatio: false,
-//    plugins: {
-//      legend: { position: 'top' },
-//      title: { display: true, text: 'Activity Progress' }
-//    }
-//  }
-//});
+const ctx = document.getElementById('barChart').getContext('2d');
 Chart.register(ChartDataLabels);
 let barChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ["Faculty Profile Details", "Non-teaching Staff", "Faculty Participation", "MOOC/Short-term Course", "Events", "Faculty Awards", "Sponsored Research", "Research Publication - Journal", "Research Publication - Confernece", "Research Publication - Books", "Patents", "M.Tech/Ph.D Guided", "Resource Person"],
+      labels: ["Faculty Participation", "MOOC/Short-term Course", "Events", "Faculty Awards", "Sponsored Research", "Research Publication - Journal", "Research Publication - Confernece", "Research Publication - Books", "Patents", "M.Tech/Ph.D Guided", "Resource Person"],
       datasets: [{
         data: dataMap.cum,
         borderColor: color.cum,
@@ -130,7 +109,7 @@ document.getElementById('activityDropdown').addEventListener('change', function 
     window.location.reload();
   }
   console.log(selected);
-  const data = JSON.parse(document.getElementById(`my-data-${selected}1`).textContent);
+  const data = JSON.parse(document.getElementById(`my-data-${selected}`).textContent);
   let dy_list_count = [];
   let dy_list_label = [];
   let dy_list_short_label = [];
@@ -142,27 +121,18 @@ document.getElementById('activityDropdown').addEventListener('change', function 
       });
   } else {
       dy_list_count.push(data);
-      if (selected === 'rpj') {
+      if (selected === '7_1') {
         dy_list_label.push('Research Publication - Journals');
         dy_list_short_label.push('RPJ');
-      } else if(selected === 'rpcp') {
+      } else if(selected === '7_2') {
         dy_list_label.push('Research Publication - Conference Publication');
         dy_list_short_label.push('RPCP');
-      } else if(selected === 'rpb') {
+      } else if(selected === '7_3') {
         dy_list_label.push('Research Publication - Book and Book Chapters');
         dy_list_short_label.push('RPB');
-      } else if(selected === 'patents') {
+      } else if(selected === '7_4') {
         dy_list_label.push('Patents');
         dy_list_short_label.push('PATENTS');
-      } else if(selected === 'mp') {
-        dy_list_label.push('M.Tech/Ph.D Guided');
-        dy_list_short_label.push(selected);
-      } else if(selected === 'ntspd') {
-        dy_list_label.push('Non-Teaching Staff');
-        dy_list_short_label.push('NTS');
-      } else if(selected === 'fpd') {
-        dy_list_label.push('Faculty Profile Details');
-        dy_list_short_label.push(selected);
       }
   }
   const target = "Other";

@@ -193,22 +193,27 @@ finalArray11.forEach(cat => {
 })
 
 const forms = [
-    { form_number: "0", title: "Non-teaching Staff Profile Details", color: "#64748b", count: totalSum, innerCategory : finalArray, completeData: data },
-    { form_number: "1", title: "Faculty Participation", color: "#22c55e", count: totalSum1, innerCategory : finalArray1, completeData: data1 },
-    { form_number: "2", title: "MOOC's/Short Term Course/Course Completion", color: "#eab308" , count: totalSum2, innerCategory : finalArray2, completeData: data2 },
-    { form_number: "3", title: "Events Organized by Department", color: "#ef4444" , count: totalSum3, innerCategory : finalArray3, completeData: data3 },
-    { form_number: "4", title: "Faculty Awards and Achievements", color: "#06b6d4", count: totalSum4, innerCategory : finalArray4, completeData: data4 },
-    { form_number: "5", title: "Sponsored Research/Grant Received/Consultancy", color: "#8b5cf6", count: totalSum5, innerCategory : finalArray5, completeData: data5 },
-    { form_number: "6", title: "Research Publication - Journals", color: "#0ea5e9", count: totalSum6, innerCategory : finalArray6, completeData: data6 },
-    { form_number: "7", title: "Research Publication - Conference Publication", color: "#3b82f6", count: totalSum7, innerCategory : finalArray7, completeData: data7 },
-    { form_number: "8", title: "Research Publication - Book and Book Chapters", color: "#f59e0b", count: totalSum8, innerCategory : finalArray8, completeData: data8 },
-    { form_number: "9", title: "Patents", color: "#14b8a6",count: totalSum9, innerCategory : finalArray9, completeData: data9 },
-    { form_number: "10", title: "M.Tech/Ph.D Guided", color: "#06b6d4", count: totalSum10, innerCategory : finalArray10, completeData: data10 },
-    { form_number: "11", title: "Resource Person", color: "#ec4899", count: totalSum11, innerCategory : finalArray11, completeData: data11 }
+    { form_number: "0", title: "Non-teaching Staff Profile Details", color: "#64748b", count: totalSum, innerCategory : finalArray, completeData: data,date: 'Date of Birth' },
+    { form_number: "1", title: "Faculty Participation", color: "#22c55e", count: totalSum1, innerCategory : finalArray1, completeData: data1,date: 'Starting Date' },
+    { form_number: "2", title: "MOOC's/Short Term Course/Course Completion", color: "#eab308" , count: totalSum2, innerCategory : finalArray2, completeData: data2,date: 'Starting Date' },
+    { form_number: "3", title: "Events Organized by Department", color: "#ef4444" , count: totalSum3, innerCategory : finalArray3, completeData: data3,date: 'Starting Date' },
+    { form_number: "4", title: "Faculty Awards and Achievements", color: "#06b6d4", count: totalSum4, innerCategory : finalArray4, completeData: data4,date: 'Award Date' },
+    { form_number: "5", title: "Sponsored Research/Grant Received/Consultancy", color: "#8b5cf6", count: totalSum5, innerCategory : finalArray5, completeData: data5,date: 'Form Filled Date' },
+    { form_number: "6", title: "Research Publication - Journals", color: "#0ea5e9", count: totalSum6, innerCategory : finalArray6, completeData: data6,date: 'Published Date' },
+    { form_number: "7", title: "Research Publication - Conference Publication", color: "#3b82f6", count: totalSum7, innerCategory : finalArray7, completeData: data7,date: 'Published Date' },
+    { form_number: "8", title: "Research Publication - Book and Book Chapters", color: "#f59e0b", count: totalSum8, innerCategory : finalArray8, completeData: data8,date: 'Published Date' },
+    { form_number: "9", title: "Patents", color: "#14b8a6",count: totalSum9, innerCategory : finalArray9, completeData: data9,date: 'Published Date' },
+    { form_number: "10", title: "M.Tech/Ph.D Guided", color: "#06b6d4", count: totalSum10, innerCategory : finalArray10, completeData: data10,date: 'Date of Viva-Voce' },
+    { form_number: "11", title: "Resource Person", color: "#ec4899", count: totalSum11, innerCategory : finalArray11, completeData: data11,date: 'Starting Date' }
 ];
-document.getElementById("app").innerHTML = forms.map(f => {
+
+var all_over_total_sum = 0;
+document.getElementById("app").innerHTML = forms.map((f, index, array) => {
+    const isLast = index === array.length - 1;
+    all_over_total_sum += f.count;
     if(form_type === "filled_forms" && f.count > 0) {
-        return  `<div class="primary-card" style="--card-color:${f.color}">
+        return `
+            <div class="primary-card" style="--card-color:${f.color}">
                 <div class="primary-header">
                     <div>
                         <h5>${f.title}</h5>
@@ -234,13 +239,15 @@ document.getElementById("app").innerHTML = forms.map(f => {
                                                     const id = data.id;
                                                     const catMatch = data.category_display || data.email__email || data.noj || data.top || data.tob || data.top;
                                                     const value = Object.values(data)[1];
+                                                    const date_value = formatDateManual(new Date(Object.values(data)[2]));
                                                     if(catMatch === s.category_display) {
                                                         return `
                                                             <div class="entry-item d-flex ms-auto justify-content-between align-items-center" style="padding: 8px 0; border-bottom: 1px solid #eee;">
                                                                 <div style="flex: 1;" class="ms-3">${value}</div>
+                                                                <div style="flex: 1;" id="date_value" class="ms-3"><b>${f.date}:</b> ${date_value}</div>
                                                                 <div style="margin-left: 10px;">
                                                                     <a href="progressdetails/${f.form_number}/${id}" style="text-decoration: none; color: #007bff;">
-                                                                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold"><button type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i> <b>Edit </b> </button></span> 
+                                                                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold"><button type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i> <b>Edit </b> </button></span>
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -251,7 +258,8 @@ document.getElementById("app").innerHTML = forms.map(f => {
                                         </div>
                                     </div>
                                 </div> 
-                            `;} else {
+                            `;
+                            } else {
                                 return `
                                 `;
                             }
@@ -259,40 +267,59 @@ document.getElementById("app").innerHTML = forms.map(f => {
                     </div>
                 </div>
             </div>
-            `;
-        } else if(form_type == "unfilled_forms") {
-            if (f.count == 0)  {
-                return  `
-                    <div class="primary-card" style="--card-color:${f.color}">
-                        <div class="primary-header">
-                            <div>
-                                <h5>${f.title}</h5>
-                                <small>${f.count} Forms Filled</small>
-                            </div>
-                            <i class="fas fa-chevron-down rotate"></i>
+        `;
+    } else if(form_type == "filled_forms" && f.count == 0) {
+        if (isLast && !all_over_total_sum) {
+            return `
+                <div class="d-flex justify-content-center align-items-center p-3 m-3">
+                    <div class = "empty_field_body">
+                        <h5> No Forms are Filled! </h5>
+                    <div>
+                </div>
+            `
+        }
+    } else if(form_type == "unfilled_forms") {
+        var haveCard = false;
+        if (f.count == 0)  {
+            haveCard = true;
+            return  `
+                <div class="primary-card" style="--card-color:${f.color}">
+                    <div class="primary-header">
+                        <div>
+                            <h5>${f.title}</h5>
+                            <small>${f.count} Forms Filled</small>
                         </div>
+                        <i class="fas fa-chevron-down rotate"></i>
+                    </div>
 
-                        <div class="primary-body">
-                            <div class="inner-content">
-                                ${f.innerCategory.map(s => {
-                                    if (s.count == 0) { 
-                                        return  `<div class="sub-row">
-                                                    <div class="sub-header">
-                                                        <span>${s.category_display}</span>
-                                                        <div class = "w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">${s.count}</div>
-                                                    </div>
+                    <div class="primary-body">
+                        <div class="inner-content">
+                            ${f.innerCategory.map(s => {
+                                if (s.count == 0) {
+                                    return  `<div class="sub-row">
+                                                <div class="sub-header">
+                                                    <span>${s.category_display}</span>
+                                                    <div class = "w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">${s.count}</div>
                                                 </div>
-                                        `;
-                                    }
-                                }).join("")}
-                            </div>
+                                            </div>
+                                    `;
+                                }
+                            }).join("")}
                         </div>
                     </div>
-                `;
-            }
+                </div>
+            `;
+        } else if(isLast && !haveCard) {
+            return `
+                <div class="d-flex justify-content-center align-items-center p-3 m-3">
+                    <div class = "empty_field_body">
+                        <h5> All Forms are Filled! </h5>
+                    <div>
+                </div>
+            `
         }
     }
-).join("");
+}).join("");
 
 /* EVENTS */
 document.querySelectorAll(".primary-header").forEach(h => {
@@ -311,3 +338,17 @@ document.querySelectorAll(".sub-header").forEach(h => {
         row.classList.toggle("open");
     };
 });
+
+function formatDateManual(dateObj) {
+    // 1. Get the day and pad it with a leading zero if it's less than 10
+    const day = String(dateObj.getDate()).padStart(2, '0');
+
+    // 2. Get the month, add 1, and pad it
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+
+    // 3. Get the full 4-digit year
+    const year = dateObj.getFullYear();
+
+    // 4. Combine them with template literals
+    return `${day}-${month}-${year}`;
+}
