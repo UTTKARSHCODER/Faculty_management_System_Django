@@ -332,6 +332,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -401,6 +402,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -656,6 +658,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -815,6 +818,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -947,6 +951,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1069,6 +1074,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1359,6 +1365,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1535,6 +1542,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1639,6 +1647,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1807,6 +1816,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1925,6 +1935,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>

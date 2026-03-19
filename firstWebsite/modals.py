@@ -38,6 +38,7 @@ class sponsors(models.TextChoices):
     NON_SPONSORED = "NS", "Non-Sponsored"
 
 class session(models.TextChoices):
+    Y2024_25 = "2024-25", "2024-25",
     Y2025_26 = "2025-26", "2025-26",
     Y2026_27 = "2026-27", "2026-27",
     Y2027_28 = "2027-28", "2027-28",
