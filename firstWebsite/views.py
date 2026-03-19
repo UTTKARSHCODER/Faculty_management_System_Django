@@ -11,7 +11,7 @@ from firstWebsite.modals import Faculty, Faculty_participation_data, mooc_course
     non_teaching_staff, category
 from .modals import Student_Directory
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 import json
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -135,9 +135,10 @@ def deleteuser(request):
         faculty_object.delete()
         messages.success(request,"User deleted successfully!")
 
-    return redirect(reverse('directory'))
+    return redirect(reverse('manage_access'))
 
 @session_login_required
+@ensure_csrf_cookie
 def all_forms(request,pk):
     if pk:
         if 12 > pk > 0 or pk == 16:

@@ -433,7 +433,7 @@ def save_all_forms(request, pk):
                     return redirect('all_forms',pk=pk)
 
                 status = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request, dop, "Status"):
+                if not va.radiocheck(request, status, "Status"):
                     return redirect('all_forms', pk=pk)
 
                 if request.FILES.get('proof_file'):
