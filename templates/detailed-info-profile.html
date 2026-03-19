@@ -31,18 +31,24 @@
             <div class="card-body">
                 <h5 class = "small-font mt-5"><i data-lucide="mail" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{faculty.email}}</h5>
                 <h5 class = "small-font mt-3"><i data-lucide="phone" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{faculty.contact_number}}</h5>
-                <p class = "small font mt-3" style="margin-bottom: 0px;">Specilization</p>
-                <h5 style = "font-size: 15px;"><strong>{{faculty.get_aos_display}}</strong></h5>
-                <p class = "small font mt-3" style="margin-bottom: 0px;">Highest Qualification</p>
-                <h5 style = "font-size: 15px;"><strong>{{faculty.get_hq_display}}</strong></h5>
-                <p class = "small font mt-3" style="margin-bottom: 0px;">Publications</p>
-                <h5 style = "font-size: 15px;"><strong>{{faculty.norp}}</strong></h5>
-                <p class = "small font mt-3" style="margin-bottom: 0px;">Goggle Scholar Link</p>
-                <h5 style = "font-size: 15px;"><strong>{% if faculty.google_scholar != "NULL" %}<a href="{{faculty.google_scholar}}" target="_blank">Click Here</a>{% else %}Not Uploaded Yet{% endif %}</strong></h5>
-                <p class = "small font mt-3" style="margin-bottom: 0px;">Vidwan Profile Link</p>
-                <h5 style = "font-size: 15px;"><strong>{% if faculty.vidwan_profile != "NULL" %}<a href="{{faculty.vidwan_profile}}" target="_blank">Click Here</a>{% else %}Not Uploaded Yet{% endif %}</strong></h5>
-                <p class = "small font mt-3" style="margin-bottom: 0px;">Website Link</p>
-                <h5 style = "font-size: 15px;"><strong>{% if faculty.personal_website_link is not None %}<a href="{{faculty.personal_website_link}}" target="_blank">Click Here</a>{% else %}Not Uploaded Yet{% endif %}</strong></h5>
+                <div class="d-flex justify-content-between">
+                    <div class="col">
+                        <p class = "mt-3" style="margin-bottom: 0px;"><strong>Specilization</strong></p>
+                        <h5 class= "small-font">{{faculty.get_aos_display}}</h5>
+                        <p class = "mt-3" style="margin-bottom: 0px;"><strong>Highest Qualification</strong></p>
+                        <h5 class="small-font">{{faculty.get_hq_display}}</h5>
+                        <p class = "mt-3" style="margin-bottom: 0px;"><strong>Publications</strong></p>
+                        <h5 class="small-font">{{faculty.norp}}</h5>
+                    </div>
+                    <div class="col">
+                        <p class = "small font mt-3" style="margin-bottom: 0px;"><strong>Goggle Scholar Link</strong></p>
+                        <h5 class = "small-font">{% if faculty.google_scholar != "NULL" %}<a href="{{faculty.google_scholar}}" target="_blank">Click Here</a>{% else %}Not Uploaded Yet{% endif %}</h5>
+                        <p class = "mt-3" style="margin-bottom: 0px;"><strong>Vidwan Profile Link</strong></p>
+                        <h5 class = "small-font">{% if faculty.vidwan_profile != "NULL" %}<a href="{{faculty.vidwan_profile}}" target="_blank">Click Here</a>{% else %}Not Uploaded Yet{% endif %}</h5>
+                        <p class = "mt-3" style="margin-bottom: 0px;"><strong>Website Link</strong></p>
+                        <h5 class = "small-font">{% if faculty.personal_website_link is not None %}<a href="{{faculty.personal_website_link}}" target="_blank">Click Here</a>{% else %}Not Uploaded Yet{% endif %}</h5>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
