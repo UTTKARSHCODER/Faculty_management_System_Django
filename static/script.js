@@ -106,8 +106,6 @@ if(!csrfToken) {
     window.location.href = "/cookie";
 }
 
-// Consider the case where user deselects a checkbox then your value is not reset back to previous sum value or 0 value
-var total_forms = 0;
 checkboxGroup.addEventListener('change', (e) => {
     if (e.target.type === 'checkbox') {
         generateInputFields();
@@ -141,7 +139,6 @@ function generateInputFields() {
     const checkedValues = checkedBoxes.map(cb => cb.value);
     Object.keys(quantities).forEach(key => {
         if (!checkedValues.includes(key)) {
-            total_forms -= quantities[key];
             delete quantities[key];
         }
     });
@@ -182,7 +179,6 @@ function generateInputFields() {
             if (val < 0) val = 0;
             e.target.value = val || '';
             quantities[value] = val;
-            total_forms += val;
             generateSubForms();
         });
     });
@@ -191,9 +187,10 @@ function generateInputFields() {
     generateSubForms();
 }
 
+let totalForms = 0
 function generateSubForms() {
     subFormsContainer.innerHTML = '';
-    let totalForms = 0;
+    totalForms = 0;
 
     const checkedBoxes = Array.from(checkboxGroup.querySelectorAll('input[type="checkbox"]:checked'));
 
@@ -2112,7 +2109,6 @@ function generateSubForms() {
     }
 
     subformCount.textContent = `${totalForms} form${totalForms !== 1 ? 's' : ''}`;
-
     // Initialize Bootstrap validation for all newly created forms
     setTimeout(() => {
         initializeBootstrapValidation();
@@ -2205,7 +2201,7 @@ document.addEventListener('submit', function(e) {
             if(data.status === 'success') {
                 curr_count++;
                 submitButton.innerText = "Saved Successfully!";
-                if(curr_count === total_forms) {
+                if(curr_count === totalForms) {
                     window.location.href = '/success';
                 }
             } else {

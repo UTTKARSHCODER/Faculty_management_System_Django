@@ -143,7 +143,7 @@ def save_all_forms(request, pk):
                 obj = non_teaching_staff(session=session, name=name, mobile_no=mobile_no, email=faculty_instance, department=department, Lab_no=lab_no, designation=designation, emp_id=emp_id, highest_qual=highest_qual, university_name=university_name, pshd=pshd, professional_course=professional_course, pan_no=pan_no,dob=dob, joining_date=joining_date, promotion_date=promotion_date, joining_report=joining_report, offer_letter=offer_letter, higher_degree_certificate=higher_degree_certificate, salary_slip=salary_slip, certificate=certificate)
                 obj.save()
                 messages.success(request, 'Form filled successfully!')
-                return redirect(reverse('home'))
+                return redirect(reverse('fdp'))
 
             elif pk == 1:
                 category = request.POST.get('category').strip()
