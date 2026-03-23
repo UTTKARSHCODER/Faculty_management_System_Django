@@ -36,8 +36,8 @@ def save_all_forms(request, pk):
 
                 department = request.POST.get('department',"").strip()
 
-                lab_no = int(request.POST.get('lab_no') or 0)
-                if not va.numberValidate(request,lab_no,"Lab Number"):
+                lab_no = request.POST.get('lab_no').strip()
+                if not va.nameValidate(request,lab_no,"Lab Number"):
                     return redirect('all_forms', pk=pk)
 
                 designation = request.POST.get('designation').strip()

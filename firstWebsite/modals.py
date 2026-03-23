@@ -716,6 +716,7 @@ class resource(models.Model):
 
 class designation_non_tech(models.TextChoices):
     OFFICE_ASSISTANT = "OA", "Office Assistant",
+    LAB_ASSISTANT = "LA", "Lab Assistant",
     TECHNICAL_ASSISTANT = "TA", "Technical Assistant",
     ASSISTANT = "A", "Assistant",
     CLERK = "C", "Clerk",
@@ -742,7 +743,7 @@ class non_teaching_staff(models.Model):
         max_length=8,
         choices=department.choices
     )
-    Lab_no = models.IntegerField()
+    Lab_no = models.CharField(max_length=100)
     designation = models.CharField(
         max_length=2,
         choices= designation_non_tech.choices
