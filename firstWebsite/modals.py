@@ -546,7 +546,7 @@ class research_conference(models.Model):
     )
     details = models.CharField(max_length=100)
     index_by = models.CharField(max_length=100)
-    proof_file = models.FileField(upload_to='uploads/research_journal/')
+    proof_file = models.FileField(upload_to='uploads/research_conference/')
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -634,7 +634,7 @@ class enrollmentYear(models.TextChoices):
 
 class survillance(models.TextChoices):
     S = "S", "Supervisor",
-    C = "C", "Co-Supervisor"
+    C = "CS", "Co-Supervisor"
 
 class guided(models.Model):
     category = models.CharField(
@@ -651,7 +651,7 @@ class guided(models.Model):
     )
     tod = models.CharField(max_length=100)
     visor = models.CharField(
-        max_length=1,
+        max_length=2,
         choices=survillance.choices
     )
     dov = models.DateField()
