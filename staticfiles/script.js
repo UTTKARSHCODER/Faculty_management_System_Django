@@ -332,6 +332,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -375,7 +376,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -401,6 +402,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -545,7 +547,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -656,6 +658,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -780,7 +783,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -815,6 +818,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -876,7 +880,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -947,6 +951,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -981,7 +986,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1069,6 +1074,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1253,7 +1259,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf, image/jpeg, image/png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file or .jpeg or .png file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1359,6 +1365,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1438,7 +1445,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf, image/jpeg, image/png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file  or .jpeg or .png file..</div>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1535,6 +1542,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1614,7 +1622,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf, image/jpeg, image/png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file  or .jpeg or .png file..</div>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1639,6 +1647,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1781,7 +1790,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
                                             <input type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1807,6 +1816,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1925,6 +1935,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -2071,7 +2082,7 @@ function generateSubForms() {
                                         <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-7">
                                             <input type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>

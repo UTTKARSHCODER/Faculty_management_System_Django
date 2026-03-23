@@ -75,8 +75,8 @@
                                 <th>Employee ID</th>
                                 <th>PAN No.</th>
                                 <th>Date of Joining(College)</th>
-                                <th>Profile Photo</th>
                                 {% if user == 'ad' or user == 'spa' %}
+                                <th>Profile Photo</th>
                                 <th>Joining Report Letter</th>
                                 <th>Offer Letter</th>
                                 <th>Highest Degree Certificate</th>
@@ -109,8 +109,8 @@
                                 <td>{{value.emp_id}}</td>
                                 <td>{{value.pan_no}}</td>
                                 <td>{{value.jd}}</td>
-                                <td>{{value.jd}}</td>
                                 {% if user == 'ad' or user == 'spa' %}
+                                <td><a href = "/media/{{value.profile_picture}}" target = "_blank" class = "text-info">Click Here</a></td>
                                 <td><a href = "/media/{{value.jr}}" target = "_blank" class = "text-info">Click Here</a></td>
                                 <td><a href = "/media/{{value.of}}" target = "_blank" class = "text-info">Click Here</a></td>
                                 <td><a href = "/media/{{value.hdc}}" target = "_blank" class = "text-info">Click Here</a></td>

@@ -152,7 +152,6 @@ def all_forms(request,pk):
 @session_login_required
 def fdp(request):
     forms = [
-        {'no': '1.1','no_': '1.1', 'form': "Faculty Profile Details", 'tooltip': "Faculty basic details, higher studies, personal file information."},
         {'no': '16','no_': '1.2', 'form': "Non-teaching Staff Profile Details", 'tooltip': "Non-Teaching Staff basic details, higher studies, personal file information."},
         {'no': '1', 'no_': '2','form': "Faculty Participation", 'tooltip': "Faculty participation in FDP, Conference, Workshop, STTP, Seminar etc."},
         {'no': '2', 'no_': '3','form': "MOOC's/Short Term Course/Course Completion", 'tooltip': "MOOCs (Swayam/NPTEL),courses from Infosys Springboard, Coursera, edX, Udemy etc. and other certifications."},
