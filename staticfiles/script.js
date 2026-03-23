@@ -79,8 +79,8 @@ const categoryValue = {
     'Sponsored Grant': 'SG',
     'Research Project': 'RP',
     'Consultancy': 'CONS',
-    'M.Tech Students': 'M_TECH',
-    'Ph.D Students': 'PH_D',
+    'M.Tech Students Guided': 'M_TECH',
+    'Ph.D Students Guided': 'PH_D',
     'Other' : 'OTH'
 }
 

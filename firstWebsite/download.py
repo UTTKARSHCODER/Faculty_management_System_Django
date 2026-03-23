@@ -54,7 +54,7 @@ def download_filtered_files(request, choices, model_name, results, file_fields, 
                 file_path = result.get(field)
                 if file_path:
                     hyperlink_text = "https://uttkarsh007.pythonanywhere.com/media/" + file_path
-                    hyperlink_formula = f'=HYPERLINK("{hyperlink_text}", "View File online")'
+                    hyperlink_formula = f'=HYPERLINK("{hyperlink_text}", "{hyperlink_text}")'
                     result[field] = hyperlink_formula
                 else:
                     text = "No File"

@@ -23,12 +23,12 @@
         <div class="row mt-5 me-5 custom-css">
             <img src = "/static/success_image.png" class = "adjust">
             <h2 class = "text-center edit">Forms Submitted Successfully!</h2>
-            <a style = "margin-left: 225px; margin-top: 50px;" href = "{% url 'home' %}" id = "manualRedirectLink">Click here to go to your dashboard</a>
+            <a style = "margin-left: 225px; margin-top: 50px;" href = "{% url 'fdp' %}" id = "manualRedirectLink">Click here to go back to FDC Forms</a>
         </div>
     </div>
 
     <script>
-        const redirectURL = '/';
+        const redirectURL = '/fdp';
         const delay = 3000;
 
         function autoRedirect() {

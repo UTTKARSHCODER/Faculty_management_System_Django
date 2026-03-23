@@ -747,6 +747,10 @@ def save_all_forms(request, pk):
                 obj9.save()
 
             elif pk == 10:
+                category = request.POST.get('category').strip()
+                if not va.nameValidate(request, category, "Category"):
+                    return redirect('all_forms', pk=pk)
+
                 nos = request.POST.get('nos').strip()
                 if not va.nameValidate(request, nos, "Name of the student Guided"):
                     return redirect('all_forms', pk=pk)
@@ -787,7 +791,7 @@ def save_all_forms(request, pk):
                 if not va.nameValidate(request, noe, "Name of external examiner"):
                     return redirect('all_forms', pk=pk)
 
-                obj10 = guided(nos=nos, ens=ens, urns=urns, eys=eys, tod=tod, visor=visor, dov=dov, noe=noe, session=session,email=faculty_instance)
+                obj10 = guided(category=category ,nos=nos, ens=ens, urns=urns, eys=eys, tod=tod, visor=visor, dov=dov, noe=noe, session=session,email=faculty_instance)
                 obj10.save()
 
             elif pk == 11:
