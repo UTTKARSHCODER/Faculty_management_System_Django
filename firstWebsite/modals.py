@@ -127,7 +127,7 @@ class Faculty(models.Model):
 
         # Returns a clean Python list of the human-readable names
         return [str(choices_dict.get(choice, choice)) for choice in self.form_alloted]
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
     contact_number = models.CharField(max_length=10)
     email = models.EmailField(max_length=254,unique=True)
     department = models.CharField(
@@ -139,7 +139,7 @@ class Faculty(models.Model):
         choices=gender.choices,
         default=gender.MALE
     )
-    address = models.CharField(max_length=100,default='Address')
+    address = models.CharField(max_length=255,default='Address')
     emp_id = models.IntegerField()
     role = models.CharField(
         max_length=3,
@@ -179,7 +179,7 @@ class Faculty(models.Model):
         choices=highest_qual.choices,
         default=highest_qual.OTHER
     )
-    univ_name = models.CharField(max_length=100,default='Unknown')
+    univ_name = models.CharField(max_length=255,default='Unknown')
     pshd = models.IntegerField(default=0)
     pan_no = models.CharField(max_length=10,default='AAAEE875AE')
     google_scholar = models.CharField(max_length=255,default="NULL")
@@ -194,7 +194,7 @@ class Faculty(models.Model):
     ss = models.FileField(upload_to='uploads/faculty_documents/salary_slip/',default=None,null = True)
     hdc = models.FileField(upload_to='uploads/faculty_documents/higher_degree_certificate/',default=None,null = True)
     certificate = models.FileField(upload_to='uploads/faculty_documents/certificate/',default=None,null = True)
-    phd_univ = models.CharField(max_length=100, null = True, blank = True)
+    phd_univ = models.CharField(max_length=255, null = True, blank = True)
     phd_dor = models.DateField(null=True,blank=True)
     norp = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -256,7 +256,7 @@ class Faculty_participation_data(models.Model):
         choices=category.choices,
         default=category.OTHER
     )
-    top = models.CharField(max_length=100,default='Unknown')
+    top = models.CharField(max_length=255,default='Unknown')
     mode = models.CharField(
         max_length=2,
         choices=mode.choices
@@ -265,8 +265,8 @@ class Faculty_participation_data(models.Model):
         max_length=2,
         choices=level.choices
     )
-    organizer = models.CharField(max_length=100)
-    sponsors = models.CharField(max_length=100)
+    organizer = models.CharField(max_length=255)
+    sponsors = models.CharField(max_length=255)
     approval = models.CharField(
         max_length=1,
         choices=accept.choices
@@ -316,15 +316,15 @@ class mooc_course(models.Model):
         choices=category.choices,
         default=category.MOOC
     )
-    timeline = models.CharField(max_length=100)
-    noc = models.CharField(max_length=100)
+    timeline = models.CharField(max_length=255)
+    noc = models.CharField(max_length=255)
     doc = models.CharField(
         max_length=2,
         choices=doc.choices
     )
     begi_date = models.DateField()
     end_date = models.DateField()
-    offer = models.CharField(max_length=100)
+    offer = models.CharField(max_length=255)
     ctype = models.CharField(
         max_length=2,
         choices=medals.choices
@@ -376,9 +376,9 @@ class events(models.Model):
         return [choice_dict.get(key, key) for key in data]
 
     nofc = models.CharField(max_length=255,default="Unknown")
-    topdpo = models.CharField(max_length=100)
+    topdpo = models.CharField(max_length=255)
     nop = models.IntegerField()
-    adcc = models.CharField(max_length=100)
+    adcc = models.CharField(max_length=255)
     session = models.CharField(
         max_length=7,
         choices=session.choices
@@ -387,16 +387,16 @@ class events(models.Model):
         max_length=2,
         choices=sponsors.choices
     )
-    nosa = models.CharField(max_length=100)
-    cd = models.CharField(max_length=100)
+    nosa = models.CharField(max_length=255)
+    cd = models.CharField(max_length=255)
     begi_date = models.DateField()
     end_date = models.DateField()
     gr = models.CharField(
         max_length=1,
         choices=accept.choices
     )
-    gd = models.CharField(max_length=100)
-    awpsfooe = models.CharField(max_length=100)
+    gd = models.CharField(max_length=255)
+    awpsfooe = models.CharField(max_length=255)
     nossp = models.CharField(max_length=255)
     nosmp = models.CharField(max_length=255)
     eraipf = models.CharField(
@@ -417,10 +417,10 @@ class awards_and_achievments(models.Model):
         max_length=6,
         choices=category.choices
     )
-    noaa = models.CharField(max_length=100)
-    paf = models.CharField(max_length=100)
-    ao = models.CharField(max_length=100)
-    prize = models.CharField(max_length=100)
+    noaa = models.CharField(max_length=255)
+    paf = models.CharField(max_length=255)
+    ao = models.CharField(max_length=255)
+    prize = models.CharField(max_length=255)
     ad = models.DateField()
     remark = models.CharField(max_length=255, null = True)
     proof_file = models.FileField(upload_to='uploads/awards/')
@@ -444,7 +444,7 @@ class sponsored_research(models.Model):
         max_length=6,
         choices=category.choices
     )
-    nofa = models.CharField(max_length=100)
+    nofa = models.CharField(max_length=255)
     dop = models.IntegerField()
     amount = models.IntegerField()
     session = models.CharField(
@@ -478,33 +478,33 @@ class quartile(models.TextChoices):
     NA = "NA", "NA"
 
 class research_journal(models.Model):
-    noa = models.CharField(max_length=150)
+    noa = models.CharField(max_length=255)
     top = models.CharField(max_length=255)
     noj = models.CharField(max_length=255)
-    nop = models.CharField(max_length=100)
-    vi = models.CharField(max_length=100)
-    pn = models.CharField(max_length=100)
+    nop = models.CharField(max_length=255)
+    vi = models.CharField(max_length=255)
+    pn = models.CharField(max_length=255)
     pd = models.DateField()
     session = models.CharField(
         max_length=7,
         choices=session.choices
     )
-    isnp = models.CharField(max_length=100)
-    isno = models.CharField(max_length=100)
+    isnp = models.CharField(max_length=255)
+    isno = models.CharField(max_length=255)
     level = models.CharField(
         max_length=2,
         choices=level.choices
     )
-    doi = models.CharField(max_length=100)
+    doi = models.CharField(max_length=255)
     lwj = models.URLField(max_length=500)
     lap = models.URLField(max_length=500)
     lrsj = models.URLField(max_length=500)
-    aiop = models.CharField(max_length=100)
+    aiop = models.CharField(max_length=255)
     ssa = models.CharField(
         max_length=1,
         choices=accept.choices
     )
-    details = models.CharField(max_length=100)
+    details = models.CharField(max_length=255)
     index_by = models.CharField(
         max_length=3,
         choices=index_by.choices
@@ -522,30 +522,30 @@ class research_journal(models.Model):
         return self.noj + " " + self.noa
 
 class research_conference(models.Model):
-    noa = models.CharField(max_length=100)
-    toc = models.CharField(max_length=100)
-    top = models.CharField(max_length=100)
-    topc = models.CharField(max_length=100)
+    noa = models.CharField(max_length=255)
+    toc = models.CharField(max_length=255)
+    top = models.CharField(max_length=255)
+    topc = models.CharField(max_length=255)
     level = models.CharField(
         max_length=2,
         choices=level.choices
     )
-    isnp = models.CharField(max_length=100)
-    nop = models.CharField(max_length=100)
+    isnp = models.CharField(max_length=255)
+    nop = models.CharField(max_length=255)
     pd = models.DateField()
     session = models.CharField(
         max_length=7,
         choices=session.choices
     )
-    doi = models.CharField(max_length=100)
+    doi = models.CharField(max_length=255)
     lwj = models.URLField(max_length=500)
-    aitp = models.CharField(max_length=100)
+    aitp = models.CharField(max_length=255)
     ssa = models.CharField(
         max_length=1,
         choices=accept.choices
     )
-    details = models.CharField(max_length=100)
-    index_by = models.CharField(max_length=100)
+    details = models.CharField(max_length=255)
+    index_by = models.CharField(max_length=255)
     proof_file = models.FileField(upload_to='uploads/research_conference/')
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -555,15 +555,15 @@ class research_conference(models.Model):
         return self.top + " " + self.noa
 
 class research_book(models.Model):
-    noa = models.CharField(max_length=100)
-    tob = models.CharField(max_length=100)
-    top = models.CharField(max_length=100)
+    noa = models.CharField(max_length=255)
+    tob = models.CharField(max_length=255)
+    top = models.CharField(max_length=255)
     level = models.CharField(
         max_length=2,
         choices=level.choices
     )
-    isbn = models.CharField(max_length=100)
-    nop = models.CharField(max_length=100)
+    isbn = models.CharField(max_length=255)
+    nop = models.CharField(max_length=255)
     pd = models.DateField()
     session = models.CharField(
         max_length=7,
@@ -571,13 +571,13 @@ class research_book(models.Model):
     )
     doi = models.CharField(max_length=255)
     lwj = models.URLField(max_length=500)
-    aitp = models.CharField(max_length=100)
+    aitp = models.CharField(max_length=255)
     ssa = models.CharField(
         max_length=1,
         choices=accept.choices
     )
     details = models.CharField(max_length=255)
-    index_by = models.CharField(max_length=100)
+    index_by = models.CharField(max_length=255)
     proof_file = models.FileField(upload_to="uploads/research_book/")
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -599,10 +599,10 @@ class patents(models.Model):
         choices=status_of_patent.choices,
         default=status_of_patent.GRANTED
     )
-    gi = models.CharField(max_length=100)
-    ag = models.CharField(max_length=100)
-    top = models.CharField(max_length=100)
-    gc = models.CharField(max_length=100)
+    gi = models.CharField(max_length=255)
+    ag = models.CharField(max_length=255)
+    top = models.CharField(max_length=255)
+    gc = models.CharField(max_length=255)
     pfd = models.DateField(default=datetime.date(2024,1,1))
     pd = models.DateField()
     session = models.CharField(
@@ -642,20 +642,20 @@ class guided(models.Model):
         choices=category.choices,
         default=category.OTHER
     )
-    nos = models.CharField(max_length=100)
-    ens = models.CharField(max_length=100)
-    urns = models.CharField(max_length=100)
+    nos = models.CharField(max_length=255)
+    ens = models.CharField(max_length=255)
+    urns = models.CharField(max_length=255)
     eys = models.CharField(
         max_length=4,
         choices=enrollmentYear.choices
     )
-    tod = models.CharField(max_length=100)
+    tod = models.CharField(max_length=255)
     visor = models.CharField(
         max_length=2,
         choices=survillance.choices
     )
     dov = models.DateField()
-    noe = models.CharField(max_length=100)
+    noe = models.CharField(max_length=255)
     session = models.CharField(
         max_length=7,
         choices=session.choices
@@ -691,7 +691,7 @@ class resource(models.Model):
         choices=category.choices,
         default=category.OTHER
     )
-    toe = models.CharField(max_length=100)
+    toe = models.CharField(max_length=255)
     sa = models.CharField(max_length=200)
     doe = models.IntegerField()
     rpt = models.CharField(
@@ -736,14 +736,14 @@ class non_teaching_staff(models.Model):
         choices=session.choices,
         default=session.Y2025_26
     )
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
     mobile_no = models.CharField(max_length=10)
     email = models.ForeignKey(Faculty,on_delete=models.CASCADE)
     department = models.CharField(
         max_length=8,
         choices=department.choices
     )
-    Lab_no = models.CharField(max_length=100)
+    Lab_no = models.CharField(max_length=255)
     designation = models.CharField(
         max_length=2,
         choices= designation_non_tech.choices
@@ -753,7 +753,7 @@ class non_teaching_staff(models.Model):
         max_length=3,
         choices=highest_qual.choices
     )
-    university_name = models.CharField(max_length=100)
+    university_name = models.CharField(max_length=255)
     pshd = models.IntegerField()
     professional_course = models.JSONField(default=list, blank=True)
     @property
