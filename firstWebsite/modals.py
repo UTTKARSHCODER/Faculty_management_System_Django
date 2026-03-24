@@ -19,9 +19,9 @@ class batch(models.TextChoices):
     CS_IOT_B = "3CS(IOT)-B"
 
 class Student_Directory(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
     batch = models.CharField(max_length=10,default=batch.CS_F,choices=batch.choices)
-    roll_no = models.CharField(max_length=100)
+    roll_no = models.CharField(max_length=255)
     college_id = models.CharField(max_length=20)
     email = models.EmailField(max_length=254)
     student_phone_no = models.CharField(max_length=10)
