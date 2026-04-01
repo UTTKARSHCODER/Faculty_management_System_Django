@@ -250,27 +250,27 @@
                             <label class="col-sm-2 col-form-label">Professional Courses<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-10">
                                 <div class="d-flex column-gap-4">
-                                    <div class="form-check">
+                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
                                         <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio1" name="professional_courses" value="CCNA">
                                         <label class="form-check-label" for="radio1">CCNA</label>
                                     </div>
-                                    <div class="form-check">
+                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
                                         <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio2" name="professional_courses" value="HN">
                                         <label class="form-check-label" for="radio2">Hardware & Networking</label>
                                     </div>
-                                    <div class="form-check">
+                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
                                         <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio3" name="professional_courses" value="O/A">
                                         <label class="form-check-label" for="radio3">O Level/ A level</label>
                                     </div>
-                                    <div class="form-check">
+                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
                                         <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio4" name="professional_courses" value="ACT">
                                         <label class="form-check-label" for="radio4">AWS Cloud Technical</label>
                                     </div>
-                                    <div class="form-check">
+                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
                                         <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio5" name="professional_courses" value="VM">
                                         <label class="form-check-label" for="radio5">VMware</label>
                                     </div>
-                                    <div class="form-check">
+                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
                                         <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio6" name="professional_courses" value="O">
                                         <label class="form-check-label" for="radio6">Other</label>
                                     </div>
@@ -467,7 +467,9 @@ document.addEventListener('change', function(event) {
                     <a href="/forms_listing/filled_forms" class="btn" style = "background-color: rgb(79 70 229); color: white;">View Filled Forms</a>
                 </div>
             </div>
-            <div class="col mt-4">
+            <div class="row flex justify-content-between">
+
+            <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4">
                 <span>
                     <i class="fa-solid fa-envelope"></i>
                     <label for="email" class="form-label"><b>Email</b><span class="ms-1" style="color: red;">*</span></label>
@@ -476,7 +478,7 @@ document.addEventListener('change', function(event) {
                     value="{{value.email}}" placeholder="Enter your personal Email Adddress"
                     name="email" readonly>
             </div>
-            <div class="col mt-4" id="emp_id_verify">
+            <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4" id="emp_id_verify">
                 <span>
                     <i class="fa-solid fa-user"></i>
                     <label for="emp_id" class="form-label"><b>Employee ID</b><span class="ms-1" style="color: red;">*</span></label>
@@ -485,14 +487,14 @@ document.addEventListener('change', function(event) {
                     value="{{value.emp_id}}" placeholder="Enter your Employee ID"
                     name="emp_id" maxlength="5" oninput="validateForm('con_number')" readonly>
             </div>
-            <div class="col mt-4" id="depart">
+            <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4" id="depart">
                 <span>
                     <i class="fa-solid fa-building"></i>
                     <label for="branchSelect" class="form-label"><b>Department</b><span class="ms-1" style="color: red;">*</span></label>
                 </span>
                 <input value = "{{value.department}}" class="form-control custom-back" id="branchSelect" readonly>
             </div>
-            <div class="col mt-4" id="name_check">
+            <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4" id="name_check">
                 <span>
                     <i class="fa-solid fa-user"></i>
                     <label for="name" class="form-label"><b>Name</b><span class="ms-1"
@@ -502,48 +504,54 @@ document.addEventListener('change', function(event) {
                     value="{{value.name}}" placeholder="Enter your Name" name="name"
                     oninput="validateForm('name_check')" readonly>
             </div>
+            
+            </div>
+
+
         </div>
         {% if form_number == 1 %}
             <div class="row form-row m-3">
-                 <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+                 <div class="d-flex column-gap-4 mt-4 text-wrap" id = "checkboxGroup">
                     <span>
                         <label for="eop" class="form-label"><b>Event/Program Category</b><span class="ms-1" style="color: red;">*</span> :-</label>
                     </span>
-                    <div class="form-check" id = "eop">
-                        <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="FDP">
-                        <label class="form-check-label" for="radio7-{i}"><b>FDP</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Workshop">
-                        <label class="form-check-label" for="radio8-{i}"><b>Workshop</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Conference">
-                        <label class="form-check-label" for="radio9-{i}"><b>Conference</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="STTP">
-                        <label class="form-check-label" for="radio10-{i}"><b>STTP</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio11-{i}" name="optradio" value="Seminar">
-                        <label class="form-check-label" for="radio11-{i}"><b>Seminar</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio12-{i}" name="optradio" value="Webinar">
-                        <label class="form-check-label" for="radio12-{i}"><b>Webinar</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio13-{i}" name="optradio" value="Lecture Series">
-                        <label class="form-check-label" for="radio13-{i}"><b>Lecture Series</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio14-{i}" name="optradio" value="Symposium">
-                        <label class="form-check-label" for="radio14-{i}"><b>Symposium</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio15-{i}" name="optradio" value="Other">
-                        <label class="form-check-label" for="radio15-{i}"><b>Other</b></label>
+                    <div class="row g-3 ">
+                        <div class="col-12  col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                            <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="FDP">
+                            <label class="form-check-label" for="radio7-{i}"><b>FDP</b></label>
+                        </div>
+                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                            <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Workshop">
+                            <label class="form-check-label" for="radio8-{i}"><b>Workshop</b></label>
+                        </div>
+                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                            <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Conference">
+                            <label class="form-check-label" for="radio9-{i}"><b>Conference</b></label>
+                        </div>
+                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                            <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="STTP">
+                            <label class="form-check-label" for="radio10-{i}"><b>STTP</b></label>
+                        </div>
+                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                            <input type="checkbox" class="form-check-input" id="radio11-{i}" name="optradio" value="Seminar">
+                            <label class="form-check-label" for="radio11-{i}"><b>Seminar</b></label>
+                        </div>
+                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                            <input type="checkbox" class="form-check-input" id="radio12-{i}" name="optradio" value="Webinar">
+                            <label class="form-check-label" for="radio12-{i}"><b>Webinar</b></label>
+                        </div>
+                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                            <input type="checkbox" class="form-check-input" id="radio13-{i}" name="optradio" value="Lecture Series">
+                            <label class="form-check-label" for="radio13-{i}"><b>Lecture Series</b></label>
+                        </div>
+                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                            <input type="checkbox" class="form-check-input" id="radio14-{i}" name="optradio" value="Symposium">
+                            <label class="form-check-label" for="radio14-{i}"><b>Symposium</b></label>
+                        </div>
+                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                            <input type="checkbox" class="form-check-input" id="radio15-{i}" name="optradio" value="Other">
+                            <label class="form-check-label" for="radio15-{i}"><b>Other</b></label>
+                        </div>
                     </div>
                  </div>
                 <div class="invalid-feedback">Please select at least one option.</div>
@@ -554,13 +562,15 @@ document.addEventListener('change', function(event) {
                    <span>
                        <label for="eop" class="form-label"><b>Type of Course</b><span class="ms-1" style="color: red;">*</span> :-</label>
                    </span>
-                    <div class="form-check" id = "eop">
-                        <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="MOOC">
-                        <label class="form-check-label" for="radio7-${i}"><b>MOOC</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Short Term Courses">
-                        <label class="form-check-label" for="radio8-${i}"><b>Short Term Course</b></label>
+                   <div class="row g-3 ms-4" style="width: 100%">
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                            <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="MOOC">
+                            <label class="form-check-label" for="radio7-${i}"><b>MOOC</b></label>
+                        </div>
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                            <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Short Term Courses">
+                            <label class="form-check-label" for="radio8-${i}"><b>Short Term Course</b></label>
+                        </div>
                     </div>
                 </div>
                 <div class="invalid-feedback">Please select at least one option.</div>
@@ -577,73 +587,73 @@ document.addEventListener('change', function(event) {
                      </div>
                      <div class="col-11">
                          <div class="row g-3">
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                  <div class="form-check" id = "eop">
                                      <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="Workshop">
                                      <label class="form-check-label" for="radio7-{i}"><b>Workshop</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                  <div class="form-check">
                                      <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Expert Lecture">
                                      <label class="form-check-label" for="radio8-{i}"><b>Expert Lecture</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Expert Talk">
                                     <label class="form-check-label" for="radio9-{i}"><b>Expert Talk</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
-                                <div class="form-check">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
                                     <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="Conference">
                                     <label class="form-check-label" for="radio10-{i}"><b>Conference</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio11-{i}" name="optradio" value="FDP">
                                     <label class="form-check-label" for="radio11-{i}"><b>FDP</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
-                                <div class="form-check">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
                                     <input type="checkbox" class="form-check-input" id="radio12-{i}" name="optradio" value="Lecture Series">
                                     <label class="form-check-label" for="radio12-{i}"><b>Lecture Series</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio13-{i}" name="optradio" value="STTP">
                                     <label class="form-check-label" for="radio13-{i}"><b>STTP</b></label>
                                 </div>
                              </div>
-                             <div class="col-3">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio14-{i}" name="optradio" value="Short Term Course">
                                     <label class="form-check-label" for="radio14-{i}"><b>Short Term Course</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio15-{i}" name="optradio" value="Seminar">
                                     <label class="form-check-label" for="radio15-{i}"><b>Seminar</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio16-{i}" name="optradio" value="Webinar">
                                     <label class="form-check-label" for="radio16-{i}"><b>Webinar</b></label>
                                  </div>
                              </div>
-                             <div class="col-3">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio17-{i}" name="optradio" value="Induction Program">
                                     <label class="form-check-label" for="radio17-{i}"><b>Induction Program</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio18-{i}" name="optradio" value="Other">
                                     <label class="form-check-label" for="radio18-{i}"><b>Other</b></label>
@@ -659,23 +669,25 @@ document.addEventListener('change', function(event) {
             <div class="row form-row m-3">
                 <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
                    <span>
-                       <label for="eop" class="form-label"><b>Category</b><span class="ms-1" style="color: red;">*</span> :-</label>
+                       <label for="eop" class="form-label"><b>Category</b><span class="ms-1" style="color: red;">*</span><span class="ms-2">:-</span></label>
                    </span>
-                    <div class="form-check" id = "eop">
-                        <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="Education">
-                        <label class="form-check-label" for="radio7-{i}"><b>Education</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Research">
-                        <label class="form-check-label" for="radio8-{i}"><b>Research</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Sports">
-                        <label class="form-check-label" for="radio9-{i}"><b>Sports</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="Other">
-                        <label class="form-check-label" for="radio10-{i}"><b>Other</b></label>
+                   <div class="row g-3 ms-4" style="width: 100%">
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check" id = "eop">
+                            <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="Education">
+                            <label class="form-check-label" for="radio7-{i}"><b>Education</b></label>
+                        </div>
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Research">
+                            <label class="form-check-label" for="radio8-{i}"><b>Research</b></label>
+                        </div>
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Sports">
+                            <label class="form-check-label" for="radio9-{i}"><b>Sports</b></label>
+                        </div>
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="Other">
+                            <label class="form-check-label" for="radio10-{i}"><b>Other</b></label>
+                        </div>
                     </div>
                 </div>
                 <div class="invalid-feedback">Please select at least one option.</div>
@@ -686,17 +698,19 @@ document.addEventListener('change', function(event) {
                    <span>
                        <label for="eop" class="form-label"><b>Type of Category</b><span class="ms-1" style="color: red;">*</span> :-</label>
                    </span>
-                    <div class="form-check" id = "eop">
-                        <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Sponsored Grant">
-                        <label class="form-check-label" for="radio7-${i}"><b>Sponsored Grant</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Research Project">
-                        <label class="form-check-label" for="radio8-${i}"><b>Research Project</b></label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="radio9-${i}" name="optradio" value="Consultancy">
-                        <label class="form-check-label" for="radio9-${i}"><b>Consultancy</b></label>
+                   <div class="row g-3 ms-4" style="width: 100%">
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                            <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Sponsored Grant">
+                            <label class="form-check-label" for="radio7-${i}"><b>Sponsored Grant</b></label>
+                        </div>
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                            <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Research Project">
+                            <label class="form-check-label" for="radio8-${i}"><b>Research Project</b></label>
+                        </div>
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                            <input type="checkbox" class="form-check-input" id="radio9-${i}" name="optradio" value="Consultancy">
+                            <label class="form-check-label" for="radio9-${i}"><b>Consultancy</b></label>
+                        </div>
                     </div>
                 </div>
                 <div class="invalid-feedback">Please select at least one option.</div>
@@ -707,7 +721,7 @@ document.addEventListener('change', function(event) {
                    <span>
                        <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
                    </span>
-                    <div class="form-check" id = "eop">
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
                         <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Research Publication - Journals">
                         <label class="form-check-label" for="radio7-${i}"><b>Research Publication - Journals</b></label>
                     </div>
@@ -720,7 +734,7 @@ document.addEventListener('change', function(event) {
                    <span>
                        <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
                    </span>
-                    <div class="form-check" id = "eop">
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
                         <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Research Publication - Conference Publication">
                         <label class="form-check-label" for="radio7-${i}"><b>Research Publication - Conference Publication</b></label>
                     </div>
@@ -733,7 +747,7 @@ document.addEventListener('change', function(event) {
                    <span>
                        <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
                    </span>
-                    <div class="form-check" id = "eop">
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
                         <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Research Publication - Book and Book Chapters">
                         <label class="form-check-label" for="radio7-${i}"><b>Research Publication - Book and Book Chapters</b></label>
                     </div>
@@ -746,7 +760,7 @@ document.addEventListener('change', function(event) {
                    <span>
                        <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
                    </span>
-                    <div class="form-check" id = "eop">
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
                         <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Patents">
                         <label class="form-check-label" for="radio7-${i}"><b>Patents</b></label>
                     </div>
@@ -759,13 +773,15 @@ document.addEventListener('change', function(event) {
                    <span>
                        <label for="eop" class="form-label"><b>Program of Student</b><span class="ms-1" style="color: red;">*</span> :-</label>
                    </span>
-                    <div class="form-check" id = "eop">
-                        <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="M.Tech Students Guided">
-                        <label class="form-check-label" for="radio7-${i}"><b>M.Tech</b></label>
-                    </div>
-                    <div class="form-check" id = "eop1">
-                        <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Ph.D Students Guided">
-                        <label class="form-check-label" for="radio8-${i}"><b>Ph.D</b></label>
+                   <div class="row g-3 ms-4" style="width: 100%">
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                            <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="M.Tech Students Guided">
+                            <label class="form-check-label" for="radio7-${i}"><b>M.Tech</b></label>
+                        </div>
+                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop1">
+                            <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Ph.D Students Guided">
+                            <label class="form-check-label" for="radio8-${i}"><b>Ph.D</b></label>
+                        </div>
                     </div>
                 </div>
                 <div class="invalid-feedback">Please select at least one option.</div>
@@ -782,103 +798,103 @@ document.addEventListener('change', function(event) {
                      </div>
                      <div class="col-11">
                          <div class="row g-3">
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
                                  <div class="form-check" id = "eop">
                                      <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="FDP">
                                      <label class="form-check-label" for="radio7-${i}"><b>FDP</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                  <div class="form-check">
                                      <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Conference">
                                      <label class="form-check-label" for="radio8-${i}"><b>Conference</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio9-${i}" name="optradio" value="STTP">
                                     <label class="form-check-label" for="radio9-${i}"><b>STTP</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio10-${i}" name="optradio" value="Workshop">
                                     <label class="form-check-label" for="radio10-${i}"><b>Workshop</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio11-${i}" name="optradio" value="Webinar">
                                     <label class="form-check-label" for="radio11-${i}"><b>Webinar</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio12-${i}" name="optradio" value="External Examination(UG)">
                                     <label class="form-check-label" for="radio12-${i}"><b>External Examination(UG)</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio13-${i}" name="optradio" value="External Examination(PG)">
                                     <label class="form-check-label" for="radio13-${i}"><b>External Examination(PG)</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio14-${i}" name="optradio" value="Journal">
                                     <label class="form-check-label" for="radio14-${i}"><b>Journal</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio15-${i}" name="optradio" value="Expert Lecture">
                                     <label class="form-check-label" for="radio15-${i}"><b>Expert Lecture</b></label>
                                 </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio16-${i}" name="optradio" value="Expert Talk">
                                     <label class="form-check-label" for="radio16-${i}"><b>Expert Talk</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio17-${i}" name="optradio" value="Seminar">
                                     <label class="form-check-label" for="radio17-${i}"><b>Seminar</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio18-${i}" name="optradio" value="Hackathon">
                                     <label class="form-check-label" for="radio18-${i}"><b>Hackathon</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio19-${i}" name="optradio" value="Training">
                                     <label class="form-check-label" for="radio19-${i}"><b>Training</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio20-${i}" name="optradio" value="Internship">
                                     <label class="form-check-label" for="radio20-${i}"><b>Internship</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio21-${i}" name="optradio" value="BOS">
                                     <label class="form-check-label" for="radio21-${i}"><b>BOS</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio22-${i}" name="optradio" value="DRC">
                                     <label class="form-check-label" for="radio22-${i}"><b>DRC</b></label>
                                  </div>
                              </div>
-                             <div class="col-2">
+                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
                                  <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="radio23-${i}" name="optradio" value="Other">
                                     <label class="form-check-label" for="radio23-${i}"><b>Other</b></label>
@@ -893,58 +909,55 @@ document.addEventListener('change', function(event) {
 
 
         <!-- Step 2: Dynamic Input Fields -->
-        <div class="section m-3">
-            <div class="row">
-                <div class="col-md-8 col-sm-8">
-                    <label class="section-title">
-                        Step 2: Enter Quantities
-                        <span class="badge" id="inputCount">0 fields</span>
-                    </label>
-                    <div class="input-fields" id="inputFields">
-                        <div class="empty-state">Select checkboxes above to generate input fields</div>
-                    </div>
+        
+
+       <div class="section m-3">
+    <div class="row g-3">
+        <div class="col-12 col-md-8">
+            <label class="section-title">
+                Step 2: Enter Quantities
+                <span class="badge" id="inputCount">0 fields</span>
+            </label>
+            <div class="input-fields" id="inputFields">
+                <div class="empty-state">Select checkboxes above to generate input fields</div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; max-width: 340px;">
+
+                <!-- Heading -->
+                <div style="background: #fff8e1; border-bottom: 1px solid #f0d080; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 13px; font-weight: 600; color: #7a5c00;">&#9432; Note:</span>
                 </div>
-                <!-- <div class="col-md-4">
-                    <div class="info-icon">
-                        <img src="../static/i-btn-hover.png" style="height: 120px;" alt="hoverInfo">
-                    </div>
-                    <div class="info-desc"><p><b>For More Information of the Field Please <u><span style="color: #dc3545;">*</span>Hover<span style="color: #dc3545;">*</span></u> on i tab as Shown in Figure<span style="color: #dc3545;">*</span></b></p></div>
-                </div> -->
-                <div class="col-md-4" style="margin-left: 47rem; margin-top: -5rem; width: 29rem;">
-                    <div style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; max-width: 340px;">
 
-                        <!-- Heading -->
-                        <div style="background: #fff8e1; border-bottom: 1px solid #f0d080; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 13px; font-weight: 600; color: #7a5c00;">&#9432; Note:</span>
-                        </div>
+                <!-- Body -->
+                <div style="padding: 12px 14px 14px; background: #fff;">
+                    <p style="margin: 0 0 12px; font-size: 12.5px; color: #555; line-height: 1.6;">
+                        For more information on any field, hover over the
+                        <span style="display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; border:1px solid #aaa; font-size:9px; font-weight:600; color:#555; vertical-align:middle; margin:0 2px;">i</span>
+                        icon as shown below:
+                    </p>
 
-                        <!-- Body -->
-                        <div style="padding: 12px 14px 14px; background: #fff;">
-                        <p style="margin: 0 0 12px; font-size: 12.5px; color: #555; line-height: 1.6;">
-                            For more information on any field, hover over the
-                            <span style="display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; border:1px solid #aaa; font-size:9px; font-weight:600; color:#555; vertical-align:middle; margin:0 2px;">i</span>
-                            icon as shown below:
-                        </p>
-
-                        <!-- Screenshot simulation -->
-                        <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
-                            <div style="background: #1a1a2e; padding: 10px 14px; font-size: 12px; color: #e2e8f0; line-height: 1.6; text-align: center;">
+                    <!-- Screenshot simulation -->
+                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                        <div style="background: #1a1a2e; padding: 10px 14px; font-size: 12px; color: #e2e8f0; line-height: 1.6; text-align: center;">
                             A Session e.g 2024-25 starts at<br>July 2024 and ends at June 2025
-                            </div>
-                            <div style="background: #f8f9fa; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
+                        </div>
+                        <div style="background: #f8f9fa; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
                             <span style="font-size: 13px; font-weight: 500;">Session</span>
                             <span style="color: #dc3545;">*</span>
                             <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; border:1px solid #aaa; font-size:10px; font-weight:500; color:#555;">i</span>
                             <span style="font-size: 11px; color: #999; margin-left: 4px;">← hover this</span>
-                            </div>
                         </div>
-                        </div>
-
                     </div>
                 </div>
+
             </div>
-            
         </div>
+    </div>
+</div>
+
         <!-- Step 3: Sub-forms -->
         <div class="section m-3">
             <div class="section-title">

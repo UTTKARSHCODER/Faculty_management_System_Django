@@ -44,77 +44,123 @@
 <!--        </div>-->
 <!--        {% endif %}-->
         <!-- header -->
- <div class="row">
-            <div class="col-md-1 col-sm-12 text-center">
-                <img src = "/static/skit_logo.png" alt="SKIT LOGO" style = "height:80px; width:80px">
-            </div>
-            <div class="col-md-10 col-sm-12 text-center mt-2" >
-                <h3 class = "text-white text-wrap mt-3" style = "font-weight: bold;">Swami Keshvanand Institute of Technology, Management & Gramothan(SKIT)</h3>
-            </div>
-            <!-- Role-Specifier -->
-             <div class="col-md-1 col-sm-12 admin position-relative">
-                <div class="position-absolute" style="top: 10%; right: 20%;">
-                    {% if request.session.topLeftBar is not None %}
+    <div class="row align-items-center py-2">
+    
+    <!-- Logo -->
+    <div class="col-auto text-center ">
+        <img src="/static/skit_logo.png" alt="SKIT LOGO" style="height:80px; width:80px">
+    </div>
 
-                    <button type="button" class="btn btn-secondary text-white dropdown-toggle ms-5 mt-3" data-bs-toggle="dropdown"><i class = "fa-regular fa-user text-white"></i>
-                        {% if request.session.topLeftBar ==  'spa' %}
-                        SuperAdmin
-                        {% elif request.session.topLeftBar ==  'ad' %}
-                         Admin
-                        {% elif request.session.topLeftBar ==  'fa' %}
-                        Faculty
-                        {% else %}
-                        Unknown
-                        {% endif %}
-                    </button>
-                    <ul class = "dropdown-menu">
-                        <li><span style = "display: flex;"><i class = "fa-solid fa-right-from-bracket" style = "margin-top: 11px; margin-left: 15px;"></i><a class="dropdown-item" href="{% url 'logout' %}" id = "forceLogoutRedirect" style = "padding-left: 5px;">Logout</a></span></li>
-                    </ul>
-                    {% else %}
-                    <a type="button" class="btn btn-primary text-center ms-5 mt-3" href="/login">
-                        Login
-                    </a>
+    <!-- Title -->
+    <div class="col text-center">
+        <h3 class="text-white fw-bold mb-0" style="font-size: clamp(18px, 2vw, 28px);">
+            Swami Keshvanand Institute of Technology, Management & Gramothan(SKIT)
+        </h3>
+    </div>
 
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+    <!-- Role Specifier -->
+    <div class="col-auto text-center d-none d-md-block">
+        {% if request.session.topLeftBar is not None %}
+        <button type="button" class="btn btn-secondary text-white dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="fa-regular fa-user text-white"></i>
+            {% if request.session.topLeftBar == 'spa' %}
+                SuperAdmin
+            {% elif request.session.topLeftBar == 'ad' %}
+                Admin
+            {% elif request.session.topLeftBar == 'fa' %}
+                Faculty
+            {% else %}
+                Unknown
+            {% endif %}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+                <span style="display: flex;">
+                    <i class="fa-solid fa-right-from-bracket" style="margin-top: 11px; margin-left: 15px;"></i>
+                    <a class="dropdown-item" href="{% url 'logout' %}" id="forceLogoutRedirect" style="padding-left: 5px;">Logout</a>
+                </span>
+            </li>
+        </ul>
+        {% else %}
+        <a type="button" class="btn btn-primary" href="/login">Login</a>
+        {% endif %}
+    </div>
+
+</div>
 
 
     </div>
 <!--    <div class="container-fluid w-100" style="&#45;&#45;bs-gutter-x: 0;">-->
         <!-- left nav sec  -->
-    <main class = "d-flex flex-column" style = "min-height: 67.5vh">
+  <main class = "d-flex flex-column" style = "min-height: 67.5vh">
 
-        <div class="hamburger" id="hamburger">☰</div>
-
-
-    <div class="row" style = "--bs-gutter-x: 0; flex-grow: 1; flex-wrap: nowrap;">
-        <div class="col-2 sidebar" id="sidebar" style="width: auto">
-              <nav class="navbar h-100" style = "background-color: #2F3E46; width: 100%; align-content: space-between;">
-                    <ul class="navbar-nav text-dark">
-                        {% if request.session.topLeftBar %}
-                        <a href="/dashboard" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == progress or '/forms_listing/' in request.path %} active {% endif %}" id = "home">Dashboard</li></a>
-                        <a href="/profile" style = "text-decoration: none;"><li class = "nav-item text-white {% if request.path == profile or request.path == editProfile %} active {% endif %}" id = "profile">Profile</li></a>
-                        <a href="/fdp" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == fdp or 'all_forms' in request.path %} active {% endif %}" id = "faculty_development" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Faculty  Data Collection(FDC) Forms">FDC Forms</li></a>
-                        {% if request.session.topLeftBar == 'spa' %}
-                        <a href="/manage_access" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == manage_access %} active {% endif %}" id = "manage_access">Manage Access</li></a>
-                        {% endif %}
-                        {% endif %}
-                        <a href="/" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == home or '/faculty/' in request.path or request.path == fac %} active {% endif %}" id = "faculty_report">Faculty Details</li></a>
-                        {% if request.session.topLeftBar == 'spa' or request.session.topLeftBar == 'ad' %}
-                        <a href="/report" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == report %} active {% endif %}" id = "report1">Report Download</li></a>
-                        {% endif %}
-<!--                        <a href="/report" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == report %} active {% endif %}" id = "report">Report download</li></a>-->
-                        <!-- <a href="/student_directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == student_directory %} active {% endif %}" id = "student_directory">Student Directory</li></a> -->
-                        <a href="/about" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == about %} active {% endif %}" id = "about_us">About Us</li></a>
-                    </ul>
-              </nav>
+        <!-- Mobile Top Bar: Hamburger + SuperAdmin same line -->
+    <div class="d-flex d-md-none align-items-center px-3 py-2" style="background-color: #2F3E46;">
+        <button class="hamburger btn p-0" id="hamburger" style="color: white; font-size: 1.5rem;">☰</button>
+        <div class="ms-auto">
+            {% if request.session.topLeftBar is not None %}
+            <button type="button" class="btn btn-secondary text-white dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="fa-regular fa-user text-white"></i>
+                {% if request.session.topLeftBar == 'spa' %}SuperAdmin
+                {% elif request.session.topLeftBar == 'ad' %}Admin
+                {% elif request.session.topLeftBar == 'fa' %}Faculty
+                {% else %}Unknown{% endif %}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <span style="display:flex;">
+                        <i class="fa-solid fa-right-from-bracket" style="margin-top:11px; margin-left:15px;"></i>
+                        <a class="dropdown-item" href="{% url 'logout' %}" style="padding-left:5px;">Logout</a>
+                    </span>
+                </li>
+            </ul>
+            {% else %}
+            <a class="btn btn-primary" href="/login">Login</a>
+            {% endif %}
         </div>
-        {% block content %}
+    </div>
 
+    <div class="row" style="--bs-gutter-x: 0; flex-grow: 1; flex-wrap: nowrap;">
+        
+        <!-- Sidebar -->
+        <div class="col-2 sidebar" id="sidebar" style="width: auto">
+            <nav class="navbar h-100" style="background-color: #2F3E46; width: 100%; align-content: space-between;">
+                <ul class="navbar-nav text-dark">
+                    {% if request.session.topLeftBar %}
+                    <a href="/dashboard" style="text-decoration: none;">
+                        <li class="nav-item text-white {% if request.path == progress or '/forms_listing/' in request.path %}active{% endif %}" id="home">Dashboard</li>
+                    </a>
+                    <a href="/profile" style="text-decoration: none;">
+                        <li class="nav-item text-white {% if request.path == profile or request.path == editProfile %}active{% endif %}" id="profile">Profile</li>
+                    </a>
+                    <a href="/fdp" style="text-decoration: none;">
+                        <li class="nav-item text-white {% if request.path == fdp or 'all_forms' in request.path %}active{% endif %}" id="faculty_development" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Faculty Data Collection(FDC) Forms">FDC Forms</li>
+                    </a>
+                    {% if request.session.topLeftBar == 'spa' %}
+                    <a href="/manage_access" style="text-decoration: none;">
+                        <li class="nav-item text-white {% if request.path == manage_access %}active{% endif %}" id="manage_access">Manage Access</li>
+                    </a>
+                    {% endif %}
+                    {% endif %}
+                    <a href="/" style="text-decoration: none;">
+                        <li class="nav-item text-white {% if request.path == home or '/faculty/' in request.path or request.path == fac %}active{% endif %}" id="faculty_report">Faculty Details</li>
+                    </a>
+                    {% if request.session.topLeftBar == 'spa' or request.session.topLeftBar == 'ad' %}
+                    <a href="/report" style="text-decoration: none;">
+                        <li class="nav-item text-white {% if request.path == report %}active{% endif %}" id="report1">Report Download</li>
+                    </a>
+                    {% endif %}
+                    <a href="/about" style="text-decoration: none;">
+                        <li class="nav-item text-white {% if request.path == about %}active{% endif %}" id="about_us">About Us</li>
+                    </a>
+                </ul>
+            </nav>
+        </div>
+
+        {% block content %}
         {% endblock %}
     </div>
+
         <!-- The Message Modal -->
         <div class="modal fade" id="messageModal">
             <div class="modal-dialog modal-dialog-centered">
@@ -140,6 +186,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Delete Model Ends -->
         <script src="{% static 'dynamic_message.js' %}"></script>
         <script>
@@ -201,10 +248,13 @@
               });
         </script>
     </main>
+    
+
     <style>
         html,body{
             width: 100%;
             height: 100%;
+            overflow-x: hidden;
         }
      
         .nav-item{
@@ -232,6 +282,11 @@
 
 
 /* Mobile view */
+@media(max-width:279px){
+    .col-auto.text-center{
+      width: 100%;
+    }
+}
 @media(max-width:768px){
 
     .hamburger{
@@ -256,6 +311,7 @@
 }
 
     </style>
+
    <script>
 const hamburger = document.getElementById("hamburger");
 const sidebar = document.getElementById("sidebar");
