@@ -4,6 +4,7 @@ import uuid
 from django.db import models
 from django.db.models import CASCADE
 from multiselectfield import MultiSelectField
+from django.utils import timezone
 
 class batch(models.TextChoices):
     CS_A = "3CS-A",
