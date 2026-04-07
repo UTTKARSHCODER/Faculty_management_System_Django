@@ -238,8 +238,8 @@ class category(models.TextChoices):
     INTERNSHIP = "INT","Internship",
     BOS = "BOS","BOS",
     DRC = "DRC","DRC",
-    SHORT_TERM_COURSES = "STC","Short Term Courses",
-    MOOC = "MOOC","MOOC courses",
+    SHORT_TERM_COURSES = "STC","Short Term Course",
+    MOOC = "MOOC","MOOC",
     INDUCTION_PROGRAM = "IP","Induction Program",
     EDUCATION = "EDU","Education",
     RESEARCH = "REA","Research",
@@ -247,8 +247,8 @@ class category(models.TextChoices):
     SPONSORED_GRANT= "SG","Sponsored Grant",
     RESEARCH_PROJECT = "RP","Research Project",
     CONSULTANCY = "CONS","Consultancy",
-    M_TECH = "M_TECH","M.Tech Students",
-    PHD = "PH_D","Ph.D Students",
+    M_TECH = "M_TECH","M.Tech",
+    PHD = "PH_D","Ph.D",
     OTHER = "OTH", "Other"
 
 class Faculty_participation_data(models.Model):
@@ -289,7 +289,7 @@ class Faculty_participation_data(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.get_category_display()} + {self.top} + {self.pk}"
+        return self.get_category_display() + " " + self.top
 
 class doc(models.TextChoices):
     WEEK_4 = "4", "4 Weeks",
@@ -668,7 +668,7 @@ class guided(models.Model):
     def __str__(self):
         return self.get_category_display() + " " + self.nos
 
-class resouce_person_type(models.TextChoices):
+class resource_person_type(models.TextChoices):
     EXTERNAL_EXAMINATION_UG = "EE(UG)", "External  Examination(UG)",
     EXTERNAL_EXAMINATION_PG = "EE(PG)", "External  Examination(PG)",
     EDITORIAL_BOARD_MEMBER = "EBM", "Editorial Board Member",
@@ -697,8 +697,8 @@ class resource(models.Model):
     doe = models.IntegerField()
     rpt = models.CharField(
         max_length=6,
-        choices=resouce_person_type.choices,
-        default=resouce_person_type.OTHER
+        choices=resource_person_type.choices,
+        default=resource_person_type.OTHER
     )
     begi_date = models.DateField()
     end_date = models.DateField()

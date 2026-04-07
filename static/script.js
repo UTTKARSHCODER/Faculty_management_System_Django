@@ -2231,6 +2231,7 @@ document.addEventListener('submit', function(e) {
             } else {
                 submitButton.disabled = false;
                 submitButton.innerText = "Try Again";
+                alert(data.error);
             }
         })
         .catch(error => {

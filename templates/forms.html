@@ -377,18 +377,18 @@
         <script>
 (function() {
     'use strict'
-    
+
     const form = document.querySelector('.needs-validation');
-    
+
     if (form) {
         // Professional Courses checkbox validation
         const professionalCheckboxes = document.querySelectorAll('.professional-course-checkbox');
         const professionalCoursesError = document.getElementById('professionalCoursesError');
-        
+
         // Function to validate professional courses checkboxes
         function validateProfessionalCourses() {
     const isChecked = Array.from(professionalCheckboxes).some(cb => cb.checked);
-    
+
     professionalCheckboxes.forEach(checkbox => {
         if (!isChecked) {
             checkbox.classList.add('is-invalid');
@@ -398,7 +398,7 @@
             checkbox.classList.add('is-valid');
         }
     });
-    
+
     if (!isChecked) {
         professionalCoursesError.style.display = 'block';
         return false;
@@ -407,7 +407,7 @@
         return true;
     }
 }
-        
+
         // Add real-time validation on checkbox change
         professionalCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
@@ -416,21 +416,21 @@
                 }
             });
         });
-        
+
         // Form submission validation
         form.addEventListener('submit', function(event) {
             const formValid = form.checkValidity();
             const checkboxValid = validateProfessionalCourses();
-            
+
             if (!formValid || !checkboxValid) {
                 event.preventDefault();
                 event.stopPropagation();
             }
-            
+
             form.classList.add('was-validated');
         }, false);
     }
-    
+
 })();
 
 // file validation for pdf file
@@ -1176,7 +1176,11 @@ function createLinkField(name, placeholder) {
     {% endif %}
     </div>
 </div>
+<!-- Dynamically loading forms from this js -->
+{% if form_number != 16 %}
 <script src = "{% static 'script.js' %}"></script>
+{% endif %}
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // --- Checkbox Validation Logic ---
