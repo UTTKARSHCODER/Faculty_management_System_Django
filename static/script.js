@@ -2186,6 +2186,7 @@ document.addEventListener('submit', function(e) {
         submitButton.disabled = true;
         submitButton.innerText = "Saving...";
     }
+    console.log(e.target.classList);
     if(e.target.classList.contains('sub-for')) {
         const formData = new FormData(e.target);
         const redirect_url = `/save_all_forms/${form_number}`;
@@ -2204,6 +2205,29 @@ document.addEventListener('submit', function(e) {
                 if(curr_count === totalForms) {
                     window.location.href = '/success';
                 }
+            } else {
+                submitButton.disabled = false;
+                submitButton.innerText = "Try Again";
+            }
+        })
+        .catch(error => {
+            console.log("Error fetching the result");
+        });
+    } else if (e.target.classList.contains('upl-exe')){
+        const formData = new FormData(e.target);
+        const redirect_url = `/upload_excel/${form_number}`;
+        fetch(redirect_url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': `${csrfToken}`
+            }
+        })
+        .then(response=>response.json())
+        .then(data=> {
+            if(data.status === 'success') {
+                submitButton.innerText = "Saved Successfully!";
+                window.location.href = '/all_forms/' + form_number;
             } else {
                 submitButton.disabled = false;
                 submitButton.innerText = "Try Again";

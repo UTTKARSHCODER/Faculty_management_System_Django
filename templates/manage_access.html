@@ -50,7 +50,7 @@
                   <td></td>
                   {% else %}
                   <td><a href = "#" data-bs-toggle="modal" data-bs-target="#editDetails" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" data-contact-number="{{value.contact_number}}" data-status="{{value.status}}" data-department = "{{value.department}}" data-role = "{{value.role}}" data-form="{{value.form_alloted}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>
-                  <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
+                  <td><a href = "#" data-bs-toggle="modal" data-bs-target="#deleteUser" data-pk = "{{value.pk}}" data-emp-id = "{{value.emp_id}}" data-emp-name = "{{value.name}}" data-emp-email = "{{value.email}}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-trash-can"></i></a></td>
                   {% endif %}
                   <td>{{value.emp_id}}</td>
                   <td>{{value.name}}</td>
@@ -84,7 +84,7 @@
 
             </div>
         </div>
-        <form action="/upload_excel/1" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
+        <form action="/upload_excel/14" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
             <div class="modal fade" id="upload_file" tabindex="-1">
                 <div class="modal-dialog">
@@ -137,7 +137,7 @@
                         <form action="/deleteUser" method="POST">
                             {% csrf_token %}
                             <div class="dflex justify-content-end">
-                                <input type = "hidden" id="faculty_emp_id" name = "faculty_emp_id" value = "">
+                                <input type = "hidden" id="faculty_pk" name = "faculty_pk" value = "">
                                 <button type="button" class = "btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Delete User</button>
                             </div>
@@ -574,13 +574,14 @@
         $('#deleteUser').on('show.bs.modal', function(event) {
             var link =  $(event.relatedTarget);
             var faculty_id = link.data('empId');
+            var unique_id = link.data('pk');
             var faculty_name = link.data('empName');
             var email = link.data('empEmail');
             var modal = $(this);
             modal.find('#modal-emp-id').text(faculty_id);
             modal.find('#modal-name').text(faculty_name);
             modal.find('#modal-email').text(email);
-            modal.find('#faculty_emp_id').val(faculty_id);
+            modal.find('#faculty_pk').val(unique_id);
         });
     });
     $(document).ready(function() {

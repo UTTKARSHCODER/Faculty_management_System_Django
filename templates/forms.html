@@ -458,6 +458,9 @@ document.addEventListener('change', function(event) {
 </script>
         </div>
     {% else %}
+        <div class="d-flex justify-content-center align-items-center">
+            <button class="btn btn-primary mt-3" type="button" data-bs-toggle="modal" data-bs-target="#upload_file">Upload Previous Year Data</button>
+        </div>
         <div class="row form-row m-3">
             <div class="row">
                 <div class="col-md-8">
@@ -955,6 +958,37 @@ document.addEventListener('change', function(event) {
                 <div class="empty-state">Enter quantities above to generate sub-forms</div>
             </div>
         </div>
+        <!-- Bulk Upload Modal Begins -->
+        <form action="/upload_excel/{{ form_number }}" class="upl-exe" method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <div class="modal fade" id="upload_file" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- modal header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title custom-font">Upload Excel File</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <!-- modal body -->
+                        <div class="modal-body">
+                            <div>
+                                <input type="file" id = "excel_file"  name="excel_file" class="m-3" accept=".xlsx,.xlsm" required>
+                                <button type="submit" class="btn btn-primary rounded-pill">Upload File</button>
+                            </div>
+                            <div>
+                                <a href="/static/faculty_dir_excel.png" target="_blank">Click here to view the excel
+                                    format to upload</a>
+                            </div>
+                        </div>
+                        <!-- modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- Bulk Upload Modal Ends -->
         <script>
     document.addEventListener('keydown', function(event) {
         const target = event.target;

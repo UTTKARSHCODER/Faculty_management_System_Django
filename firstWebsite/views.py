@@ -130,8 +130,8 @@ def successfulsubmission(request):
 def deleteuser(request):
     if request.method == "POST":
 
-        faculty_id = request.POST.get('faculty_emp_id')
-        faculty_object = get_object_or_404(Faculty, emp_id=faculty_id)
+        faculty_pk = request.POST.get('faculty_pk')
+        faculty_object = get_object_or_404(Faculty, pk=faculty_pk)
         faculty_object.delete()
         messages.success(request,"User deleted successfully!")
 
