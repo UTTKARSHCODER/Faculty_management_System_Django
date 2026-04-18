@@ -18,8 +18,8 @@
 </style>
 
 <div class="col-10">
-    <div class="container mt-3 mb-3 px-3">
-        <div class="card p-3 p-md-4 w-100" style="max-width: 500px;">
+    <div class="container-fluid mt-3 mb-3 ml-3 mr-3 px-3">
+        <div class="card p-3 p-md-4 w-100" style="max-width: 100%;">
             
             <!-- Top Sectio- Image + Info -->
             <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start gap-3">
@@ -31,17 +31,26 @@
                 </div>
                 <div class="text-center text-sm-start">
                     <h2 class="fw-bold mb-1">{{data.name}}</h2>
-                    <p class="text-muted mb-3" style="font-size: 16px;">
-                        {{data.get_department_display}}, {{data.get_designation_display}}
+                    <p class="text-muted mb-1" style="font-size: 16px;">
+                        {{data.get_department_display}}
                     </p>
-                    <button class="btn text-white px-4" 
+                        {{data.get_designation_display}}
+                        <br>
+                    
+                    <button class="btn text-white px-4 mt-3" 
                             style="background-color: rgb(79 70 229);"
                             onclick="window.location.href='{% url 'editProfile' %}';">
                         <i class="fa-solid fa-pen me-2"></i>Edit Profile
                     </button>
                 </div>
             </div>
-
+</div>
+</div>
+<!-- Contact Info  -->
+<div class="col-12">
+    <div class="container-fluid mt-3 mb-3 px-3">
+        <div class="card p-3 p-md-4 w-100" style="max-width: 100%;">
+                    <h4 class="fw-bold mb-1">Contact Information</h4>
             <hr class="my-3">
 
             <!-- Contact Info -->
@@ -59,7 +68,14 @@
                     {{data.address}}
                 </p>
             </div>
+        </div>
 
+  <!-- Academic Profiles -->
+
+  <div class="col-12">
+    <div class="container-fluid  mt-3 mb-3 px-0">
+        <div class="card p-3 p-md-4 w-100" style="max-width: 100%;">
+          <h4 class="fw-bold mb-1">Qualifications & Academic Profiles</h4>
             <hr class="my-3">
 
             <!-- Details Grid -->
@@ -110,7 +126,6 @@
 
         </div>
     </div>
-</div>
 
 
 {% endblock %}

@@ -49,7 +49,10 @@
     .container.ms-5 {
         margin-left: 0.5rem !important;
         margin-right: 0.5rem !important;
+        
     }
+
+    
 
     .row.g-3 {
         flex-direction: column !important;
@@ -73,6 +76,7 @@
         display: flex;
         justify-content: center;
     }
+    
 
     .total_count {
         text-align: center;
@@ -82,11 +86,11 @@
 </style>
 <div class="col-10">
     <div class="container ms-5 mt-4 mb-3">
-
         <div class=" row g-3">
             <!-- ye left wale section ka code hai  -->
-            <div class="col-12 col-md-7">
-                <ul class="nav nav-tabs" role="tablist">
+            <div class=" container col-12 col-md-7">
+                <div class="container">
+                <ul class="nav nav-tabs" text-allign="center" role="tablist">
                     {% for form_no, form_name in form_to_show %}
                         {% if forloop.first %}
                         <li><button class="nav-link active" id="{{ form_no }}" onclick="openTab(event, '{{ form_no }}')">{{ form_no }} {{ form_name }}</button></li>
@@ -94,6 +98,7 @@
                         <li><button class="nav-link" id="{{ form_no }}" onclick="openTab(event, '{{ form_no }}')">{{ form_no }} {{ form_name }}</button></li>
                         {% endif %}
                     {% endfor %}
+                </div>
                 </ul>
                 <div class="tab-content tab-hidden table-responsive pt-2" id="fn_1_1">
                     <table class = "table table-hover table-striped mt-3" id="form_table_faculty_details">
