@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 import re
 
-from firstWebsite.modals import Student_Directory, Faculty, accept, Faculty_participation_data, level, mode, category, \
+from firstWebsite.modals import Faculty, accept, Faculty_participation_data, level, mode, category, \
     session, mooc_course, doc, medals, pertopper, eof_choices, sponsors, events, department, awards_and_achievments, \
     index_by, quartile, research_journal, research_conference, research_book, patents, type_of_patent, status_of_patent, \
     enrollmentYear, survillance, guided, resource_person_type, resource, sponsored_research, status
@@ -28,8 +28,8 @@ def new_user_registration(data, username):
     return user_instance
 
 
-def upload_excel(request, pk):
-    if pk and request.method == 'POST':
+def upload_excel(request, form_no):
+    if form_no and request.method == 'POST':
 
         dataset = Dataset()
         new_data = request.FILES['excel_file']
@@ -53,7 +53,7 @@ def upload_excel(request, pk):
         session_db_val = {choice.label: choice.value for choice in session}
         approval_db_val = {choice.label: choice.value for choice in accept}
 
-        if pk == 0:
+        if form_no == 0:
             for data in imported_data.dict:
                 value = Student_Directory(name=data['name'], roll_no=data['roll_no'], college_id=data['college_id'],
                                           email=data['email'], student_phone_no=data['student_phone_no'],
@@ -63,7 +63,7 @@ def upload_excel(request, pk):
             messages.success(request, 'We are glad to share that your excel file is uploaded successfully!')
             return redirect(reverse('student-directory'))
 
-        elif pk == 14:
+        elif form_no == 14:
             for data in df.to_dict(orient='records'):
                 if not data['name']:
                     continue
@@ -73,7 +73,7 @@ def upload_excel(request, pk):
 
             return redirect(reverse('manage_access'))
 
-        elif pk == 1:
+        elif form_no == 1:
 
             level_db_val = {choice.label: choice.value for choice in level}
             mode_db_val = {choice.label: choice.value for choice in mode}
@@ -110,7 +110,7 @@ def upload_excel(request, pk):
                 except Exception:
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
-        elif pk == 2:
+        elif form_no == 2:
 
             for data in df.to_dict(orient='records'):
 
@@ -148,7 +148,7 @@ def upload_excel(request, pk):
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
 
-        elif pk == 3:
+        elif form_no == 3:
 
             for data in df.to_dict(orient='records'):
 
@@ -202,7 +202,7 @@ def upload_excel(request, pk):
                 except Exception:
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
-        elif pk == 4:
+        elif form_no == 4:
             for data in df.to_dict(orient='records'):
                 try:
                     if not data['name_of_the_award_achievement']:
@@ -231,7 +231,7 @@ def upload_excel(request, pk):
                 except Exception:
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
-        elif pk == 5:
+        elif form_no == 5:
             for data in df.to_dict(orient='records'):
                 status_db_val = {choice.label: choice.value for choice in status}
                 try:
@@ -260,7 +260,7 @@ def upload_excel(request, pk):
                 except Exception:
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
-        elif pk == 6:
+        elif form_no == 6:
             for data in df.to_dict(orient='records'):
                 level_db_val = {choice.label: choice.value for choice in level}
                 index_by_db_val = {choice.label: choice.value for choice in index_by}
@@ -299,7 +299,7 @@ def upload_excel(request, pk):
                 except Exception:
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
-        elif pk == 7:
+        elif form_no == 7:
             for data in df.to_dict(orient='records'):
                 level_db_val = {choice.label: choice.value for choice in level}
 
@@ -333,7 +333,7 @@ def upload_excel(request, pk):
                 except Exception:
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
-        elif pk == 8:
+        elif form_no == 8:
             for data in df.to_dict(orient='records'):
                 level_db_val = {choice.label: choice.value for choice in level}
 
@@ -366,7 +366,7 @@ def upload_excel(request, pk):
                 except Exception:
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
-        elif pk == 9:
+        elif form_no == 9:
             for data in df.to_dict(orient='records'):
                 type_of_patent_db_val = {choice.label: choice.value for choice in type_of_patent}
                 status_of_patent_db_val = {choice.label: choice.value for choice in status_of_patent}
@@ -400,7 +400,7 @@ def upload_excel(request, pk):
                 except Exception:
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
-        elif pk == 10:
+        elif form_no == 10:
             for data in df.to_dict(orient='records'):
                 visor_db_val = {choice.label: choice.value for choice in survillance}
                 enrollment_year_db_val = {choice.label: choice.value for choice in enrollmentYear}
@@ -433,7 +433,7 @@ def upload_excel(request, pk):
                 except Exception:
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
-        elif pk == 11:
+        elif form_no == 11:
             for data in df.to_dict(orient='records'):
                 resource_person_type_db_val = {choice.label: choice.value for choice in resource_person_type}
 

@@ -139,16 +139,8 @@
 }
 </style>
 
-<div class="col-10 ms-4 mt-3">
-    <div class="container-custom" id="app"></div>
-    <!-- <div class="container-custom">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold" style="color: var(--primary-dark);">Faculty & Departmental Dashboard</h2>
-        </div>
+<div class="container-custom" id="app"></div>
 
-        <div id="masterContainer"></div>
-    </div> -->
-</div>
 {{ nts|json_script:"my-data-nts" }}
 {{ fdp1|json_script:"my-data-fdp1" }}
 {{ msc1|json_script:"my-data-msc1" }}
@@ -164,5 +156,54 @@
 {{ form_type|json_script:"my-data-formtype" }}
 
 <script src = "{% static 'form_listing.js' %}"></script>
+<!-- The Delete Modal -->
+<div class="modal fade" id="deleteUser">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title text-white">Delete Entry Permanently</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+          <!-- Modal body -->
+            <div class="modal-body">
+                Are you sure you want to delete <strong><span id = "modal-head-main"></span></strong> entry permanently?
+            </div>
+
+          <!-- Modal footer -->
+            <div class="modal-footer">
+                <form id="deleteForm" method="POST">
+                    {% csrf_token %}
+                    <div class="dflex justify-content-end">
+                        <input type = "hidden" id="pk" name = "pk" value = "">
+                        <input type = "hidden" id="form_no" name = "form_no" value = "">
+                        <input type = "hidden" name = "next" value = "{{ request.path }}">
+                        <button type="button" class = "btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Delete Entry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Model Ends -->
+<script>
+    $(document).ready(function() {
+        $('#deleteUser').on('show.bs.modal', function(event) {
+            const link = $(event.relatedTarget);
+            const pk = link.data('pk');
+            const form_no = link.data('form_no');
+            const main_value = link.data('deleteEntryName');
+            console.log(main_value);
+            const modal = $(this);
+            modal.find('#modal-head-main').text(main_value);
+            modal.find('#pk').val(pk);
+            modal.find('#form_no').val(form_no);
+            modal.find('#deleteForm').attr('action', '/deleteformdata');
+        });
+    });
+</script>
 
 {% endblock %}

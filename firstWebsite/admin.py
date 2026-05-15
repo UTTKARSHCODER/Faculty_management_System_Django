@@ -1,12 +1,11 @@
 from django.contrib import admin
 
-from firstWebsite.modals import Student_Directory, Faculty, Faculty_participation_data, mooc_course, events, \
+from firstWebsite.modals import Faculty, Faculty_participation_data, mooc_course, events, \
     awards_and_achievments, sponsored_research, research_journal, research_conference, research_book, patents, guided, \
     resource, non_teaching_staff
 
 # Tester 3121
 # Register your models here.
-admin.site.register(Student_Directory)
 admin.site.register(Faculty)
 admin.site.register(Faculty_participation_data)
 admin.site.register(mooc_course)

@@ -98,867 +98,866 @@
         color: #198754;
     }
 </style>
-<div class="col-md-10 col-sm-12">
-    <div class="conatiner">
-    {% if form_number == 16 %}
-        <div class="row form-row-non-tech">
-            <form action="/save_all_forms/16" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
-                {% csrf_token %}
-                <div class="row g-3">
-                    <div class="col-md-4" style = "margin-top: 2.5rem;">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
-                            <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-26</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
-                                <div class="invalid-feedback">Please select an option.</div>
-                            </div>
+<div class="conatiner">
+{% if form_number == 16 %}
+    <div class="row form-row-non-tech">
+        <form action="/save_all_forms/16" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-4" style = "margin-top: 2.5rem;">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                        <div class="col-sm-8">
+                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
+                                <option value="" selected disabled>Select your Session</option>
+                                <option value="2024-25">2024-26</option>
+                                <option value="2025-26">2025-26</option>
+                                <option value="2026-27">2026-27</option>
+                                <option value="2027-28">2027-28</option>
+                                <option value="2028-29">2028-29</option>
+                                <option value="2029-30">2029-30</option>
+                            </select>
+                            <div class="invalid-feedback">Please select an option.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label for="top" class="col-sm-4 col-form-label">Name<span class="ms-1" style="color: red;">*</span></label>
-                            <div class = "col-md-8">
-                                <input type="text" class="form-control custom-back" id="top" pattern="[A-Za-z\s]+" title="Numbers and special characters are not allowed" placeholder="Enter your name" name="name" required>
-                                <div class="invalid-feedback">Please enter your name.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label for="top" class="col-sm-4 col-form-label">Name<span class="ms-1" style="color: red;">*</span></label>
+                        <div class = "col-md-8">
+                            <input type="text" class="form-control custom-back" id="top" pattern="[A-Za-z\s]+" title="Numbers and special characters are not allowed" placeholder="Enter your name" name="name" required>
+                            <div class="invalid-feedback">Please enter your name.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Mobile No<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="tel" class="form-control" maxlength="10" pattern="[6789][0-9]{9}" placeholder="Enter 10-Digit mobile number" name = "mobile_no" required>
-                                <div class="invalid-feedback">Please enter your mobile number with starting digit 6 onwards.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Mobile No<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="tel" class="form-control" maxlength="10" pattern="[6789][0-9]{9}" placeholder="Enter 10-Digit mobile number" name = "mobile_no" required>
+                            <div class="invalid-feedback">Please enter your mobile number with starting digit 6 onwards.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Email ID<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="{{value.email}}" name = "organizer" readonly>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Email ID<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" placeholder="{{value.email}}" name = "organizer" readonly>
 
-                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Department<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="department" id="department" required>
-                                    <option value="" selected disabled>Select your Department</option>
-                                    <option value="CSE">Computer Science & Engineering</option>
-                                    <option value="CSE(AI)">Computer Science & Engineering(AI)</option>
-                                    <option value="CSE(DS)">Computer Science & Engineering(DS)</option>
-                                    <option value="CSE(IOT)">Computer Science & Engineering(IOT)</option>
-                                </select>
-                                <div class="invalid-feedback">Please select your department.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Department<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-select custom-back-select" name="department" id="department" required>
+                                <option value="" selected disabled>Select your Department</option>
+                                <option value="CSE">Computer Science & Engineering</option>
+                                <option value="CSE(AI)">Computer Science & Engineering(AI)</option>
+                                <option value="CSE(DS)">Computer Science & Engineering(DS)</option>
+                                <option value="CSE(IOT)">Computer Science & Engineering(IOT)</option>
+                            </select>
+                            <div class="invalid-feedback">Please select your department.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Lab No<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter lab no." name = "lab_no" required>
-                                <div class="invalid-feedback">Please enter your lab number.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Lab No<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" placeholder="Enter lab no." name = "lab_no" required>
+                            <div class="invalid-feedback">Please enter your lab number.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Desgination<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="designation" id="designation" required>
-                                    <option value="" selected disabled>Select your Highest Qualification</option>
-                                    <option value="OA">Office Assistant</option>
-                                    <option value="LA">Lab Assistant</option>
-                                    <option value="TA">Technical Assistant</option>
-                                    <option value="A">Assistant</option>
-                                    <option value="C">Clerk</option>
-                                    <option value="O" id="Other">Other</option>
-                                </select>
-                                <div class="invalid-feedback">Please select your designation.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Desgination<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-select custom-back-select" name="designation" id="designation" required>
+                                <option value="" selected disabled>Select your Highest Qualification</option>
+                                <option value="OA">Office Assistant</option>
+                                <option value="LA">Lab Assistant</option>
+                                <option value="TA">Technical Assistant</option>
+                                <option value="A">Assistant</option>
+                                <option value="C">Clerk</option>
+                                <option value="O" id="Other">Other</option>
+                            </select>
+                            <div class="invalid-feedback">Please select your designation.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Employee ID<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" maxlength="6" min="0" oninput="if(this.value<0)this.value=0" placeholder="Enter employee ID" name = "emp_id" required>
-                                <div class="invalid-feedback">Please enter your employee ID.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Employee ID<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" maxlength="6" min="0" oninput="if(this.value<0)this.value=0" placeholder="Enter employee ID" name = "emp_id" required>
+                            <div class="invalid-feedback">Please enter your employee ID.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Highest Qualification<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="highest_qualification" id="highest_qualification" required>
-                                    <option value="" selected disabled>Select your Highest Qualification</option>
-                                    <option value="BT">B.E. / B.Tech</option>
-                                    <option value="MT">M.E. / M.Tech</option>
-                                    <option value="MS">M.S.</option>
-                                    <option value="MBA">MBA</option>
-                                    <option value="PHD">Ph.D.</option>
-                                    <option value="PD">Post-Doctoral Research (Post-Doc)</option>
-                                    <option value="O" id="hqOther">Other</option>
-                                </select>
-                                <div class="invalid-feedback">Please select your highest qualification.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Highest Qualification<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-select custom-back-select" name="highest_qualification" id="highest_qualification" required>
+                                <option value="" selected disabled>Select your Highest Qualification</option>
+                                <option value="BT">B.E. / B.Tech</option>
+                                <option value="MT">M.E. / M.Tech</option>
+                                <option value="MS">M.S.</option>
+                                <option value="MBA">MBA</option>
+                                <option value="PHD">Ph.D.</option>
+                                <option value="PD">Post-Doctoral Research (Post-Doc)</option>
+                                <option value="O" id="hqOther">Other</option>
+                            </select>
+                            <div class="invalid-feedback">Please select your highest qualification.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">University Name<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" pattern="[A-Za-z\s]+" title="Numbers and special characters are not allowed" placeholder="Enter university name" name = "univ_name" required>
-                                <div class="invalid-feedback">Please enter your university name.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">University Name<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" pattern="[A-Za-z\s]+" title="Numbers and special characters are not allowed" placeholder="Enter university name" name = "univ_name" required>
+                            <div class="invalid-feedback">Please enter your university name.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Passing Year of Highest Degree<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" min="2000" placeholder="Enter passing year of highest degree" name = "pshd" required>
-                                <div class="invalid-feedback">Please enter your passing year of highest degree.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Passing Year of Highest Degree<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" min="2000" placeholder="Enter passing year of highest degree" name = "pshd" required>
+                            <div class="invalid-feedback">Please enter your passing year of highest degree.</div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Higher Degree Certificate(Date of Award)<span class="ms-1" style="color: red;">*</span>
-                            <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "hdc" accept=".pdf,.jpg,.jpeg,.png" required>
-                                <div class="invalid-feedback">Please upload your higher degree certificate in <b>pdf format only.</b>.</div>
-                            </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Higher Degree Certificate(Date of Award)<span class="ms-1" style="color: red;">*</span>
+                        <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "hdc" accept=".pdf,.jpg,.jpeg,.png" required>
+                            <div class="invalid-feedback">Please upload your higher degree certificate in <b>pdf format only.</b>.</div>
                         </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="row align-items-center">
-                            <label class="col-sm-2 col-form-label">Professional Courses<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-10">
-                                <div class="d-flex column-gap-4">
-                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                                        <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio1" name="professional_courses" value="CCNA">
-                                        <label class="form-check-label" for="radio1">CCNA</label>
-                                    </div>
-                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                                        <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio2" name="professional_courses" value="HN">
-                                        <label class="form-check-label" for="radio2">Hardware & Networking</label>
-                                    </div>
-                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                                        <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio3" name="professional_courses" value="O/A">
-                                        <label class="form-check-label" for="radio3">O Level/ A level</label>
-                                    </div>
-                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                                        <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio4" name="professional_courses" value="ACT">
-                                        <label class="form-check-label" for="radio4">AWS Cloud Technical</label>
-                                    </div>
-                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                                        <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio5" name="professional_courses" value="VM">
-                                        <label class="form-check-label" for="radio5">VMware</label>
-                                    </div>
-                                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                                        <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio6" name="professional_courses" value="O">
-                                        <label class="form-check-label" for="radio6">Other</label>
-                                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row align-items-center">
+                        <label class="col-sm-2 col-form-label">Professional Courses<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-10">
+                            <div class="d-flex column-gap-4">
+                                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                                    <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio1" name="professional_courses" value="CCNA">
+                                    <label class="form-check-label" for="radio1">CCNA</label>
                                 </div>
-                                <div class="invalid-feedback" id="professionalCoursesError" style="display: none;">
-                                    Please select at least one professional course.
+                                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                                    <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio2" name="professional_courses" value="HN">
+                                    <label class="form-check-label" for="radio2">Hardware & Networking</label>
+                                </div>
+                                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                                    <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio3" name="professional_courses" value="O/A">
+                                    <label class="form-check-label" for="radio3">O Level/ A level</label>
+                                </div>
+                                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                                    <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio4" name="professional_courses" value="ACT">
+                                    <label class="form-check-label" for="radio4">AWS Cloud Technical</label>
+                                </div>
+                                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                                    <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio5" name="professional_courses" value="VM">
+                                    <label class="form-check-label" for="radio5">VMware</label>
+                                </div>
+                                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                                    <input type="checkbox" class="form-check-input professional-course-checkbox" id="radio6" name="professional_courses" value="O">
+                                    <label class="form-check-label" for="radio6">Other</label>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 " style = "margin-top: 1.7rem;">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Pan No.<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    placeholder="ABCDE1234F" 
-                                    name="pan_no" 
-                                    id="pan_no"
-                                    pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" 
-                                    maxlength="10"
-                                    oninput="this.value = this.value.toUpperCase()"
-                                    required>
-                                <div class="invalid-feedback">Please enter a valid 10-digit PAN (e.g., ABCDE1234F).</div>
-                                <div class="valid-feedback">Format looks correct!</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Date of Birth<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="date" class="form-control" min="1930-01-01" max="2001-12-31" placeholder="Enter your dob" name = "dob" required>
-                                <div class="invalid-feedback">Please enter your date of birth.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Joining Date<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of joining" name = "jd" required>
-                                <div class="invalid-feedback">Please enter your date of joining.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Promotion Date(If any)</label>
-                            <div class="col-sm-8">
-                                <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of promotion" name = "pd">
-                                <div class="invalid-feedback">Please enter your date of promotion.</div>
+                            <div class="invalid-feedback" id="professionalCoursesError" style="display: none;">
+                                Please select at least one professional course.
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row g-3 mt-2">
-                    <div class="col-md-6">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Joining Report<span class="ms-1" style="color: red;">*</span>
-                            <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "jr" accept=".pdf,.jpg,.jpeg,.png" required>
-                                <div class="invalid-feedback">Please upload your joining report in <b>pdf format only.</b>.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Offer Letter     (Appointment Letter)<span class="ms-1" style="color: red;">*</span>
-                            <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "ol" accept=".pdf,.jpg,.jpeg,.png" required>
-                                <div class="invalid-feedback">Please upload your offer letter in <b>pdf format only.</b>.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Salary Slip (Recently)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "ss" accept=".pdf,.jpg,.jpeg,.png">
-                                <div class="invalid-feedback">Please upload your salary slip in <b>pdf format only.</b>.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">If Awards and recognition received for extension activities (Upload Certificate)<h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "awards" accept=".pdf,.jpg,.jpeg,.png">
-                                <div class="invalid-feedback">Please upload your awards and recognition certificate in <b>pdf format only.</b>.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class = "col-md-12">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
+                <div class="col-md-4 " style = "margin-top: 1.7rem;">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Pan No.<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="ABCDE1234F"
+                                name="pan_no"
+                                id="pan_no"
+                                pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                                maxlength="10"
+                                oninput="this.value = this.value.toUpperCase()"
+                                required>
+                            <div class="invalid-feedback">Please enter a valid 10-digit PAN (e.g., ABCDE1234F).</div>
+                            <div class="valid-feedback">Format looks correct!</div>
                         </div>
                     </div>
                 </div>
-            </form>
-        <script>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Date of Birth<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" min="1930-01-01" max="2001-12-31" placeholder="Enter your dob" name = "dob" required>
+                            <div class="invalid-feedback">Please enter your date of birth.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Joining Date<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of joining" name = "jd" required>
+                            <div class="invalid-feedback">Please enter your date of joining.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Promotion Date(If any)</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of promotion" name = "pd">
+                            <div class="invalid-feedback">Please enter your date of promotion.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3 mt-2">
+                <div class="col-md-6">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Joining Report<span class="ms-1" style="color: red;">*</span>
+                        <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "jr" accept=".pdf,.jpg,.jpeg,.png" required>
+                            <div class="invalid-feedback">Please upload your joining report in <b>pdf format only.</b>.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Offer Letter     (Appointment Letter)<span class="ms-1" style="color: red;">*</span>
+                        <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "ol" accept=".pdf,.jpg,.jpeg,.png" required>
+                            <div class="invalid-feedback">Please upload your offer letter in <b>pdf format only.</b>.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Salary Slip (Recently)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "ss" accept=".pdf,.jpg,.jpeg,.png">
+                            <div class="invalid-feedback">Please upload your salary slip in <b>pdf format only.</b>.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">If Awards and recognition received for extension activities (Upload Certificate)<h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "awards" accept=".pdf,.jpg,.jpeg,.png">
+                            <div class="invalid-feedback">Please upload your awards and recognition certificate in <b>pdf format only.</b>.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class = "col-md-12">
+                    <div class="row align-items-center justify-content-center">
+                        <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    <script>
 (function() {
-    'use strict'
+'use strict'
 
-    const form = document.querySelector('.needs-validation');
+const form = document.querySelector('.needs-validation');
 
-    if (form) {
-        // Professional Courses checkbox validation
-        const professionalCheckboxes = document.querySelectorAll('.professional-course-checkbox');
-        const professionalCoursesError = document.getElementById('professionalCoursesError');
+if (form) {
+    // Professional Courses checkbox validation
+    const professionalCheckboxes = document.querySelectorAll('.professional-course-checkbox');
+    const professionalCoursesError = document.getElementById('professionalCoursesError');
 
-        // Function to validate professional courses checkboxes
-        function validateProfessionalCourses() {
-    const isChecked = Array.from(professionalCheckboxes).some(cb => cb.checked);
+    // Function to validate professional courses checkboxes
+    function validateProfessionalCourses() {
+const isChecked = Array.from(professionalCheckboxes).some(cb => cb.checked);
 
-    professionalCheckboxes.forEach(checkbox => {
-        if (!isChecked) {
-            checkbox.classList.add('is-invalid');
-            checkbox.classList.remove('is-valid');
-        } else {
-            checkbox.classList.remove('is-invalid');
-            checkbox.classList.add('is-valid');
-        }
-    });
-
+professionalCheckboxes.forEach(checkbox => {
     if (!isChecked) {
-        professionalCoursesError.style.display = 'block';
-        return false;
+        checkbox.classList.add('is-invalid');
+        checkbox.classList.remove('is-valid');
     } else {
-        professionalCoursesError.style.display = 'none';
-        return true;
+        checkbox.classList.remove('is-invalid');
+        checkbox.classList.add('is-valid');
     }
+});
+
+if (!isChecked) {
+    professionalCoursesError.style.display = 'block';
+    return false;
+} else {
+    professionalCoursesError.style.display = 'none';
+    return true;
+}
 }
 
-        // Add real-time validation on checkbox change
-        professionalCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                if (form.classList.contains('was-validated')) {
-                    validateProfessionalCourses();
-                }
-            });
-        });
-
-        // Form submission validation
-        form.addEventListener('submit', function(event) {
-            const formValid = form.checkValidity();
-            const checkboxValid = validateProfessionalCourses();
-
-            if (!formValid || !checkboxValid) {
-                event.preventDefault();
-                event.stopPropagation();
+    // Add real-time validation on checkbox change
+    professionalCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (form.classList.contains('was-validated')) {
+                validateProfessionalCourses();
             }
+        });
+    });
 
-            form.classList.add('was-validated');
-        }, false);
-    }
+    // Form submission validation
+    form.addEventListener('submit', function(event) {
+        const formValid = form.checkValidity();
+        const checkboxValid = validateProfessionalCourses();
+
+        if (!formValid || !checkboxValid) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        form.classList.add('was-validated');
+    }, false);
+}
 
 })();
 
 // file validation for pdf file
 document.addEventListener('change', function(event) {
-    const input = event.target;
+const input = event.target;
 
-        if (input.type === 'file' && (input.name === 'awards' || input.name === 'ss' || input.name === 'hdc' || input.name === 'ol' || input.name === 'jr')) {
-            const file = input.files[0];
-            const feedback = input.nextElementSibling; // Selects the .invalid-feedback div
+    if (input.type === 'file' && (input.name === 'awards' || input.name === 'ss' || input.name === 'hdc' || input.name === 'ol' || input.name === 'jr')) {
+        const file = input.files[0];
+        const feedback = input.nextElementSibling; // Selects the .invalid-feedback div
 
-            if (file) {
-                // Check if the file is a PDF
-                if (file.type !== "application/pdf") {
-                    input.classList.add('is-invalid');
-                    input.classList.remove('is-valid');
-                    input.value = ""; // Reset the input so the wrong file isn't submitted
-                } else {
-                    // Show Bootstrap success state
-                    input.classList.remove('is-invalid');
-                    input.classList.add('is-valid');
-                }
+        if (file) {
+            // Check if the file is a PDF
+            if (file.type !== "application/pdf") {
+                input.classList.add('is-invalid');
+                input.classList.remove('is-valid');
+                input.value = ""; // Reset the input so the wrong file isn't submitted
+            } else {
+                // Show Bootstrap success state
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
             }
         }
-    });
+    }
+});
 </script>
+    </div>
+{% else %}
+    <div class="d-flex justify-content-center align-items-center">
+        <button class="btn btn-primary mt-3" type="button" data-bs-toggle="modal" data-bs-target="#upload_file">Upload Previous Year Data</button>
+    </div>
+    <div class="row form-row m-3">
+        <div class="row">
+            <div class="col-md-8">
+                <div class = "section-title">Step1: Verify Basic Details(read-only)</div>
+            </div>
+            <div class="col-md-4">
+                <a href="/forms_listing/filled_forms" class="btn" style = "background-color: rgb(79 70 229); color: white;">View Filled Forms</a>
+            </div>
         </div>
-    {% else %}
-        <div class="d-flex justify-content-center align-items-center">
-            <button class="btn btn-primary mt-3" type="button" data-bs-toggle="modal" data-bs-target="#upload_file">Upload Previous Year Data</button>
+        <div class="row flex justify-content-between">
+
+        <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4">
+            <span>
+                <i class="fa-solid fa-envelope"></i>
+                <label for="email" class="form-label"><b>Email</b><span class="ms-1" style="color: red;">*</span></label>
+            </span>
+            <input type="email" class="form-control custom-back" id="email"
+                value="{{value.email}}" placeholder="Enter your personal Email Adddress"
+                name="email" readonly>
         </div>
+        <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4" id="emp_id_verify">
+            <span>
+                <i class="fa-solid fa-user"></i>
+                <label for="emp_id" class="form-label"><b>Employee ID</b><span class="ms-1" style="color: red;">*</span></label>
+            </span>
+            <input type="text" class="form-control custom-back" id="emp_id"
+                value="{{value.emp_id}}" placeholder="Enter your Employee ID"
+                name="emp_id" maxlength="5" oninput="validateForm('con_number')" readonly>
+        </div>
+        <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4" id="depart">
+            <span>
+                <i class="fa-solid fa-building"></i>
+                <label for="branchSelect" class="form-label"><b>Department</b><span class="ms-1" style="color: red;">*</span></label>
+            </span>
+            <input value = "{{value.department}}" class="form-control custom-back" id="branchSelect" readonly>
+        </div>
+        <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4" id="name_check">
+            <span>
+                <i class="fa-solid fa-user"></i>
+                <label for="name" class="form-label"><b>Name</b><span class="ms-1"
+                        style="color: red;">*</span></label>
+            </span>
+            <input type="text" class="form-control custom-back" id="name"
+                value="{{value.name}}" placeholder="Enter your Name" name="name"
+                oninput="validateForm('name_check')" readonly>
+        </div>
+
+        </div>
+
+
+    </div>
+    {% if form_number == 1 %}
         <div class="row form-row m-3">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class = "section-title">Step1: Verify Basic Details(read-only)</div>
-                </div>
-                <div class="col-md-4">
-                    <a href="/forms_listing/filled_forms" class="btn" style = "background-color: rgb(79 70 229); color: white;">View Filled Forms</a>
-                </div>
-            </div>
-            <div class="row flex justify-content-between">
-
-            <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4">
+             <div class="d-flex column-gap-4 mt-4 text-wrap" id = "checkboxGroup">
                 <span>
-                    <i class="fa-solid fa-envelope"></i>
-                    <label for="email" class="form-label"><b>Email</b><span class="ms-1" style="color: red;">*</span></label>
+                    <label for="eop" class="form-label"><b>Event/Program Category</b><span class="ms-1" style="color: red;">*</span> :-</label>
                 </span>
-                <input type="email" class="form-control custom-back" id="email"
-                    value="{{value.email}}" placeholder="Enter your personal Email Adddress"
-                    name="email" readonly>
-            </div>
-            <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4" id="emp_id_verify">
-                <span>
-                    <i class="fa-solid fa-user"></i>
-                    <label for="emp_id" class="form-label"><b>Employee ID</b><span class="ms-1" style="color: red;">*</span></label>
-                </span>
-                <input type="text" class="form-control custom-back" id="emp_id"
-                    value="{{value.emp_id}}" placeholder="Enter your Employee ID"
-                    name="emp_id" maxlength="5" oninput="validateForm('con_number')" readonly>
-            </div>
-            <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4" id="depart">
-                <span>
-                    <i class="fa-solid fa-building"></i>
-                    <label for="branchSelect" class="form-label"><b>Department</b><span class="ms-1" style="color: red;">*</span></label>
-                </span>
-                <input value = "{{value.department}}" class="form-control custom-back" id="branchSelect" readonly>
-            </div>
-            <div class="col-12  col-md-4 col-sm-6 col-lg-2  mt-4" id="name_check">
-                <span>
-                    <i class="fa-solid fa-user"></i>
-                    <label for="name" class="form-label"><b>Name</b><span class="ms-1"
-                            style="color: red;">*</span></label>
-                </span>
-                <input type="text" class="form-control custom-back" id="name"
-                    value="{{value.name}}" placeholder="Enter your Name" name="name"
-                    oninput="validateForm('name_check')" readonly>
-            </div>
-            
-            </div>
-
-
-        </div>
-        {% if form_number == 1 %}
-            <div class="row form-row m-3">
-                 <div class="d-flex column-gap-4 mt-4 text-wrap" id = "checkboxGroup">
-                    <span>
-                        <label for="eop" class="form-label"><b>Event/Program Category</b><span class="ms-1" style="color: red;">*</span> :-</label>
-                    </span>
-                    <div class="row g-3 ">
-                        <div class="col-12  col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
-                            <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="FDP">
-                            <label class="form-check-label" for="radio7-{i}"><b>FDP</b></label>
-                        </div>
-                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
-                            <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Workshop">
-                            <label class="form-check-label" for="radio8-{i}"><b>Workshop</b></label>
-                        </div>
-                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
-                            <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Conference">
-                            <label class="form-check-label" for="radio9-{i}"><b>Conference</b></label>
-                        </div>
-                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
-                            <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="STTP">
-                            <label class="form-check-label" for="radio10-{i}"><b>STTP</b></label>
-                        </div>
-                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
-                            <input type="checkbox" class="form-check-input" id="radio11-{i}" name="optradio" value="Seminar">
-                            <label class="form-check-label" for="radio11-{i}"><b>Seminar</b></label>
-                        </div>
-                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
-                            <input type="checkbox" class="form-check-input" id="radio12-{i}" name="optradio" value="Webinar">
-                            <label class="form-check-label" for="radio12-{i}"><b>Webinar</b></label>
-                        </div>
-                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
-                            <input type="checkbox" class="form-check-input" id="radio13-{i}" name="optradio" value="Lecture Series">
-                            <label class="form-check-label" for="radio13-{i}"><b>Lecture Series</b></label>
-                        </div>
-                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
-                            <input type="checkbox" class="form-check-input" id="radio14-{i}" name="optradio" value="Symposium">
-                            <label class="form-check-label" for="radio14-{i}"><b>Symposium</b></label>
-                        </div>
-                        <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
-                            <input type="checkbox" class="form-check-input" id="radio15-{i}" name="optradio" value="Other">
-                            <label class="form-check-label" for="radio15-{i}"><b>Other</b></label>
-                        </div>
+                <div class="row g-3 ">
+                    <div class="col-12  col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                        <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="FDP">
+                        <label class="form-check-label" for="radio7-{i}"><b>FDP</b></label>
                     </div>
-                 </div>
-                <div class="invalid-feedback">Please select at least one option.</div>
-            </div>
-        {% elif form_number == 2 %}
-            <div class="row form-row m-3">
-                <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
-                   <span>
-                       <label for="eop" class="form-label"><b>Type of Course</b><span class="ms-1" style="color: red;">*</span> :-</label>
-                   </span>
-                   <div class="row g-3 ms-4" style="width: 100%">
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
-                            <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="MOOC">
-                            <label class="form-check-label" for="radio7-${i}"><b>MOOC</b></label>
-                        </div>
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                            <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Short Term Courses">
-                            <label class="form-check-label" for="radio8-${i}"><b>Short Term Course</b></label>
-                        </div>
+                    <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                        <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Workshop">
+                        <label class="form-check-label" for="radio8-{i}"><b>Workshop</b></label>
+                    </div>
+                    <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                        <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Conference">
+                        <label class="form-check-label" for="radio9-{i}"><b>Conference</b></label>
+                    </div>
+                    <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                        <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="STTP">
+                        <label class="form-check-label" for="radio10-{i}"><b>STTP</b></label>
+                    </div>
+                    <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                        <input type="checkbox" class="form-check-input" id="radio11-{i}" name="optradio" value="Seminar">
+                        <label class="form-check-label" for="radio11-{i}"><b>Seminar</b></label>
+                    </div>
+                    <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                        <input type="checkbox" class="form-check-input" id="radio12-{i}" name="optradio" value="Webinar">
+                        <label class="form-check-label" for="radio12-{i}"><b>Webinar</b></label>
+                    </div>
+                    <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                        <input type="checkbox" class="form-check-input" id="radio13-{i}" name="optradio" value="Lecture Series">
+                        <label class="form-check-label" for="radio13-{i}"><b>Lecture Series</b></label>
+                    </div>
+                    <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                        <input type="checkbox" class="form-check-input" id="radio14-{i}" name="optradio" value="Symposium">
+                        <label class="form-check-label" for="radio14-{i}"><b>Symposium</b></label>
+                    </div>
+                    <div class="col-12  col-md-4 col-sm-6 col-lg-2  form-check">
+                        <input type="checkbox" class="form-check-input" id="radio15-{i}" name="optradio" value="Other">
+                        <label class="form-check-label" for="radio15-{i}"><b>Other</b></label>
                     </div>
                 </div>
-                <div class="invalid-feedback">Please select at least one option.</div>
-            </div>
-        {% elif form_number == 3 %}
-            <div class="row form-row m-3">
-                 <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
-                     <div class="col-1">
-                         <div class="row">
-                             <span>
-                                 <label for="eop" class="form-label"><b>Type of Event</b><span class="ms-1" style="color: red;">*</span> :-</label>
-                             </span>
-                         </div>
-                     </div>
-                     <div class="col-11">
-                         <div class="row g-3">
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                 <div class="form-check" id = "eop">
-                                     <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="Workshop">
-                                     <label class="form-check-label" for="radio7-{i}"><b>Workshop</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                 <div class="form-check">
-                                     <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Expert Lecture">
-                                     <label class="form-check-label" for="radio8-{i}"><b>Expert Lecture</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Expert Talk">
-                                    <label class="form-check-label" for="radio9-{i}"><b>Expert Talk</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="Conference">
-                                    <label class="form-check-label" for="radio10-{i}"><b>Conference</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio11-{i}" name="optradio" value="FDP">
-                                    <label class="form-check-label" for="radio11-{i}"><b>FDP</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio12-{i}" name="optradio" value="Lecture Series">
-                                    <label class="form-check-label" for="radio12-{i}"><b>Lecture Series</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio13-{i}" name="optradio" value="STTP">
-                                    <label class="form-check-label" for="radio13-{i}"><b>STTP</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio14-{i}" name="optradio" value="Short Term Course">
-                                    <label class="form-check-label" for="radio14-{i}"><b>Short Term Course</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio15-{i}" name="optradio" value="Seminar">
-                                    <label class="form-check-label" for="radio15-{i}"><b>Seminar</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio16-{i}" name="optradio" value="Webinar">
-                                    <label class="form-check-label" for="radio16-{i}"><b>Webinar</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio17-{i}" name="optradio" value="Induction Program">
-                                    <label class="form-check-label" for="radio17-{i}"><b>Induction Program</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio18-{i}" name="optradio" value="Other">
-                                    <label class="form-check-label" for="radio18-{i}"><b>Other</b></label>
-                                 </div>
-                             </div>
-                             <div class="invalid-feedback">Please select at least one option.</div>
-                         </div>
-                    </div>
-                 </div>
-            </div>
-            
-        {% elif form_number == 4 %}
-            <div class="row form-row m-3">
-                <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
-                   <span>
-                       <label for="eop" class="form-label"><b>Category</b><span class="ms-1" style="color: red;">*</span><span class="ms-2">:-</span></label>
-                   </span>
-                   <div class="row g-3 ms-4" style="width: 100%">
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check" id = "eop">
-                            <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="Education">
-                            <label class="form-check-label" for="radio7-{i}"><b>Education</b></label>
-                        </div>
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Research">
-                            <label class="form-check-label" for="radio8-{i}"><b>Research</b></label>
-                        </div>
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Sports">
-                            <label class="form-check-label" for="radio9-{i}"><b>Sports</b></label>
-                        </div>
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="Other">
-                            <label class="form-check-label" for="radio10-{i}"><b>Other</b></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="invalid-feedback">Please select at least one option.</div>
-            </div>
-        {% elif form_number == 5 %}
-            <div class="row form-row m-3">
-                <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
-                   <span>
-                       <label for="eop" class="form-label"><b>Type of Category</b><span class="ms-1" style="color: red;">*</span> :-</label>
-                   </span>
-                   <div class="row g-3 ms-4" style="width: 100%">
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
-                            <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Sponsored Grant">
-                            <label class="form-check-label" for="radio7-${i}"><b>Sponsored Grant</b></label>
-                        </div>
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                            <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Research Project">
-                            <label class="form-check-label" for="radio8-${i}"><b>Research Project</b></label>
-                        </div>
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
-                            <input type="checkbox" class="form-check-input" id="radio9-${i}" name="optradio" value="Consultancy">
-                            <label class="form-check-label" for="radio9-${i}"><b>Consultancy</b></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="invalid-feedback">Please select at least one option.</div>
-            </div>
-        {% elif form_number == 6 %}
-            <div class="row form-row m-3">
-                <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
-                   <span>
-                       <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
-                   </span>
-                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
-                        <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Research Publication - Journals">
-                        <label class="form-check-label" for="radio7-${i}"><b>Research Publication - Journals</b></label>
-                    </div>
-                </div>
-                <div class="invalid-feedback">Please select at least one option.</div>
-            </div>
-        {% elif form_number == 7 %}
-            <div class="row form-row m-3">
-                <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
-                   <span>
-                       <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
-                   </span>
-                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
-                        <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Research Publication - Conference Publication">
-                        <label class="form-check-label" for="radio7-${i}"><b>Research Publication - Conference Publication</b></label>
-                    </div>
-                </div>
-                <div class="invalid-feedback">Please select at least one option.</div>
-            </div>
-        {% elif form_number == 8 %}
-            <div class="row form-row m-3">
-                <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
-                   <span>
-                       <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
-                   </span>
-                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
-                        <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Research Publication - Book and Book Chapters">
-                        <label class="form-check-label" for="radio7-${i}"><b>Research Publication - Book and Book Chapters</b></label>
-                    </div>
-                </div>
-                <div class="invalid-feedback">Please select at least one option.</div>
-            </div>
-        {% elif form_number == 9 %}
-            <div class="row form-row m-3">
-                <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
-                   <span>
-                       <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
-                   </span>
-                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
-                        <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Patents">
-                        <label class="form-check-label" for="radio7-${i}"><b>Patents</b></label>
-                    </div>
-                </div>
+             </div>
             <div class="invalid-feedback">Please select at least one option.</div>
-            </div>
-        {% elif form_number == 10 %}
-            <div class="row form-row m-3">
-                <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
-                   <span>
-                       <label for="eop" class="form-label"><b>Program of Student</b><span class="ms-1" style="color: red;">*</span> :-</label>
-                   </span>
-                   <div class="row g-3 ms-4" style="width: 100%">
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
-                            <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="M.Tech Students Guided">
-                            <label class="form-check-label" for="radio7-${i}"><b>M.Tech</b></label>
-                        </div>
-                        <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop1">
-                            <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Ph.D Students Guided">
-                            <label class="form-check-label" for="radio8-${i}"><b>Ph.D</b></label>
-                        </div>
+        </div>
+    {% elif form_number == 2 %}
+        <div class="row form-row m-3">
+            <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+               <span>
+                   <label for="eop" class="form-label"><b>Type of Course</b><span class="ms-1" style="color: red;">*</span> :-</label>
+               </span>
+               <div class="row g-3 ms-4" style="width: 100%">
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                        <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="MOOC">
+                        <label class="form-check-label" for="radio7-${i}"><b>MOOC</b></label>
+                    </div>
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                        <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Short Term Courses">
+                        <label class="form-check-label" for="radio8-${i}"><b>Short Term Course</b></label>
                     </div>
                 </div>
-                <div class="invalid-feedback">Please select at least one option.</div>
             </div>
-        {% elif form_number == 11 %}
-            <div class="row form-row m-3">
-                 <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
-                     <div class="col-1">
-                         <div class="row">
-                             <span>
-                                 <label for="eop" class="form-label"><b>Type of Event</b><span class="ms-1" style="color: red;">*</span> :-</label>
-                             </span>
-                         </div>
+            <div class="invalid-feedback">Please select at least one option.</div>
+        </div>
+    {% elif form_number == 3 %}
+        <div class="row form-row m-3">
+             <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+                 <div class="col-1">
+                     <div class="row">
+                         <span>
+                             <label for="eop" class="form-label"><b>Type of Event</b><span class="ms-1" style="color: red;">*</span> :-</label>
+                         </span>
                      </div>
-                     <div class="col-11">
-                         <div class="row g-3">
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2">
-                                 <div class="form-check" id = "eop">
-                                     <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="FDP">
-                                     <label class="form-check-label" for="radio7-${i}"><b>FDP</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                 <div class="form-check">
-                                     <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Conference">
-                                     <label class="form-check-label" for="radio8-${i}"><b>Conference</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio9-${i}" name="optradio" value="STTP">
-                                    <label class="form-check-label" for="radio9-${i}"><b>STTP</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio10-${i}" name="optradio" value="Workshop">
-                                    <label class="form-check-label" for="radio10-${i}"><b>Workshop</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio11-${i}" name="optradio" value="Webinar">
-                                    <label class="form-check-label" for="radio11-${i}"><b>Webinar</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio12-${i}" name="optradio" value="External Examination(UG)">
-                                    <label class="form-check-label" for="radio12-${i}"><b>External Examination(UG)</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio13-${i}" name="optradio" value="External Examination(PG)">
-                                    <label class="form-check-label" for="radio13-${i}"><b>External Examination(PG)</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio14-${i}" name="optradio" value="Journal">
-                                    <label class="form-check-label" for="radio14-${i}"><b>Journal</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio15-${i}" name="optradio" value="Expert Lecture">
-                                    <label class="form-check-label" for="radio15-${i}"><b>Expert Lecture</b></label>
-                                </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio16-${i}" name="optradio" value="Expert Talk">
-                                    <label class="form-check-label" for="radio16-${i}"><b>Expert Talk</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio17-${i}" name="optradio" value="Seminar">
-                                    <label class="form-check-label" for="radio17-${i}"><b>Seminar</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio18-${i}" name="optradio" value="Hackathon">
-                                    <label class="form-check-label" for="radio18-${i}"><b>Hackathon</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio19-${i}" name="optradio" value="Training">
-                                    <label class="form-check-label" for="radio19-${i}"><b>Training</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio20-${i}" name="optradio" value="Internship">
-                                    <label class="form-check-label" for="radio20-${i}"><b>Internship</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio21-${i}" name="optradio" value="BOS">
-                                    <label class="form-check-label" for="radio21-${i}"><b>BOS</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio22-${i}" name="optradio" value="DRC">
-                                    <label class="form-check-label" for="radio22-${i}"><b>DRC</b></label>
-                                 </div>
-                             </div>
-                             <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
-                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="radio23-${i}" name="optradio" value="Other">
-                                    <label class="form-check-label" for="radio23-${i}"><b>Other</b></label>
-                                 </div>
-                             </div>
-                             <div class="invalid-feedback">Please select at least one option.</div>
-                         </div>
-                    </div>
                  </div>
-            </div>
-        {% endif %}
-
-
-        <!-- Step 2: Dynamic Input Fields -->
-        
-
-       <div class="section m-3">
-    <div class="row g-3">
-        <div class="col-12 col-md-8">
-            <label class="section-title">
-                Step 2: Enter Quantities
-                <span class="badge" id="inputCount">0 fields</span>
-            </label>
-            <div class="input-fields" id="inputFields">
-                <div class="empty-state">Select checkboxes above to generate input fields</div>
-            </div>
+                 <div class="col-11">
+                     <div class="row g-3">
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                             <div class="form-check" id = "eop">
+                                 <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="Workshop">
+                                 <label class="form-check-label" for="radio7-{i}"><b>Workshop</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                             <div class="form-check">
+                                 <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Expert Lecture">
+                                 <label class="form-check-label" for="radio8-{i}"><b>Expert Lecture</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Expert Talk">
+                                <label class="form-check-label" for="radio9-{i}"><b>Expert Talk</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                            <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                                <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="Conference">
+                                <label class="form-check-label" for="radio10-{i}"><b>Conference</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio11-{i}" name="optradio" value="FDP">
+                                <label class="form-check-label" for="radio11-{i}"><b>FDP</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                            <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                                <input type="checkbox" class="form-check-input" id="radio12-{i}" name="optradio" value="Lecture Series">
+                                <label class="form-check-label" for="radio12-{i}"><b>Lecture Series</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio13-{i}" name="optradio" value="STTP">
+                                <label class="form-check-label" for="radio13-{i}"><b>STTP</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio14-{i}" name="optradio" value="Short Term Course">
+                                <label class="form-check-label" for="radio14-{i}"><b>Short Term Course</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio15-{i}" name="optradio" value="Seminar">
+                                <label class="form-check-label" for="radio15-{i}"><b>Seminar</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio16-{i}" name="optradio" value="Webinar">
+                                <label class="form-check-label" for="radio16-{i}"><b>Webinar</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio17-{i}" name="optradio" value="Induction Program">
+                                <label class="form-check-label" for="radio17-{i}"><b>Induction Program</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio18-{i}" name="optradio" value="Other">
+                                <label class="form-check-label" for="radio18-{i}"><b>Other</b></label>
+                             </div>
+                         </div>
+                         <div class="invalid-feedback">Please select at least one option.</div>
+                     </div>
+                </div>
+             </div>
         </div>
 
-        <div class="col-12 col-md-4">
-            <div style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; max-width: 340px;">
-
-                <!-- Heading -->
-                <div style="background: #fff8e1; border-bottom: 1px solid #f0d080; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 13px; font-weight: 600; color: #7a5c00;">&#9432; Note:</span>
-                </div>
-
-                <!-- Body -->
-                <div style="padding: 12px 14px 14px; background: #fff;">
-                    <p style="margin: 0 0 12px; font-size: 12.5px; color: #555; line-height: 1.6;">
-                        For more information on any field, hover over the
-                        <span style="display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; border:1px solid #aaa; font-size:9px; font-weight:600; color:#555; vertical-align:middle; margin:0 2px;">i</span>
-                        icon as shown below:
-                    </p>
-
-                    <!-- Screenshot simulation -->
-                    <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
-                        <div style="background: #1a1a2e; padding: 10px 14px; font-size: 12px; color: #e2e8f0; line-height: 1.6; text-align: center;">
-                            A Session e.g 2024-25 starts at<br>July 2024 and ends at June 2025
-                        </div>
-                        <div style="background: #f8f9fa; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
-                            <span style="font-size: 13px; font-weight: 500;">Session</span>
-                            <span style="color: #dc3545;">*</span>
-                            <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; border:1px solid #aaa; font-size:10px; font-weight:500; color:#555;">i</span>
-                            <span style="font-size: 11px; color: #999; margin-left: 4px;">← hover this</span>
-                        </div>
+    {% elif form_number == 4 %}
+        <div class="row form-row m-3">
+            <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+               <span>
+                   <label for="eop" class="form-label"><b>Category</b><span class="ms-1" style="color: red;">*</span><span class="ms-2">:-</span></label>
+               </span>
+               <div class="row g-3 ms-4" style="width: 100%">
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check" id = "eop">
+                        <input type="checkbox" class="form-check-input" id="radio7-{i}" name="optradio" value="Education">
+                        <label class="form-check-label" for="radio7-{i}"><b>Education</b></label>
+                    </div>
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="radio8-{i}" name="optradio" value="Research">
+                        <label class="form-check-label" for="radio8-{i}"><b>Research</b></label>
+                    </div>
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="radio9-{i}" name="optradio" value="Sports">
+                        <label class="form-check-label" for="radio9-{i}"><b>Sports</b></label>
+                    </div>
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="radio10-{i}" name="optradio" value="Other">
+                        <label class="form-check-label" for="radio10-{i}"><b>Other</b></label>
                     </div>
                 </div>
-
             </div>
+            <div class="invalid-feedback">Please select at least one option.</div>
+        </div>
+    {% elif form_number == 5 %}
+        <div class="row form-row m-3">
+            <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+               <span>
+                   <label for="eop" class="form-label"><b>Type of Category</b><span class="ms-1" style="color: red;">*</span> :-</label>
+               </span>
+               <div class="row g-3 ms-4" style="width: 100%">
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                        <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Sponsored Grant">
+                        <label class="form-check-label" for="radio7-${i}"><b>Sponsored Grant</b></label>
+                    </div>
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                        <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Research Project">
+                        <label class="form-check-label" for="radio8-${i}"><b>Research Project</b></label>
+                    </div>
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check">
+                        <input type="checkbox" class="form-check-input" id="radio9-${i}" name="optradio" value="Consultancy">
+                        <label class="form-check-label" for="radio9-${i}"><b>Consultancy</b></label>
+                    </div>
+                </div>
+            </div>
+            <div class="invalid-feedback">Please select at least one option.</div>
+        </div>
+    {% elif form_number == 6 %}
+        <div class="row form-row m-3">
+            <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+               <span>
+                   <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
+               </span>
+                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                    <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Research Publication - Journals">
+                    <label class="form-check-label" for="radio7-${i}"><b>Research Publication - Journals</b></label>
+                </div>
+            </div>
+            <div class="invalid-feedback">Please select at least one option.</div>
+        </div>
+    {% elif form_number == 7 %}
+        <div class="row form-row m-3">
+            <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+               <span>
+                   <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
+               </span>
+                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                    <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Research Publication - Conference Publication">
+                    <label class="form-check-label" for="radio7-${i}"><b>Research Publication - Conference Publication</b></label>
+                </div>
+            </div>
+            <div class="invalid-feedback">Please select at least one option.</div>
+        </div>
+    {% elif form_number == 8 %}
+        <div class="row form-row m-3">
+            <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+               <span>
+                   <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
+               </span>
+                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                    <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Research Publication - Book and Book Chapters">
+                    <label class="form-check-label" for="radio7-${i}"><b>Research Publication - Book and Book Chapters</b></label>
+                </div>
+            </div>
+            <div class="invalid-feedback">Please select at least one option.</div>
+        </div>
+    {% elif form_number == 9 %}
+        <div class="row form-row m-3">
+            <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+               <span>
+                   <label for="eop" class="form-label"><b>Type of form</b><span class="ms-1" style="color: red;">*</span> :-</label>
+               </span>
+                <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                    <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="Patents">
+                    <label class="form-check-label" for="radio7-${i}"><b>Patents</b></label>
+                </div>
+            </div>
+        <div class="invalid-feedback">Please select at least one option.</div>
+        </div>
+    {% elif form_number == 10 %}
+        <div class="row form-row m-3">
+            <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+               <span>
+                   <label for="eop" class="form-label"><b>Program of Student</b><span class="ms-1" style="color: red;">*</span> :-</label>
+               </span>
+               <div class="row g-3 ms-4" style="width: 100%">
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop">
+                        <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="M.Tech Students Guided">
+                        <label class="form-check-label" for="radio7-${i}"><b>M.Tech</b></label>
+                    </div>
+                    <div class="col-12 col-md-4 col-sm-6 col-lg-2 form-check" id = "eop1">
+                        <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Ph.D Students Guided">
+                        <label class="form-check-label" for="radio8-${i}"><b>Ph.D</b></label>
+                    </div>
+                </div>
+            </div>
+            <div class="invalid-feedback">Please select at least one option.</div>
+        </div>
+    {% elif form_number == 11 %}
+        <div class="row form-row m-3">
+             <div class="d-flex column-gap-4 mt-4" id = "checkboxGroup">
+                 <div class="col-1">
+                     <div class="row">
+                         <span>
+                             <label for="eop" class="form-label"><b>Type of Event</b><span class="ms-1" style="color: red;">*</span> :-</label>
+                         </span>
+                     </div>
+                 </div>
+                 <div class="col-11">
+                     <div class="row g-3">
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2">
+                             <div class="form-check" id = "eop">
+                                 <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio" value="FDP">
+                                 <label class="form-check-label" for="radio7-${i}"><b>FDP</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                             <div class="form-check">
+                                 <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio" value="Conference">
+                                 <label class="form-check-label" for="radio8-${i}"><b>Conference</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio9-${i}" name="optradio" value="STTP">
+                                <label class="form-check-label" for="radio9-${i}"><b>STTP</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio10-${i}" name="optradio" value="Workshop">
+                                <label class="form-check-label" for="radio10-${i}"><b>Workshop</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio11-${i}" name="optradio" value="Webinar">
+                                <label class="form-check-label" for="radio11-${i}"><b>Webinar</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio12-${i}" name="optradio" value="External Examination(UG)">
+                                <label class="form-check-label" for="radio12-${i}"><b>External Examination(UG)</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio13-${i}" name="optradio" value="External Examination(PG)">
+                                <label class="form-check-label" for="radio13-${i}"><b>External Examination(PG)</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio14-${i}" name="optradio" value="Journal">
+                                <label class="form-check-label" for="radio14-${i}"><b>Journal</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio15-${i}" name="optradio" value="Expert Lecture">
+                                <label class="form-check-label" for="radio15-${i}"><b>Expert Lecture</b></label>
+                            </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio16-${i}" name="optradio" value="Expert Talk">
+                                <label class="form-check-label" for="radio16-${i}"><b>Expert Talk</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio17-${i}" name="optradio" value="Seminar">
+                                <label class="form-check-label" for="radio17-${i}"><b>Seminar</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio18-${i}" name="optradio" value="Hackathon">
+                                <label class="form-check-label" for="radio18-${i}"><b>Hackathon</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio19-${i}" name="optradio" value="Training">
+                                <label class="form-check-label" for="radio19-${i}"><b>Training</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio20-${i}" name="optradio" value="Internship">
+                                <label class="form-check-label" for="radio20-${i}"><b>Internship</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio21-${i}" name="optradio" value="BOS">
+                                <label class="form-check-label" for="radio21-${i}"><b>BOS</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio22-${i}" name="optradio" value="DRC">
+                                <label class="form-check-label" for="radio22-${i}"><b>DRC</b></label>
+                             </div>
+                         </div>
+                         <div class="col-12 col-md-4 col-sm-6 col-lg-2 ">
+                             <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="radio23-${i}" name="optradio" value="Other">
+                                <label class="form-check-label" for="radio23-${i}"><b>Other</b></label>
+                             </div>
+                         </div>
+                         <div class="invalid-feedback">Please select at least one option.</div>
+                     </div>
+                </div>
+             </div>
+        </div>
+    {% endif %}
+
+
+    <!-- Step 2: Dynamic Input Fields -->
+
+
+   <div class="section m-3">
+<div class="row g-3">
+    <div class="col-12 col-md-8">
+        <label class="section-title">
+            Step 2: Enter Quantities
+            <span class="badge" id="inputCount">0 fields</span>
+        </label>
+        <div class="input-fields" id="inputFields">
+            <div class="empty-state">Select checkboxes above to generate input fields</div>
         </div>
     </div>
+
+    <div class="col-12 col-md-4">
+        <div style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; max-width: 340px;">
+
+            <!-- Heading -->
+            <div style="background: #fff8e1; border-bottom: 1px solid #f0d080; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 13px; font-weight: 600; color: #7a5c00;">&#9432; Note:</span>
+            </div>
+
+            <!-- Body -->
+            <div style="padding: 12px 14px 14px; background: #fff;">
+                <p style="margin: 0 0 12px; font-size: 12.5px; color: #555; line-height: 1.6;">
+                    For more information on any field, hover over the
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; border:1px solid #aaa; font-size:9px; font-weight:600; color:#555; vertical-align:middle; margin:0 2px;">i</span>
+                    icon as shown below:
+                </p>
+
+                <!-- Screenshot simulation -->
+                <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                    <div style="background: #1a1a2e; padding: 10px 14px; font-size: 12px; color: #e2e8f0; line-height: 1.6; text-align: center;">
+                        A Session e.g 2024-25 starts at<br>July 2024 and ends at June 2025
+                    </div>
+                    <div style="background: #f8f9fa; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 13px; font-weight: 500;">Session</span>
+                        <span style="color: #dc3545;">*</span>
+                        <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; border:1px solid #aaa; font-size:10px; font-weight:500; color:#555;">i</span>
+                        <span style="font-size: 11px; color: #999; margin-left: 4px;">← hover this</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 </div>
 
         <!-- Step 3: Sub-forms -->
@@ -989,8 +988,7 @@ document.addEventListener('change', function(event) {
                                 <button type="submit" class="btn btn-primary rounded-pill">Upload File</button>
                             </div>
                             <div>
-                                <a href="/static/faculty_dir_excel.png" target="_blank">Click here to view the excel
-                                    format to upload</a>
+                                <a href="https://docs.google.com/spreadsheets/d/1N0DS7m8CfP7yNjUcgTTDl1KBffvpTGHfteag9ASTFsQ/edit?gid=1136367196#gid=1136367196" target="_blank">Click here to view the Excel format to upload</a>
                             </div>
                         </div>
                         <!-- modal footer -->
@@ -1175,7 +1173,6 @@ function createLinkField(name, placeholder) {
 </script>
     {% endif %}
     </div>
-</div>
 <!-- Dynamically loading forms from this js -->
 {% if form_number != 16 %}
 <script src = "{% static 'script.js' %}"></script>

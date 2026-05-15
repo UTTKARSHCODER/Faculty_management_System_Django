@@ -15,7 +15,7 @@ from firstWebsite.modals import Faculty, non_teaching_staff, Faculty_participati
     guided, resource
 from firstWebsite.views import session_login_required
 
-def download_filtered_files(request, choices, model_name, results, file_fields, date_time_fields , date_fields, headers, multi_valued = ""):
+def download_filtered_files(request, model_name, results, file_fields, date_time_fields , date_fields, headers, multi_valued = ""):
     if len(results) > 0:
         # ['department', 'designation', 'aos', 'hq', 'status', 'role', 'gender']
         # ['profile_picture', 'jr', 'of', 'hdc', 'ss', 'certificate']
@@ -54,7 +54,7 @@ def download_filtered_files(request, choices, model_name, results, file_fields, 
                 file_path = result.get(field)
                 if file_path:
                     hyperlink_text = "https://uttkarsh007.pythonanywhere.com/media/" + file_path
-                    hyperlink_formula = f'=HYPERLINK("{hyperlink_text}", "{hyperlink_text}")'
+                    hyperlink_formula = f'=HYPERLINK("{hyperlink_text}", "View File Online")'
                     result[field] = hyperlink_formula
                 else:
                     text = "No File"
@@ -82,8 +82,6 @@ def download_filtered_files(request, choices, model_name, results, file_fields, 
         df = pd.DataFrame(data)
         df.rename(columns={'safe_dept': 'dept'}, inplace=True)
         pd.set_option('display.max_columns', None)
-        print(df)
-        df.columns = headers
 
         # For CSV
         json_data = df.to_json(orient='records', date_format='iso')
@@ -117,10 +115,18 @@ def download_filtered_files(request, choices, model_name, results, file_fields, 
                 'bold': True
             })
 
+            link_style_format = workbook.add_format({
+                'font_color': 'blue',
+                'underline': 1
+            })
+
             # ==========================================
             # 4. APPLY FORMATS & AUTOFIT
             # ==========================================
 
+            # Setting default column of collected headers
+            initial_headers = df.columns
+            df.columns = headers
             # Apply the header format
             # Pandas already wrote the headers, so we iterate through them and overwrite
             # the cells in row 0 with our new custom header format.
@@ -132,6 +138,11 @@ def download_filtered_files(request, choices, model_name, results, file_fields, 
                 # set_column arguments: (first_col, last_col, width, format)
                 # Passing 'None' for width means we aren't setting a manual width yet.
                 worksheet.set_column(col_num, col_num, None, data_font_format)
+
+            # Applying link color
+            for file_col in file_fields:
+                col_idx = initial_headers.get_loc(file_col)
+                worksheet.set_column(col_idx, col_idx, None, link_style_format)
 
             # Autofit the column widths
             # This built-in method calculates the maximum width of the data in each
@@ -150,7 +161,6 @@ def download_files(request):
         date_time_fields = ['created_at']
         file_fields = ['proof_file']
         if form_no == '1_1': # or '1_1' in forms_to_download
-            choices = ['department','designation','aos','hq']
             file_fields = ['jr','of','hdc','ss','certificate']
             date_fields = ['dob','jd','pd','phd_dor']
             result = Faculty.objects.filter(department__in=values, status="R").values(
@@ -168,10 +178,9 @@ def download_files(request):
                          'If Awards and recognition received for extension activities(Upload Certificate)'
                           ]
 
-            download_filtered_files(request, choices, Faculty, result, file_fields, date_time_fields, date_fields,headers_0)
+            download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields,headers_0)
 
         elif form_no == '1_2':
-            choices = ['department', 'designation', 'hq']
             file_fields = ['higher_degree_certificate', 'joining_report', 'offer_letter', 'salary_slip', 'certificate']
             date_fields = ['dob','joining_date','promotion_date']
             multi_select_field = 'professional_course'
@@ -187,10 +196,9 @@ def download_files(request):
                          'If Awards and recognition received for extension activities (Upload Certificate)'
                          ]
 
-            download_filtered_files(request, choices, Faculty, result, file_fields, date_time_fields, date_fields, headers_1, multi_select_field)
+            download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields, headers_1, multi_select_field)
 
         elif form_no == '2':
-            choices = ['department', 'category', 'mode', 'level', 'approval', 'proof_enclosed']
             date_fields = ['begi_date', 'end_date']
             result = Faculty_participation_data.objects.filter(category__in=values).annotate(
                 safe_email=F('email__email'),
@@ -206,10 +214,9 @@ def download_files(request):
                          'Organizer', 'Sponsored By', 'Grant received from SKIT (Yes/No)', 'From Date', 'To Date',
                          'Session', 'No. of Days', 'Proof Enclosed (Yes/No)','Upload Certificate/Proof']
 
-            download_filtered_files(request, choices, Faculty_participation_data, result, file_fields, date_time_fields, date_fields, headers_2)
+            download_filtered_files(request, Faculty_participation_data, result, file_fields, date_time_fields, date_fields, headers_2)
 
         elif form_no == '3':
-            choices = ['category', 'doc', 'ctype', 'topper_in']
             date_fields = ['begi_date', 'end_date']
             result = mooc_course.objects.filter(category__in=values).annotate(
                 safe_email=F('email__email'),
@@ -228,11 +235,10 @@ def download_files(request):
                          'Any  category from below ',
                          'Remarks (if any)', 'Upload Certificate/Proof']
 
-            download_filtered_files(request, choices, mooc_course, result, file_fields, date_time_fields,
+            download_filtered_files(request, mooc_course, result, file_fields, date_time_fields,
                                     date_fields, headers_3)
 
         elif form_no == '4':
-            choices = ['category', 'ct', 'gr', 'eraipf']
             date_fields = ['begi_date', 'end_date']
             multi_select_field = 'eof'
             result = events.objects.filter(category__in=values).annotate(
@@ -256,11 +262,10 @@ def download_files(request):
                          'Number of staff member participated(Provide list of staff members with  their EMPLOYEE ID & Certificates)',
                          'Event report attached in proper format(YES/NO)', 'Any Other Remark', 'Upload Event Report']
 
-            download_filtered_files(request, choices, events, result, file_fields, date_time_fields,
+            download_filtered_files(request, events, result, file_fields, date_time_fields,
                                     date_fields, headers_4, multi_select_field)
 
         elif form_no == '5':
-            choices = ['category','designation','department']
             date_fields = ['ad']
             result = awards_and_achievments.objects.filter(category__in=values).annotate(
                 safe_email=F('email__email'),
@@ -278,11 +283,10 @@ def download_files(request):
                          'Agency/Organization', 'Prize', 'Award Date', 'Remark', 'Upload Award Certificate/Proof'
                          ]
 
-            download_filtered_files(request, choices, awards_and_achievments, result, file_fields, date_time_fields,
+            download_filtered_files(request, awards_and_achievments, result, file_fields, date_time_fields,
                                     date_fields, headers_5)
 
         elif form_no == '6':
-            choices = ['category','department','status']
             result = sponsored_research.objects.filter(category__in=values).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
@@ -297,11 +301,10 @@ def download_files(request):
                          'Duration of Project (in Years)',
                          'Amount in Rs.', 'Session in which grant/research project/consultancy received', 'Status', 'Upload Proof']
 
-            download_filtered_files(request, choices, sponsored_research, result, file_fields, date_time_fields,
+            download_filtered_files(request, sponsored_research, result, file_fields, date_time_fields,
                                     [], headers_6)
 
         elif form_no == '7_1':
-            choices = ['department','level','index_by','quartile','ssa']
             date_fields = ['pd']
             result = research_journal.objects.filter(index_by__in=values).annotate(
                 safe_email=F('email__email'),
@@ -325,11 +328,10 @@ def download_files(request):
                          'Is SKIT student associated ?',
                          'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)', 'Upload Full Paper']
 
-            download_filtered_files(request, choices, research_journal, result, file_fields, date_time_fields,
+            download_filtered_files(request, research_journal, result, file_fields, date_time_fields,
                                     date_fields, headers_7_1)
 
         elif form_no == '7_2':
-            choices = ['department','level','ssa']
             date_fields = ['pd']
             result = research_conference.objects.filter(level__in=values).annotate(
                 safe_email=F('email__email'),
@@ -348,13 +350,11 @@ def download_files(request):
                          'Is SKIT stuacdent associated?',
                          'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)','Upload Full Paper']
 
-            download_filtered_files(request, choices, research_conference, result, file_fields, date_time_fields,
+            download_filtered_files(request, research_conference, result, file_fields, date_time_fields,
                                     date_fields, headers_7_2)
 
         elif form_no == '7_3':
-            choices = ['department','level','ssa']
             date_fields = ['pd']
-            print("Inside")
             result = research_book.objects.filter(level__in=values).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
@@ -369,13 +369,11 @@ def download_files(request):
                                'ISBN', 'Name of the Publisher', 'Published Date', 'Session', 'DOI', 'Web Link', 'Affiliating Institute at the time of publication',
                                'Indexed By', 'Is SKIT student associated', 'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)', 'Upload Proof (Book Chapter/Front Page/Document etc.)']
 
-            download_filtered_files(request, choices, research_book, result, file_fields, date_time_fields,
+            download_filtered_files(request, research_book, result, file_fields, date_time_fields,
                                     date_fields, headers_7_3)
 
         elif form_no == '7_4':
-            choices = ['department','sop','pg','ssa']
             date_fields = ['pd']
-            print(values)
             result = patents.objects.filter(pg__in=values).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
@@ -391,11 +389,10 @@ def download_files(request):
                           'Is SKIT student associated?',
                           'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name) ', 'Link', 'Upload Proof']
 
-            download_filtered_files(request, choices, patents, result, file_fields, date_time_fields,
+            download_filtered_files(request, patents, result, file_fields, date_time_fields,
                                     date_fields, headers_7_4)
 
         elif form_no == '8':
-            choices = ['department','category','eys','visor']
             date_fields = ['dov']
             result = guided.objects.filter(category__in=values).annotate(
                 safe_email=F('email__email'),
@@ -411,11 +408,10 @@ def download_files(request):
                                'University Roll Number of Student', 'Enrollment Year of Student', 'Title of the Dissertation', 'Supervisor / Co-supervisor', 'Date of Viva-Voce',
                                'Name of external examiner']
 
-            download_filtered_files(request, choices, guided, result, [], date_time_fields,
+            download_filtered_files(request, guided, result, [], date_time_fields,
                                     date_fields, headers_8)
 
         elif form_no == '9':
-            choices = ['department','category','rpt']
             date_fields = ['begi_date', 'end_date']
             result = resource.objects.filter(category__in=values).annotate(
                 safe_email=F('email__email'),
@@ -429,7 +425,7 @@ def download_files(request):
                                'Resource Person in', 'Title of Event/ Exam Name', 'Subject Area/Subject Name/Lab Name/Session Name',
                                'Resource Person Type', 'Duration of event (in days)', 'Date From', 'Date to', 'Venue', 'Proof (Certificate/Mail)']
 
-            download_filtered_files(request, choices, resource, result, file_fields, date_time_fields,
+            download_filtered_files(request, resource, result, file_fields, date_time_fields,
                                     date_fields, headers_9)
 
         return HttpResponse(status=204)
@@ -454,6 +450,7 @@ def download_files(request):
             workbook = openpyxl.Workbook()
             default_sheet = workbook.active
             workbook.remove(default_sheet)
+            underline_font = Font(color="0563C1", underline="single")
             user_type = request.session.get('topLeftBar')
             forms_to_download = request.GET.getlist('form_id')
             if '1_1' in forms_to_download:
@@ -488,35 +485,35 @@ def download_files(request):
                                 item.pd, item.phd_univ, item.phd_dor, item.norp,
                                 'I Agree']
                     if item.jr and (user_type == 'ad' or user_type == 'spa'):
-                        joining_report = "https://uttkarsh007.pythonanywhere.com/" + item.jr.url
+                        joining_report = "https://uttkarsh007.pythonanywhere.com" + item.jr.url
                         row_data.insert(16, joining_report)
                     elif not item.jr and (user_type == 'ad' or user_type == 'spa'):
                         joining_report = "No File"
                         row_data.insert(16, joining_report)
 
                     if item.of and (user_type == 'ad' or user_type == 'spa'):
-                        offer_letter = "https://uttkarsh007.pythonanywhere.com/" + item.of.url
+                        offer_letter = "https://uttkarsh007.pythonanywhere.com" + item.of.url
                         row_data.insert(17, offer_letter)
                     elif not item.of and (user_type == 'ad' or user_type == 'spa'):
                         offer_letter = "No File"
                         row_data.insert(17, offer_letter)
 
                     if item.ss and (user_type == 'ad' or user_type == 'spa'):
-                        salary_slip = "https://uttkarsh007.pythonanywhere.com/" + item.ss.url
+                        salary_slip = "https://uttkarsh007.pythonanywhere.com" + item.ss.url
                         row_data.insert(18, salary_slip)
                     elif not item.ss and (user_type == 'ad' or user_type == 'spa'):
                         salary_slip = "No File"
                         row_data.insert(18, salary_slip)
 
                     if item.hdc and (user_type == 'ad' or user_type == 'spa'):
-                        higher_degree_certificate = "https://uttkarsh007.pythonanywhere.com/" + item.hdc.url
+                        higher_degree_certificate = "https://uttkarsh007.pythonanywhere.com" + item.hdc.url
                         row_data.insert(19, higher_degree_certificate)
                     elif not item.hdc and (user_type == 'ad' or user_type == 'spa'):
                         higher_degree_certificate = "No File"
                         row_data.insert(19, higher_degree_certificate)
 
                     if item.certificate and (user_type == 'ad' or user_type == 'spa'):
-                        certificate = "https://uttkarsh007.pythonanywhere.com/" + item.certificate.url
+                        certificate = "https://uttkarsh007.pythonanywhere.com" + item.certificate.url
                         row_data.insert(23, certificate)
                     elif not item.certificate and (user_type == 'ad' or user_type == 'spa'):
                         certificate = "No File"
@@ -526,28 +523,38 @@ def download_files(request):
 
                     if item.jr and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet0.cell(row=sheet0.max_row, column=17)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.jr.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.jr.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                     if item.of and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet0.cell(row=sheet0.max_row, column=18)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.of.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.of.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                     if item.ss and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet0.cell(row=sheet0.max_row, column=19)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.ss.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.ss.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                     if item.hdc and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet0.cell(row=sheet0.max_row, column=20)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.hdc.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.hdc.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                     if item.certificate and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet0.cell(row=sheet0.max_row, column=24)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.certificate.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.certificate.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet0.columns:
                     # selecting the row1
@@ -592,35 +599,35 @@ def download_files(request):
                                    ", ".join(item.professional_display_list), item.pan_no, item.dob, item.joining_date, item.promotion_date,
                                    'I Agree']
                     if item.higher_degree_certificate and (user_type == 'ad' or user_type == 'spa'):
-                        higher_degree_certificate = "https://uttkarsh007.pythonanywhere.com/" + item.higher_degree_certificate.url
+                        higher_degree_certificate = "https://uttkarsh007.pythonanywhere.com" + item.higher_degree_certificate.url
                         row_data.insert(12, higher_degree_certificate)
                     elif not item.higher_degree_certificate and (user_type == 'ad' or user_type == 'spa'):
                         higher_degree_certificate = "No File"
                         row_data.insert(12, higher_degree_certificate)
 
                     if item.joining_report and (user_type == 'ad' or user_type == 'spa'):
-                        joining_report = "https://uttkarsh007.pythonanywhere.com/" + item.joining_report.url
+                        joining_report = "https://uttkarsh007.pythonanywhere.com" + item.joining_report.url
                         row_data.insert(18,joining_report)
                     elif not item.joining_report and (user_type == 'ad' or user_type == 'spa'):
                         joining_report = "No File"
                         row_data.insert(18, joining_report)
 
                     if item.offer_letter and (user_type == 'ad' or user_type == 'spa'):
-                        offer_letter = "https://uttkarsh007.pythonanywhere.com/" + item.offer_letter.url
+                        offer_letter = "https://uttkarsh007.pythonanywhere.com" + item.offer_letter.url
                         row_data.insert(19,offer_letter)
                     elif not item.offer_letter and (user_type == 'ad' or user_type == 'spa'):
                         offer_letter = "No File"
                         row_data.insert(19,offer_letter)
 
                     if item.salary_slip and (user_type == 'ad' or user_type == 'spa'):
-                        salary_slip = "https://uttkarsh007.pythonanywhere.com/" + item.salary_slip.url
+                        salary_slip = "https://uttkarsh007.pythonanywhere.com" + item.salary_slip.url
                         row_data.insert(20, salary_slip)
                     elif not item.salary_slip and (user_type == 'ad' or user_type == 'spa'):
                         salary_slip = "No File"
                         row_data.insert(20, salary_slip)
 
                     if item.certificate and (user_type == 'ad' or user_type == 'spa'):
-                        certificate = "https://uttkarsh007.pythonanywhere.com/" + item.certificate.url
+                        certificate = "https://uttkarsh007.pythonanywhere.com" + item.certificate.url
                         row_data.insert(21, certificate)
                     elif not item.certificate and (user_type == 'ad' or user_type == 'spa'):
                         certificate = "No File"
@@ -630,32 +637,41 @@ def download_files(request):
 
                     if item.higher_degree_certificate and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet1.cell(row=sheet1.max_row, column=13)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.higher_degree_certificate.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.higher_degree_certificate.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                     if item.joining_report and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet1.cell(row=sheet1.max_row, column=19)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.joining_report.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.joining_report.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                     if item.offer_letter and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet1.cell(row=sheet1.max_row, column=20)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.offer_letter.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.offer_letter.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                     if item.salary_slip and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet1.cell(row=sheet1.max_row, column=21)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.salary_slip.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.salary_slip.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                     if item.certificate and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet1.cell(row=sheet1.max_row, column=22)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.certificate.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.certificate.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet1.columns:
                     # selecting the row1
-                    header_cell = col[0]
                     header_value = str(col[0].value) if col[0].value else ""
                     max_length = len(header_value)
                     column_letter = col[0].column_letter
@@ -685,7 +701,7 @@ def download_files(request):
                                    item.begi_date.strftime("%d-%m-%Y"), item.end_date.strftime("%d-%m-%Y"), item.get_session_display(),
                                    item.no_of_days, item.get_proof_enclosed_display()]
                     if item.proof_file and (user_type == "ad" or user_type == "spa"):
-                        proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         row_data.append(proof_file)
                     elif not item.proof_file and (user_type == "ad" or user_type == "spa"):
                         proof_file = "No File"
@@ -699,8 +715,10 @@ def download_files(request):
 
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet2.cell(row=sheet2.max_row, column=18)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet2.columns:
                     # selecting the row1
@@ -748,7 +766,7 @@ def download_files(request):
                                 item.get_topper_in_display(),
                                 item.remarks]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
-                        proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         row_data.insert(15, proof_file)
                     elif not item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "No File"
@@ -758,8 +776,10 @@ def download_files(request):
 
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet3.cell(row=sheet3.max_row, column=16)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet3.columns:
                     # selecting the row1
@@ -811,7 +831,7 @@ def download_files(request):
                                 item.get_eraipf_display(),
                                 item.remarks]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
-                        proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         row_data.insert(19, proof_file)
                     elif not item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "No File"
@@ -821,8 +841,10 @@ def download_files(request):
 
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet4.cell(row=sheet4.max_row, column=20)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet4.columns:
                     # selecting the row1
@@ -862,7 +884,7 @@ def download_files(request):
                                    item.ao, item.prize,
                                    item.remark, "I AGREE"]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
-                        proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         row_data.insert(12,proof_file)
                     elif not item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "No File"
@@ -872,8 +894,10 @@ def download_files(request):
 
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet5.cell(row=sheet5.max_row, column=13)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet5.columns:
                     # selecting the row1
@@ -914,7 +938,7 @@ def download_files(request):
                                    item.amount, item.get_session_display(), item.get_status_display(),
                                    ]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
-                        proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         row_data.append(proof_file)
                     elif not item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "No File"
@@ -924,8 +948,10 @@ def download_files(request):
 
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet6.cell(row=sheet6.max_row, column=12)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet6.columns:
                     # selecting the row1
@@ -969,7 +995,7 @@ def download_files(request):
                                    item.get_index_by_display(), item.get_quartile_display(), item.get_ssa_display(), item.details,
                                    ]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
-                        proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         row_data.append(proof_file)
                     elif not item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "No File"
@@ -979,8 +1005,10 @@ def download_files(request):
 
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet7.cell(row=sheet7.max_row, column=25)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet7.columns:
                     # selecting the row1
@@ -1021,7 +1049,7 @@ def download_files(request):
                                    item.index_by, item.get_ssa_display(), item.details,
                                    ]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
-                        proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         row_data.append(proof_file)
                     elif not item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "No File"
@@ -1031,8 +1059,10 @@ def download_files(request):
 
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet8.cell(row=sheet8.max_row, column=20)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet8.columns:
                     # selecting the row1
@@ -1073,7 +1103,7 @@ def download_files(request):
                                    item.doi, item.lwj,
                                    item.aitp, item.index_by, item.get_ssa_display(), item.details]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
-                        proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         row_data.append(proof_file)
                     elif not item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "No File"
@@ -1083,8 +1113,10 @@ def download_files(request):
 
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet9.cell(row=sheet9.max_row, column=19)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet9.columns:
                     # selecting the row1
@@ -1125,7 +1157,7 @@ def download_files(request):
                                    item.pd.strftime("%d-%m-%Y"), item.get_ssa_display(), item.details,
                                    item.link]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
-                        proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         row_data.append(proof_file)
                     elif not item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "No File"
@@ -1135,8 +1167,10 @@ def download_files(request):
 
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet10.cell(row=sheet10.max_row, column=18)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet10.columns:
                     # selecting the row1
@@ -1210,7 +1244,7 @@ def download_files(request):
                                    item.doe, item.begi_date.strftime("%d-%m-%Y"), item.end_date.strftime("%d-%m-%Y"),
                                    item.venue]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
-                        proof_file = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         row_data.append(proof_file)
                     elif not item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "No File"
@@ -1220,8 +1254,10 @@ def download_files(request):
 
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         cell = sheet12.cell(row=sheet12.max_row, column=15)
-                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com/" + item.proof_file.url
+                        cell.value = "View File Online"
+                        cell.hyperlink = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
                         cell.style = "Hyperlink"
+                        cell.font = underline_font
 
                 for col in sheet12.columns:
                     # selecting the row1

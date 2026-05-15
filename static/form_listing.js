@@ -193,21 +193,22 @@ finalArray11.forEach(cat => {
 })
 
 const forms = [
-    { form_number: "0", title: "Non-teaching Staff Profile Details", color: "#64748b", count: totalSum, innerCategory : finalArray, completeData: data,date: 'Date of Birth' },
-    { form_number: "1", title: "Faculty Participation", color: "#22c55e", count: totalSum1, innerCategory : finalArray1, completeData: data1,date: 'Starting Date' },
-    { form_number: "2", title: "MOOC's/Short Term Course/Course Completion", color: "#eab308" , count: totalSum2, innerCategory : finalArray2, completeData: data2,date: 'Starting Date' },
-    { form_number: "3", title: "Events Organized by Department", color: "#ef4444" , count: totalSum3, innerCategory : finalArray3, completeData: data3,date: 'Starting Date' },
-    { form_number: "4", title: "Faculty Awards and Achievements", color: "#06b6d4", count: totalSum4, innerCategory : finalArray4, completeData: data4,date: 'Award Date' },
-    { form_number: "5", title: "Sponsored Research/Grant Received/Consultancy", color: "#8b5cf6", count: totalSum5, innerCategory : finalArray5, completeData: data5,date: 'Form Filled Date' },
-    { form_number: "6", title: "Research Publication - Journals", color: "#0ea5e9", count: totalSum6, innerCategory : finalArray6, completeData: data6,date: 'Published Date' },
-    { form_number: "7", title: "Research Publication - Conference Publication", color: "#3b82f6", count: totalSum7, innerCategory : finalArray7, completeData: data7,date: 'Published Date' },
-    { form_number: "8", title: "Research Publication - Book and Book Chapters", color: "#f59e0b", count: totalSum8, innerCategory : finalArray8, completeData: data8,date: 'Published Date' },
-    { form_number: "9", title: "Patents", color: "#14b8a6",count: totalSum9, innerCategory : finalArray9, completeData: data9,date: 'Published Date' },
-    { form_number: "10", title: "M.Tech/Ph.D Guided", color: "#06b6d4", count: totalSum10, innerCategory : finalArray10, completeData: data10,date: 'Date of Viva-Voce' },
-    { form_number: "11", title: "Resource Person", color: "#ec4899", count: totalSum11, innerCategory : finalArray11, completeData: data11,date: 'Starting Date' }
+    { form_number: "1_2", title: "Non-teaching Staff Profile Details", color: "#64748b", count: totalSum, innerCategory : finalArray, completeData: data,date: 'Date of Birth' },
+    { form_number: "2", title: "Faculty Participation", color: "#22c55e", count: totalSum1, innerCategory : finalArray1, completeData: data1,date: 'Starting Date' },
+    { form_number: "3", title: "MOOC's/Short Term Course/Course Completion", color: "#eab308" , count: totalSum2, innerCategory : finalArray2, completeData: data2,date: 'Starting Date' },
+    { form_number: "4", title: "Events Organized by Department", color: "#ef4444" , count: totalSum3, innerCategory : finalArray3, completeData: data3,date: 'Starting Date' },
+    { form_number: "5", title: "Faculty Awards and Achievements", color: "#06b6d4", count: totalSum4, innerCategory : finalArray4, completeData: data4,date: 'Award Date' },
+    { form_number: "6", title: "Sponsored Research/Grant Received/Consultancy", color: "#8b5cf6", count: totalSum5, innerCategory : finalArray5, completeData: data5,date: 'Form Filled Date' },
+    { form_number: "7_1", title: "Research Publication - Journals", color: "#0ea5e9", count: totalSum6, innerCategory : finalArray6, completeData: data6,date: 'Published Date' },
+    { form_number: "7_2", title: "Research Publication - Conference Publication", color: "#3b82f6", count: totalSum7, innerCategory : finalArray7, completeData: data7,date: 'Published Date' },
+    { form_number: "7_3", title: "Research Publication - Book and Book Chapters", color: "#f59e0b", count: totalSum8, innerCategory : finalArray8, completeData: data8,date: 'Published Date' },
+    { form_number: "7_4", title: "Patents", color: "#14b8a6",count: totalSum9, innerCategory : finalArray9, completeData: data9,date: 'Published Date' },
+    { form_number: "8", title: "M.Tech/Ph.D Guided", color: "#06b6d4", count: totalSum10, innerCategory : finalArray10, completeData: data10,date: 'Date of Viva-Voce' },
+    { form_number: "9", title: "Resource Person", color: "#ec4899", count: totalSum11, innerCategory : finalArray11, completeData: data11,date: 'Starting Date' }
 ];
 
 var all_over_total_sum = 0;
+var haveCard = false;
 document.getElementById("app").innerHTML = forms.map((f, index, array) => {
     const isLast = index === array.length - 1;
     all_over_total_sum += f.count;
@@ -236,8 +237,8 @@ document.getElementById("app").innerHTML = forms.map((f, index, array) => {
                                         <div>
                                             <div class="entry-padding">
                                                 ${f.completeData.map(data => {
-                                                    const id = data.id;
-                                                    const catMatch = data.category_display || data.email__email || data.noj || data.top || data.tob || data.top;
+                                                    const id = data.token;
+                                                    const catMatch = data.category_display || data.email__email || data.noj || data.top || data.tob;
                                                     const value = Object.values(data)[1];
                                                     const date_value = formatDateManual(new Date(Object.values(data)[2]));
                                                     if(catMatch === s.category_display) {
@@ -247,7 +248,10 @@ document.getElementById("app").innerHTML = forms.map((f, index, array) => {
                                                                 <div style="flex: 1;" id="date_value" class="ms-3"><b>${f.date}:</b> ${date_value}</div>
                                                                 <div style="margin-left: 10px;">
                                                                     <a href="progressdetails/${f.form_number}/${id}" style="text-decoration: none; color: #007bff;">
-                                                                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold"><button type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i> <b>Edit </b> </button></span>
+                                                                        <span class="py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold"><button type="button" class="btn btn-sm btn-outline-success"><i class="fas fa-pencil-alt"></i> <b>Edit </b> </button></span>
+                                                                    </a>
+                                                                    <a data-bs-toggle="modal" data-bs-target="#deleteUser" data-form_no = "${f.form_number}" data-pk = "${id}" data-delete-entry-name = "${value}" style="text-decoration: none; color: #007bff;" id="modal-head-main">
+                                                                        <span class="py-1 bg-red-100 text-red-700 rounded-full text-sm font-semibold"><button type="button" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i> <b>Delete </b> </button></span>
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -279,7 +283,6 @@ document.getElementById("app").innerHTML = forms.map((f, index, array) => {
             `
         }
     } else if(form_type == "unfilled_forms") {
-        var haveCard = false;
         if (f.count == 0)  {
             haveCard = true;
             return  `
@@ -309,7 +312,8 @@ document.getElementById("app").innerHTML = forms.map((f, index, array) => {
                     </div>
                 </div>
             `;
-        } else if(isLast && !haveCard) {
+        }
+        if(isLast && !haveCard) {
             return `
                 <div class="d-flex justify-content-center align-items-center p-3 m-3">
                     <div class = "empty_field_body">

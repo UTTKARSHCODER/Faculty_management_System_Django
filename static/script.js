@@ -48,7 +48,9 @@ const fieldInfo = {
     'Upload Proof (Patent)': 'Rename file as session_name_patent for e.g : 2024-25_NikhilGupta_patent',
     'Title of Event/ Exam Name': 'for e.g. : University Practical Exam B.Tech CSE V Sem  2023-24, International Conference on AI Systems and Sustainable Technologies 2025, Name of the Journal if editorial board member etc.',
     'Subject Area/Subject Name/Lab Name/Session Name': 'for e.g: Object Oriented Programming Lab, Name of session',
-    'Proof (Certificate/Mail)': 'Any proof in (certificate/mail screenshot/document/etc) which validates you as a resource person'
+    'Proof (Certificate/Mail)': 'Any proof in (certificate/mail screenshot/document/etc) which validates you as a resource person',
+    'Actual Expenditure': 'Only write amount (will be considered in Rs. only)',
+    'Mapped SDGs': 'Event Organized is mapped with which SDGs (Sustainable Development Goals) out of 17 SDGs given below? Select 1 or more options'
 };
 
 const categoryValue = {
@@ -217,7 +219,7 @@ function generateSubForms() {
                 subForm.style = 'flex-direction: column';
                 subForm.method  = 'POST';
                 subForm.enctype = 'multipart/form-data'
-               if(form_number == '1') {
+               if(form_number === '1') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -386,7 +388,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if(form_number == '2') {
+                } else if(form_number === '2') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -566,7 +568,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if (form_number == 3) {
+                } else if (form_number === '3') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -731,6 +733,15 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Actual Expenditure<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Actual Expenditure']}"></label>
+                                        <div class = "col-sm-8">
+                                            <input type="number" class="form-control" placeholder="Only write amount (for e.g:- 30000)" name = "actual_expenditure" required>
+                                            <div class="invalid-feedback">Please provide actual expenditure.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Association with professional societies for organization of event<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Association with professional societies for organization of event']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter details" name = "awpsfooe" required>
@@ -756,17 +767,97 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-2 col-form-label">Mapped SDG's<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Mapped SDGs']}"></label>
+                                        <div class = "col-sm-10 mt-4">
+                                            <div class="d-flex column-gap-4">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input group-required" id="radio1-${i}" name="optradio4" value="SDG1">
+                                                    <label class="form-check-label" for="radio1">SDG - 1 (No Poverty)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio2-${i}" name="optradio4" value="SDG2">
+                                                    <label class="form-check-label" for="radio2-${i}">SDG - 2 (Zero Hunger)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio3-${i}" name="optradio4" value="SDG3">
+                                                    <label class="form-check-label" for="radio3">SDG - 3 (Good Health And Well-Being)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio4-${i}" name="optradio4" value="SDG4">
+                                                    <label class="form-check-label" for="radio3">SDG - 4 (Quality Education)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio5-${i}" name="optradio4" value="SDG5">
+                                                    <label class="form-check-label" for="radio3">SDG - 5 (Gender Equality)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio6-${i}" name="optradio4" value="SDG6">
+                                                    <label class="form-check-label" for="radio3">SDG - 6 (Clean Water And Sanitation)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio4" value="SDG7">
+                                                    <label class="form-check-label" for="radio3">SDG - 7 (Affordable And Clean Energy)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio4" value="SDG8">
+                                                    <label class="form-check-label" for="radio3">SDG - 8 (Decent Work And Economic Growth)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio9-${i}" name="optradio4" value="SDG9">
+                                                    <label class="form-check-label" for="radio3">SDG - 9 (Industry, Innovation And Infrastructure)</label>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex column-gap-4">    
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio10-${i}" name="optradio4" value="SDG10">
+                                                    <label class="form-check-label" for="radio3">SDG - 10 (Reduced Inequalities)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio11-${i}" name="optradio4" value="SDG11">
+                                                    <label class="form-check-label" for="radio3">SDG - 11 (Sustainable Cities And Communities)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio12-${i}" name="optradio4" value="SDG12">
+                                                    <label class="form-check-label" for="radio3">SDG - 12 (Responsible Consumption And Production)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio13-${i}" name="optradio4" value="SDG13">
+                                                    <label class="form-check-label" for="radio3">SDG - 13 (Climate Action)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio14-${i}" name="optradio4" value="SDG14">
+                                                    <label class="form-check-label" for="radio3">SDG - 14 (Life Below Water)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio15-${i}" name="optradio4" value="SDG15">
+                                                    <label class="form-check-label" for="radio3">SDG - 15 (Life On Land)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio16-${i}" name="optradio4" value="SDG16">
+                                                    <label class="form-check-label" for="radio3">SDG - 16 (Peace, Justice, And Strong Institutions)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio17-${i}" name="optradio4" value="SDG17">
+                                                    <label class="form-check-label" for="radio3">SDG - 17 (Partnerships For The Goals)</label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">Please select at least one option.</div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Event report attached in proper format(YES/NO)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Event report attached in proper format']}"></span></label>
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5-${i}-${i}" name="optradio4" value="y" required>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}-${i}" name="optradio5" value="y" required>
                                                     <label class="form-check-label" for="radio5">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio4" value="N">
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio5" value="N">
                                                     <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
@@ -802,7 +893,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if(form_number == 4) {
+                } else if(form_number === '4') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "category" value = "${categoryValue[category]}">
@@ -883,9 +974,9 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Remark<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Remark']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Remark<span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Remark']}"></span></label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter organizer" name = "remark" required>
+                                            <input type="text" class="form-control" placeholder="Enter organizer" name = "remark">
                                             <div class="invalid-feedback">Please provide remark.</div>
                                         </div>
                                     </div>
@@ -908,7 +999,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if (form_number == 5) {
+                } else if (form_number === '5') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "category" value = "${categoryValue[category]}">
@@ -996,7 +1087,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if(form_number == 6) {
+                } else if(form_number === '6') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -1269,7 +1360,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if(form_number == 7) {
+                } else if(form_number === '7') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -1455,7 +1546,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if(form_number == 8) {
+                } else if(form_number === '8') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -1632,7 +1723,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if (form_number == 9) {
+                } else if (form_number === '9') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -1800,7 +1891,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if (form_number == 10) {
+                } else if (form_number === '10') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "category" value = "${categoryValue[category]}">
@@ -1919,7 +2010,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if (form_number == 11) {
+                } else if (form_number === '11') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "category" value = "${categoryValue[category]}">
@@ -2113,13 +2204,14 @@ function generateSubForms() {
     setTimeout(() => {
         initializeBootstrapValidation();
         attachLinkValidation(); // ADD THIS LINE HERE
+        stopScrollNumberIncrement();
     }, 100);
 }
 
 function attachLinkValidation() {
     const linkFields = document.querySelectorAll('input[name="link"], input[name="lwj"], input[name="lrsj"], input[name="lap"]');
     // Updated pattern: REQUIRES either http://, https://, or www. at the start
-    const urlPattern = /^(https?:\/\/|www\.)[^\s]{2,}$|^(na|NA)$/i;
+    const urlPattern = /^(https?:\/\/|www\.)\S{2,}$|^(na|NA)$/i;
 
     linkFields.forEach(field => {
        field.removeAttribute('pattern'); // Remove pattern attribute to prevent HTML5 validation conflicts
@@ -2130,6 +2222,15 @@ function attachLinkValidation() {
         field.addEventListener('input', function() {
             validateLinkField(this, urlPattern);
         });
+    });
+}
+function stopScrollNumberIncrement() {
+    const numberInputs = document.querySelectorAll('input[type="number"]')
+
+    numberInputs.forEach(function(input) {
+        input.addEventListener('wheel', function(event) {
+            event.preventDefault();
+        }, {passive : false});
     });
 }
 

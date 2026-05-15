@@ -21,8 +21,5 @@ media/
 # Environments
 .env
 
-#Token
-githubToken
-
-# PPT
-NAAC_Excellence_Blueprint(My Version).pptx
+#Offical Docs Folder
+official_docs/

@@ -17,15 +17,14 @@
     }
 </style>
 
-<div class="col-10">
     <div class="container-fluid mt-3 mb-3 ml-3 mr-3 px-3">
         <div class="card p-3 p-md-4 w-100" style="max-width: 100%;">
-            
+
             <!-- Top Sectio- Image + Info -->
             <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start gap-3">
                 <div class="flex-shrink-0 text-center">
-                    <img src="/media/{{data.profile_picture}}" 
-                         alt="Profile Picture" 
+                    <img src="/media/{{data.profile_picture}}"
+                         alt="Profile Picture"
                          class="rounded"
                          style="height: 150px; width: 130px; object-fit: cover;">
                 </div>
@@ -36,8 +35,8 @@
                     </p>
                         {{data.get_designation_display}}
                         <br>
-                    
-                    <button class="btn text-white px-4 mt-3" 
+
+                    <button class="btn text-white px-4 mt-3"
                             style="background-color: rgb(79 70 229);"
                             onclick="window.location.href='{% url 'editProfile' %}';">
                         <i class="fa-solid fa-pen me-2"></i>Edit Profile

@@ -15,19 +15,17 @@
         transform: scale(1.02);
     }
 </style>
-<div class="col-10 ms-3">
-    <div class="row m-2">
-        {% for value in values %}
-        <div class="col-md-3 col-sm-6 forms">
-            <a href = "/all_forms/{{value.no}}" style = "text-decoration: None;" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{value.tooltip}}" >
-                <div class="card text-white text-center mt-3" style = "width: 100%">
-                    <h5 class="card-title">Form {{ value.no_ }}</h5>
-                    <p class = "mt-2 mb-2">{{value.form}}</p>
-                </div>
-            </a>
-        </div>
-        {% endfor %}
+<div class="row m-2">
+    {% for value in values %}
+    <div class="col-md-3 col-sm-6 forms">
+        <a href = "/all_forms/{{value.no}}" style = "text-decoration: None;" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{value.tooltip}}" >
+            <div class="card text-white text-center mt-3" style = "width: 100%">
+                <h5 class="card-title">Form {{ value.no_ }}</h5>
+                <p class = "mt-2 mb-2">{{value.form}}</p>
+            </div>
+        </a>
     </div>
+    {% endfor %}
 </div>
 
 {% endblock %}

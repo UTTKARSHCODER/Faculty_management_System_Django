@@ -30,3 +30,5 @@ tablib==3.9.0
 tzdata==2025.2
 urllib3==2.6.0
 xlsxwriter==3.2.9
+django-multiselectfield
+python-dotenv

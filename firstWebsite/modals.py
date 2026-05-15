@@ -1,10 +1,14 @@
 import datetime
+import os
 import uuid
 
 from django.db import models
 from django.db.models import CASCADE
+from django.utils.dateparse import parse_date
 from multiselectfield import MultiSelectField
 from django.utils import timezone
+import jwt
+from MyFirstDjangoWebsite import settings
 
 class batch(models.TextChoices):
     CS_A = "3CS-A",
@@ -18,21 +22,6 @@ class batch(models.TextChoices):
     CS_DS_A = "3CS(DS)-A",
     CS_IOT_A = "3CS(IOT)-A",
     CS_IOT_B = "3CS(IOT)-B"
-
-class Student_Directory(models.Model):
-    name = models.CharField(max_length=255)
-    batch = models.CharField(max_length=10,default=batch.CS_F,choices=batch.choices)
-    roll_no = models.CharField(max_length=255)
-    college_id = models.CharField(max_length=20)
-    email = models.EmailField(max_length=254)
-    student_phone_no = models.CharField(max_length=10)
-    parent_phone_no = models.CharField(max_length=10)
-    address = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
 
 class sponsors(models.TextChoices):
     SPONSORED = "S", "Sponsored",
@@ -120,6 +109,14 @@ class Faculty(models.Model):
         choices=forms.choices,
         default=forms.NO_FORM
     )
+
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
 
     @property
     def form_alloted_display_list(self):
@@ -251,7 +248,30 @@ class category(models.TextChoices):
     PHD = "PH_D","Ph.D",
     OTHER = "OTH", "Other"
 
+    @classmethod
+    def get_fullvalue(cls, label):
+        if not hasattr(cls, '_label_to_value_map'):
+            cls._label_to_value_map = {choice.value: choice.label for choice in cls}
+
+        return cls._label_to_value_map.get(label)
+
+def rename_fpd_file(instance, old_filename):
+    extension = os.path.splitext(old_filename)[1].lower()
+    username = "".join(map(str.capitalize, instance.name.split()))
+    type_of_event = "_".join(category.get_fullvalue(instance.category).split())
+    title_of_program = "_".join(instance.top.split())
+    count = Faculty_participation_data.objects.filter(category=instance.category,email=instance.email).values('id').count()
+    new_filename = f"{instance.session}_{username}_{type_of_event}_{count + 1}_{title_of_program}{extension}"
+    return os.path.join('uploads/fdp_certificate/', new_filename)
+
 class Faculty_participation_data(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     category = models.CharField(
         max_length=6,
         choices=category.choices,
@@ -283,7 +303,7 @@ class Faculty_participation_data(models.Model):
         max_length=1,
         choices=accept.choices
     )
-    proof_file = models.FileField(upload_to='uploads/fdp_certificate/')
+    proof_file = models.FileField(upload_to=rename_fpd_file)
     email = models.ForeignKey(Faculty,on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -310,8 +330,29 @@ class pertopper(models.TextChoices):
     PER_10 = "10", "10%"
     PER_NA = "NA", "Not Applicable"
 
+def rename_mooc_file(instance, old_filename):
+    extension = os.path.splitext(old_filename)[1].lower()
+    raw_date = instance.end_date
+    if isinstance(raw_date, str):
+        date_obj = parse_date(raw_date)
+        year = date_obj.year if date_obj else "no_year"
+    elif raw_date:
+        year = raw_date.year
+    else:
+        year = "no_year"
+    name_of_course = "_".join(instance.noc.split())
+    username = "".join(map(str.capitalize, instance.name.split()))
+    new_filename = f"{name_of_course}_{username}_{year}{extension}"
+    return os.path.join('uploads/mooc_certificate/', new_filename)
 
 class mooc_course(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     category = models.CharField(
         max_length=6,
         choices=category.choices,
@@ -339,8 +380,8 @@ class mooc_course(models.Model):
         choices=session.choices
     )
     remarks = models.CharField(max_length=255,null=True)
-    proof_file = models.FileField(upload_to='uploads/mooc_certificate/')
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
+    proof_file = models.FileField(upload_to=rename_mooc_file)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -352,7 +393,40 @@ class eof_choices(models.TextChoices):
     TEACHING_STAFF = "TS", "Teaching Staff",
     NON_TEACHING_STAFF = "NTS", "Non-Teaching Staff"
 
+class mapped_sdgs(models.TextChoices):
+    SDG_1 = "SDG1", "SDG - 1 (No Poverty)",
+    SDG_2 = "SDG2", "SDG - 2 (Zero Hunger)",
+    SDG_3 = "SDG3", "SDG - 3 (Good Health And Well-Being)",
+    SDG_4 = "SDG4", "SDG - 4 (Quality Education)",
+    SDG_5 = "SDG5", "SDG - 5 (Gender Equality)",
+    SDG_6 = "SDG6", "SDG - 6 (Clean Water And Sanitation)",
+    SDG_7 = "SDG7", "SDG - 7 (Affordable And Clean Energy)",
+    SDG_8 = "SDG8", "SDG - 8 (Decent Work And Economic Growth)",
+    SDG_9 = "SDG9", "SDG - 9 (Industry, Innovation And Infrastructure)",
+    SDG_10 = "SDG10", "SDG - 10 (Reduced Inequalities)",
+    SDG_11 = "SDG11", "SDG - 11 (Sustainable Cities And Communities)",
+    SDG_12 = "SDG12", "SDG - 12 (Responsible Consumption And Production)",
+    SDG_13 = "SDG13", "SDG - 13 (Climate Action)",
+    SDG_14 = "SDG14", "SDG - 14 (Life Below Water)",
+    SDG_15 = "SDG15", "SDG - 15 (Life On Land)",
+    SDG_16 = "SDG16", "SDG - 16 (Peace, Justice, And Strong Institutions)",
+    SDG_17 = "SDG17", "SDG - 17 (Partnerships For The Goals)",
+
+def rename_events_file(instance, old_filename):
+    extension = os.path.splitext(old_filename)[1].lower()
+    type_of_event = "_".join(category.get_fullvalue(instance.category).split())
+    title_of_event = "_".join(instance.topdpo.split())
+    new_filename = f"{instance.session}_{type_of_event}_{title_of_event}{extension}"
+    return os.path.join('uploads/events/', new_filename)
+
 class events(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     category = models.CharField(
         max_length=6,
         choices=category.choices,
@@ -397,14 +471,20 @@ class events(models.Model):
         choices=accept.choices
     )
     gd = models.CharField(max_length=255)
+    actual_expenditure = models.IntegerField(default=0)
     awpsfooe = models.CharField(max_length=255)
     nossp = models.CharField(max_length=255)
     nosmp = models.CharField(max_length=255)
+    map_sdg = MultiSelectField(
+        max_length=5,
+        choices=mapped_sdgs.choices,
+        default=mapped_sdgs.SDG_17
+    )
     eraipf = models.CharField(
         max_length=1,
         choices=accept.choices
     )
-    proof_file = models.FileField(upload_to='uploads/events/')
+    proof_file = models.FileField(upload_to=rename_events_file)
     remarks = models.CharField(max_length=255, null = True)
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -413,7 +493,21 @@ class events(models.Model):
     def __str__(self):
         return self.get_category_display() + " " + self.topdpo
 
+def rename_awards_file(instance, old_filename):
+    extension = os.path.splitext(old_filename)[1].lower()
+    username = "".join(map(str.capitalize, instance.name.split()))
+    name_of_award = "_".join(instance.noaa.split())
+    new_filename = f"{instance.session}_{username}_{name_of_award}{extension}"
+    return os.path.join('uploads/awards/', new_filename)
+
 class awards_and_achievments(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     category = models.CharField(
         max_length=6,
         choices=category.choices
@@ -424,7 +518,7 @@ class awards_and_achievments(models.Model):
     prize = models.CharField(max_length=255)
     ad = models.DateField()
     remark = models.CharField(max_length=255, null = True)
-    proof_file = models.FileField(upload_to='uploads/awards/')
+    proof_file = models.FileField(upload_to=rename_awards_file)
     session = models.CharField(
         max_length=7,
         choices=session.choices
@@ -440,7 +534,21 @@ class status(models.TextChoices):
     ONGOING = "ON", "Ongoing",
     COMPLETED = "CM", "Completed"
 
+def rename_sponsored_file(instance, old_filename):
+    extension = os.path.splitext(old_filename)[1].lower()
+    username = "".join(map(str.capitalize, instance.name.split()))
+    type_of_event = "_".join(category.get_fullvalue(instance.category).split())
+    new_filename = f"{instance.session}_{username}_{type_of_event}{extension}"
+    return os.path.join('uploads/sponsored_research/', new_filename)
+
 class sponsored_research(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     category = models.CharField(
         max_length=6,
         choices=category.choices
@@ -456,7 +564,7 @@ class sponsored_research(models.Model):
         max_length=2,
         choices=status.choices
     )
-    proof_file = models.FileField(upload_to='uploads/sponsored_research/')
+    proof_file = models.FileField(upload_to=rename_sponsored_file)
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -478,7 +586,20 @@ class quartile(models.TextChoices):
     Q4 = "Q4", "Q4",
     NA = "NA", "NA"
 
+def rename_journal_file(instance, old_filename):
+    extension = os.path.splitext(old_filename)[1].lower()
+    username = "".join(map(str.capitalize, instance.name.split()))
+    new_filename = f"{instance.session}_{username}{extension}"
+    return os.path.join('uploads/research_journal/', new_filename)
+
 class research_journal(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     noa = models.CharField(max_length=255)
     top = models.CharField(max_length=255)
     noj = models.CharField(max_length=255)
@@ -514,7 +635,7 @@ class research_journal(models.Model):
         max_length=2,
         choices=quartile.choices
     )
-    proof_file = models.FileField(upload_to='uploads/research_journal/')
+    proof_file = models.FileField(upload_to=rename_journal_file)
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -522,7 +643,20 @@ class research_journal(models.Model):
     def __str__(self):
         return self.noj + " " + self.noa
 
+def rename_conference_file(instance, old_filename):
+    extension = os.path.splitext(old_filename)[1].lower()
+    username = "".join(map(str.capitalize, instance.name.split()))
+    new_filename = f"{instance.session}_{username}{extension}"
+    return os.path.join('uploads/research_conference/', new_filename)
+
 class research_conference(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     noa = models.CharField(max_length=255)
     toc = models.CharField(max_length=255)
     top = models.CharField(max_length=255)
@@ -547,7 +681,7 @@ class research_conference(models.Model):
     )
     details = models.CharField(max_length=255)
     index_by = models.CharField(max_length=255)
-    proof_file = models.FileField(upload_to='uploads/research_conference/')
+    proof_file = models.FileField(upload_to=rename_conference_file)
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -555,7 +689,20 @@ class research_conference(models.Model):
     def __str__(self):
         return self.top + " " + self.noa
 
+def rename_book_file(instance, old_filename):
+    extension = os.path.splitext(old_filename)[1].lower()
+    username = "".join(map(str.capitalize, instance.name.split()))
+    new_filename = f"{instance.session}_{username}{extension}"
+    return os.path.join('uploads/research_book/', new_filename)
+
 class research_book(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     noa = models.CharField(max_length=255)
     tob = models.CharField(max_length=255)
     top = models.CharField(max_length=255)
@@ -579,7 +726,7 @@ class research_book(models.Model):
     )
     details = models.CharField(max_length=255)
     index_by = models.CharField(max_length=255)
-    proof_file = models.FileField(upload_to="uploads/research_book/")
+    proof_file = models.FileField(upload_to=rename_book_file)
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -594,7 +741,20 @@ class status_of_patent(models.TextChoices):
     PUBLISHED = "P", "Published",
     GRANTED = "G", "Granted"
 
+def rename_patent_file(instance, old_filename):
+    extension = os.path.splitext(old_filename)[1].lower()
+    username = "".join(map(str.capitalize, instance.name.split()))
+    new_filename = f"{instance.session}_{username}_patent{extension}"
+    return os.path.join('uploads/patents/', new_filename)
+
 class patents(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     sop = models.CharField(
         max_length=1,
         choices=status_of_patent.choices,
@@ -620,7 +780,7 @@ class patents(models.Model):
     )
     details = models.CharField(max_length=255)
     link = models.URLField(max_length=500)
-    proof_file = models.FileField(upload_to='uploads/patents/')
+    proof_file = models.FileField(upload_to=rename_patent_file)
     email = models.ForeignKey(Faculty,on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -638,6 +798,13 @@ class survillance(models.TextChoices):
     C = "CS", "Co-Supervisor"
 
 class guided(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     category = models.CharField(
         max_length=6,
         choices=category.choices,
@@ -687,6 +854,13 @@ class resource_person_type(models.TextChoices):
     OTHER = "O", "Other"
 
 class resource(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     category = models.CharField(
         max_length=6,
         choices=category.choices,
@@ -732,6 +906,13 @@ class professional_course(models.TextChoices):
     OTHER = "O", "Other"
 
 class non_teaching_staff(models.Model):
+    @property
+    def secure_token(self):
+        return jwt.encode(
+            {"user_pk": self.pk},
+            settings.SECRET_KEY,
+            algorithm="HS256"
+        )
     session = models.CharField(
         max_length=7,
         choices=session.choices,
@@ -772,7 +953,7 @@ class non_teaching_staff(models.Model):
         choice_dict = dict(professional_course.choices)
 
         # Now 'NTS' stays together as one key
-        return [choice_dict.get(key, key) for key in data]
+        return ", ".join([choice_dict.get(key, key) for key in data])
 
     pan_no = models.CharField(max_length=10)
     dob = models.DateField()

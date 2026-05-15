@@ -1,5 +1,6 @@
 from functools import wraps
 
+import jwt
 from django.contrib import messages
 from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
@@ -9,13 +10,11 @@ from MyFirstDjangoWebsite import settings
 from firstWebsite.modals import Faculty, Faculty_participation_data, mooc_course, events, awards_and_achievments, \
     sponsored_research, research_journal, research_conference, research_book, patents, guided, resource, \
     non_teaching_staff, category
-from .modals import Student_Directory
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 import json
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
-
 
 CLIENT_ID = settings.SOCIALACCOUNT_PROVIDERS['google']['APP']['client_id']
 @csrf_exempt
@@ -113,15 +112,20 @@ def session_login_required(view_func):
     return wrapper
 
 @session_login_required
-def edit_profile(request):
+def edit_profile(request, user_token=-1):
     try:
-        faculty_instance = Faculty.objects.get(pk=request.session.get('user_id'))
+        if user_token != -1:
+            payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=["HS256"])
+            actual_pk = payload['user_pk']
+            faculty_instance = Faculty.objects.get(pk=actual_pk)
+        else:
+            faculty_instance = Faculty.objects.get(pk=request.session.get('user_id'))
         context = {'key': faculty_instance}
         return render(request,'editProfile.html',context=context)
     except Faculty.DoesNotExist:
         error_message = f"User does not exist in database."
         messages.error(request,error_message)
-        return render(request,'index.html')
+        return render(request,'404.html')
 
 def successfulsubmission(request):
     return render(request,'submitSuccess.html')
@@ -139,10 +143,10 @@ def deleteuser(request):
 
 @session_login_required
 @ensure_csrf_cookie
-def all_forms(request,pk):
-    if pk:
-        if 12 > pk > 0 or pk == 16:
-            form_number = pk
+def all_forms(request,form_no):
+    if form_no:
+        if 12 > form_no > 0 or form_no == 16:
+            form_number = form_no
             secret_key = Faculty.objects.get(pk=request.session.get('user_id'))
             return render(request,'forms.html',{'form_number': form_number, 'value': secret_key})
         else:
@@ -184,13 +188,6 @@ def index(request):
     context = {'dir_ins': fac_dir_instance}
     return render(request, 'index.html', context=context)
 
-def student(request):
-    stu_dir_instance = Student_Directory.objects.values('batch').annotate(
-        count=Count('id')
-    ).order_by('batch')
-    context = {'dir_ins':stu_dir_instance}
-    return render(request, 'student_card_details.html',context = context)
-
 @session_login_required
 def profile(request):
     value = Faculty.objects.get(pk=request.session.get('user_id'))
@@ -199,32 +196,13 @@ def profile(request):
     context = {'data': value}
     return render(request,'profile.html', context=context)
 
-
-@session_login_required
-def student_directory(request):
-    modal = request.session.get('topLeftBar')
-    stu_data = Student_Directory.objects.all()
-    context = {'stu_data': stu_data, 'user': modal}
-    return render(request,'student_directory.html',context = context)
-
 def about(request):
     return render(request,'about.html')
 
-@session_login_required
-def stu_card_details(request,pk):
-    if pk:
-        batches = Student_Directory.objects.filter(batch = pk)
-        if batches:
-            context = {'stu_data': batches }
-            return render(request,'batch_details.html',context=context)
-        else:
-            messages.info(request,"No data to display")
-            return render(request,'index.html')
-    return render(request,'404.html')
 
-def fac_card_details(request,pk):
-    if pk:
-        department = Faculty.objects.filter(department = pk)
+def fac_card_details(request,department):
+    if department:
+        department = Faculty.objects.filter(department = department)
         if department:
             if 'topLeftBar' in request.session:
                 user = request.session.get('topLeftBar')
@@ -271,63 +249,52 @@ def cookie_not_found(request):
     return render(request,'403.html')
 
 @session_login_required
-def progressdetails(request,pk,key_id):
-    if request.session.get('topLeftBar') == 'spa' or request.session.get('topLeftBar') == 'ad':
-        if pk == "0":
-            non_teaching = non_teaching_staff.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk, 'data': non_teaching,'key_id':int(key_id), 'category' : category})
-        elif pk == "1":
-            faculty_participation_instance = Faculty_participation_data.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': faculty_participation_instance,'key_id':int(key_id), 'category' : category})
-        elif pk == "2":
-            mooc_instance = mooc_course.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': mooc_instance,'key_id':int(key_id), 'category' : category})
-        elif pk == "3":
-            events_instance = events.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': events_instance,'key_id':int(key_id), 'category' : category})
-        elif pk == "4":
-            awards = awards_and_achievments.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': awards,'key_id':int(key_id), 'category' : category})
-        elif pk == "5":
-            sponsor = sponsored_research.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': sponsor,'key_id':int(key_id), 'category' : category})
-        elif pk == "6":
-            research_journal_instance = research_journal.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_journal_instance,'key_id':int(key_id), 'category' : category})
-        elif pk == "7":
-            research_confernce_instance = research_conference.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_confernce_instance,'key_id':int(key_id), 'category' : category})
-        elif pk == "8":
-            research_book_instance = research_book.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': research_book_instance,'key_id':int(key_id), 'category' : category})
-        elif pk == "9":
-            patents1 = patents.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': patents1,'key_id':int(key_id), 'category' : category})
-        elif pk == "10":
-            guided1 = guided.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': guided1,'key_id':int(key_id), 'category' : category})
-        elif pk == "11":
-            resouce_person = resource.objects.get(pk=key_id)
-            return render(request, 'progressDetails.html', context={'form_number': pk,'data': resouce_person,'key_id':int(key_id), 'category' : category})
+def progressdetails(request, form_no, user_token):
+    if request.session.get('topLeftBar') == 'spa' or request.session.get('topLeftBar') == 'ad': # Why not faculty ?
+        payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=["HS256"])
+        actual_pk = payload['user_pk']
+        if form_no == "1_1":
+            instance = Faculty.objects.get(pk=actual_pk)
+            return render(request,'editProfile.html', context={'key': instance} )
+        elif form_no == "1_2":
+            instance = non_teaching_staff.objects.get(pk=actual_pk)
+        elif form_no == "2":
+            instance = Faculty_participation_data.objects.get(pk=actual_pk)
+        elif form_no == "3":
+            instance = mooc_course.objects.get(pk=actual_pk)
+        elif form_no == "4":
+            instance = events.objects.get(pk=actual_pk)
+        elif form_no == "5":
+            instance = awards_and_achievments.objects.get(pk=actual_pk)
+        elif form_no == "6":
+            instance = sponsored_research.objects.get(pk=actual_pk)
+        elif form_no == "7_1":
+            instance = research_journal.objects.get(pk=actual_pk)
+        elif form_no == "7_2":
+            instance = research_conference.objects.get(pk=actual_pk)
+        elif form_no == "7_3":
+            instance = research_book.objects.get(pk=actual_pk)
+        elif form_no == "7_4":
+            instance = patents.objects.get(pk=actual_pk)
+        elif form_no == "8":
+            instance = guided.objects.get(pk=actual_pk)
+        elif form_no == "9":
+            instance = resource.objects.get(pk=actual_pk)
         else:
             return render(request,'404.html')
+
+        return render(request,
+                      'EditFormPreview.html',
+                      context={'form_number': form_no, 'data': instance, 'key_id': user_token,'category': category}
+                      )
     else:
         return render(request, '404.html')
 
-def add_student(request):
-    if request.method == "POST":
-        new_mail = request.POST.get('new_email')
-        if Student_Directory.objects.filter(email=new_mail).exists():
-            messages.error(request, "Email already exists!")
-            return redirect(reverse("student-directory"))
-
-        return render(request, 'page_under_construction.html')
-    else:
-        return render(request,'404.html')
-
-def detailed_info_profile(request, faculty_id):
+def detailed_info_profile(request, user_token):
     if 'user_id' in request.session and 'topLeftBar' in request.session:
-        faculty = get_object_or_404(Faculty, pk=faculty_id)
+        payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=["HS256"])
+        actual_pk = payload['user_pk']
+        faculty = get_object_or_404(Faculty, pk=actual_pk)
         return render(request, 'detailed-info-profile.html', {'faculty': faculty})
     else:
         return render(request, '404.html')

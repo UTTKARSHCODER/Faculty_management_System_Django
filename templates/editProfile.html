@@ -77,428 +77,439 @@
         background-size: 10px 10px;
     }
 </style>
-<div class="col-md-10 col-sm-9">
-    <div class="container-fluid mt-3 h-100">
+<div class="container-fluid mt-3 h-100">
+    <form action="/save_all_forms/13" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
         <div class="row form-row-non-tech">
-            <form action="/save_all_forms/13" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                {% csrf_token %}
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="A Session e.g 2024-25 starts at July 2024 and ends at June 2025"></span></label>
-                            <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25" {% if key.session == '2024-25' %}selected{% endif %}>2024-25</option>
-                                    <option value="2025-26" {% if key.session == '2025-26' %}selected{% endif %}>2025-26</option>
-                                    <option value="2026-27" {% if key.session == '2026-27' %}selected{% endif %}>2026-27</option>
-                                    <option value="2027-28" {% if key.session == '2027-28' %}selected{% endif %}>2027-28</option>
-                                    <option value="2028-29" {% if key.session == '2028-29' %}selected{% endif %}>2028-29</option>
-                                    <option value="2029-30" {% if key.session == '2029-30' %}selected{% endif %}>2029-30</option>
-                                </select>
-                                <div class="invalid-feedback">Please select an option.</div>
-                            </div>
+            <div class="row g-3">
+                <h4 style="color: #667eea">1. Personal Information</h4>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <input type = "hidden" name = "user_id" value="{{ key.pk }}"/>
+                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="A Session e.g 2024-25 starts at July 2024 and ends at June 2025"></span></label>
+                        <div class="col-sm-8">
+                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
+                                <option value="" selected disabled>Select your Session</option>
+                                <option value="2024-25" {% if key.session == '2024-25' %}selected{% endif %}>2024-25</option>
+                                <option value="2025-26" {% if key.session == '2025-26' %}selected{% endif %}>2025-26</option>
+                                <option value="2026-27" {% if key.session == '2026-27' %}selected{% endif %}>2026-27</option>
+                                <option value="2027-28" {% if key.session == '2027-28' %}selected{% endif %}>2027-28</option>
+                                <option value="2028-29" {% if key.session == '2028-29' %}selected{% endif %}>2028-29</option>
+                                <option value="2029-30" {% if key.session == '2029-30' %}selected{% endif %}>2029-30</option>
+                            </select>
+                            <div class="invalid-feedback">Please select an option.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label for="top" class="col-sm-4 col-form-label">Name<span class="ms-1" style="color: red;">*</span></label>
-                            <div class = "col-md-8">
-                                <input type="text" class="form-control custom-back" id="top" pattern="[A-Za-z\s]+" title="Number and special character are not allowed" placeholder="Enter your name" value = {{key.name}} name="name" required>
-                                <div class="invalid-feedback">Please enter your name.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label for="top" class="col-sm-4 col-form-label">Name<span class="ms-1" style="color: red;">*</span></label>
+                        <div class = "col-md-8">
+                            <input type="text" class="form-control custom-back" id="top" pattern="[A-Za-z\s]+" title="Number and special character are not allowed" placeholder="Enter your name" value = "{{key.name}}" name="name" required>
+                            <div class="invalid-feedback">Please enter your name.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Mobile No<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="tel" class="form-control" maxlength="10" pattern="[6789][0-9]{9}" placeholder="Enter 10-Digits mobile number" name = "mobile_no" value = {{key.contact_number}} required>
-                                <div class="invalid-feedback">Please enter your mobile number with starting digit 6 onwards.</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Mobile No<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="tel" class="form-control" maxlength="10" pattern="[6789][0-9]{9}" placeholder="Enter 10-Digits mobile number" name = "mobile_no" value = {{key.contact_number}} required>
+                            <div class="invalid-feedback">Please enter your mobile number with starting digit 6 onwards.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Email ID<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" value="{{key.email}}" name = "email" readonly>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Email ID<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="{{key.email}}" name = "email" readonly>
                         </div>
                     </div>
-                    <div class = "col-md-4 mt-4">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label class = "form-label" ><b>Gender</b><span class = "ms-1" style = "color: red;">*</span></label>
-                            </div>
-                            <div class="col-md-3">
-                                <div class = "form-check">
-                                    <input type = "radio" class = "form-check-input" id = "radio1" name = "optradio" value = "M" {% if key.gender == "M" %}checked{% endif %}>
-                                    <label class = "form-check-label" for = "radio1">Male</label>
+                </div>
+                <div class = "col-md-4 mt-4">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class = "form-label" ><b>Gender</b><span class = "ms-1" style = "color: red;">*</span></label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class = "form-check">
+                                <input type = "radio" class = "form-check-input" id = "radio1" name = "optradio" value = "M" {% if key.gender == "M" %}checked{% endif %}>
+                                <label class = "form-check-label" for = "radio1">Male</label>
 
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class ="form-check">
-                                    <input type = "radio" class = "form-check-input" id = "radio2" name = "optradio" value = "F" {% if key.gender == "F" %}checked{% endif %}>
-                                    <label class = "form-check-label" for = "radio2">Female</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class = "form-check">
-                                    <input type = "radio" class = "form-check-input" id = "radio3" name = "optradio" value = "O" {% if key.gender == "O" %}checked{% endif %}>
-                                    <label class = "form-check-label" for = "radio3">Others</label>
-                                </div>
-                            </div>
-                            <div class="invalid-feedback">Please select your gender.</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Date of Birth<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="date" class="form-control" min="1930-01-01" max="2001-12-31" placeholder="Enter your dob" name = "dob" value="{{ key.dob|date:'Y-m-d' }}" id = "dob" required>
-                                <div class="invalid-feedback">Please enter your date of birth.</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Department<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="department" id="department" value = "{{key}}" required>
-                                    <option value="" {% if key.department == "" %}selected{% endif %} disabled>Select your Department</option>
-                                    <option value="CSE" {% if key.department == "CSE" %}selected{% endif %}>Computer Science & Engineering</option>
-                                    <option value="CSE(AI)" {% if key.department == "CSE(AI)" %}selected{% endif %}>Computer Science & Engineering(AI)</option>
-                                    <option value="CSE(DS)" {% if key.department == "CSE(DS)" %}selected{% endif %}>Computer Science & Engineering(DS)</option>
-                                    <option value="CSE(IOT)" {% if key.department == "CSE(IOT)" %}selected{% endif %}>Computer Science & Engineering(IOT)</option>
-                                </select>
-                                <div class="invalid-feedback">Please select your department.</div>
+                        <div class="col-md-3">
+                            <div class ="form-check">
+                                <input type = "radio" class = "form-check-input" id = "radio2" name = "optradio" value = "F" {% if key.gender == "F" %}checked{% endif %}>
+                                <label class = "form-check-label" for = "radio2">Female</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Employee ID<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" min="0" maxlength="6" oninput="if(this.value<0)this.value=0" placeholder="Enter employee id" name = "emp_id" value = "{{key.emp_id}}" required>
-                                <div class="invalid-feedback">Please enter your employee id.</div>
+                        <div class="col-md-3">
+                            <div class = "form-check">
+                                <input type = "radio" class = "form-check-input" id = "radio3" name = "optradio" value = "O" {% if key.gender == "O" %}checked{% endif %}>
+                                <label class = "form-check-label" for = "radio3">Others</label>
                             </div>
                         </div>
+                        <div class="invalid-feedback">Please select your gender.</div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Desgination<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="designation" id="designation" required>
-                                    <option value="" {% if key.designation == "" %}selected{% endif %} disabled>Select your Highest Qualification</option>
-                                    <option value="AP1" {% if key.designation == "AP1" %}selected{% endif %}>Assistant Professor 1</option>
-                                    <option value="AP2" {% if key.designation == "AP2" %}selected{% endif %}>Assistant Professor 2</option>
-                                    <option value="ASP1" {% if key.designation == "ASP1" %}selected{% endif %}>Associate Professor 1</option>
-                                    <option value="ASP2" {% if key.designation == "ASP2" %}selected{% endif %}>Associate Professor 2</option>
-                                    <option value="P" {% if key.designation == "P" %}selected{% endif %}>Professor</option>
-                                </select>
-                            </div>
-                            <div class="invalid-feedback">Please select your designation.</div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Date of Birth<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" min="1930-01-01" max="2001-12-31" placeholder="Enter your dob" name = "dob" value="{{ key.dob|date:'Y-m-d' }}" id = "dob" required>
+                            <div class="invalid-feedback">Please enter your date of birth.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Area of Specialization<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="aos" id="aos" required>
-                                    <option value="" {% if key.aos == "" %}selected{% endif %} disabled>Select your Area of Specialization</option>
-                                    <option value="AIML" {% if key.aos == "AIML" %}selected{% endif %}>Artificial Intelligence & Machine Learning</option>
-                                    <option value="CN" {% if key.aos == "CN" %}selected{% endif %}>Cybersecurity & Networks</option>
-                                    <option value="SSD" {% if key.aos == "SSD" %}selected{% endif %}>Software Systems & Development</option>
-                                    <option value="CSA" {% if key.aos == "CSA" %}selected{% endif %}>Computer Systems & Architecture</option>
-                                    <option value="M" {% if key.aos == "M" %}selected{% endif %}>Mathematics</option>
-                                    <option value="TCS" {% if key.aos == "TCS" %}selected{% endif %}>Theoretical Computer Science</option>
-                                    <option value="O" id="Other" {% if key.aos == "O" %}selected{% endif %}>Other</option>
-                                </select>
-                                <div class="invalid-feedback">Please select your area of specialization.</div>
-                            </div>
+                </div>
+                <div class="col-md-4 " style = "margin-top: 1.7rem;">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Pan No.<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" placeholder="ABCDE1234F" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" maxlength="10" oninput="this.value = this.value.toUpperCase()" name = "pan_no" id = "pan_no" value="{{key.pan_no}}" required>
+                            <div class="invalid-feedback">Please enter a valid 10-digit PAN (e.g., ABCDE1234F).</div>
+                            <div class="valid-feedback">Format looks correct!</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Highest Qualification<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="highest_qualification" id="highest_qualification" required>
-                                    <option value="" {% if key.hq == "" %}selected{% endif %} disabled>Select your Highest Qualification</option>
-                                    <option value="BT" {% if key.hq == "BT" %}selected{% endif %}>B.E. / B.Tech</option>
-                                    <option value="MT" {% if key.hq == "MT" %}selected{% endif %}>M.E. / M.Tech</option>
-                                    <option value="MS" {% if key.hq == "MS" %}selected{% endif %}>M.S.</option>
-                                    <option value="MBA" {% if key.hq == "MBA" %}selected{% endif %}>MBA</option>
-                                    <option value="PHD" {% if key.hq == "PHD" %}selected{% endif %}>Ph.D.</option>
-                                    <option value="PD" {% if key.hq == "PD" %}selected{% endif %}>Post-Doctoral Research (Post-Doc)</option>
-                                    <option value="O" id="hqOther" {% if key.hq == "O" %}selected{% endif %}>Other</option>
-                                </select>
-                                <div class="invalid-feedback">Please select your highest qualification.</div>
-                            </div>
+                </div>
+                <div class="col-md-6 mt-3" id = "add">
+                    <div class="row">
+                        <label for = "address" class = "col-sm-4 mt-3 form-label"><b>Address:-</b><span class = "ms-1" style = "color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <textarea class = "form-control custom-back" rows = "4" id = "address" placeholder = "Enter your permanent Address" name = "address" oninput = "validateForm('add')" required>{{key.address}}</textarea>
+                            <div class="invalid-feedback">Please enter a valid address (Letters, numbers, and , . / - allowed).</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">University Name<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" pattern="[A-Za-z\s]+" title="Numbers and special characters are not allowed" placeholder="Enter university name" name = "univ_name" value = "{{key.univ_name}}" required>
-                                <div class="invalid-feedback">Please enter your university name.</div>
-                            </div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-row-non-tech">
+            <div class="row g-3">
+                <h4 style="color: #667eea">2. Academic & Professional Qualification</h4>
+                <h5 style="font-size: 14px; color: #808080" class="text-center"># Basic Acadmic Details</h5>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Department<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-select custom-back-select" name="department" id="department" value = "{{key}}" required>
+                                <option value="" {% if key.department == "" %}selected{% endif %} disabled>Select your Department</option>
+                                <option value="CSE" {% if key.department == "CSE" %}selected{% endif %}>Computer Science & Engineering</option>
+                                <option value="CSE(AI)" {% if key.department == "CSE(AI)" %}selected{% endif %}>Computer Science & Engineering(AI)</option>
+                                <option value="CSE(DS)" {% if key.department == "CSE(DS)" %}selected{% endif %}>Computer Science & Engineering(DS)</option>
+                                <option value="CSE(IOT)" {% if key.department == "CSE(IOT)" %}selected{% endif %}>Computer Science & Engineering(IOT)</option>
+                            </select>
+                            <div class="invalid-feedback">Please select your department.</div>
                         </div>
                     </div>
-
-                    <div class="col-md-4 " style = "margin-top: 1.7rem;">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Pan No.<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="ABCDE1234F" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" maxlength="10" oninput="this.value = this.value.toUpperCase()" name = "pan_no" id = "pan_no" value="{{key.pan_no}}" required>
-                                <div class="invalid-feedback">Please enter a valid 10-digit PAN (e.g., ABCDE1234F).</div>
-                                <div class="valid-feedback">Format looks correct!</div>
-                            </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Area of Specialization<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-select custom-back-select" name="aos" id="aos" required>
+                                <option value="" {% if key.aos == "" %}selected{% endif %} disabled>Select your Area of Specialization</option>
+                                <option value="AIML" {% if key.aos == "AIML" %}selected{% endif %}>Artificial Intelligence & Machine Learning</option>
+                                <option value="CN" {% if key.aos == "CN" %}selected{% endif %}>Cybersecurity & Networks</option>
+                                <option value="SSD" {% if key.aos == "SSD" %}selected{% endif %}>Software Systems & Development</option>
+                                <option value="CSA" {% if key.aos == "CSA" %}selected{% endif %}>Computer Systems & Architecture</option>
+                                <option value="M" {% if key.aos == "M" %}selected{% endif %}>Mathematics</option>
+                                <option value="TCS" {% if key.aos == "TCS" %}selected{% endif %}>Theoretical Computer Science</option>
+                                <option value="O" id="Other" {% if key.aos == "O" %}selected{% endif %}>Other</option>
+                            </select>
+                            <div class="invalid-feedback">Please select your area of specialization.</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label" for = "pshd">Passing Year of Highest Degree<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <select class = "form-control" id = "pshd" name = "pshd" required>
-                                <script>
-                                    function populateYearOptions(dobValue) {
-                                        const selectYear = document.getElementById('pshd');
-                                        const dateObject = new Date(dobValue);
-                                        const yearBirth = dateObject.getFullYear();
-                                        const val = {{ key.pshd }};
-                                        if (val >= yearBirth + 18) {
-                                            selectYear.innerHTML = '<option value = "'+val+'"selected>'+val+'</option>';
-                                        } else {
-                                            selectYear.innerHTML = '<option value = ""selected disabled>Select Year</option>';
-                                        }
-
-                                        if(!dobValue) {
-                                            return;
-                                        }
-
-                                        for (let year = yearBirth + 18; year <= 2025; year++) {
-                                            const option = document.createElement('option');
-                                            option.value = year;
-                                            option.textContent = year;
-                                            selectYear.appendChild(option);
-                                        }
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Highest Qualification<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-select custom-back-select" name="highest_qualification" id="highest_qualification" required>
+                                <option value="" {% if key.hq == "" %}selected{% endif %} disabled>Select your Highest Qualification</option>
+                                <option value="BT" {% if key.hq == "BT" %}selected{% endif %}>B.E. / B.Tech</option>
+                                <option value="MT" {% if key.hq == "MT" %}selected{% endif %}>M.E. / M.Tech</option>
+                                <option value="MS" {% if key.hq == "MS" %}selected{% endif %}>M.S.</option>
+                                <option value="MBA" {% if key.hq == "MBA" %}selected{% endif %}>MBA</option>
+                                <option value="PHD" {% if key.hq == "PHD" %}selected{% endif %}>Ph.D.</option>
+                                <option value="PD" {% if key.hq == "PD" %}selected{% endif %}>Post-Doctoral Research (Post-Doc)</option>
+                                <option value="O" id="hqOther" {% if key.hq == "O" %}selected{% endif %}>Other</option>
+                            </select>
+                            <div class="invalid-feedback">Please select your highest qualification.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">University Name<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" pattern="[A-Za-z\s]+" title="Numbers and special characters are not allowed" placeholder="Enter university name" name = "univ_name" value = "{{key.univ_name}}" required>
+                            <div class="invalid-feedback">Please enter your university name.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label" for = "pshd">Passing Year of Highest Degree<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class = "form-control" id = "pshd" name = "pshd" required>
+                            <script>
+                                function populateYearOptions(dobValue) {
+                                    const selectYear = document.getElementById('pshd');
+                                    const dateObject = new Date(dobValue);
+                                    const yearBirth = dateObject.getFullYear();
+                                    const val = {{ key.pshd }};
+                                    if (val >= yearBirth + 18) {
+                                        selectYear.innerHTML = '<option value = "'+val+'"selected>'+val+'</option>';
+                                    } else {
+                                        selectYear.innerHTML = '<option value = ""selected disabled>Select Year</option>';
                                     }
 
-                                    const initialDob = document.getElementById('dob').value;
-                                    populateYearOptions(initialDob);
+                                    if(!dobValue) {
+                                        return;
+                                    }
 
-                                    document.getElementById('dob').addEventListener('input', function() {
-                                        const updatedDob = this.value;
-                                        populateYearOptions(updatedDob);
-                                    });
-                                </script>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Joining Date<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of joining" name = "jd" value="{{ key.jd|date:'Y-m-d' }}" required>
-                                <div class="invalid-feedback">Please enter your joining date.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Promotion Date(If any)</label>
-                            <div class="col-sm-8">
-                                <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of promotion" name = "pd" value = "{{ key.pd|date:'Y-m-d' }}">
-                                <div class="invalid-feedback">Please enter your promotion date.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label" for = "go_sc">Google Scholar Link<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id = "go_sc" placeholder="Enter google scholar link" name = "google_scholar" value = "{{ key.google_scholar }}" required>
-                                <div class="invalid-feedback">Please enter your Google Scholar link.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label" for = "vi_pr">Vidwan Profile Link<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id = "vi_pr" placeholder="Enter vidwan profile link" name = "vidwan_profile" value = "{{ key.vidwan_profile }}" required>
-                                <div class="invalid-feedback">Please enter your Vidwan Profile link.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label" for = "website_link">Your Website Link</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id = "website_link" placeholder="Enter your website link" name = "website_link" value = "{{ key.google_scholar }}">
-                                <div class="invalid-feedback">Please enter your Website link.</div>
-                            </div>
+                                    for (let year = yearBirth + 18; year <= 2025; year++) {
+                                        const option = document.createElement('option');
+                                        option.value = year;
+                                        option.textContent = year;
+                                        selectYear.appendChild(option);
+                                    }
+                                }
+
+                                const initialDob = document.getElementById('dob').value;
+                                populateYearOptions(initialDob);
+
+                                document.getElementById('dob').addEventListener('input', function() {
+                                    const updatedDob = this.value;
+                                    populateYearOptions(updatedDob);
+                                });
+                            </script>
+                            </select>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 mt-3" id = "add">
-                    <span>
-                        <label for = "address" class = "form-label"><b>Address:-</b><span class = "ms-1" style = "color: red;">*</span></label>
-                    </span>
-                    <textarea class = "form-control mt-2 custom-back" rows = "4" id = "address" placeholder = "Enter your permanent Address" name = "address" oninput = "validateForm('add')" required>{{key.address}}</textarea>
-                    <div class="invalid-feedback">Please enter a valid address (Letters, numbers, and , . / - allowed).</div>
-                </div>
-                <div class="row g-3 mt-2">
-                    <div class="col-md-6">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Profile Picture{% if not key.profile_picture %}<span class="ms-1" style="color: red;">*</span>{% endif %}
-                            <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload Image of .png, .jpeg, .jpg Image Format(MAX SIZE:- 2MB)</h5>
-                            </label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "profile_picture" accept=".jpg, .jpeg, .png" {% if not key.profile_picture %}required{% endif %}>
-                                <div class="invalid-feedback">Please upload your profile picture in .jpeg or .png format only.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 mt-3">
-                        <div class="row align-items-center">
-                            <div class="col-sm-8">
-                                {% if key.profile_picture %}
-                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.profile_picture}}')"><i class="fa-solid fa-eye"></i>View</button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Joining Report{% if not key.jr %}<span class="ms-1" style="color: red;">*</span>{% endif %} <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "jr" accept=".pdf,.jpg,.jpeg,.png" {% if not key.jr %}required{% endif %}>
-                                <div class="invalid-feedback">Please upload your joining report in <b>pdf format only.</b></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 mt-3">
-                        <div class="row align-items-center">
-                            <div class="col-sm-8">
-                                {% if key.jr %}
-                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.jr}}')"><i class="fa-solid fa-eye"></i>View</button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Offer Letter(Appointment Letter){% if not key.of %}<span class="ms-1" style="color: red;">*</span>{% endif %} <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "ol" accept=".pdf,.jpg,.jpeg,.png" {% if not key.of %}required{% endif %}>
-                                <div class="invalid-feedback">Please upload your offer letter in <b>pdf format only.</b>.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 " style = "margin-top: 2.5rem;">
-                        <div class="row align-items-center">
-                            <div class="col-sm-8">
-                                {% if key.of %}
-                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.of}}')"><i class="fa-solid fa-eye"></i>View</button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Higher Degree Certificate(Date of Award){% if not key.hdc %}<span class="ms-1" style="color: red;">*</span>{% endif %} <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "hdc" accept=".pdf,.jpg,.jpeg,.png" {% if not key.hdc %}required{% endif %}>
-                                <div class="invalid-feedback">Please upload your higher degree certificate in <b>pdf format only.</b>.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2" style = "margin-top: 2.5rem;">
-                        <div class="row align-items-center">
-                            <div class="col-sm-8">
-                                {% if key.hdc %}
-                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.hdc}}')"><i class="fa-solid fa-eye"></i>View</button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Salary Slip (Recent) <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "ss" accept=".pdf,.jpg,.jpeg,.png">
-                                <div class="invalid-feedback">Please upload your salary slip in <b>pdf format only.</b>.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 mt-3">
-                        <div class="row align-items-center">
-                            <div class="col-sm-8">
-                                {% if key.ss %}
-                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.ss}}')"><i class="fa-solid fa-eye"></i>View</button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">If Awards and recognition received for extension activities (Upload Certificate) <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
-                            <div class="col-sm-8">
-                                <input type="file" class="form-control" name = "awards" accept=".pdf,.jpg,.jpeg,.png">
-                                <div class="invalid-feedback">Please upload your awards certificate in <b>pdf format only.</b>.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2" style = "margin-top: 4rem;">
-                        <div class="row align-items-center">
-                            <div class="col-sm-8">
-                                {% if key.certificate %}
-                                <button type = "button" class="btn btn-primary" onclick = "window.open('/media/{{key.certificate}}')"><i class="fa-solid fa-eye"></i>View</button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 " style = "margin-top: 1.7rem;">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Name of University(If PhD pursuing)</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter name of university" name = "phd_univ" value="{{key.phd_univ}}">
-                                <div class="invalid-feedback">Please enter your university name.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 " style = "margin-top: 1.7rem;">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Date of registration</label>
-                            <div class="col-sm-8">
-                                <input type="date" class="form-control" min="2000-01-01" name = "phd_dor" value="{{ key.phd_dor|date:'Y-m-d' }}">
-                                <div class="invalid-feedback">Please enter your date of registration.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 " style = "margin-top: 1.7rem;">
-                        <div class="row align-items-center">
-                            <label class="col-sm-4 col-form-label">Number of research paper<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" min="0" max="1000" placeholder="Enter number of research Paper" name = "norp" value="{{key.norp}}" required>
-                                <div class="invalid-feedback">Please enter number of research paper.</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class = "col-md-12">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Employee ID<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" min="0" maxlength="6" oninput="if(this.value<0)this.value=0" placeholder="Enter employee id" name = "emp_id" value = "{{key.emp_id}}" required>
+                            <div class="invalid-feedback">Please enter your employee id.</div>
                         </div>
                     </div>
                 </div>
-            </form>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Desgination<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <select class="form-select custom-back-select" name="designation" id="designation" required>
+                                <option value="" {% if key.designation == "" %}selected{% endif %} disabled>Select your Highest Qualification</option>
+                                <option value="AP1" {% if key.designation == "AP1" %}selected{% endif %}>Assistant Professor 1</option>
+                                <option value="AP2" {% if key.designation == "AP2" %}selected{% endif %}>Assistant Professor 2</option>
+                                <option value="ASP1" {% if key.designation == "ASP1" %}selected{% endif %}>Associate Professor 1</option>
+                                <option value="ASP2" {% if key.designation == "ASP2" %}selected{% endif %}>Associate Professor 2</option>
+                                <option value="P" {% if key.designation == "P" %}selected{% endif %}>Professor</option>
+                            </select>
+                        </div>
+                        <div class="invalid-feedback">Please select your designation.</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Joining Date<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of joining" name = "jd" value="{{ key.jd|date:'Y-m-d' }}" required>
+                            <div class="invalid-feedback">Please enter your joining date.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Promotion Date(If any)</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" min="2000-01-01" placeholder="Enter your date of promotion" name = "pd" value = "{{ key.pd|date:'Y-m-d' }}">
+                            <div class="invalid-feedback">Please enter your promotion date.</div>
+                        </div>
+                    </div>
+                </div>
+                <h5 style="font-size: 14px; color: #808080" class="text-center"># Research & Academic Profiles</h5>
+                <div class="col-md-4 " style = "margin-top: 1.7rem;">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Number of research paper<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" min="0" max="1000" placeholder="Enter number of research Paper" name = "norp" value="{{key.norp}}" required>
+                            <div class="invalid-feedback">Please enter number of research paper.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label" for = "go_sc">Google Scholar Link<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id = "go_sc" placeholder="Enter google scholar link" name = "google_scholar" value = "{{ key.google_scholar }}" required>
+                            <div class="invalid-feedback">Please enter your Google Scholar link.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label" for = "vi_pr">Vidwan Profile Link<span class="ms-1" style="color: red;">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id = "vi_pr" placeholder="Enter vidwan profile link" name = "vidwan_profile" value = "{{ key.vidwan_profile }}" required>
+                            <div class="invalid-feedback">Please enter your Vidwan Profile link.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label" for = "website_link">Personal Website Link</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id = "website_link" placeholder="Enter your website link" name = "website_link" value = "{{ key.google_scholar }}">
+                            <div class="invalid-feedback">Please enter your Website link.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 " style = "margin-top: 1.7rem;">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Name of University(If PhD pursuing)</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" placeholder="Enter name of university" name = "phd_univ" value="{{key.phd_univ}}">
+                            <div class="invalid-feedback">Please enter your university name.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 " style = "margin-top: 1.7rem;">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Date of registration</label>
+                        <div class="col-sm-8">
+                            <input type="date" class="form-control" min="2000-01-01" name = "phd_dor" value="{{ key.phd_dor|date:'Y-m-d' }}">
+                            <div class="invalid-feedback">Please enter your date of registration.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="row form-row-non-tech">
+            <div class="row g-3 mt-2">
+                <h4 style="color: #667eea">3. Document Uploading</h4>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Profile Picture{% if not key.profile_picture %}<span class="ms-1" style="color: red;">*</span>{% endif %}
+                        <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload Image of .png, .jpeg, .jpg Image Format(MAX SIZE:- 2MB)</h5>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "profile_picture" accept=".jpg, .jpeg, .png" {% if not key.profile_picture %}required{% endif %}>
+                            <div class="invalid-feedback">Please upload your profile picture in .jpeg or .png format only.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mt-4">
+                    <div class="row align-items-center">
+                        <div class="col-sm-8 mt-3">
+                            {% if key.profile_picture %}
+                            <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.profile_picture}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Joining Report{% if not key.jr %}<span class="ms-1" style="color: red;">*</span>{% endif %} <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "jr" accept=".pdf,.jpg,.jpeg,.png" {% if not key.jr %}required{% endif %}>
+                            <div class="invalid-feedback">Please upload your joining report in <b>pdf format only.</b></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mt-4">
+                    <div class="row align-items-center">
+                        <div class="col-sm-8 mt-3">
+                            {% if key.jr %}
+                            <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.jr}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Offer Letter(Appointment Letter){% if not key.of %}<span class="ms-1" style="color: red;">*</span>{% endif %} <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "ol" accept=".pdf,.jpg,.jpeg,.png" {% if not key.of %}required{% endif %}>
+                            <div class="invalid-feedback">Please upload your offer letter in <b>pdf format only.</b>.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mt-4">
+                    <div class="row align-items-center">
+                        <div class="col-sm-8 mt-4">
+                            {% if key.of %}
+                            <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.of}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Higher Degree Certificate(Date of Award){% if not key.hdc %}<span class="ms-1" style="color: red;">*</span>{% endif %} <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "hdc" accept=".pdf,.jpg,.jpeg,.png" {% if not key.hdc %}required{% endif %}>
+                            <div class="invalid-feedback">Please upload your higher degree certificate in <b>pdf format only.</b>.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mt-5">
+                    <div class="row align-items-center">
+                        <div class="col-sm-8 mt-3">
+                            {% if key.hdc %}
+                            <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.hdc}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">Salary Slip (Recent) <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "ss" accept=".pdf,.jpg,.jpeg,.png">
+                            <div class="invalid-feedback">Please upload your salary slip in <b>pdf format only.</b>.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mt-3">
+                    <div class="row align-items-center">
+                        <div class="col-sm-8 mt-3">
+                            {% if key.ss %}
+                            <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{key.ss}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row align-items-center">
+                        <label class="col-sm-4 col-form-label">If Awards and recognition received for extension activities (Upload Certificate) <h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Upload .pdf File Format(MAX SIZE:- 2MB)</h5></label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name = "awards" accept=".pdf,.jpg,.jpeg,.png">
+                            <div class="invalid-feedback">Please upload your awards certificate in <b>pdf format only.</b>.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 mt-5">
+                    <div class="row align-items-center">
+                        <div class="col-sm-8 mt-5">
+                            {% if key.certificate %}
+                            <button type = "button" class="btn btn-primary mt-4" onclick = "window.open('/media/{{key.certificate}}')"><i class="fa-solid fa-eye"></i>View</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class = "col-md-12">
+                    <div class="row align-items-center justify-content-center">
+                        <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 <script>
     // --- Step-by-Step Validation Logic ---

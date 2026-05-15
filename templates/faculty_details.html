@@ -67,42 +67,40 @@
     }
 </style>
 
-<div class="col-lg-10 col-md-9">
-    <div class="container-fluid p-4">
-       
-        <div class="mb-4" style="display: flex; justify-content: flex-end; align-items: center;">
-            <!-- search can be done on any field like name, designation or email -->
-            <label for="searchInput" ><b>Search:</b></label>
-            <input 
-                type="text" 
-                id="searchInput"
-                class="form-control"
-                style="max-width: 200px; margin-left: 10px;">
-        </div>
+<div class="container-fluid p-4">
 
-        <div class="row g-4">
-            {% for detail in fac_data %}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 faculty-col">
-                <a class="card faculty-card" {% if user is not None %}href="/faculty/{{detail.id}}/detailed-info-profile/"{% endif %} style="text-decoration: none;">
-                    <div class="d-flex justify-content-center">
-                        <img class="card-img-top"
-                             src="/media/{{detail.profile_picture}}"
-                             alt="Profile Picture of {{detail.name}}">
+    <div class="mb-4" style="display: flex; justify-content: flex-end; align-items: center;">
+        <!-- search can be done on any field like name, designation or email -->
+        <label for="searchInput" ><b>Search:</b></label>
+        <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            style="max-width: 200px; margin-left: 10px;">
+    </div>
+
+    <div class="row g-4">
+        {% for detail in fac_data %}
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 faculty-col">
+            <a class="card faculty-card" {% if user is not None %}href="/faculty/{{detail.secure_token}}/detailed-info-profile/"{% endif %} style="text-decoration: none;">
+                <div class="d-flex justify-content-center">
+                    <img class="card-img-top"
+                         src="/media/{{detail.profile_picture}}"
+                         alt="Profile Picture of {{detail.name}}">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{detail.name}}</h5>
+                    <p class="designation">{{detail.get_designation_display}}</p>
+                    <div class="contact-info">
+                        <p><strong>Email:</strong><br>{{detail.email}}</p>
+                        {% if user %}
+                        <p><strong>Contact:</strong><br>{{detail.contact_number}}</p>
+                        {% endif %}
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{detail.name}}</h5>
-                        <p class="designation">{{detail.get_designation_display}}</p>
-                        <div class="contact-info">
-                            <p><strong>Email:</strong><br>{{detail.email}}</p>
-                            {% if user %}
-                            <p><strong>Contact:</strong><br>{{detail.contact_number}}</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
+                </div>
+            </a>
         </div>
+        {% endfor %}
     </div>
 </div>
 
