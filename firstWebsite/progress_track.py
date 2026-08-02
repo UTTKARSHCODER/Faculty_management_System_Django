@@ -401,7 +401,10 @@ def showdynamictable(request):
 
             datatosend = return_data(instance, col_vals)
 
-            map_data = non_teaching_staff.objects.all().count()
+            map_data = list(non_teaching_staff.objects.values('department').annotate(count=Count('id')))
+            for item in map_data:
+                item['category'] = item['department']
+                item['category_display'] = department_map.get(item['category'], item['category'])
 
         elif form_to_load == '2':
             instance = Faculty_participation_data.objects.only('email__email', 'email__emp_id', 'email__department',

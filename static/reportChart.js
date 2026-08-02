@@ -3,7 +3,7 @@ let dy_list_count = [];
 let dy_list_label = [];
 Chart.defaults.font.size = 16;
 Chart.register(ChartDataLabels);
-let pieChart = new Chart(ctx, {
+const config = {
     type: 'pie',
     data: {
         labels: dy_list_label,
@@ -50,7 +50,10 @@ let pieChart = new Chart(ctx, {
             }
         }
     }
-});
+};
+
+new Chart(ctx, config);
+
 function drawChart(data) {
     /* Maintaining the filter options above the download button opens here */
     let dy_list_count = [];
@@ -78,19 +81,19 @@ function drawChart(data) {
             document.getElementById("checkBoxGroup").innerHTML = `
           <div class = "form-check ms-2">
               <input type = "checkbox" class = "form-check-input" id = "check1" name = "optcheck[]" value = "CSE" style = "border: 2px solid black;">
-              <label class = "form-check-label" for = "check1"><b>CSE</b></label>
+              <label class = "form-check-label" for = "check1"><b>Computer Science & Engineering</b></label>
           </div>
           <div class = "form-check ms-2">
               <input type = "checkbox" class = "form-check-input" id = "check2" name = "optcheck[]" value = "CSE(AI)" style = "border: 2px solid black;">
-              <label class = "form-check-label" for = "check2"><b>CSE(AI)</b></label>
+              <label class = "form-check-label" for = "check2"><b>Computer Science & Engineering(AI)</b></label>
           </div>
           <div class = "form-check ms-2">
               <input type = "checkbox" class = "form-check-input" id = "check3" name = "optcheck[]" value = "CSE(DS)" style = "border: 2px solid black;">
-              <label class = "form-check-label" for = "check3"><b>CSE(DS)</b></label>
+              <label class = "form-check-label" for = "check3"><b>Computer Science & Engineering(DS)</b></label>
           </div>
           <div class = "form-check ms-2">
               <input type = "checkbox" class = "form-check-input" id = "check4" name = "optcheck[]" value = "CSE(IOT)" style = "border: 2px solid black;">
-              <label class = "form-check-label" for = "check4"><b>CSE(IOT)</b></label>
+              <label class = "form-check-label" for = "check4"><b>Computer Science & Engineering(IOT)</b></label>
           </div>
         `
         } else if (form_numbers_list.includes('1_2')) {
@@ -185,9 +188,11 @@ function drawChart(data) {
 
     // const download_link = document.getElementById('excel-download');
     /* Updates the entire chart data -starts- */
-    pieChart.data.datasets[0].data = dy_list_count;
-    pieChart.data.labels = dy_list_label;
-    pieChart.update();
+    const existingChart = Chart.getChart("pieChart");
+    if (existingChart) existingChart.destroy();
+    config.data.datasets[0].data = dy_list_count;
+    config.data.labels = dy_list_label;
+    new Chart(ctx, config);
     document.getElementById('total_count').innerHTML = 'Total Forms Filled are: ' + totalSum;
     /* Updates the entire chart data -ends- */
 }

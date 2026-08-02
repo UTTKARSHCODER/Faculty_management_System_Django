@@ -32,7 +32,7 @@ const noDataAvailableTableStructure = `
     </div>
 `;
 
-new DataTable(`#tb_empty`, {
+let table = new DataTable(`#tb_empty`, {
     paging: false,
     scrollY: '260px',
     scrollX: true
@@ -41,7 +41,7 @@ function updateTable(values, table_id) {
     const table_to_update = document.getElementById('dynamic_table');
     if (table_id === 'empty-table') {
         table_to_update.innerHTML = noDataAvailableTableStructure;
-        new DataTable(`#empty_table`, {
+        table = new DataTable(`#empty_table`, {
             paging: false,
             scrollY: '260px',
             scrollX: true
@@ -55,7 +55,7 @@ function updateTable(values, table_id) {
     `;
     const col_values = Object.keys(values[0]);
     col_values.forEach((col) => {
-        table_html_structure += `<th>${col}</th>`;
+        table_html_structure += `<th data-name="${col}">${col}</th>`;
     })
     if (table_id !== '1_1') table_html_structure += `<th>Delete</th>`;
     table_html_structure += `
@@ -135,7 +135,7 @@ function updateTable(values, table_id) {
         </table>
     `;
     table_to_update.innerHTML = table_html_structure;
-    new DataTable(`#tb_${table_id}`, {
+    table = new DataTable(`#tb_${table_id}`, {
         paging: false,
         scrollY: '260px',
         scrollX: true
@@ -235,6 +235,51 @@ function openTab(containerId) {
     .catch(error => console.error('Error during fetching data: ', error));
 }
 
+function updateTableWithFilters(currentCheckboxes, table_id) {
+    const selCheckVal = Array.from(currentCheckboxes)
+            .filter(cb => cb.checked)
+            .map(cb => {
+                // Find the label whose 'for' attribute matches this checkbox's 'id'
+                const label = document.querySelector(`label[for="${cb.id}"]`);
+                return label ? label.textContent.trim() : "";
+            });
+
+    // 1. Escape special regex characters like ( and )
+    const escapedTerms = selCheckVal.map(function(term) {
+        return term.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    });
+
+    // 2. Join with | and wrap tightly with ^ and $
+    const exactRegexString = '^(' + escapedTerms.join('|') + ')$';
+
+    const table_id_to_column_name = {'1_1' : 'Department', '1_2' : 'Department', '2' : 'Conference/FDP/ Workshop/Seminar/ STTP',
+                                        '3' : 'Type of Course', '4' : 'Type of Event', '5' : 'Category', '6' : 'Category',
+                                        '7_1' : 'Indexed by', '7_2' : 'Level (National/ International)', '7_3' : 'Level (National/ International)',
+                                        '7_4' : 'Type of Patent', '8' : 'Program of Student', '9' : 'Resource Person in'}
+
+    const column_name = table_id_to_column_name[table_id];
+    if (selCheckVal.length === 0) {
+        // Passing an empty string removes the filter entirely
+        table.column(`${column_name}:name`).search('').draw();
+    } else table.column(`${column_name}:name`).search(exactRegexString, true, false).draw();
+    const pieChart = Chart.getChart("pieChart");
+    if (!pieChart) {
+        console.log(`No Chart instance found attached to canvas ID: pieChart`)
+        return;
+    }
+    const labels = pieChart.data.labels;
+    labels.forEach((label, index) => {
+        const shouldBeVisible = !selCheckVal || selCheckVal.length === 0 ? true : selCheckVal.includes(label);
+
+        const isCurrentlyVisible = pieChart.getDataVisibility(index);
+
+        if (isCurrentlyVisible !== shouldBeVisible) {
+            pieChart.toggleDataVisibility(index);
+        }
+    });
+    pieChart.update();
+}
+
 function filterDataToDownload() {
     // Filteration method
     const downloadButtonID = document.querySelector(`.nav-link.active`).id;
@@ -252,7 +297,10 @@ function filterDataToDownload() {
     updateButtonState();
 
     currentCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateButtonState);
+        checkbox.addEventListener('change', (event) => {
+            updateButtonState();
+            updateTableWithFilters(currentCheckboxes, downloadButtonID);
+        });
     });
     cleanDownloadButton.addEventListener('click', function () {
 
