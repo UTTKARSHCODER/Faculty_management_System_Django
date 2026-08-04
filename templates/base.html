@@ -36,6 +36,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body class ="h-100">
     <div class="container-fluid" style = "background-color: #2F3E46">
@@ -85,7 +86,7 @@
             </li>
         </ul>
         {% else %}
-        <a type="button" class="btn btn-primary bg-primary mt-3" href="/login">Login</a>
+        <a type="button" class="btn btn-primary bg-primary mt-3" href="/login" id="header_login_button">Login</a>
         {% endif %}
     </div>
 
@@ -129,30 +130,37 @@
         <div class="col-2 sidebar" id="sidebar" style="width: auto; border-right: 1px solid #D6D6D6">
             <nav class="navbar h-100" style="width: 100%; align-content: space-between;">
                 <ul class="navbar-nav text-dark">
-                    {% if request.session.topLeftBar %}
-                    <a href="/dashboard" style="text-decoration: none;">
-                        <li class="nav-item text-dark {% if request.path == progress or '/forms_listing/' in request.path %}active{% endif %}" id="home">Dashboard</li>
-                    </a>
-                    <a href="/profile" style="text-decoration: none;">
-                        <li class="nav-item text-dark {% if request.path == profile or request.path == editProfile %}active{% endif %}" id="profile">Profile</li>
-                    </a>
-                    <a href="/fdp" style="text-decoration: none;">
-                        <li class="nav-item text-dark {% if request.path == fdp or 'all_forms' in request.path %}active{% endif %}" id="faculty_development" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Faculty Data Collection(FDC) Forms">FDC Forms</li>
-                    </a>
-                    {% if request.session.topLeftBar == 'spa' %}
-                    <a href="/manage_access" style="text-decoration: none;">
-                        <li class="nav-item text-dark {% if request.path == manage_access %}active{% endif %}" id="manage_access">Manage Access</li>
-                    </a>
-                    {% endif %}
-                    {% endif %}
+                    {% with role=request.session.topLeftBar %}
+                        {% if role == 'ad' or role == 'fa' %}
+                            <a href="/dashboard" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == progress or '/forms_listing/' in request.path %}active{% endif %}" id="home">Dashboard</li>
+                            </a>
+                            <a href="/profile" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == profile or request.path == editProfile or '/manage_profile/' in request.path %}active{% endif %}" id="profile">Profile</li>
+                            </a>
+                            <a href="/fdp" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == fdp or 'all_forms' in request.path %}active{% endif %}" id="faculty_development" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Faculty Data Collection(FDC) Forms">FDC Forms</li>
+                            </a>
+                            {% if role == 'ad' %}
+                                <a href="/report" style="text-decoration: none;">
+                                    <li class="nav-item text-dark {% if request.path == report %}active{% endif %}" id="report1">Report Download</li>
+                                </a>
+                            {% endif %}
+                        {% elif role == 'spa' %}
+                            <a href="/report" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == report %}active{% endif %}" id="report1">Report Download</li>
+                            </a>
+                            <a href="/profile" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == profile or request.path == editProfile or '/manage_profile/' in request.path %}active{% endif %}" id="profile">Profile</li>
+                            </a>
+                            <a href="/manage_access" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == manage_access %}active{% endif %}" id="manage_access">Manage Access</li>
+                            </a>
+                        {% endif %}
+                    {% endwith %}
                     <a href="/" style="text-decoration: none;">
                         <li class="nav-item text-dark {% if request.path == home or '/faculty/' in request.path or request.path == fac %}active{% endif %}" id="faculty_report">Faculty Details</li>
                     </a>
-                    {% if request.session.topLeftBar == 'spa' or request.session.topLeftBar == 'ad' %}
-                    <a href="/report" style="text-decoration: none;">
-                        <li class="nav-item text-dark {% if request.path == report %}active{% endif %}" id="report1">Report Download</li>
-                    </a>
-                    {% endif %}
                     <a href="/about" style="text-decoration: none;">
                         <li class="nav-item text-dark {% if request.path == about %}active{% endif %}" id="about_us">About Us</li>
                     </a>

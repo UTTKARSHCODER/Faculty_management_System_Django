@@ -7,9 +7,10 @@ from django.http import JsonResponse
 import re
 
 from firstWebsite.modals import Faculty, accept, Faculty_participation_data, level, mode, category, \
-    session, mooc_course, doc, medals, pertopper, eof_choices, sponsors, events, department, awards_and_achievments, \
+    mooc_course, doc, medals, pertopper, eof_choices, sponsors, events, department, awards_and_achievments, \
     index_by, quartile, research_journal, research_conference, research_book, patents, type_of_patent, status_of_patent, \
-    enrollmentYear, survillance, guided, resource_person_type, resource, sponsored_research, status
+    enrollmentYear, survillance, guided, resource_person_type, resource, sponsored_research, status, \
+    generate_session_choices
 
 
 def new_user_registration(data, username):
@@ -50,20 +51,10 @@ def upload_excel(request, form_no):
         )
 
         category_db_val = {choice.label: choice.value for choice in category}
-        session_db_val = {choice.label: choice.value for choice in session}
+        session_db_val = {label: value for value, label in generate_session_choices()}
         approval_db_val = {choice.label: choice.value for choice in accept}
 
-        if form_no == 0:
-            for data in imported_data.dict:
-                value = Student_Directory(name=data['name'], roll_no=data['roll_no'], college_id=data['college_id'],
-                                          email=data['email'], student_phone_no=data['student_phone_no'],
-                                          parent_phone_no=data['parent_phone_no'], address=data['address'])
-                value.save()
-
-            messages.success(request, 'We are glad to share that your excel file is uploaded successfully!')
-            return redirect(reverse('student-directory'))
-
-        elif form_no == 14:
+        if form_no == 14:
             for data in df.to_dict(orient='records'):
                 if not data['name']:
                     continue

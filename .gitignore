@@ -26,3 +26,5 @@ official_docs/
 
 #staticfolder(builds automatically on production, no need at development)
 staticfiles/
+
+gitHubToken.txt

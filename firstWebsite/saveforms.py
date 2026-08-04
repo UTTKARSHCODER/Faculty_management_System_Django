@@ -865,10 +865,6 @@ def save_all_forms(request, form_no):
                 actual_pk = payload['user_pk']
                 faculty_instance = Faculty.objects.get(pk=actual_pk)
 
-                faculty_instance.session = request.POST.get('sessionyear').strip()
-                if not va.radiocheck(request, faculty_instance.session, "Session Year"):
-                    return redirect('all_forms', pk=form_no)
-
                 faculty_instance.name = request.POST.get('name').strip()
                 if not va.nameValidate(request, faculty_instance.name, "Name"):
                     return redirect('all_forms', pk=form_no)

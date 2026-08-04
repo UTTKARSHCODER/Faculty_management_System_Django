@@ -27,13 +27,26 @@ class sponsors(models.TextChoices):
     SPONSORED = "S", "Sponsored",
     NON_SPONSORED = "NS", "Non-Sponsored"
 
-class session(models.TextChoices):
-    Y2024_25 = "2024-25", "2024-25",
-    Y2025_26 = "2025-26", "2025-26",
-    Y2026_27 = "2026-27", "2026-27",
-    Y2027_28 = "2027-28", "2027-28",
-    Y2028_29 = "2028-29", "2028-29",
-    Y2029_30 = "2029-30", "2029-30"
+def generate_session_choices():
+  """Generates a list of academic sessions dynamically,
+
+  ranging from 2 years in the past to 5 years into the future.
+  """
+  current_year = timezone.now().year
+  choices = []
+  # Adjust the range as needed (e.g., past 2 years to future 5 years)
+  for year in range(current_year - 2, current_year + 6):
+    next_year_short = str(year + 1)[-2:]
+    session_str = f"{year}-{next_year_short}"
+    choices.append((session_str, session_str))
+  return choices
+
+
+def get_current_session():
+  """Returns the default session string for the current year (e.g., '2026-27')."""
+  current_year = timezone.now().year
+  next_year_short = str(current_year + 1)[-2:]
+  return f"{current_year}-{next_year_short}"
 
 class Role(models.TextChoices):
     FACULTY = "FA", "Faculty",
@@ -101,8 +114,8 @@ class Faculty(models.Model):
     session_version = models.UUIDField(default=uuid.uuid4, editable=False)
     session=models.CharField(
         max_length=7,
-        choices=session.choices,
-        default=session.Y2025_26
+        choices=generate_session_choices,
+        default=get_current_session
     )
     form_alloted = MultiSelectField(
         max_length=40,
@@ -199,7 +212,7 @@ class Faculty(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.email + " " + str(self.pk)
+        return self.email
 
 # class faculty_data(models.Model):
 #
@@ -296,7 +309,8 @@ class Faculty_participation_data(models.Model):
     end_date = models.DateField()
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     no_of_days = models.IntegerField()
     proof_enclosed = models.CharField(
@@ -377,7 +391,8 @@ class mooc_course(models.Model):
     )
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     remarks = models.CharField(max_length=255,null=True)
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
@@ -456,7 +471,8 @@ class events(models.Model):
     adcc = models.CharField(max_length=255)
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     ct = models.CharField(
         max_length=2,
@@ -521,7 +537,8 @@ class awards_and_achievments(models.Model):
     proof_file = models.FileField(upload_to=rename_awards_file)
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -558,7 +575,8 @@ class sponsored_research(models.Model):
     amount = models.IntegerField()
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     status = models.CharField(
         max_length=2,
@@ -609,7 +627,8 @@ class research_journal(models.Model):
     pd = models.DateField()
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     isnp = models.CharField(max_length=255)
     isno = models.CharField(max_length=255)
@@ -670,7 +689,8 @@ class research_conference(models.Model):
     pd = models.DateField()
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     doi = models.CharField(max_length=255)
     lwj = models.URLField(max_length=500)
@@ -715,7 +735,8 @@ class research_book(models.Model):
     pd = models.DateField()
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     doi = models.CharField(max_length=255)
     lwj = models.URLField(max_length=500)
@@ -768,7 +789,8 @@ class patents(models.Model):
     pd = models.DateField()
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     pg = models.CharField(
         max_length=1,
@@ -826,7 +848,8 @@ class guided(models.Model):
     noe = models.CharField(max_length=255)
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     email = models.ForeignKey(Faculty,on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -878,7 +901,8 @@ class resource(models.Model):
     end_date = models.DateField()
     session = models.CharField(
         max_length=7,
-        choices=session.choices
+        choices=generate_session_choices,
+        default=get_current_session
     )
     venue = models.CharField(max_length=255)
     proof_file = models.FileField(upload_to='uploads/resource/')
@@ -915,8 +939,8 @@ class non_teaching_staff(models.Model):
         )
     session = models.CharField(
         max_length=7,
-        choices=session.choices,
-        default=session.Y2025_26
+        choices=generate_session_choices,
+        default=get_current_session
     )
     name = models.CharField(max_length=255)
     mobile_no = models.CharField(max_length=10)
