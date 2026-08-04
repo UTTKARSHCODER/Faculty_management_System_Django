@@ -861,7 +861,9 @@ def save_all_forms(request, form_no):
                 obj11.save()
 
             elif form_no == 13:
-                faculty_instance = Faculty.objects.get(pk=request.POST.get('user_id'))
+                payload = jwt.decode(request.POST.get('user_id'), settings.SECRET_KEY, algorithms=["HS256"])
+                actual_pk = payload['user_pk']
+                faculty_instance = Faculty.objects.get(pk=actual_pk)
 
                 faculty_instance.session = request.POST.get('sessionyear').strip()
                 if not va.radiocheck(request, faculty_instance.session, "Session Year"):
@@ -1035,8 +1037,8 @@ def save_all_forms(request, form_no):
 
                 if request.POST.get('user_id') == Faculty.objects.get(pk=request.session.get('user_id')).pk:
                     return redirect(reverse('editProfile'))
-
-                return redirect('manageProfile', pk=request.POST.get('user_id'))
+                print("From saveForms pk is: ",request.POST.get('user_id'))
+                return redirect('manageProfile', user_token=request.POST.get('user_id'))
 
             elif form_no == 14:
 

@@ -85,7 +85,7 @@
                 <h4 style="color: #667eea">1. Personal Information</h4>
                 <div class="col-md-4">
                     <div class="row align-items-center">
-                        <input type = "hidden" name = "user_id" value="{{ key.pk }}"/>
+                        <input type = "hidden" name = "user_id" value="{{ key.secure_token }}"/>
                         <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="A Session e.g 2024-25 starts at July 2024 and ends at June 2025"></span></label>
                         <div class="col-sm-8">
                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
