@@ -117,6 +117,7 @@ def edit_profile(request, user_token=-1):
         if user_token != -1:
             payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=["HS256"])
             actual_pk = payload['user_pk']
+            print("From edit_profile pk is: ",actual_pk)
             faculty_instance = Faculty.objects.get(pk=actual_pk)
         else:
             faculty_instance = Faculty.objects.get(pk=request.session.get('user_id'))

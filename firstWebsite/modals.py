@@ -199,7 +199,7 @@ class Faculty(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.email
+        return self.email + " " + str(self.pk)
 
 # class faculty_data(models.Model):
 #
