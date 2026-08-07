@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    
+    .faculty-card {
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        background: white;
+        height: 100%;
+        border: none;
+        {% if user is not None %}cursor: pointer;{% endif %}
+
+    }
+
+    .faculty-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    .faculty-card .card-img-top {
+        height: 180px;
+        width: 54%;
+        object-fit: cover;
+        background: #e9ecef;
+        border-bottom: 3px solid #3498db;
+    }
+
+    .faculty-card .card-body {
+        padding: 1.25rem;
+        text-align: center;
+    }
+
+    .faculty-card .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .faculty-card .designation {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    .faculty-card .contact-info {
+        font-size: 0.85rem;
+        color: #555;
+        line-height: 1.8;
+    }
+
+    .faculty-card .contact-info p {
+        margin-bottom: 0.3rem;
+        word-break: break-word;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        .faculty-card .card-img-top {
+            height: 150px;
+        }
+    }
+</style>
+
+<div class="container-fluid p-4">
+
+    <div class="mb-4" style="display: flex; justify-content: flex-end; align-items: center;">
+        <!-- search can be done on any field like name, designation or email -->
+        <label for="searchInput" ><b>Search:</b></label>
+        <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            style="max-width: 200px; margin-left: 10px;">
+    </div>
+
+    <div class="row g-4">
+        {% for detail in fac_data %}
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 faculty-col">
+            <a class="card faculty-card" {% if user is not None %}href="/faculty/{{detail.secure_token}}/detailed-info-profile/"{% endif %} style="text-decoration: none;">
+                <div class="d-flex justify-content-center">
+                    <img class="card-img-top"
+                         src="/media/{{detail.profile_picture}}"
+                         alt="Profile Picture of {{detail.name}}">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{detail.name}}</h5>
+                    <p class="designation">{{detail.get_designation_display}}</p>
+                    <div class="contact-info">
+                        <p><strong>Email:</strong><br>{{detail.email}}</p>
+                        {% if user %}
+                        <p><strong>Contact:</strong><br>{{detail.contact_number}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    const cards = document.querySelectorAll('.faculty-card');
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            const facultyId = card.getAttribute('data-faculty-id');
+            window.location.href = `/faculty/${facultyId}/detailed-info-profile/`;
+        });
+    });
+
+    // js for serach box
+    document.getElementById("searchInput").addEventListener("input", function() {
+        const query = this.value.toLowerCase().trim();
+
+        document.querySelectorAll(".faculty-col").forEach(col => {
+            const name        = col.querySelector(".card-title").innerText.toLowerCase();
+            const designation = col.querySelector(".designation").innerText.toLowerCase();
+            const email       = col.querySelector(".contact-info").innerText.toLowerCase();
+
+            const matches = name.includes(query) || 
+                            designation.includes(query) || 
+                            email.includes(query);
+
+            col.style.display = matches ? "" : "none"; 
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,4 +1,3 @@
-console.log('=== Script loaded successfully ===');
 const checkboxGroup = document.getElementById('checkboxGroup');
 const inputFields = document.getElementById('inputFields');
 const subFormsContainer = document.getElementById('subFormsContainer');
@@ -46,9 +45,12 @@ const fieldInfo = {
     'Title of the proceedings of the conference': 'for e.g: Proceedings of the International Conference on Intelligent Computing, Communication and Information Security ICICCIS 2022',
     'Is the Patent granted ?': "Select 'Yes' if the Patent is both published and granted , and 'No' if the Patent is only published, but not yet granted.",
     'Is SKIT student associated?(Patent)': 'Is SKIT student associated with the Patent (Is SKIT student inventor/applicant/owner etc)?',
+    'Upload Proof (Patent)': 'Rename file as session_name_patent for e.g : 2024-25_NikhilGupta_patent',
     'Title of Event/ Exam Name': 'for e.g. : University Practical Exam B.Tech CSE V Sem  2023-24, International Conference on AI Systems and Sustainable Technologies 2025, Name of the Journal if editorial board member etc.',
     'Subject Area/Subject Name/Lab Name/Session Name': 'for e.g: Object Oriented Programming Lab, Name of session',
-    'Proof (Certificate/Mail)': 'Any proof in (certificate/mail screenshot/document/etc) which validates you as a resource person'
+    'Proof (Certificate/Mail)': 'Any proof in (certificate/mail screenshot/document/etc) which validates you as a resource person',
+    'Actual Expenditure': 'Only write amount (will be considered in Rs. only)',
+    'Mapped SDGs': 'Event Organized is mapped with which SDGs (Sustainable Development Goals) out of 17 SDGs given below? Select 1 or more options'
 };
 
 const categoryValue = {
@@ -57,6 +59,7 @@ const categoryValue = {
     'Conference': 'CON',
     'STTP': 'STTP',
     'Seminar': 'SEM',
+    'Webinar': 'WEB',
     'Lecture Series': 'LS',
     'Symposium': 'SYM',
     'External  Examination(UG)': 'EE(UG)',
@@ -70,7 +73,7 @@ const categoryValue = {
     'BOS': 'BOS',
     'DRC': 'DRC',
     'Short Term Courses': 'STC',
-    'MOOC courses': 'MOOC',
+    'MOOC': 'MOOC',
     'Induction Program': 'IP',
     'Education': 'EDU',
     'Research': 'REA',
@@ -78,8 +81,8 @@ const categoryValue = {
     'Sponsored Grant': 'SG',
     'Research Project': 'RP',
     'Consultancy': 'CONS',
-    'M.Tech Students': 'M_TECH',
-    'Ph.D Students': 'PH_D',
+    'M.Tech Students Guided': 'M_TECH',
+    'Ph.D Students Guided': 'PH_D',
     'Other' : 'OTH'
 }
 
@@ -101,13 +104,26 @@ function getCookie(name) {
 
 const csrfToken = getCookie('csrftoken');
 
+if(!csrfToken) {
+    window.location.href = "/cookie";
+}
+
 checkboxGroup.addEventListener('change', (e) => {
     if (e.target.type === 'checkbox') {
         generateInputFields();
     }
 });
 
-
+checkboxGroup.addEventListener('change', (e) => {
+    if (e.target.type === 'checkbox') {
+        // If checkbox is unchecked, remove its quantity
+        if (!e.target.checked) {
+            const value = e.target.value;
+            delete quantities[value];
+        }
+        generateInputFields();
+    }
+});
 
 
 function generateInputFields() {
@@ -117,13 +133,19 @@ function generateInputFields() {
     if (checkedBoxes.length === 0) {
         inputFields.innerHTML = '<div class="empty-state">Select checkboxes above to generate input fields</div>';
         inputCount.textContent = '0 fields';
+        Object.keys(quantities).forEach(key => delete quantities[key]);
         generateSubForms();
         return;
     }
 
+    const checkedValues = checkedBoxes.map(cb => cb.value);
+    Object.keys(quantities).forEach(key => {
+        if (!checkedValues.includes(key)) {
+            delete quantities[key];
+        }
+    });
+
     inputCount.textContent = `${checkedBoxes.length} field${checkedBoxes.length !== 1 ? 's' : ''}`;
-
-
 
     checkedBoxes.forEach(checkbox => {
         const value = checkbox.value;
@@ -142,6 +164,7 @@ function generateInputFields() {
                 id="input-${value}"
                 min="0"
                 max="20"
+                style="width: 200px;"
                 placeholder="Enter quantity (max 20)"
                 value="${quantities[value] || ''}"
             >
@@ -161,28 +184,15 @@ function generateInputFields() {
             generateSubForms();
         });
     });
+
+    // Regenerate sub-forms after updating quantities
+    generateSubForms();
 }
 
-function initializeBootstrapValidation() {
-    'use strict'
-    
-    const forms = document.querySelectorAll('.needs-validation')
-    
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-            }
-            
-            form.classList.add('was-validated')
-        }, false)
-    })
-}
-
+let totalForms = 0
 function generateSubForms() {
     subFormsContainer.innerHTML = '';
-    let totalForms = 0;
+    totalForms = 0;
 
     const checkedBoxes = Array.from(checkboxGroup.querySelectorAll('input[type="checkbox"]:checked'));
 
@@ -208,29 +218,27 @@ function generateSubForms() {
                 subForm.setAttribute('novalidate', '');
                 subForm.style = 'flex-direction: column';
                 subForm.method  = 'POST';
-                subForm.action = '/save_all_forms/' + form_number;
                 subForm.enctype = 'multipart/form-data'
-                if(form_number == '1') {
+               if(form_number === '1') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
-                        <input type = "hidden" name = "category" value = "${categoryValue[category]}">
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
+                        <input type = "hidden" name = "category" value = "${categoryValue[category]}">
                         <div class="sub-form-fields">
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label for="top-${i}" class="col-sm-4 col-form-label">Title Of Program<span class="ms-1" style="color: red;">*</span></label>
+                                        <label for="top-${i}" class="col-sm-4 col-form-label">Title Of the Program<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
-                                            <input type="text" class="form-control custom-back" id="top" placeholder="Enter title of the program" name="top" required>
+                                            <input type="text" class="form-control custom-back" title="Numbers and special characters are not allowed" id="top-${i}" placeholder="Enter title of the program" name="top">
                                             <div class="invalid-feedback">Please provide a program title.</div>
-                            
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Mode<span class="ms-1" style="color: red;">*</span></label>
-                                        <div class = "col-sm-8">
+                                        <label class="col-sm-4 col-form-label ">Mode (Offline/Online)<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class = "col-sm-8 mb-3">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
                                                     <input type="radio" class="form-check-input" id="radio1-${i}" name="optradio" value="On" required>
@@ -247,7 +255,7 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Level<span class="ms-1" style="color: red;">*</span></label>
+                                        <label class="col-sm-4 col-form-label gap-2">Level<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
@@ -283,7 +291,7 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">SKIT Approved<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['SKIT Approved']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Grant received from SKIT (Yes/No)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['SKIT Approved']}"></span></label>
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
@@ -303,7 +311,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">From Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <input type="date" class="form-control" name = "begi_date" required>
+                                            <input type="date" class="form-control" name = "begi_date" id = "begi_date" required>
                                             <div class="invalid-feedback">Please provide a start date.</div>
                                         </div>
                                     </div>
@@ -312,7 +320,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">To Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <input type="date" class="form-control" name = "end_date" required>
+                                            <input type="date" class="form-control" name = "end_date" id = "end_date" required>
                                             <div class="invalid-feedback">Please provide an end date.</div>
                                         </div>
                                     </div>
@@ -323,6 +331,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -337,15 +346,14 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">No. of days<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter number of days" name = "num_of_days" required>
+                                            <input type="text" class="form-control" min="0" placeholder="Enter number of days" name = "num_of_days" id = "num_of_days" required>
                                             <div class="invalid-feedback">Please provide number of days.</div>
-                                        </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Proof Enclosed<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Proof Enclosed']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Proof Enclosed  (Yes/No)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Proof Enclosed']}"></span></label>
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
@@ -363,17 +371,11 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 mt-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
+                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -386,7 +388,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if(form_number == '2') {
+                } else if(form_number === '2') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -395,9 +397,26 @@ function generateSubForms() {
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
+                                                <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
+                                                <option value="2025-26">2025-26</option>
+                                                <option value="2026-27">2026-27</option>
+                                                <option value="2027-28">2027-28</option>
+                                                <option value="2028-29">2028-29</option>
+                                                <option value="2029-30">2029-30</option>
+                                            </select>
+                                            <div class="invalid-feedback">Please select a session.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row align-items-center">
                                         <label for="toc-${i}" class="col-sm-4 col-form-label">Timeline of course<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Timeline of Course']}"></span></label>
                                         <div class = "col-md-8">
-                                            <input type="text" class="form-control" id="toc-${i}" placeholder="Enter timeline of the program" name="toc-${i}" required>
+                                            <input type="text" class="form-control" id="toc-${i}" placeholder="Enter timeline of the program" name="toc" required>
                                             <div class="invalid-feedback">Please provide timeline of the course.</div>
                                         </div>
                                     </div>
@@ -485,7 +504,7 @@ function generateSubForms() {
                                                     <input type="radio" class="form-check-input" id="radio8-${i}" name="optradio1" value="SC">
                                                     <label class="form-check-label" for="radio8-${i}">Successfully Completed</label>
                                                 </div>
-                                                
+
                                             </div>
                                             <div class="invalid-feedback">Please select certificate type.</div>
                                         </div>
@@ -523,17 +542,11 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
-                                        <div class="col-sm-8">
-                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                                <option value="" selected disabled>Select your Session</option>
-                                                <option value="2025-26">2025-26</option>
-                                                <option value="2026-27">2026-27</option>
-                                                <option value="2027-28">2027-28</option>
-                                                <option value="2028-29">2028-29</option>
-                                                <option value="2029-30">2029-30</option>
-                                            </select>
-                                            <div class="invalid-feedback">Please select a session.</div>
+                                        <label class="col-sm-4 col-form-label">Upload Certificate<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate(MOOC)']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <div class="col-sm-6">
+                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -546,22 +559,6 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate(MOOC)']}"></span></label>
-                                        <div class="col-sm-6">
-                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 mt-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class = "col-md-12">
                                     <div class="row align-items-center justify-content-center">
                                         <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
@@ -571,13 +568,31 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if (form_number == 3) {
+                } else if (form_number === '3') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
                         <input type = "hidden" name = "category" value = "${categoryValue[category]}">
                         <div class="sub-form-fields">
                             <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Start Date of the Event<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class="col-sm-8">
+                                            <input type="date" class="form-control" name = "begi_date" required>
+                                            <div class="invalid-feedback">Please provide the start date of the event.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">End Date of the Event<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class="col-sm-8">
+                                            <input type="date" class="form-control" name = "end_date" required>
+                                            <div class="invalid-feedback">Please provide the end date of the event.</div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Event organized for<span class="ms-1" style="color: red;">*</span></label>
@@ -597,6 +612,15 @@ function generateSubForms() {
                                                 </div>
                                             </div>
                                             <div class="invalid-feedback">Please select at least one option.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Name of Faculty Coordinator(s)<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class = "col-sm-8">
+                                            <input type="text" class="form-control" placeholder="Enter Name of Faculty Coordinator(s)" name = "nofc" required>
+                                            <div class="invalid-feedback">Please provide the title of the program.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -633,6 +657,7 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -645,7 +670,7 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Certificate Type<span class="ms-1" style="color: red;">*</span></label>
+                                        <label class="col-sm-4 col-form-label">Sponsored/Non Sponsored<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
@@ -681,24 +706,6 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Start Date of the Event<span class="ms-1" style="color: red;">*</span></label>
-                                        <div class="col-sm-8">
-                                            <input type="date" class="form-control" name = "begi_date" required>
-                                            <div class="invalid-feedback">Please provide the start date of the event.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">End Date of the Event<span class="ms-1" style="color: red;">*</span></label>
-                                        <div class="col-sm-8">
-                                            <input type="date" class="form-control" name = "end_date" required>
-                                            <div class="invalid-feedback">Please provide the end date of the event.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Grant Received(YES/NO)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['SKIT Approved']}"></span></label>
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
@@ -726,10 +733,19 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Actual Expenditure<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Actual Expenditure']}"></label>
+                                        <div class = "col-sm-8">
+                                            <input type="number" class="form-control" placeholder="Only write amount (for e.g:- 30000)" name = "actual_expenditure" required>
+                                            <div class="invalid-feedback">Please provide actual expenditure.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Association with professional societies for organization of event<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Association with professional societies for organization of event']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter details" name = "awpsfooe" required>
-                                            <div class="invalid-feedback">Please provide association details.
+                                            <div class="invalid-feedback">Please provide association details.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -737,8 +753,8 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter details" name = "nossp" required>
-                                            <div class="invalid-feedback">Please provide number of SKIT students participated.
+                                            <input type="text" class="form-control" placeholder="Enter details" name = "nossp" required>
+                                            <div class="invalid-feedback">Please provide number of SKIT students participated.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -746,8 +762,88 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Number of staff member participated(Provide list of staff members with  their EMPLOYEE ID & Certificates)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter details" name = "nosmp" required>
-                                            <div class="invalid-feedback">Please provide number of staff members participated.
+                                            <input type="text" class="form-control" placeholder="Enter details" name = "nosmp" required>
+                                            <div class="invalid-feedback">Please provide number of staff members participated.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-2 col-form-label">Mapped SDG's<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Mapped SDGs']}"></label>
+                                        <div class = "col-sm-10 mt-4">
+                                            <div class="d-flex column-gap-4">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input group-required" id="radio1-${i}" name="optradio4" value="SDG1">
+                                                    <label class="form-check-label" for="radio1">SDG - 1 (No Poverty)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio2-${i}" name="optradio4" value="SDG2">
+                                                    <label class="form-check-label" for="radio2-${i}">SDG - 2 (Zero Hunger)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio3-${i}" name="optradio4" value="SDG3">
+                                                    <label class="form-check-label" for="radio3">SDG - 3 (Good Health And Well-Being)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio4-${i}" name="optradio4" value="SDG4">
+                                                    <label class="form-check-label" for="radio3">SDG - 4 (Quality Education)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio5-${i}" name="optradio4" value="SDG5">
+                                                    <label class="form-check-label" for="radio3">SDG - 5 (Gender Equality)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio6-${i}" name="optradio4" value="SDG6">
+                                                    <label class="form-check-label" for="radio3">SDG - 6 (Clean Water And Sanitation)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio7-${i}" name="optradio4" value="SDG7">
+                                                    <label class="form-check-label" for="radio3">SDG - 7 (Affordable And Clean Energy)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio8-${i}" name="optradio4" value="SDG8">
+                                                    <label class="form-check-label" for="radio3">SDG - 8 (Decent Work And Economic Growth)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio9-${i}" name="optradio4" value="SDG9">
+                                                    <label class="form-check-label" for="radio3">SDG - 9 (Industry, Innovation And Infrastructure)</label>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex column-gap-4">    
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio10-${i}" name="optradio4" value="SDG10">
+                                                    <label class="form-check-label" for="radio3">SDG - 10 (Reduced Inequalities)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio11-${i}" name="optradio4" value="SDG11">
+                                                    <label class="form-check-label" for="radio3">SDG - 11 (Sustainable Cities And Communities)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio12-${i}" name="optradio4" value="SDG12">
+                                                    <label class="form-check-label" for="radio3">SDG - 12 (Responsible Consumption And Production)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio13-${i}" name="optradio4" value="SDG13">
+                                                    <label class="form-check-label" for="radio3">SDG - 13 (Climate Action)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio14-${i}" name="optradio4" value="SDG14">
+                                                    <label class="form-check-label" for="radio3">SDG - 14 (Life Below Water)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio15-${i}" name="optradio4" value="SDG15">
+                                                    <label class="form-check-label" for="radio3">SDG - 15 (Life On Land)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio16-${i}" name="optradio4" value="SDG16">
+                                                    <label class="form-check-label" for="radio3">SDG - 16 (Peace, Justice, And Strong Institutions)</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="radio17-${i}" name="optradio4" value="SDG17">
+                                                    <label class="form-check-label" for="radio3">SDG - 17 (Partnerships For The Goals)</label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">Please select at least one option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -757,37 +853,31 @@ function generateSubForms() {
                                         <div class="col-sm-8">
                                             <div class="d-flex column-gap-4">
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5-${i}-${i}" name="optradio4" value="y" required>
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}-${i}" name="optradio5" value="y" required>
                                                     <label class="form-check-label" for="radio5">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio4" value="N">
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio5" value="N">
                                                     <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
-                                            <div class="invalid-feedback">Please select an option.
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Event Report']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Event Report<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Event Report']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 mt-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
+                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Remarks(If any)</label>
+                                        <label class="col-sm-4 col-form-label">Any Other Remark(If any)</label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Remarks" name = "remarks">
                                             <div class="invalid-feedback">Please provide remarks.</div>
@@ -803,13 +893,30 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if(form_number == 4) {
+                } else if(form_number === '4') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "category" value = "${categoryValue[category]}">
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
                         <div class="sub-form-fields">
                             <div class="row g-3">
+                                <div class="col-md-4" style = "margin-top: 2.5rem;">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
+                                                <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
+                                                <option value="2025-26">2025-26</option>
+                                                <option value="2026-27">2026-27</option>
+                                                <option value="2027-28">2027-28</option>
+                                                <option value="2028-29">2028-29</option>
+                                                <option value="2029-30">2029-30</option>
+                                            </select>
+                                            <div class="invalid-feedback">Please select an option.</div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
                                         <label for="top" class="col-sm-4 col-form-label">Name of the Award/   Achievement<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Name of the Award/Achievement']}"></span></label>
@@ -833,7 +940,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Agency / Organization<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Agency / Organization']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter organizer" name = "ao" required>
-                                            <div class="invalid-feedback">Please provide agency / organization.
+                                            <div class="invalid-feedback">Please provide agency / organization.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -842,58 +949,35 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Prize<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Prize']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter organizer" name = "prize" required>
-                                            <div class="invalid-feedback">Please provide prize.
+                                            <div class="invalid-feedback">Please provide prize.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Award Date<span class="ms-1" style="color: red;">*</span></label>
+                                        <label class="col-sm-4 col-form-label">Date of Award<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "award_date" required>
-                                            <div class="invalid-feedback">Please provide award date.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Remark<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Remark']}"></span></label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter organizer" name = "remark" required>
-                                            <div class="invalid-feedback">Please provide remark.
+                                            <div class="invalid-feedback">Please provide award date.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Certificate/Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Certificate/Proof']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Award Certificate/Proof<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Award Certificate/Proof']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2" style = "margin-top: 2.5rem;">
+                                <div class="col-md-4">
                                     <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Remark<span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Remark']}"></span></label>
                                         <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4" style = "margin-top: 2.5rem;">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
-                                        <div class="col-sm-8">
-                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                                <option value="" selected disabled>Select your Session</option>
-                                                <option value="2025-26">2025-26</option>
-                                                <option value="2026-27">2026-27</option>
-                                                <option value="2027-28">2027-28</option>
-                                                <option value="2028-29">2028-29</option>
-                                                <option value="2029-30">2029-30</option>
-                                            </select>
-                                            <div class="invalid-feedback">Please select an option.</div>
+                                            <input type="text" class="form-control" placeholder="Enter organizer" name = "remark">
+                                            <div class="invalid-feedback">Please provide remark.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -915,7 +999,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if (form_number == 5) {
+                } else if (form_number === '5') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "category" value = "${categoryValue[category]}">
@@ -924,7 +1008,7 @@ function generateSubForms() {
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label for="top" class="col-sm-4 col-form-label">Name of the Funding Agency</label>
+                                        <label for="top" class="col-sm-4 col-form-label">Name of the Funding Agency (MSME/DST/CSIR/SERB /Industry etc.)</label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control custom-back" id="nofa" placeholder="Enter title of the program" name="nofa" required>
                                             <div class="invalid-feedback">Please provide the name of the funding agency.</div>
@@ -951,10 +1035,11 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Session in which grant/research project/consultancy received<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -985,17 +1070,11 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Proof(Only PDF)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Proof']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Proof<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Proof']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 mt-5">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
+                                            <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1008,7 +1087,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if(form_number == 6) {
+                } else if(form_number === '6') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -1019,7 +1098,7 @@ function generateSubForms() {
                                         <label for="top" class="col-sm-4 col-form-label">Name of the author(s)<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control" id="toc" placeholder="Enter name of author" name="noa" required>
-                                            <div class="invalid-feedback">Please provide name of author(s).
+                                            <div class="invalid-feedback">Please provide name of author(s).</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1028,7 +1107,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of Paper<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of Paper" name = "top" required>
-                                            <div class="invalid-feedback">Please provide title of paper.
+                                            <div class="invalid-feedback">Please provide title of paper.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1037,7 +1116,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of Journal<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter name of journal" name = "noj" required>
-                                            <div class="invalid-feedback">Please provide name of journal.
+                                            <div class="invalid-feedback">Please provide name of journal.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1045,8 +1124,8 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Name of the Publisher<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter name of publisher" name = "nop" required>
-                                            <div class="invalid-feedback">Please provide name of publisher.
+                                            <input type="text" class="form-control"  placeholder="Enter name of publisher" name = "nop" required>
+                                            <div class="invalid-feedback">Please provide name of publisher.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1054,8 +1133,8 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Volume, Issue<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter volumn, issue" name = "vi" required>
-                                            <div class="invalid-feedback">Please provide volume, issue.
+                                            <input type="text" class="form-control" placeholder="Enter volumne, issue" name = "vi" required>
+                                            <div class="invalid-feedback">Please provide volume, issue.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1063,8 +1142,8 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Page No.<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter page no." name = "pn" required>
-                                            <div class="invalid-feedback">Please provide page no.
+                                            <input type="text" class="form-control" placeholder="Enter page no." name = "pn" required>
+                                            <div class="invalid-feedback">Please provide page no.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1073,16 +1152,17 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Published Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
-                                            <div class="invalid-feedback">Please provide published date.
+                                            <div class="invalid-feedback">Please provide published date.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Academic Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1098,7 +1178,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">ISSN number : Print<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter details" name = "isnp" required>
-                                            <div class="invalid-feedback">Please provide ISSN number : Print.
+                                            <div class="invalid-feedback">Please provide ISSN number : Print.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1107,7 +1187,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">ISSN number : Online<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter details" name = "isno" required>
-                                            <div class="invalid-feedback">Please provide ISSN number : Online.
+                                            <div class="invalid-feedback">Please provide ISSN number : Online.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1125,7 +1205,7 @@ function generateSubForms() {
                                                     <label class="form-check-label" for="radio2-${i}">International</label>
                                                 </div>
                                             </div>
-                                            <div class="invalid-feedback">Please select level.
+                                            <div class="invalid-feedback">Please select level.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1134,7 +1214,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">DOI(Digital Object Identifier)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['DOI']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter DOI(Digital Object Identifier)" name = "doi" required>
-                                            <div class="invalid-feedback">Please provide DOI(Digital Object Identifier).
+                                            <div class="invalid-feedback">Please provide DOI(Digital Object Identifier).</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1142,8 +1222,8 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Link to website of the Journal<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter DOI(Digital Object Identifier)" name = "lwj" required>
-                                            <div class="invalid-feedback">Please provide Link to website of the Journal.
+                                            <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "lwj" required>
+                                            <div class="invalid-feedback">Please provide Link to website of the Journal starting with www., http://, or https://. or write na</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1152,7 +1232,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to article/paper/ abstract of the article<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to article/paper/abstract of the article']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to article/paper/abstract of the article " name = "lap" required>
-                                            <div class="invalid-feedback">Please provide Link to article/paper/ abstract of the article.
+                                            <div class="invalid-feedback">Please provide Link to article/paper/ abstract of the article starting with www., http://, or https://.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1161,7 +1241,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link to the recognition in SCOPUS enlistment of the Journal<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to the recognition in SCOPUS enlistment of the Journal" name = "lrsj" required>
-                                            <div class="invalid-feedback">Please provide Link to the recognition in SCOPUS enlistment of the Journal.
+                                            <div class="invalid-feedback">Please provide Link to the recognition in SCOPUS enlistment of the Journal starting with www., http://, or https://.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1170,34 +1250,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Affiliating Institute at the time of publication<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Affiliating Institute at the time of publication']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Affiliating Institute at the time of publication" name = "aiop" required>
-                                            <div class="invalid-feedback">Please provide Affiliating Institute at the time of publication.-${i}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Is SKIT student associated?<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Is SKIT student associated?']}"></span></label>
-                                        <div class="col-sm-8">
-                                            <div class="d-flex column-gap-4">
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="y" required>
-                                                    <label class="form-check-label" for="radio5-${i}">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="N">
-                                                    <label class="form-check-label" for="radio6-${i}">No</label>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback">Please select an option.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']}"></span></label>
-                                        <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter Student details" name = "details" required>
-                                            <div class="invalid-feedback">Please provide student(s) details.
+                                            <div class="invalid-feedback">Please provide Affiliating Institute at the time of publication.-${i}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1223,7 +1276,7 @@ function generateSubForms() {
                                                     <label class="form-check-label" for="radio6-${i}">UGC</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="Other">
+                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="O">
                                                     <label class="form-check-label" for="radio7-${i}">Other</label>
                                                 </div>
                                             </div>
@@ -1261,19 +1314,40 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
-                                        <div class="col-sm-6">
-                                            <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
+                                        <label class="col-sm-4 col-form-label">Is SKIT student associated?<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Is SKIT student associated?']}"></span></label>
+                                        <div class="col-sm-8">
+                                            <div class="d-flex column-gap-4">
+                                                <div class="form-check">
+                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio2" value="y" required>
+                                                    <label class="form-check-label" for="radio5-${i}">Yes</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio2" value="N">
+                                                    <label class="form-check-label" for="radio6-${i}">No</label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
+                                        <label class="col-sm-4 col-form-label">If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']}"></span></label>
+                                        <div class = "col-sm-8">
+                                            <input type="text" class="form-control" placeholder="Enter Student details" name = "details" required>
+                                            <div class="invalid-feedback">Please provide student(s) details.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
+                                        <div class="col-sm-6">
+                                            <input type="file" class="form-control" accept=".pdf, image/jpeg, image/png" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1286,7 +1360,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if(form_number == 7) {
+                } else if(form_number === '7') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -1297,16 +1371,16 @@ function generateSubForms() {
                                         <label for="top" class="col-sm-4 col-form-label">Name of the author(s)<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control" id="toc" placeholder="Enter name of author" name="noa" required>
-                                            <div class="invalid-feedback">Please provide name of author(s).
+                                            <div class="invalid-feedback">Please provide name of author(s).</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Title of Conference<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the Conference']}"></label>
+                                        <label class="col-sm-4 col-form-label">Title of Conference<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the Conference']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Title of the conference" name = "toc" required>
-                                            <div class="invalid-feedback">Please provide Title of Conference.
+                                            <div class="invalid-feedback">Please provide Title of Conference.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1315,16 +1389,16 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of Paper<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of Paper" name = "top" required>
-                                            <div class="invalid-feedback">Please provide Title of Paper.
+                                            <div class="invalid-feedback">Please provide Title of Paper.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Title of the proceedings of the conference<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the proceedings of the conference']}"></label>
+                                        <label class="col-sm-4 col-form-label">Title of the proceedings of the conference<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the proceedings of the conference']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Title of the proceedings of the conference" name = "topc" required>
-                                            <div class="invalid-feedback">Please provide Title of the proceedings of the conference.
+                                            <div class="invalid-feedback">Please provide Title of the proceedings of the conference.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1342,7 +1416,7 @@ function generateSubForms() {
                                                     <label class="form-check-label" for="radio2-${i}">International</label>
                                                 </div>
                                             </div>
-                                            <div class="invalid-feedback">Please select level.
+                                            <div class="invalid-feedback">Please select level.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1351,7 +1425,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">ISBN/ISSN number of the proceeding<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter ISBN/ISSN number of the proceeding" name = "isnp" required>
-                                            <div class="invalid-feedback">Please provide ISBN/ISSN number of the proceeding.
+                                            <div class="invalid-feedback">Please provide ISBN/ISSN number of the proceeding.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1360,7 +1434,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of the Publisher<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter name of publisher" name = "nop" required>
-                                            <div class="invalid-feedback">Please provide name of publisher.
+                                            <div class="invalid-feedback">Please provide name of publisher.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1369,23 +1443,24 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Published Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
-                                            <div class="invalid-feedback">Please provide published date.
+                                            <div class="invalid-feedback">Please provide published date.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Academic Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
                                                 <option value="2028-29">2028-29</option>
                                                 <option value="2029-30">2029-30</option>
                                             </select>
-                                            <div class="invalid-feedback">Please provide academic session.
+                                            <div class="invalid-feedback">Please provide academic session.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1394,16 +1469,16 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">DOI(Digital Object Identifier)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['DOI']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter DOI(Digital Object Identifier)" name = "doi" required>
-                                            <div class="invalid-feedback">Please provide DOI(Digital Object Identifier).
+                                            <div class="invalid-feedback">Please provide DOI(Digital Object Identifier).</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Link to website of the Journal<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Web Link<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "lwj" required>
-                                            <div class="invalid-feedback">Please provide Link to website of the Journal.
+                                            <div class="invalid-feedback">Please provide Link to website of the Journal starting with www., http://, or https://. or write na</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1412,7 +1487,16 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Affiliating Institute at the time of publication<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Affiliating Institute at the time of publication']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Affiliating Institute at the time of publication" name = "aitp" required>
-                                            <div class="invalid-feedback">Please provide Affiliating Institute at the time of publication.
+                                            <div class="invalid-feedback">Please provide Affiliating Institute at the time of publication.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Indexed by<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" placeholder="Enter indexed by" name = "index_by" required>
+                                            <div class="invalid-feedback">Please provide Indexed by.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1430,7 +1514,7 @@ function generateSubForms() {
                                                     <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
-                                            <div class="invalid-feedback">Please select an option.
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1439,53 +1523,17 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Student details" name = "details" required>
-                                            <div class="invalid-feedback">Please provide student(s) details.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-3 col-form-label">Indexed by<span class="ms-1" style="color: red;">*</span></label>
-                                        <div class="col-sm-9">
-                                            <div class="d-flex column-gap-4">
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio1" value="S" required>
-                                                    <label class="form-check-label" for="radio3-${i}">SCI/SCIE/SSCI</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio4-${i}">Scopus</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio5-${i}">ESCI</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio6-${i}">UGC</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio7-${i}">Other</label>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback">Please select an option.</div>
+                                            <div class="invalid-feedback">Please provide student(s) details.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
+                                            <input type="file" class="form-control" accept=".pdf, image/jpeg, image/png" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1498,7 +1546,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if(form_number == 8) {
+                } else if(form_number === '8') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
@@ -1506,10 +1554,10 @@ function generateSubForms() {
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label for="top" class="col-sm-4 col-form-label">Name of the author(s)<span class="ms-1" style="color: red;">*</span></label>
+                                        <label for="top" class="col-sm-4 col-form-label">Name of the author/editor<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control" id="toc" placeholder="Enter name of author" name="noa" required>
-                                            <div class="invalid-feedback">Please provide name of author(s).
+                                            <div class="invalid-feedback">Please provide name of author(s).</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1518,7 +1566,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of the book<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Title of the conference" name = "tob" required>
-                                            <div class="invalid-feedback">Please provide Title of the book.
+                                            <div class="invalid-feedback">Please provide Title of the book.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1527,7 +1575,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of the chapter Published<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of Paper" name = "top" required>
-                                            <div class="invalid-feedback">Please provide Title of the chapter Published.
+                                            <div class="invalid-feedback">Please provide Title of the chapter Published.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1545,7 +1593,7 @@ function generateSubForms() {
                                                     <label class="form-check-label" for="radio2-${i}">International</label>
                                                 </div>
                                             </div>
-                                            <div class="invalid-feedback">Please select level.
+                                            <div class="invalid-feedback">Please select level.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1563,7 +1611,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Name of the Publisher<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter name of publisher" name = "nop" required>
-                                            <div class="invalid-feedback">Please provide name of publisher.
+                                            <div class="invalid-feedback">Please provide name of publisher.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1572,16 +1620,17 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Published Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
-                                            <div class="invalid-feedback">Please provide published date.
+                                            <div class="invalid-feedback">Please provide published date.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Academic Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1597,16 +1646,16 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">DOI(Digital Object Identifier)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['DOI']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter DOI(Digital Object Identifier)" name = "doi" required>
-                                            <div class="invalid-feedback">Please provide DOI(Digital Object Identifier).
+                                            <div class="invalid-feedback">Please provide DOI(Digital Object Identifier).</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Link to website of the Journal<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Web Link<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "lwj" required>
-                                            <div class="invalid-feedback">Please provide Link to website of the Journal.
+                                            <div class="invalid-feedback">Please provide Link to website of the Journal starting with www., http://, or https://. or write na</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1615,7 +1664,16 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Affiliating Institute at the time of publication<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Affiliating Institute at the time of publication']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Affiliating Institute at the time of publication" name = "aitp" required>
-                                            <div class="invalid-feedback">Please provide Affiliating Institute at the time of publication.
+                                            <div class="invalid-feedback">Please provide Affiliating Institute at the time of publication.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Indexed by<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" placeholder="Enter indexed by" name = "index_by" required>
+                                            <div class="invalid-feedback">Please provide Indexed by.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1633,7 +1691,7 @@ function generateSubForms() {
                                                     <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
-                                            <div class="invalid-feedback">Please select an option.
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1642,53 +1700,17 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Student details" name = "details" required>
-                                            <div class="invalid-feedback">Please provide student(s) details.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-3 col-form-label">Indexed by<span class="ms-1" style="color: red;">*</span></label>
-                                        <div class="col-sm-9">
-                                            <div class="d-flex column-gap-4">
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio3-${i}" name="optradio1" value="S" required>
-                                                    <label class="form-check-label" for="radio3-${i}">SCI/SCIE/SSCI</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio4-${i}" name="optradio1" value="NS">
-                                                    <label class="form-check-label" for="radio4-${i}">Scopus</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio5-${i}" name="optradio1" value="ES">
-                                                    <label class="form-check-label" for="radio5-${i}">ESCI</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio6-${i}" name="optradio1" value="UGC">
-                                                    <label class="form-check-label" for="radio6-${i}">UGC</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" class="form-check-input" id="radio7-${i}" name="optradio1" value="O">
-                                                    <label class="form-check-label" for="radio7-${i}">Other</label>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback">Please select an option.</div>
+                                            <div class="invalid-feedback">Please provide student(s) details.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Proof (Book Chapter/Front Page/Document etc.)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
+                                            <input type="file" class="form-control" accept=".pdf, image/jpeg, image/png" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1701,12 +1723,29 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if (form_number == 9) {
+                } else if (form_number === '9') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
                         <div class="sub-form-fields">
                             <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
+                                                <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
+                                                <option value="2025-26">2025-26</option>
+                                                <option value="2026-27">2026-27</option>
+                                                <option value="2027-28">2027-28</option>
+                                                <option value="2028-29">2028-29</option>
+                                                <option value="2029-30">2029-30</option>
+                                            </select>
+                                            <div class="invalid-feedback">Please select Academic Session.-${i}</div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Status of Patent<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Is the Patent granted ?']}"></span></label>
@@ -1727,19 +1766,19 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label for="top" class="col-sm-4 col-form-label">Granted ID<span class="ms-1" style="color: red;">*</span></label>
-                                        <div class = "col-md-8">
-                                            <input type="text" class="form-control" id="toc" placeholder="Enter " name="nof" required>
-                                            <div class="invalid-feedback">Please provide Granted ID.</div>
+                                        <label class="col-sm-4 col-form-label">Application ID<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class = "col-sm-8">
+                                            <input type="text" class="form-control" placeholder="Enter Application ID" name = "ag" required>
+                                            <div class="invalid-feedback">Please provide Application ID.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Application ID<span class="ms-1" style="color: red;">*</span></label>
-                                        <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter ID" name = "ag" required>
-                                            <div class="invalid-feedback">Please provide Application ID.
+                                        <label for="top" class="col-sm-4 col-form-label">Granted ID<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class = "col-md-8">
+                                            <input type="text" class="form-control" id="toc" placeholder="Enter Granted ID" name="nof" required>
+                                            <div class="invalid-feedback">Please provide Granted ID.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1766,7 +1805,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Title of Patent<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of Patent" name = "top" required>
-                                            <div class="invalid-feedback">Please provide Title of Patent.
+                                            <div class="invalid-feedback">Please provide Title of Patent.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1775,7 +1814,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Granted Country<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter detail" name = "gc" required>
-                                            <div class="invalid-feedback">Please provide Granted Country.
+                                            <div class="invalid-feedback">Please provide Granted Country.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1784,7 +1823,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Patent Filed Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "filed_date" required>
-                                            <div class="invalid-feedback">Please provide Patent Filed Date.
+                                            <div class="invalid-feedback">Please provide Patent Filed Date.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1793,27 +1832,10 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Publication Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "begi_date" required>
-                                            <div class="invalid-feedback">Please provide Publication Date.
+                                            <div class="invalid-feedback">Please provide Publication Date.</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Academic Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
-                                        <div class="col-sm-8">
-                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                                <option value="" selected disabled>Select your Session</option>
-                                                <option value="2025-26">2025-26</option>
-                                                <option value="2026-27">2026-27</option>
-                                                <option value="2027-28">2027-28</option>
-                                                <option value="2028-29">2028-29</option>
-                                                <option value="2029-30">2029-30</option>
-                                            </select>
-                                            <div class="invalid-feedback">Please select Academic Session.</div>-${i}
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Is SKIT student associated?<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Is SKIT student associated?(Patent)']}"></span></label>
@@ -1828,7 +1850,7 @@ function generateSubForms() {
                                                     <label class="form-check-label" for="radio6-${i}">No</label>
                                                 </div>
                                             </div>
-                                            <div class="invalid-feedback">Please select an option.
+                                            <div class="invalid-feedback">Please select an option.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1837,7 +1859,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Student details" name = "details" required>
-                                            <div class="invalid-feedback">Please provide student(s) details.
+                                            <div class="invalid-feedback">Please provide student(s) details.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1846,23 +1868,17 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Link<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Link to website of the Journal']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Link to website of the Journal" name = "link" required>
-                                            <div class="invalid-feedback">Please provide Link.
+                                            <div class="invalid-feedback">Please provide a valid link starting with www., http://, or https:// or write na</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Upload Full Paper<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Full Paper']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Upload Proof<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Upload Proof (Patent)']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-6">
-                                            <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
+                                            <input type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1875,7 +1891,7 @@ function generateSubForms() {
                         </div>
                         <hr>
                     `;
-                } else if (form_number == 10) {
+                } else if (form_number === '10') {
                     subForm.innerHTML = `
                         <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
                         <input type = "hidden" name = "category" value = "${categoryValue[category]}">
@@ -1884,10 +1900,27 @@ function generateSubForms() {
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
+                                                <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
+                                                <option value="2025-26">2025-26</option>
+                                                <option value="2026-27">2026-27</option>
+                                                <option value="2027-28">2027-28</option>
+                                                <option value="2028-29">2028-29</option>
+                                                <option value="2029-30">2029-30</option>
+                                            </select>
+                                            <div class="invalid-feedback">Please select Session.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row align-items-center">
                                         <label for="top" class="col-sm-4 col-form-label">Name of the student Guided<span class="ms-1" style="color: red;">*</span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control custom-back" id="top" placeholder="Enter Name of the student Guided" name="nos" required>
-                                            <div class="invalid-feedback">Please provide Name of the student Guided.
+                                            <div class="invalid-feedback">Please provide Name of the student Guided.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1896,7 +1929,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Enrollment Number of Student<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Enrollment Number of Student" name = "ens" required>
-                                            <div class="invalid-feedback">Please enter Enrollment Number of Student.
+                                            <div class="invalid-feedback">Please enter Enrollment Number of Student.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1905,7 +1938,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">University Roll Number of Student<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter organizer" name = "urns" required>
-                                            <div class="invalid-feedback">Please enter University Roll Number of Student.
+                                            <div class="invalid-feedback">Please enter University Roll Number of Student.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1955,7 +1988,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Date of Viva-Voce<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="date" class="form-control" name = "dov" required>
-                                            <div class="invalid-feedback">Please provide Date of Viva-Voce.
+                                            <div class="invalid-feedback">Please provide Date of Viva-Voce.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1968,12 +2001,29 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class = "col-md-12">
+                                    <div class="row align-items-center justify-content-center">
+                                        <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    `;
+                } else if (form_number === '11') {
+                    subForm.innerHTML = `
+                        <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+                        <input type = "hidden" name = "category" value = "${categoryValue[category]}">
+                        <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
+                        <div class="sub-form-fields">
+                            <div class="row g-3">
+                                <div class="col-md-6 mt-4">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                                         <div class="col-sm-8">
                                             <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
                                                 <option value="" selected disabled>Select your Session</option>
+                                                <option value="2024-25">2024-25</option>
                                                 <option value="2025-26">2025-26</option>
                                                 <option value="2026-27">2026-27</option>
                                                 <option value="2027-28">2027-28</option>
@@ -1984,28 +2034,12 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class = "col-md-12">
-                                    <div class="row align-items-center justify-content-center">
-                                        <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                    `;
-                } else if (form_number == 11) {
-                    subForm.innerHTML = `
-                        <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
-                        <input type = "hidden" name = "category" value = "${categoryValue[category]}">
-                        <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
-                        <div class="sub-form-fields">
-                            <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
                                         <label for="top" class="col-sm-4 col-form-label">Title of Event/ Exam Name<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of Event/ Exam Name']}"></span></label>
                                         <div class = "col-md-8">
                                             <input type="text" class="form-control custom-back" id="top" placeholder="Enter Name of the student Guided" name="toe" required>
-                                            <div class="invalid-feedback">Please provide Title of Event/ Exam Name.
+                                            <div class="invalid-feedback">Please provide Title of Event/ Exam Name.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2014,16 +2048,7 @@ function generateSubForms() {
                                         <label class="col-sm-4 col-form-label">Subject Area/Subject Name/Lab Name/Session Name<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Subject Area/Subject Name/Lab Name/Session Name']}"></span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter Enrollment Number of Student" name = "sa" required>
-                                            <div class="invalid-feedback">Please enter Subject Area/Subject Name/Lab Name/Session Name.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Duration of event (in days)<span class="ms-1" style="color: red;">*</span></label>
-                                        <div class="col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter no. of days" name = "doe" required>
-                                            <div class="invalid-feedback">Please enter Duration of event.
+                                            <div class="invalid-feedback">Please enter Subject Area/Subject Name/Lab Name/Session Name.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2103,7 +2128,16 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mt-4">
+                                <div class="col-md-6">
+                                    <div class="row align-items-center">
+                                        <label class="col-sm-4 col-form-label">Duration of event (in days)<span class="ms-1" style="color: red;">*</span></label>
+                                        <div class="col-sm-8">
+                                            <input type="number" class="form-control" placeholder="Enter no. of days" name = "doe" required>
+                                            <div class="invalid-feedback">Please enter Duration of event.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-4">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">From Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
@@ -2112,7 +2146,7 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mt-4">
+                                <div class="col-md-6 mt-4">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">To Date<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
@@ -2121,44 +2155,22 @@ function generateSubForms() {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mt-4">
-                                    <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
-                                        <div class="col-sm-8">
-                                            <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                                <option value="" selected disabled>Select your Session</option>
-                                                <option value="2025-26">2025-26</option>
-                                                <option value="2026-27">2026-27</option>
-                                                <option value="2027-28">2027-28</option>
-                                                <option value="2028-29">2028-29</option>
-                                                <option value="2029-30">2029-30</option>
-                                            </select>
-                                            <div class="invalid-feedback">Please select Session.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mt-4">
+                                <div class="col-md-6 mt-4">
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Venue<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter venue of event" name = "venue" required>
-                                            <div class="invalid-feedback">Please provide Venue.
+                                            <div class="invalid-feedback">Please provide Venue.</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mt-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-5 col-form-label">Proof(Certificate/Mail)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Proof (Certificate/Mail)']}"></span></label>
+                                        <label class="col-sm-5 col-form-label">Proof(Certificate/Mail)<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Proof (Certificate/Mail)']}"></span>
+                                        <h5 class="font-small mt-2" style="font-size: 14px; color: gray;">Upload .pdf,.jpg,.jpeg,.png File Format(MAX SIZE:- 2MB)</h5></label>
                                         <div class="col-sm-7">
-                                            <input type="file" class="form-control" accept=".pdf" name="proof_file" required>
-                                            <div class="invalid-feedback">Please upload a PDF file.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 mt-4">
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-8">
-                                            <button type = "button" class="btn btn-primary"><i class="fa-solid fa-eye"></i>View</button>
+                                            <input type="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" name="proof_file" required>
+                                            <div class="invalid-feedback">Please upload a PDF, JPG/JPEG or PNG file only.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2178,7 +2190,7 @@ function generateSubForms() {
                 tooltips.forEach(tooltip => {
                     new bootstrap.Tooltip(tooltip);
                 });
-                
+
             }
         }
     });
@@ -2188,9 +2200,143 @@ function generateSubForms() {
     }
 
     subformCount.textContent = `${totalForms} form${totalForms !== 1 ? 's' : ''}`;
-
     // Initialize Bootstrap validation for all newly created forms
     setTimeout(() => {
         initializeBootstrapValidation();
+        attachLinkValidation(); // ADD THIS LINE HERE
+        stopScrollNumberIncrement();
     }, 100);
 }
+
+function attachLinkValidation() {
+    const linkFields = document.querySelectorAll('input[name="link"], input[name="lwj"], input[name="lrsj"], input[name="lap"]');
+    // Updated pattern: REQUIRES either http://, https://, or www. at the start
+    const urlPattern = /^(https?:\/\/|www\.)\S{2,}$|^(na|NA)$/i;
+
+    linkFields.forEach(field => {
+       field.removeAttribute('pattern'); // Remove pattern attribute to prevent HTML5 validation conflicts
+
+        field.addEventListener('blur', function() {
+            validateLinkField(this, urlPattern);
+        });
+        field.addEventListener('input', function() {
+            validateLinkField(this, urlPattern);
+        });
+    });
+}
+function stopScrollNumberIncrement() {
+    const numberInputs = document.querySelectorAll('input[type="number"]')
+
+    numberInputs.forEach(function(input) {
+        input.addEventListener('wheel', function(event) {
+            event.preventDefault();
+        }, {passive : false});
+    });
+}
+
+function validateLinkField(field, pattern) {
+    const val = field.value.trim();
+
+    if (!pattern.test(field.value)) {
+        field.classList.add("is-invalid");
+        field.classList.remove("is-valid");
+    } else {
+        field.classList.add("is-valid");
+        field.classList.remove("is-invalid");
+    }
+}
+
+function initializeBootstrapValidation() {
+    'use strict'
+    
+    const forms = document.querySelectorAll('.needs-validation')
+    
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            // Check custom link validation first
+            const linkFields = form.querySelectorAll('input[name="link"], input[name="lwj"], input[name="lrsj"], input[name="lap"]');
+            let hasInvalidLinks = false;
+            
+            linkFields.forEach(field => {
+                if (!field.checkValidity()) {
+                    hasInvalidLinks = true;
+                    field.classList.add('is-invalid');
+                } else if (field.value.trim() !== "") {
+                    field.classList.add('is-valid');
+                }
+            });
+            
+            // Then check standard HTML5 validation
+            if (!form.checkValidity() || hasInvalidLinks) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            
+            form.classList.add('was-validated')
+        }, false)
+    })
+}
+
+var curr_count = 0;
+document.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const submitButton = e.target.querySelector('button[type="submit"]');
+
+    // Disable it immediately to prevent double-clicks
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerText = "Saving...";
+    }
+    console.log(e.target.classList);
+    if(e.target.classList.contains('sub-for')) {
+        const formData = new FormData(e.target);
+        const redirect_url = `/save_all_forms/${form_number}`;
+        fetch(redirect_url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': `${csrfToken}`
+            }
+        })
+        .then(response=>response.json())
+        .then(data=> {
+            if(data.status === 'success') {
+                curr_count++;
+                submitButton.innerText = "Saved Successfully!";
+                if(curr_count === totalForms) {
+                    window.location.href = '/success';
+                }
+            } else {
+                submitButton.disabled = false;
+                submitButton.innerText = "Try Again";
+            }
+        })
+        .catch(error => {
+            console.log("Error fetching the result");
+        });
+    } else if (e.target.classList.contains('upl-exe')){
+        const formData = new FormData(e.target);
+        const redirect_url = `/upload_excel/${form_number}`;
+        fetch(redirect_url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': `${csrfToken}`
+            }
+        })
+        .then(response=>response.json())
+        .then(data=> {
+            if(data.status === 'success') {
+                submitButton.innerText = "Saved Successfully!";
+                window.location.href = '/all_forms/' + form_number;
+            } else {
+                submitButton.disabled = false;
+                submitButton.innerText = "Try Again";
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.log("Error fetching the result");
+        });
+    }
+});

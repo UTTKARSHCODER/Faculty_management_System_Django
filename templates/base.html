@@ -4,15 +4,18 @@
 {% url 'about' as about %}
 {% url 'fdp' as fdp %}
 {% url 'progress' as progress %}
-{% url 'directory' as directory %}
+{% url 'manage_access' as manage_access %}
 {% url 'editProfile' as editProfile %}
-{% url 'faculty_report' as faculty_report %}
+{% url 'faculty' as fac %}
+{% url 'student' as stu %}
+{% url 'report' as report %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Information Website</title>
+    <title>Faculty Information Portal</title>
     <link rel = "icon" type = "image/png" href = "/static/top-head-logo.png">
 
     <!-- <link rel="stylesheet" href="responsive.css"> -->
@@ -21,199 +24,360 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/217508c9b2.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Latest compiled JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>-->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body class ="h-100">
-    <div class="container-fluid" style = "background-color: #2F3E46">
-        <div class="row">
-            <div class="col-1">
-                <img src = "/static/skit_logo.png" alt="SKIT LOGO" style = "height:80px; width:96px">
-            </div>
-            <div class="col-9 mt-2 ms-5" >
-                <h3 class = "text-white text-nowrap mt-3" style = "font-weight: bold;">Swami Keshvanand Institute of Technology, Management & Gramothan(SKIT)</h3>
-            </div>
-            <!-- Role-Specifier -->
-            <div class="col-1 ms-5 mt-2">
-                <div class="d-flex justify-content-end">
-                    {% if request.session.topLeftBar is not None %}
+    <div class="container-fluid" style = "background-color: white">
+<!--        {% if messages %}-->
+<!--        <div class="messages">-->
+<!--            {% for message in messages %}-->
+<!--            <li {% if message.tags %} class="{{ message.tags }}"{% endif %} id = "check"></li>-->
+<!--            {% endfor %}-->
+<!--        </div>-->
+<!--        {% endif %}-->
+        <!-- header -->
+    <div class="row align-items-center py-2" style = "background-color: #B0433E">
+    
+    <!-- Logo -->
+    <div class="col-auto text-center">
+        <img src="/static/skit_logo.png" alt="SKIT LOGO" style="height:80px; width:80px">
+    </div>
 
-                    <button type="button" class="text-white dropdown-toggle ms-5 mt-3" data-bs-toggle="dropdown" style = "background: #2F3E46"><i class = "fa-regular fa-user text-white"></i>
-                        {% if request.session.topLeftBar ==  'spa' %}
-                        SuperAdmin
-                        {% elif request.session.topLeftBar ==  'ad' %}
-                         Admin
-                        {% elif request.session.topLeftBar ==  'fa' %}
-                        Faculty
-                        {% elif request.session.topLeftBar ==  'student' %}
-                        Student
-                        {% else %}
-                        Unknown</button>
-                        {% endif %}
-                    <ul class = "dropdown-menu">
-                        <li><span style = "display: flex;"><i class = "fa-solid fa-right-from-bracket" style = "margin-top: 11px; margin-left: 15px;"></i><a class="dropdown-item" href="{% url 'logout' %}" id = "forceLogoutRedirect" style = "padding-left: 5px;">Logout</a></span></li>
-                    </ul>
-                    {% else %}
-                    <button type="button" class="btn btn-primary dropdown-toggle text-center ms-5 mt-3" data-bs-toggle="dropdown">
-                        User
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=spa">SuperAdmin</a></span></li>
-                        <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=ad">Admin</a></span></li>
-                        <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=fa">Faculty</a></span></li>
-                        <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=student">Student</a></span></li>
-                    </ul>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+    <!-- Title -->
+    <div class="col text-center">
+        <h3 class="text-white fw-bold mt-2" style="font-size: clamp(18px, 2vw, 28px);">
+            Swami Keshvanand Institute of Technology, Management & Gramothan(SKIT)
+        </h3>
+    </div>
+
+    <!-- Role Specifier -->
+    <div class="col-auto text-center d-none d-md-block">
+        {% if request.session.topLeftBar is not None %}
+        <button type="button" class="btn  authBox text-black dropdown-toggle " data-bs-toggle="dropdown" style="background-color:white">
+            <i class="fa-regular fa-user text-black"></i>
+            {% if request.session.topLeftBar == 'spa' %}
+                SuperAdmin
+            {% elif request.session.topLeftBar == 'ad' %}
+                Admin
+            {% elif request.session.topLeftBar == 'fa' %}
+                Faculty
+            {% else %}
+                Unknown
+            {% endif %}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+                <span style="display: flex;">
+                    <i class="fa-solid fa-right-from-bracket" style="margin-top: 11px; margin-left: 15px;"></i>
+                    <a class="dropdown-item" href="{% url 'logout' %}" id="forceLogoutRedirect" style="padding-left: 5px;">Logout</a>
+                </span>
+            </li>
+        </ul>
+        {% else %}
+        <a type="button" class="btn btn-primary bg-primary mt-3" href="/login" id="header_login_button">Login</a>
+        {% endif %}
+    </div>
+
+</div>
+
+
     </div>
 <!--    <div class="container-fluid w-100" style="&#45;&#45;bs-gutter-x: 0;">-->
         <!-- left nav sec  -->
-    <main class = "d-flex flex-column" style = "min-height: 64.20vh">
-    <div class="row" style = "--bs-gutter-x: 0; flex-grow: 1;">
-        <div class="col-2" style="width: auto">
-              <nav class="navbar h-100" style = "background-color: #2F3E46; width: 100%; align-content: space-between;">
-                    <ul class="navbar-nav text-dark">
-                        <a href="/" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == home or '/batch/' in request.path %} active {% endif %}" id = "home">Home</li></a>
-                        {% if request.session.topLeftBar %}
-                        <a href="/profile" style = "text-decoration: none;"><li class = "nav-item text-white {% if request.path == profile or request.path == editProfile %} active {% endif %}" id = "profile">Profile</li></a>
-                        <a href="/student_directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == student_directory %} active {% endif %}" id = "student_directory">Student Directory</li></a>
-                        <a href="/fdp" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == fdp or 'all_forms' in request.path %} active {% endif %}" id = "faculty_development">FDP Forms</li></a>
-                        <a href="/directory" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == directory %} active {% endif %}" id = "directory">Directory</li></a>
-                        <a href="/faculty_report" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == faculty_report %} active {% endif %}" id = "faculty_report">Faculty Report</li></a>
-                        <a href="/progress" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == progress %} active {% endif %}" id = "progress">Progress</li></a>
-                        {% endif %}
-                        <a href="/about" style = "text-decoration: none;"><li class="nav-item text-white {% if request.path == about %} active {% endif %}" id = "about_us">About Us</li></a>
-                    </ul>
-              </nav>
+  <main class = "d-flex flex-column" style = "min-height: 67.5vh; background-color: #F3F6F8">
+
+        <!-- Mobile Top Bar: Hamburger + SuperAdmin same line -->
+    <div class="d-flex d-md-none align-items-center px-3 py-2" style="background-color:white">
+        <button class="hamburger btn p-0" id="hamburger" style="color: black; font-size: 1.5rem;">☰</button>
+        <div class="ms-auto">
+            {% if request.session.topLeftBar is not None %}
+            <button type="button" class="btn btn-secondary text-white dropdown-toggle" data-bs-toggle="dropdown" >
+                <i class="fa-regular fa-user text-white"></i>
+                {% if request.session.topLeftBar == 'spa' %}SuperAdmin
+                {% elif request.session.topLeftBar == 'ad' %}Admin
+                {% elif request.session.topLeftBar == 'fa' %}Faculty
+                {% else %}Unknown{% endif %}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <span style="display:flex;">
+                        <i class="fa-solid fa-right-from-bracket" style="margin-top:11px; margin-left:15px;"></i>
+                        <a class="dropdown-item" href="{% url 'logout' %}" style="padding-left:5px;">Logout</a>
+                    </span>
+                </li>
+            </ul>
+            {% else %}
+            <a class="btn btn-primary" href="/login">Login</a>
+            {% endif %}
         </div>
-        {% block content %}
-
-        {% endblock %}
     </div>
+
+    <div class="row " style="--bs-gutter-x: 0; flex-grow: 1; flex-wrap: nowrap; ">
+        
+        <!-- Sidebar -->
+        <div class="col-2 sidebar d-flex" id="sidebar" style="width: auto; border-right: 1px solid #D6D6D6">
+            <nav class="navbar h-100" style="width: 100%; align-content: space-between;">
+                <ul class="navbar-nav text-dark">
+                    {% with role=request.session.topLeftBar %}
+                        {% if role == 'ad' or role == 'fa' %}
+                            <a href="/dashboard" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == progress or '/forms_listing/' in request.path %}active{% endif %}" id="home">Dashboard</li>
+                            </a>
+                            <a href="/profile" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == profile or request.path == editProfile or '/manage_profile/' in request.path %}active{% endif %}" id="profile">Profile</li>
+                            </a>
+                            <a href="/fdp" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == fdp or 'all_forms' in request.path %}active{% endif %}" id="faculty_development" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Faculty Data Collection(FDC) Forms">FDC Forms</li>
+                            </a>
+                            {% if role == 'ad' %}
+                                <a href="/report" style="text-decoration: none;">
+                                    <li class="nav-item text-dark {% if request.path == report %}active{% endif %}" id="report1">Report Download</li>
+                                </a>
+                            {% endif %}
+                        {% elif role == 'spa' %}
+                            <a href="/report" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == report %}active{% endif %}" id="report1">Report Download</li>
+                            </a>
+                            <a href="/profile" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == profile or request.path == editProfile or '/manage_profile/' in request.path %}active{% endif %}" id="profile">Profile</li>
+                            </a>
+                            <a href="/manage_access" style="text-decoration: none;">
+                                <li class="nav-item text-dark {% if request.path == manage_access %}active{% endif %}" id="manage_access">Manage Access</li>
+                            </a>
+                        {% endif %}
+                    {% endwith %}
+                    <a href="/" style="text-decoration: none;">
+                        <li class="nav-item text-dark {% if request.path == home or '/faculty/' in request.path or request.path == fac %}active{% endif %}" id="faculty_report">Faculty Details</li>
+                    </a>
+                    <a href="/about" style="text-decoration: none;">
+                        <li class="nav-item text-dark {% if request.path == about %}active{% endif %}" id="about_us">About Us</li>
+                    </a>
+                </ul>
+            </nav>
+        </div>
+        <div class="col" style="background-color: #e0e7ec">
+        {% block content %}
+        {% endblock %}
+        </div>
+    </div>
+
+        <!-- The Message Modal -->
+        <div class="modal fade" id="messageModal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header" id="header">
+                        <i class="" id="icon"></i><h4 class="modal-title text-dark" id="modal-title" style="font-weight: bold;">Message Info</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                  <!-- Modal body -->
+                    <div class="modal-body">
+                        <h5 id = "message" class="message text-dark" style="font-size: 1.13rem; text-align: center;"></h5>
+                    </div>
+
+                  <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <div class="dflex justify-content-end">
+                            <button type="button" class = "btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Model Ends -->
+        <script src="{% static 'dynamic_message.js' %}"></script>
         <script>
-            document.getElementById('forceLogoutRedirect').addEventListener('click', function(event) {
-                // 1. Let Bootstrap do its thing (close the dropdown menu)
-                // event.preventDefault(); // You don't need this if Bootstrap already uses it
+            let toastContainer = document.getElementById('toast-container');
 
-                // 2. Immediately force the browser to navigate to the desired URL.
-                // Use the href attribute of the link you just clicked.
-                const targetUrl = this.getAttribute('href');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
 
-                // Use a small delay for maximum compatibility, ensuring the dropdown closes visually
-                setTimeout(function() {
-                    window.location.href = targetUrl;
-                }, 50); // 50 milliseconds is usually enough
+                // Position the CONTAINER, not the messages
+                toastContainer.style.position = "fixed";
+                toastContainer.style.top = "20px";
+                toastContainer.style.right = "20px";
+                toastContainer.style.zIndex = "1050";
+
+                // Ensure messages stack vertically
+                toastContainer.style.display = "flex";
+                toastContainer.style.flexDirection = "column";
+                toastContainer.style.gap = "0px"; // Space between messages
+
+                document.body.appendChild(toastContainer);
+            }
+
+            // Create an empty array
+            let djangoMessages = [];
+
+            // Loop through messages and push them into the JS array
+            {% for message in messages %}
+                djangoMessages.push({
+                    "tag": "{{ message.tags|escapejs }}",
+                    "text": "{{ message|escapejs }}"
+                });
+            {% endfor %}
+            // Example: Trigger your alert for each message
+            djangoMessages.forEach((msg, index) => {
+                $(document).ready(function() {
+                    if(msg.tag.includes('error')) {
+                        $('#messageModal').on('show.bs.modal', function(event) {
+                            var modal = $(this);
+                            modal.find('#icon').addClass('fa-solid fa-triangle-exclamation text-dark mt-1 me-2');
+                            modal.find('#header').css('background-color','#FEC901');
+                            modal.find('#modal-title').text('Warning');
+                            modal.find('#message').html(msg.text);
+                        });
+                        $('#messageModal').modal('toggle');
+                    }
+                });
+                setTimeout(() => {
+                    if(!msg.tag.includes('error')) {
+                        showMessages(msg.text,msg.tag);
+                    }
+                }, index * 300);
             });
+            document.addEventListener("DOMContentLoaded", function(){
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                  return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+              });
         </script>
     </main>
+    
+
     <style>
+        *{
+            margin: 0;
+            padding:0;
+            box-sizing: border-box;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 400; /* Regular weight for normal text */
+            font-size: 16px; /* Adjust based on your exact UI needs */
+        }
+        main{
+            position:relative;
+        }
+        body{
+          overflow-x: hidden;
+        }
+     
         .nav-item{
-            padding: 20px;
+            padding-left: 25px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            padding-right: 35px;
+            font-weight: bold;
             font-size: 18px;
+            border-radius:8px;
+            transition: 0.3s;
+            font-family: 'Roboto Condensed',sans-serif;
+            color: black;
         }
         .nav-item.active {
-            background-color: #007bff;
-            color: white;
+            background-color: #B0433E !important;
+            color: white !important;
             border-radius: 5px;
             margin: 4px;
         }
+        h5.message {
+            white-space: pre-line;
+        }
+        .hamburger{
+            display:none;
+            font-size:30px;
+            padding:10px 15px;
+            background:white;
+            
+            cursor:pointer;
+
+        }
+      
+
+/* Mobile view */
+@media(max-width:279px){
+    .col-auto.text-center{
+      width: 100%;
+    }
+}
+
+
+
+@media(max-width:768px){
+    .btn.box{
+        background-color: #D6D6D6;
+        
+    }
+
+    .hamburger{
+        display:block;
+    }
+
+    .sidebar{
+        position:absolute;
+       
+       bottom:0;
+        left:-260px;
+        overflow-y: auto;
+        width:250px;
+        height:100%;    
+        background:white;
+        transition:0.3s;
+        z-index:1000;
+        
+    }
+
+    .sidebar.active{
+        left:0;
+    }
+}
+
     </style>
+
+   <script>
+const hamburger = document.getElementById("hamburger");
+const sidebar = document.getElementById("sidebar");
+hamburger.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    sidebar.classList.toggle('active');
+});
+
+sidebar.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    // sidebar.classList.remove('active');
+});
+document.addEventListener('click',(e)=>{
+    if(sidebar.classList.contains('active')){
+        sidebar.classList.remove('active');
+    }
+});
+
+// hamburger.addEventListener("click", ()=>{
+//     sidebar.classList.toggle("active");
+// });
+// sidebar.addEventListener("click",()=>{
+//     sidebar.classList.remove("active");
+// })
+</script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     {% include 'footer.html' %}
-<!--    </div>-->
-    <!-- container replaced content -->
-<!--    <header class="header-section">-->
-<!--        <div class="left-logo">-->
-<!--          <img src="/assets/image/skit_logo.png" alt="logo-avtar"/>-->
-<!--        </div>-->
-<!--        <div class="collage-name">-->
-<!--          Swami Keshvanand Institute of Technology, Management & Gramothan-->
-<!--          (SKIT)-->
-<!--        </div>-->
-<!--        <div class="user-details">-->
-<!--            <?php-->
-<!--             if (!isset($_SESSION['topLeftBar'])) { ?>-->
-<!--              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">-->
-<!--                User-->
-<!--              </button>-->
-<!--              <ul class="dropdown-menu">-->
-<!--                <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=admin">Admin</a></span></li>-->
-<!--                <li><span style = "display: flex;"><i class = "fa-solid fa-user" style = "margin-top: 7px; margin-left: 5px;"></i><a class="dropdown-item" href="/login?post=faculty">Faculty</a></span></li>-->
-<!--              </ul><?php-->
-<!--              } else if(isset($_SESSION['topLeftBar'])){ ?>-->
-<!--                <i class = "fa-regular fa-user text-white"></i>-->
-<!--                <button type="button" class="text-white dropdown-toggle" data-bs-toggle="dropdown" style = "background: #2F3E46">-->
-<!--                <?php if($_SESSION['topLeftBar'] === "admin") { echo "Admin";} else if($_SESSION['topLeftBar'] === "faculty") { echo "Faculty"; } else {unset($_SESSION['topLeftBar']);}?>-->
-<!--              </button>-->
-<!--              <ul class="dropdown-menu" style = "width: 390px; margin-top: 10px;">-->
-<!--                <link rel="stylesheet" href="/assets/css/profile.css"/>-->
-<!--                <li>-->
-<!--                <div class = "container-specific">-->
-<!--                    <?php-->
-<!--                    if (isset($_SESSION['userEmail'])) {-->
-<!--                        $email = $_SESSION['userEmail'];-->
-<!--                        $sql = "SELECT `salutation`,`name`,`designation`,`department`,`email`,`contact_number`,`address`,`profile_path` FROM `detailed_faculty_info` WHERE `detailed_faculty_info`.`email` = '" . $email . "'";-->
-<!--                        $result = mysqli_query($conn,$sql);-->
-<!--                        if(mysqli_num_rows($result) > 0) {-->
-<!--                            $row = mysqli_fetch_assoc($result);-->
-<!--                        ?>-->
-<!--                            <div class =" col-12 ms-auto d-flex">-->
-<!--                                <a href = "/sign_in_form?job=save" style = "text-decoration: none; margin-left: 15px;" class = "d-flex"><i class = "fa-solid fa-pen" style="font-size: 15px; margin-top: 5px"></i>-->
-<!--                                <h4>Edit</h4></a>-->
-<!--                            </div>-->
-<!--                            <div class="container-specific">-->
-<!--                                <a href = "/assets/php/profile_page" style="text-decoration: none;">-->
-<!--                                <div class="card-profile">-->
-<!--                                    <div class="image-card">-->
-<!--                                        <p>-->
-<!--                                            Click the card to view more details!-->
-<!--                                        </p>-->
-<!--                                        <img src=<?= $row['profile_path'];?> alt="profile-pic">-->
-<!--                                        <h2 class = "mt-3"><?= $row['salutation'] . ' ' . $row['name'] ?></h2>-->
-<!--                                    </div>-->
-<!--                                </div></a>-->
-<!--                            </div>-->
-<!--                            <?php }-->
-<!--                        } else { ?>-->
-<!--                            <div class = "container-specific h-25 bg-white text-center" style = "margin-top: 200px;">-->
-<!--                                <a href = "logout" class = "text-center">You are not authorized. Log in through Top Right dropdown.</a>-->
-<!--                            </div>-->
-<!--                            <?php-->
-<!--                        }-->
-<!--                        ?>-->
-<!--                </div></li>-->
-<!--                <li><span style = "display: flex;"><i class = "fa-solid fa-right-from-bracket" style = "margin-top: 11px; margin-left: 15px;"></i><a class="dropdown-item" href="/assets/php/logout" style = "padding-left: 5px;">Logout</a></span></li>-->
-<!--              </ul> <?php-->
-<!--              }-->
-<!--            ?>-->
-<!--        </div>-->
 
-<!--      </header>-->
-      <!-- main section -->
-<!--      <div class="content-box">-->
-
-<!--          <input type="checkbox" id="check" class="che_box" style="display: none"/>-->
-
-<!--          <div class="btn_one">-->
-<!--              <label for="check">-->
-<!--                  <i class="fa-solid fa-bars" style = "margin-top: 235px; margin-left: 10px"></i>-->
-<!--              </label>-->
-<!--          </div>-->
-
-<!--          <div class="btn_two">-->
-<!--              <label for="check">-->
-<!--                  <i class="fa-solid fa-bars" style = "margin-top: 235px; margin-left: 10px"></i>-->
-<!--              </label>-->
-<!--          </div>-->
 
 

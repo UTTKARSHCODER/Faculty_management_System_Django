@@ -16,33 +16,115 @@
         color: gray;
     }
 </style>
-<div class="col">
-    <div class="container-fluid mt-3 h-100">
-        <div class="card p-3 " style = "width: 60%;">
-            <div class="d-flex">
-                <div class="card-image-custom ms-2">
-                    <img src = "/static/skit_logo.png">
+
+    <div class="container-fluid mt-3 mb-3 ml-3 mr-3 px-3">
+        <div class="card p-3 p-md-4 w-100" style="max-width: 100%;">
+
+            <!-- Top Sectio- Image + Info -->
+            <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start gap-3">
+                <div class="flex-shrink-0 text-center">
+                    <img src="/media/{{data.profile_picture}}"
+                         alt="Profile Picture"
+                         class="rounded"
+                         style="height: 150px; width: 130px; object-fit: cover;">
                 </div>
-                <div class="card-body1-custom ms-5 mb-2">
-                    <h1><strong>{{data.name}}</strong></h1>
-                    <h5 style = "color: gray; font-size: 18px;">{{data.get_department_display}}, {{data.get_designation_display}}</h5>
-                    <button class = "btn text-white mt-3" style = "background-color: rgb(79 70 229);" onclick="window.location.href='{% url 'editProfile' %}';"><i class = "fa-solid fa-pen me-2"></i>Edit Profie</button>
+                <div class="text-center text-sm-start">
+                    <h2 class="fw-bold mb-1">{{data.name}}</h2>
+                    <p class="text-muted mb-1" style="font-size: 16px;">
+                        {{data.get_department_display}}
+                    </p>
+                        {{data.get_designation_display}}
+                        <br>
+
+                    <button class="btn text-white px-4 mt-3"
+                            style="background-color: rgb(79 70 229);"
+                            onclick="window.location.href='{% url 'editProfile' %}';">
+                        <i class="fa-solid fa-pen me-2"></i>Edit Profile
+                    </button>
                 </div>
             </div>
-            <div class="card-body">
-                <h5 class = "small-font mt-3"><i data-lucide="mail" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{data.email}}</h5>
-                <h5 class = "small-font mt-3"><i data-lucide="phone" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>{{data.contact_number}}</h5>
-                <h5 class = "small-font mt-3"><i data-lucide="map-pin" style="color: blue; width: 16px; height: 16px;" class = "me-2"></i>Address</h5>
-                <p class = "small font mt-3" style="margin-bottom: 0px;">Specilization</p>
-                <h5 style="font-size: 15px;"><strong>{{data.get_aos_display}}</strong></h5>
-                <p class = "small font mt-3" style="margin-bottom: 0px;">Highest Qualification</p>
-                <h5 style="font-size: 15px;"><strong>{{data.get_hq_display}}</strong></h5>
-                <p class = "small font mt-3" style="margin-bottom: 0px;">Publications</p>
-                <h5 style="font-size: 15px;"><strong>{{data.norp}}</strong></h5>
+</div>
+</div>
+<!-- Contact Info  -->
+<div class="col-12">
+    <div class="container-fluid mt-3 mb-3 px-3">
+        <div class="card p-3 p-md-4 w-100" style="max-width: 100%;">
+                    <h4 class="fw-bold mb-1">Contact Information</h4>
+            <hr class="my-3">
+
+            <!-- Contact Info -->
+            <div class="mb-2">
+                <p class="mb-2">
+                    <i data-lucide="mail" style="color:blue;width:16px;height:16px;" class="me-2"></i>
+                    {{data.email}}
+                </p>
+                <p class="mb-2">
+                    <i data-lucide="phone" style="color:blue;width:16px;height:16px;" class="me-2"></i>
+                    {{data.contact_number}}
+                </p>
+                <p class="mb-2">
+                    <i data-lucide="map-pin" style="color:blue;width:16px;height:16px;" class="me-2"></i>
+                    {{data.address}}
+                </p>
             </div>
         </div>
+
+  <!-- Academic Profiles -->
+
+  <div class="col-12">
+    <div class="container-fluid  mt-3 mb-3 px-0">
+        <div class="card p-3 p-md-4 w-100" style="max-width: 100%;">
+          <h4 class="fw-bold mb-1">Qualifications & Academic Profiles</h4>
+            <hr class="my-3">
+
+            <!-- Details Grid -->
+            <div class="row g-3">
+                <div class="col-12 col-sm-6">
+                    <p class="mb-1 fw-bold">Specialization</p>
+                    <p class="text-muted small mb-0">{{data.get_aos_display}}</p>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <p class="mb-1 fw-bold">Google Scholar</p>
+                    <p class="small mb-0">
+                        {% if data.google_scholar != "NULL" %}
+                            <a href="{{data.google_scholar}}" target="_blank">Click Here</a>
+                        {% else %}
+                            <span class="text-muted">Not Uploaded Yet</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <p class="mb-1 fw-bold">Highest Qualification</p>
+                    <p class="text-muted small mb-0">{{data.get_hq_display}}</p>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <p class="mb-1 fw-bold">Vidwan Profile</p>
+                    <p class="small mb-0">
+                        {% if data.vidwan_profile != "NULL" %}
+                            <a href="{{data.vidwan_profile}}" target="_blank">Click Here</a>
+                        {% else %}
+                            <span class="text-muted">Not Uploaded Yet</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <p class="mb-1 fw-bold">Publications</p>
+                    <p class="text-muted small mb-0">{{data.norp}}</p>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <p class="mb-1 fw-bold">Website Link</p>
+                    <p class="small mb-0">
+                        {% if data.personal_website_link is not None %}
+                            <a href="{{data.personal_website_link}}" target="_blank">Click Here</a>
+                        {% else %}
+                            <span class="text-muted">Not Uploaded Yet</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
 
 
 {% endblock %}

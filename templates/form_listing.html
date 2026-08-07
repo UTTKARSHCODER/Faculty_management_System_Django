@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+.container-custom {
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* PRIMARY CARD */
+.primary-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 2px solid var(--card-color);
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.primary-header {
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: var(--card-color);
+}
+
+.primary-header h5 {
+    margin: 0;
+    font-weight: 550;
+}
+
+.primary-header small {
+    display: block;
+    margin-top: 4px;
+    color: #64748b;
+}
+
+/* GRID ACCORDION (NO HEIGHT BUGS) */
+.primary-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+}
+
+.primary-card.open .primary-body {
+    grid-template-rows: 1fr;
+}
+
+.primary-body > div {
+    overflow: hidden;
+}
+
+/* INNER CONTENT */
+.inner-content {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #fafafa;
+}
+
+/* SUB ROW */
+.sub-row {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.sub-header {
+    padding: 12px 20px;
+    font-weight: 550;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* SUB ACCORDION */
+.entry-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+}
+
+.sub-row.open .entry-wrapper {
+    grid-template-rows: 1fr;
+}
+
+.entry-wrapper > div {
+    overflow: hidden;
+}
+
+.entry-padding {
+    padding: 0 20px 15px;
+}
+
+.entry-item {
+    padding: 10px 14px;
+    margin-top: 6px;
+    border-left: 4px solid var(--card-color);
+    border-radius: 6px;
+    background: #fff;
+    font-size: 0.9rem;
+}
+
+.rotate {
+    transition: transform 0.3s ease;
+}
+
+.primary-card.open .rotate,
+.sub-row.open .rotate {
+    transform: rotate(180deg);
+}
+
+.bg-indigo-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(224 231 255 / var(--tw-bg-opacity));
+}
+.rounded-full {
+    border-radius: 9999px;
+}
+.justify-center {
+    justify-content: center;
+}
+.items-center {
+    align-items: center;
+}
+.w-12 {
+    width: 3rem;
+}
+.h-12 {
+    height: 3rem;
+}
+.flex {
+    display: flex;
+}
+</style>
+
+<div class="container-custom" id="app" style=" margin-top: 1rem;"></div>
+
+{{ nts|json_script:"my-data-nts" }}
+{{ fdp1|json_script:"my-data-fdp1" }}
+{{ msc1|json_script:"my-data-msc1" }}
+{{ eod1|json_script:"my-data-eod1" }}
+{{ faa1|json_script:"my-data-faa1" }}
+{{ sgc1|json_script:"my-data-sgc1" }}
+{{ rpj1|json_script:"my-data-rpj1" }}
+{{ rpcp1|json_script:"my-data-rpcp1" }}
+{{ rpb1|json_script:"my-data-rpb1" }}
+{{ patents1|json_script:"my-data-patents1" }}
+{{ mp1|json_script:"my-data-mp1" }}
+{{ rp1|json_script:"my-data-rp1" }}
+{{ form_type|json_script:"my-data-formtype" }}
+
+<script src = "{% static 'form_listing.js' %}"></script>
+<!-- The Delete Modal -->
+<div class="modal fade" id="deleteUser">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title text-white">Delete Entry Permanently</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+          <!-- Modal body -->
+            <div class="modal-body">
+                Are you sure you want to delete <strong><span id = "modal-head-main"></span></strong> entry permanently?
+            </div>
+
+          <!-- Modal footer -->
+            <div class="modal-footer">
+                <form id="deleteForm" method="POST">
+                    {% csrf_token %}
+                    <div class="dflex justify-content-end">
+                        <input type = "hidden" id="pk" name = "pk" value = "">
+                        <input type = "hidden" id="form_no" name = "form_no" value = "">
+                        <input type = "hidden" name = "next" value = "{{ request.path }}">
+                        <button type="button" class = "btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Delete Entry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Model Ends -->
+<script>
+    $(document).ready(function() {
+        $('#deleteUser').on('show.bs.modal', function(event) {
+            const link = $(event.relatedTarget);
+            const pk = link.data('pk');
+            const form_no = link.data('form_no');
+            const main_value = link.data('deleteEntryName');
+            console.log(main_value);
+            const modal = $(this);
+            modal.find('#modal-head-main').text(main_value);
+            modal.find('#pk').val(pk);
+            modal.find('#form_no').val(form_no);
+            modal.find('#deleteForm').attr('action', '/deleteformdata');
+        });
+    });
+</script>
+
+{% endblock %}

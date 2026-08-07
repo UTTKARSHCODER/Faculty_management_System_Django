@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <style>
+    :root{
+      --glass-bg: rgba(255,255,255,0.08);
+      --glass-border: rgba(255,255,255,0.20);
+      --shadow: 0 10px 20px rgba(0,0,0,0.15);
+      --text-primary: #ffffff;
+      --text-muted: #e9e9f3;
+      --accent: #ffd166;
+    }
+
+    html, body {
+      height: 100%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: var(--text-primary);
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Glassmorphism card */
+    .card-glass {
+      backdrop-filter: blur(10px);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      border-radius: 12px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .logo-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .code-404 {
+      font-size: clamp(54px, 8vw, 120px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      color: #fff;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .lead {
+      color: var(--text-muted);
+    }
+
+    .btn-gradient {
+      background: linear-gradient(135deg, #06d6a0, #118ab2);
+      color: #fff;
+      border: none;
+    }
+    .btn-gradient:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn-outline-glass {
+      color: #fff;
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.06);
+    }
+    .btn-outline-glass:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .link-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+  </style>
+<div class="container min-vh-100 d-flex flex-column">
+    <!-- Can be used for method not allowed -->
+    <!-- Top bar -->
+    <div class="d-flex justify-content-between align-items-center py-3">
+      <a href="/dashboard" class="logo">
+        <span class="logo-dot"></span>
+        <span>Faculty Information Portal</span>
+      </a>
+      <span class="status-pill">
+        404 • Not found / Broken link
+      </span>
+    </div>
+
+    <!-- Center card -->
+    <section class="row flex-grow-1 align-items-center justify-content-center">
+      <div class="col-12 col-md-8">
+        <div class="card-glass p-4 p-md-5 text-center">
+          <div class="code-404">404</div>
+          <h1 class="mt-3 mb-2">Oops!</h1>
+          <p class="lead mb-4">
+            The link you followed may be broken, outdated, method won't be allowed or the page has been removed.
+          </p>
+
+          <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+            <a href="/" class="btn btn-gradient btn-lg px-4">Back to home</a>
+            <a href="mailto:d68930637@gmail.com" class="btn btn-outline-glass btn-lg px-4">Report this link</a>
+          </div>
+        </div>
+
+        <p class="text-center mt-3" style="color: var(--text-muted);">
+          If you typed the address by hand, double‑check your spelling.
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4 text-center" style="color: var(--text-muted);">
+      © <span id="year"></span> SKIT • Jaipur, Rajasthan
+    </footer>
+</div>
+
+
+{% endblock %}

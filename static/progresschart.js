@@ -1,22 +1,16 @@
 //Sample data
+const data = JSON.parse(document.getElementById(`my-data-form_wise_count`).textContent);
 const dataMap = {
-  fp: [9, 5, 1, 3],
-  msc: [7, 3, 2, 3],
-  eod: [10, 7, 3, 9],
-  faa: [10, 7, 3, 9],
-  sgc: [10, 7, 3, 9],
-  rpj: [10, 7, 3, 9],
-  rpcp: [10, 7, 3, 9],
-  rpb: [10, 7, 3, 9],
-  patents: [10, 7, 3, 9],
-  mp: [10, 7, 3, 9],
-  rp: [10, 7, 3, 9]
+  cum: []
 };
-//Sample Labels
-const label = {
-  fp: ["FDP", "Workshop", "Conference", "Sttp", "Seminar", "Webinar", "Lecture Series", "Symposium", "Other"]
-};
-
+dataMap.cum = data;
+const color = {
+    cum: ['rgba(44, 160, 44, 0.7)','rgba(188, 189, 34, 0.7)','rgba(214, 39, 40, 0.7)',
+    'rgba(23, 190, 207, 0.7)','rgba(255, 127, 14, 0.7)','rgba(106, 90, 205, 0.7)',
+    'rgba(72, 61, 139, 0.7)','rgba(123, 104, 238, 0.7)','rgba(255, 215, 0, 0.7)'
+    ,'rgba(173, 255, 47, 0.7)','rgba(255, 140, 0, 0.7)']
+}
+const label = []
 const categoryColors = {
     // Education & Academic Degrees (Blues)
     'mp': 'rgba(44, 127, 184, 0.7)',
@@ -42,6 +36,7 @@ const categoryColors = {
     'SYM': 'rgba(255, 152, 150, 0.7)',
     'WEB': 'rgba(140, 86, 75, 0.7)',
     'CON': 'rgba(196, 156, 148, 0.7)',
+    'NTS': 'rgba(127, 127, 127, 0.7)',
 
     // Technical & Professional (Yellows/Teals)
     'MOOC': 'rgba(188, 189, 34, 0.7)',
@@ -71,45 +66,37 @@ const categoryColors = {
     'DEFAULT': 'rgba(210, 210, 210, 0.7)'
 };
 
-const ctx = document.getElementById('pieChart').getContext('2d');
-
-//let pieChart = new Chart(ctx, {
-//  type: 'pie',
-//  data: {
-//    labels: ['Done', 'Due', 'Partial', 'Incomplete'],
-//    datasets: [{
-//      data: dataMap.forms,
-//      backgroundColor: ['#4CAF50', '#FFC107', '#DC143C', '#FF7F50'],
-//      borderWidth: 1,
-//      borderColor: '#fff'
-//    }]
-//  },
-//  options: {
-//    responsive: true,
-//    maintainAspectRatio: false,
-//    plugins: {
-//      legend: { position: 'top' },
-//      title: { display: true, text: 'Activity Progress' }
-//    }
-//  }
-//});
-
+const ctx = document.getElementById('barChart').getContext('2d');
+Chart.register(ChartDataLabels);
 let barChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ["FDP", "Workshop", "Conference", "Sttp", "Seminar", "Webinar", "Lecture Series", "Symposium", "Other"],
+      labels: ["Faculty Participation", "MOOC/Short-term Course", "Events", "Faculty Awards", "Sponsored Research", "Research Publication - Journal", "Research Publication - Confernece", "Research Publication - Books", "Patents", "M.Tech/Ph.D Guided", "Resource Person"],
       datasets: [{
-        label: 'No. of Forms Filled',
-        data: dataMap.fp,
+        data: dataMap.cum,
+        borderColor: color.cum,
+        backgroundColor: color.cum,
         barThickness: 40,
         maxBarThickness: 50,
-        borderWidth: 1
+        borderWidth: 1,
+        datalabels: {
+            color: 'black',
+            anchor: 'end',
+            align: 'top'
+        }
       }]
     },
+    plugins: [ChartDataLabels],
     options: {
       scales: {
         y: {
-          beginAtZero: true
+          beginAtZero: true,
+          grace: '10%'
+        }
+      },
+      plugins: {
+        legend: {
+            display: false
         }
       }
     }
@@ -118,8 +105,11 @@ let barChart = new Chart(ctx, {
 
 document.getElementById('activityDropdown').addEventListener('change', function () {
   const selected = this.value;
-//  console.log(trim_selected);
-  const data = JSON.parse(document.getElementById(`my-data-${selected}1`).textContent);
+  if (selected === "") {
+    window.location.reload();
+  }
+  console.log(selected);
+  const data = JSON.parse(document.getElementById(`my-data-${selected}`).textContent);
   let dy_list_count = [];
   let dy_list_label = [];
   let dy_list_short_label = [];
@@ -131,26 +121,19 @@ document.getElementById('activityDropdown').addEventListener('change', function 
       });
   } else {
       dy_list_count.push(data);
-      if (selected === 'rpj') {
+      if (selected === '7_1') {
         dy_list_label.push('Research Publication - Journals');
         dy_list_short_label.push('RPJ');
-      } else if(selected === 'rpcp') {
+      } else if(selected === '7_2') {
         dy_list_label.push('Research Publication - Conference Publication');
         dy_list_short_label.push('RPCP');
-      } else if(selected === 'rpb') {
+      } else if(selected === '7_3') {
         dy_list_label.push('Research Publication - Book and Book Chapters');
         dy_list_short_label.push('RPB');
-      } else if(selected === 'patents') {
+      } else if(selected === '7_4') {
         dy_list_label.push('Patents');
         dy_list_short_label.push('PATENTS');
-      } else if(selected === 'mp') {
-        dy_list_label.push('M.Tech/Ph.D Guided');
-        dy_list_short_label.push(selected);
-      } else if(selected === 'rp') {
-        dy_list_label.push('Resource Person');
-        dy_list_short_label.push('RP');
       }
-
   }
   const target = "Other";
   const paired = dy_list_label.map((item, i) => ({ item, value: dy_list_count[i] }));
@@ -163,13 +146,13 @@ document.getElementById('activityDropdown').addEventListener('change', function 
 
   dataMap[selected] = updated_countList;
   label[selected] = updated_labelList;
-  console.log(dy_list_short_label);
   const backgroundColors = dy_list_short_label.map(item => categoryColors[item] || categoryColors['DEFAULT']);
   const borderColors = backgroundColors.map(color => color.replace('0.7', '1.0'));
 
   barChart.data.datasets[0].backgroundColor = backgroundColors;
   barChart.data.datasets[0].borderColor = borderColors;
   barChart.data.datasets[0].data = dataMap[selected];
+//  barChart.data.datasets[0].label = dy_list_label[0];
   barChart.data.labels = label[selected];
   barChart.update();
 });

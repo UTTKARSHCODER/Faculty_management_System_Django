@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-3 mb-3">
+  <h2 class="mb-4 text-center mb-5">Faculty Information Portal - FAQs</h2>
+  <div class="accordion" id="faqAccordion">
+
+    <!-- 1. -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+            <strong>How do I log in to the Faculty Portal?</strong>
+        </button>
+      </h2>
+      <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">Use your Gmail ID and password provided by the institution to log in.</div>
+      </div>
+    </div>
+
+    <!-- 2.  -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+          <strong>How can I update my profile?</strong>
+        </button>
+      </h2>
+      <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">Log in to the portal, navigate to profile tab then click on edit profile button right next to profile picture.</div>
+      </div>
+    </div>
+
+    <!-- 3. -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingThree">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+            <strong>How can I fill any FDP form?</strong>
+        </button>
+      </h2>
+      <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">Go to ‘FDP Forms’ section and select your desired FDP form. You can fill multiple FDP forms keeping your common information static which in turn reduces your time a lot.</div>
+      </div>
+    </div>
+
+      <!-- 4. -->
+     <div class="accordion-item">
+      <h2 class="accordion-header" id="headingEight">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+            <strong>How can I edit my any FDP form as a Faculty (If any data filled by me was mispelled or wrong file uploaded) ?</strong>
+        </button>
+      </h2>
+      <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">
+            <div class = "d-flex justify-content-center align-content-center">
+                <video width="640" height="360" controls>
+                  <source src="/static/edit_fdp_form.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Feedback -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingFour">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+            <strong>Is there any way where I can keep track of what all forms are filled ?</strong>
+        </button>
+      </h2>
+      <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body">Yes, Of Course! For that, there is a dedicated tab named 'Progress' Tab. Here, you can actually track which all forms are filled and which are remaining.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,1 +1,30 @@
-.venv/ 
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+firstWebsite/migrations
+media/
+
+# Environments
+.env
+
+#Offical Docs Folder
+official_docs/
+
+#staticfolder(builds automatically on production, no need at development)
+staticfiles/
+
+gitHubToken.txt
