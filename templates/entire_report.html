@@ -1,249 +1,350 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block content %}
-<link rel="stylesheet" href="/static/dataTable.css">
+{% extends 'base.html' %} {% load static %} {% block content %}
+<link rel="stylesheet" href="/static/dataTable.css" />
 <script src="/static/dataTables.js"></script>
 <script src="/static/dataTables.bootstrap5.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.bootstrap5.min.css">
+<link
+  rel="stylesheet"
+  href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.bootstrap5.min.css"
+/>
 <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js" integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"
+  integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
 <style>
-     th {
-        white-space: nowrap;
-     }
-    .tab-hidden {
-        visibility: hidden !important;
-        position: absolute !important;
-        top: -9999px !important;
-        left: -9999px !important;
-        display: block !important; /* Keep it 'block' so width is calculated */
-    }
+  th {
+    white-space: nowrap;
+  }
+  .tab-hidden {
+    visibility: hidden !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    display: block !important; /* Keep it 'block' so width is calculated */
+  }
 
-    @media (min-width: 1100px) {
+  @media (min-width: 1100px) {
     #pieChart {
-        width: 400px !important;
-        height: 440px !important;
+      width: 440px !important;
+      height: 410px !important;
     }
     .nav-link.active {
-        background-color: #003366 !important;
-        color: #ffffff !important;
+      background-color: #003366 !important;
+      color: #ffffff !important;
     }
     .nav-link {
-        border: 0.5px solid lightgray !important;
+      border: 0.5px solid lightgray !important;
     }
-}
-  
-@media (max-width: 1100px) {
-    .container.ms-5 {
-        margin-left: 0.5rem !important;
-        margin-right: 0.5rem !important;
-        
-    }
+  }
 
-    
+  @media (max-width: 1100px) {
+    .container.ms-5 {
+      margin-left: 0.5rem !important;
+      margin-right: 0.5rem !important;
+    }
 
     .row.g-3 {
-        flex-direction: column !important;
+      flex-direction: column !important;
     }
 
     .row.g-3 > [class*="col-"] {
-        width: 100% !important;
-        max-width: 100% !important;
-        flex: 0 0 100% !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: 0 0 100% !important;
     }
 
     #pieChart {
-        width: 300px !important;
-        height: 300px !important;
-        display: block;
-        margin: 0 auto;
+      width: 300px !important;
+      height: 300px !important;
+      display: block;
+      margin: 0 auto;
     }
 
     .chart-container {
-        width: 100%;
-        display: flex;
-        justify-content: center;
+      width: 100%;
+      display: flex;
+      justify-content: center;
     }
-    
 
     .total_count {
-        text-align: center;
+      text-align: center;
     }
-}
-
+  }
 </style>
 <div class="container ms-2 mt-4 mb-3">
-    <div class="row g-3">
-        <!-- ye left wale section ka code hai  -->
-        <div class=" container col-12 col-md-7">
-            <div class="container">
-                <ul class="nav nav-tabs" role="tablist">
-                    {% for form_no, form_name in form_to_show %}
-                        {% if forloop.first %}
-                        <li><button class="nav-link active" id="{{ form_no }}" onclick="openTab('{{ form_no }}')">{{ form_no }} {{ form_name }}</button></li>
-                        {% else %}
-                        <li><button class="nav-link" id="{{form_no}}" onclick="openTab('{{ form_no }}')">{{ form_no }} {{ form_name }}</button></li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
+  <div class="row g-3">
+    <!-- ye top wale section ka code hai  -->
+    <div class="container col-12 col-md-7">
+      <div class="container" style="width: 175%">
+        <ul class="nav nav-tabs" role="tablist">
+          {% for form_no, form_name in form_to_show %} {% if forloop.first %}
+          <li>
+            <button
+              class="nav-link active"
+              id="{{ form_no }}"
+              onclick="openTab('{{ form_no }}')"
+            >
+              {{ form_no }} {{ form_name }}
+            </button>
+          </li>
+          {% else %}
+          <li>
+            <button
+              class="nav-link"
+              id="{{form_no}}"
+              onclick="openTab('{{ form_no }}')"
+            >
+              {{ form_no }} {{ form_name }}
+            </button>
+          </li>
+          {% endif %} {% endfor %}
+        </ul>
+      </div>
 
-            <!-- Dynamic Table rendering -->
-            <div class="tab-content table-responsive pt-2" id="dynamic_table"></div>
+      <!-- filter options -->
 
-            <div class = "mt-3" id = "filter">
-                <h5 style = "color: gray; text-align: center;">Select the filter:</h5>
-                <div class = "d-flex justify-content-center" id = "checkBoxGroup"></div>
+      <!-- Advance Filter trigger button -->
+<button type="button" style="margin-top: 1rem; margin-left: 36rem;" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#advanceFilterModal">
+    <i class="fa-solid fa-filter"></i> Advance Filter
+</button>
+
+<!-- Advance Filter Modal -->
+<div class="modal fade" id="advanceFilterModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Advance Filter</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="d-flex justify-content-center mx-3">
-                <div class="dropdown">
-                    <button class="btn btn-success dropdown-toggle" id="download-button" data-bs-toggle="dropdown" disabled>Download Filtered Data</button>
-                    <ul class="dropdown-menu">
-                        <!-- href = "/download?file_type=fdc_dir_data&{% for form_no in form_alloted_data_list %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}" -->
-                        <li id="excel"><a class="dropdown-item" id="excel-download" href = "/download?file_type=fdc_dir_data_excel_filtered">Excel</a></li>
-                        <li id="csv-download"><a class="dropdown-item" href="/download?file_type=fdc_dir_data_csv_filtered">CSV</a>
-                        </li>
-                    </ul>
+            <div class="modal-body">
+                
+                <div class="row g-3" id="filterFieldsContainer">
+                    <!-- filled dynamically per tab by buildTableFilters() -->
                 </div>
-                <div class="dropdown ms-3">
-                    <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Download MasterSheet</button>
-                    <ul class="dropdown-menu">
-                        <li id="excel-full"><a class="dropdown-item" id="excel-download-full" href = "/download?file_type=fdc_dir_data_excel_full&{% for form_no in form_alloted_data_list %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}">Excel</a></li>
-                        <li id="csv-download-full"><a class="dropdown-item" href="/download?file_type=fdc_dir_data_csv_full">CSV</a>
-                        </li>
-                    </ul>
-                </div>
+                <div class="d-flex justify-content-center" id="checkBoxGroup"></div>
             </div>
-        </div>
-        <!-- ye chart ka hai  -->
-        <!-- <div class="vr mx-3" style="width: 1px;"></div> -->
-        <div class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-center">
-            <div class="chart-container">
-                <canvas id="pieChart" ></canvas>
-            </div>
-            <div class="total_count mt-2">
-                <h5 id="total_count"></h5>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" id="clearFilterBtn" onclick="clearTableFilters()">Clear Filters</button>
+                <button class="btn btn-primary" id="applyFilterBtn" onclick="applyTableFiltersAndClose()">Apply Filter</button>
             </div>
         </div>
     </div>
+</div>
+      
+      <!-- Dynamic Table rendering -->
+      <div class="tab-content table-responsive pt-2" id="dynamic_table"></div>
 
+      <div class="d-flex justify-content-center mx-3">
+        <div class="dropdown">
+          <button
+            class="btn btn-success dropdown-toggle"
+            id="download-button"
+            data-bs-toggle="dropdown"
+            disabled
+          >
+            Download Filtered Data
+          </button>
+          <ul class="dropdown-menu">
+            <!-- href = "/download?file_type=fdc_dir_data&{% for form_no in form_alloted_data_list %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}" -->
+            <li id="excel">
+              <a
+                class="dropdown-item"
+                id="excel-download"
+                href="/download?file_type=fdc_dir_data_excel_filtered"
+                >Excel</a
+              >
+            </li>
+            <li id="csv-download">
+              <a
+                class="dropdown-item"
+                href="/download?file_type=fdc_dir_data_csv_filtered"
+                >CSV</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="dropdown ms-3">
+          <button
+            class="btn btn-primary dropdown-toggle"
+            data-bs-toggle="dropdown"
+          >
+            Download MasterSheet
+          </button>
+          <ul class="dropdown-menu">
+            <li id="excel-full">
+              <a
+                class="dropdown-item"
+                id="excel-download-full"
+                href="/download?file_type=fdc_dir_data_excel_full&{% for form_no in form_alloted_data_list %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}"
+                >Excel</a
+              >
+            </li>
+            <li id="csv-download-full">
+              <a
+                class="dropdown-item"
+                href="/download?file_type=fdc_dir_data_csv_full"
+                >CSV</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- ye chart ka hai  -->
+    <!-- <div class="vr mx-3" style="width: 1px;"></div> -->
+    <div
+      class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-center"
+      style="margin-top: 6rem; padding: 2rem;" 
+    >
+      <div class="chart-container">
+        <canvas id="pieChart" class="mt-1"></canvas>
+      </div>
+      <div class="total_count mt-2">
+        <h5 id="total_count"></h5>
+      </div>
+    </div>
+  </div>
 </div>
 <!-- The Delete Modal -->
 <div class="modal fade" id="deleteUser">
-    <div class="modal-dialog">
-        <div class="modal-content">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header bg-danger">
+        <h4 class="modal-title text-white">Delete Entry Permanently</h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
 
-            <!-- Modal Header -->
-            <div class="modal-header bg-danger">
-                <h4 class="modal-title text-white">Delete Entry Permanently</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        Are you sure you want to delete this entry permanently?
+        <p class="mt-2">
+          <strong>Employee Id:</strong> <span id="modal-emp-id"></span>
+        </p>
+        <p>
+          <strong><span id="modal-head-main"></span>:</strong>
+          <span id="modal-entry-main"></span>
+        </p>
+        <p>
+          <strong><span id="modal-sub-head"></span>:</strong>
+          <span id="modal-sub-entry"></span>
+        </p>
+      </div>
 
-          <!-- Modal body -->
-            <div class="modal-body">
-                Are you sure you want to delete this entry permanently?
-                <p class ="mt-2"><strong>Employee Id:</strong> <span id = "modal-emp-id"></span></p>
-                <p><strong><span id = "modal-head-main"></span>:</strong> <span id = "modal-entry-main"></span></p>
-                <p><strong><span id = "modal-sub-head"></span>:</strong> <span id = "modal-sub-entry"></span></p>
-            </div>
-
-          <!-- Modal footer -->
-            <div class="modal-footer">
-                <form id="deleteForm" method="POST">
-                    {% csrf_token %}
-                    <div class="dflex justify-content-end">
-                        <input type = "hidden" id="pk" name = "pk" value = "">
-                        <input type = "hidden" id="form_no" name = "form_no" value = "">
-                        <input type = "hidden" id="tab_no" name = "tab_no" value = "">
-                        <input type = "hidden" name = "next" value = "{{ request.path }}">
-                        <button type="button" class = "btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Delete Entry</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <form id="deleteForm" method="POST">
+          {% csrf_token %}
+          <div class="dflex justify-content-end">
+            <input type="hidden" id="pk" name="pk" value="" />
+            <input type="hidden" id="form_no" name="form_no" value="" />
+            <input type="hidden" id="tab_no" name="tab_no" value="" />
+            <input type="hidden" name="next" value="{{ request.path }}" />
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="submit"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Delete Entry
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 <!-- Delete Model Ends -->
 <!-- Data from backend converted to JSON for security reasons -->
-{{ form_alloted_data_list|json_script:"data-form-alloted" }}
-{{ first_tab_data|json_script:"data-first-form" }}
+{{ form_alloted_data_list|json_script:"data-form-alloted" }} 
+{{first_tab_data|json_script:"data-first-form" }}
 
 <script src="{% static 'reportChart.js' %}"></script>
 <script src="{% static 'dynamic_form_rendering.js' %}"></script>
 <script>
 
-    const form_numbers_list = JSON.parse(document.getElementById('data-form-alloted').textContent);
-    // To find out which form is the first one, assigned to different admins
-    if (form_numbers_list.length > 0) {
-        const f_value = form_numbers_list[0];
-        const data = JSON.parse(document.getElementById(`data-first-form`).textContent);
-        drawChart(data);
-        openTab(form_numbers_list[0]);
-    }
+      const form_numbers_list = JSON.parse(document.getElementById('data-form-alloted').textContent);
+      // To find out which form is the first one, assigned to different admins
+      if (form_numbers_list.length > 0) {
+          const f_value = form_numbers_list[0];
+          const data = JSON.parse(document.getElementById(`data-first-form`).textContent);
+          drawChart(data);
+          openTab(form_numbers_list[0]);
+      }
 
-    /* Update data of deletion modal */
-    $(document).ready(function() {
-        $('#deleteUser').on('show.bs.modal', function(event) {
-            const link = $(event.relatedTarget);
-            const faculty_id = link.data('empId');
-            const pk = link.data('pk');
-            const form_no = link.data('form_no');
-            const heading_main = link.data('headMain');
-            const heading_main_entry = link.data('headMainEntry');
-            const heading_sub_head = link.data('subHead');
-            const heading_sub_head_entry = link.data('subHeadEntry');
-            const modal = $(this);
-            modal.find('#modal-emp-id').text(faculty_id);
-            modal.find('#modal-head-main').text(heading_main);
-            modal.find('#modal-entry-main').text(heading_main_entry);
-            modal.find('#modal-sub-head').text(heading_sub_head);
-            modal.find('#modal-sub-entry').text(heading_sub_head_entry);
-            modal.find('#pk').val(pk);
-            modal.find('#form_no').val(form_no);
-            modal.find('#tab_no').val(form_no);
-            modal.find('#deleteForm').attr('action', '/deleteformdata');
-        });
-    });
+      /* Update data of deletion modal */
+      $(document).ready(function() {
+          $('#deleteUser').on('show.bs.modal', function(event) {
+              const link = $(event.relatedTarget);
+              const faculty_id = link.data('empId');
+              const pk = link.data('pk');
+              const form_no = link.data('form_no');
+              const heading_main = link.data('headMain');
+              const heading_main_entry = link.data('headMainEntry');
+              const heading_sub_head = link.data('subHead');
+              const heading_sub_head_entry = link.data('subHeadEntry');
+              const modal = $(this);
+              modal.find('#modal-emp-id').text(faculty_id);
+              modal.find('#modal-head-main').text(heading_main);
+              modal.find('#modal-entry-main').text(heading_main_entry);
+              modal.find('#modal-sub-head').text(heading_sub_head);
+              modal.find('#modal-sub-entry').text(heading_sub_head_entry);
+              modal.find('#pk').val(pk);
+              modal.find('#form_no').val(form_no);
+              modal.find('#tab_no').val(form_no);
+              modal.find('#deleteForm').attr('action', '/deleteformdata');
+          });
+      });
 
-    fixLastColumn(form_numbers_list[0]);
-    /* To set the landing page same as current tab after deletion of any entry -starts- */
-    document.addEventListener('DOMContentLoaded', function() {
-        // 1. Get the ID from the URL
-        const params = new URLSearchParams(window.location.search);
-        const button_form_no = params.get('tab');
+      fixLastColumn(form_numbers_list[0]);
+      /* To set the landing page same as current tab after deletion of any entry -starts- */
+      document.addEventListener('DOMContentLoaded', function() {
+          // 1. Get the ID from the URL
+          const params = new URLSearchParams(window.location.search);
+          const button_form_no = params.get('tab');
 
-        if (button_form_no) {
-            // 2. Find the button that matches this ID
-            const targetButton = document.getElementById(button_form_no);
+          if (button_form_no) {
+              // 2. Find the button that matches this ID
+              const targetButton = document.getElementById(button_form_no);
 
-            // 3. If the button exists on the page, natively click it
-            if (targetButton) {
-                targetButton.click(); // This automatically sends the 'event' to openTab!
-            } else {
-                console.warn("Tab with ID " + button_form_no + " not found.");
-            }
-        }
-    });
-    /* To set the landing page same as current tab after deletion of any entry -ends- */
-    {#const slowResources = performance.getEntriesByType("resource")#}
-    {#.filter(res => res.duration > 500); // Finds anything taking longer than 0.5s#}
-    {##}
-    {#console.table(slowResources.map(res => ({#}
-    {#    Name: res.name,#}
-    {#    Duration: res.duration.toFixed(2) + " ms"#}
-    //)));
-    {#(index)#}
-{#Name#}
-{#Duration#}
-{#0	'https://unpkg.com/lucide@latest'	'568.20 ms'#}
-{#1	'https://cdn.jsdelivr.net/npm/chart.js'	'580.50 ms'#}
-{#2	'https://cdnjs.cloudflare.com/ajax/libs/chartjs-plu…datalabels/2.2.0/chartjs-plugin-datalabels.min.js'	'578.20 ms'#}
-{#3	'http://127.0.0.1:8000/static/reportChart.js'	'579.50 ms'#}
-{#4	'http://127.0.0.1:8000/static/dynamic_message.js'	'600.30 ms'#}
-{#5	'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'	'708.80 ms'#}
+              // 3. If the button exists on the page, natively click it
+              if (targetButton) {
+                  targetButton.click(); // This automatically sends the 'event' to openTab!
+              } else {
+                  console.warn("Tab with ID " + button_form_no + " not found.");
+              }
+          }
+      });
+      /* To set the landing page same as current tab after deletion of any entry -ends- */
+      {#const slowResources = performance.getEntriesByType("resource")#}
+      {#.filter(res => res.duration > 500); // Finds anything taking longer than 0.5s#}
+      {##}
+      {#console.table(slowResources.map(res => ({#}
+      {#    Name: res.name,#}
+      {#    Duration: res.duration.toFixed(2) + " ms"#}
+      //)));
+      {#(index)#}
+  {#Name#}
+  {#Duration#}
+  {#0	'https://unpkg.com/lucide@latest'	'568.20 ms'#}
+  {#1	'https://cdn.jsdelivr.net/npm/chart.js'	'580.50 ms'#}
+  {#2	'https://cdnjs.cloudflare.com/ajax/libs/chartjs-plu…datalabels/2.2.0/chartjs-plugin-datalabels.min.js'	'578.20 ms'#}
+  {#3	'http://127.0.0.1:8000/static/reportChart.js'	'579.50 ms'#}
+  {#4	'http://127.0.0.1:8000/static/dynamic_message.js'	'600.30 ms'#}
+  {#5	'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'	'708.80 ms'#}
 </script>
 
 {% endblock %}

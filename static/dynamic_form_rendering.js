@@ -35,16 +35,28 @@ const noDataAvailableTableStructure = `
 let table = new DataTable(`#tb_empty`, {
     paging: false,
     scrollY: '260px',
-    scrollX: true
+    scrollX: true,
+    dom: 'lrtip',
+    language: {
+        emptyTable: "No Data Available",
+        zeroRecords: "No Data Found For The Selected Filters"
+    }
+    // searching: false
 });
 function updateTable(values, table_id) {
     const table_to_update = document.getElementById('dynamic_table');
     if (table_id === 'empty-table') {
-        table_to_update.innerHTML = noDataAvailableTableStructure;
+        // table_to_update.innerHTML = noDataAvailableTableStructure;
         table = new DataTable(`#empty_table`, {
             paging: false,
-            scrollY: '260px',
-            scrollX: true
+            scrollY: false,
+            scrollX: false,
+            dom: 'lrtip',
+            language: {
+                emptyTable: "No Data Available",
+                zeroRecords: "No Data Found For The Selected Filters"
+            }
+            // searching: false
         });
         return;
     }
@@ -138,7 +150,13 @@ function updateTable(values, table_id) {
     table = new DataTable(`#tb_${table_id}`, {
         paging: false,
         scrollY: '260px',
-        scrollX: true
+        scrollX: true,
+        dom: 'lrtip',
+        language: {
+            emptyTable: "No Data Available",
+            zeroRecords: "No Data Found For The Selected Filters"
+        }
+        // searching: false
     });
 }
 
@@ -180,6 +198,11 @@ function fixLastColumn(containerId) {
                 background-color: #fff; /* MUST be set, or text will overlap transparently */
                 box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
             }
+
+            table.dataTable tbody tr.dataTables_empty td {
+                text-align: left !important;
+                padding-left: 1rem;
+            }
         `;
             document.head.appendChild(styleTag);
         }
@@ -190,6 +213,145 @@ function fixLastColumn(containerId) {
         }
     }
 }
+
+// Maping of each nav-tabs all dropdown and text based inputs form number wise
+const TAB_FILTER_CONFIG = {
+    '1_1': {
+        text: ['Employee ID', 'Email', 'Name'],
+        dropdown: ['Department', 'Designation', 'Session']
+    },
+    '1_2': {
+        text: ['Employee ID', 'Email', 'Name'],
+        dropdown: ['Session', 'Department', 'Designation']
+    },
+    '2': {
+        text: ['Employee ID', 'Email', 'Name of Faculty Member'],
+        dropdown: ['Session', 'Department', 'Designation', 'Mode', 'Level', 'Grant Recieved from SKIT (Yes/No)']
+    },
+    '3': {
+        text: ['Employee ID', 'Email address', 'Name of Faculty Member', 'Duration of Course'],
+        dropdown: ['Session', 'Department', 'Designation', 'Certificate Type', 'Any category from below']
+    },
+    '4': {
+        text: ['Employee ID', 'Email address', 'Name of Faculty Coordinator(s)'],
+        dropdown: ['Department', 'Designation', 'Academic Session', 'Event organized for', 'Sponsored/Non Sponsored',
+                   'Grant Received(Yes/No)', ] //mapped sdg's remaining
+    },
+    '5': {
+        text: ['Employee ID', 'Email address', 'Faculty Name'],
+        dropdown: ['Session', 'Department', 'Designation']
+    },
+    '6': {
+        text: ['Employee ID', 'Email address', 'Name of Candidate (PI/Co PI)'],
+        dropdown: ['Session', 'Department', 'Designation', 'Status']
+    },
+    '7_1': {
+        text: ['Employee ID', 'Email address', 'Name of the author(s)'],
+        dropdown: ['Session', 'Department','Designation', 'Level (National/ International)', 'Indexed by',
+                   'Quartile', 'Is SKIT student associated?']
+    },
+    '7_2': {
+        text: ['Employee ID', 'Email address', 'Name of the author(s)'],
+        dropdown: ['Session', 'Department','Designation', 'Level (National/ International)', 'Is SKIT student associated?']
+    },
+    '7_3': {
+        text: ['Employee ID', 'Email address', 'Name of the author/editor'],
+        dropdown: ['Session', 'Department', 'Designation', 'Level (National/ International)', 'Is SKIT student associated?']
+    },
+    '7_4': {
+        text: ['Employee ID', 'Email address', 'Name of Faculty'],
+        dropdown: ['Session', 'Department', 'Designation', 'Status of Patent', 'Type of Patent', 'Is SKIT student associated?']
+    },
+    '8': {
+        text: ['Employee ID', 'Email address', 'Faculty Name'],
+        dropdown: ['Session', 'Department', 'Designation', 'Enrollment Year of Student', 'Supervisor / Co-supervisor']
+    },
+    '9': {
+        text: ['Employee ID', 'Email address', 'Name of Faculty Member'],
+        dropdown: ['Session', 'Department', 'Designation', 'Resource Person Type']
+    }
+};
+
+// use for building table filters
+
+function buildTableFilters(rowValues, tableId) { 
+    // console.log('called', tableId, rowValues); for debug purpose only!
+    const container = document.getElementById('filterFieldsContainer');
+    container.innerHTML = '';
+
+    const config = TAB_FILTER_CONFIG[tableId];
+    if (!config || !rowValues || rowValues.length === 0) return;
+
+    const sampleRow = rowValues[0];
+    let html = '';
+
+    (config.text || []).forEach(colKey => {
+        if (!(colKey in sampleRow)) return; // column not present for this data, skip silently
+        html += `
+            <div class="col-md-3 mb-2">
+                <label class="form-label">${colKey}</label>
+                <input type="text" class="form-control filter-input" data-column="${colKey}" placeholder="Search ${colKey}">
+            </div>`;
+    });
+
+    (config.dropdown || []).forEach(colKey => {
+        if (!(colKey in sampleRow)) return;
+        const uniqueVals = [...new Set(rowValues.map(r => r[colKey]))].filter(Boolean).sort();
+        let options = `<option value="">All</option>`;
+        uniqueVals.forEach(v => { options += `<option value="${v}">${v}</option>`; });
+        html += `
+            <div class="col-md-3 mb-2">
+                <label class="form-label">${colKey}</label>
+                <select class="form-select filter-dropdown" data-column="${colKey}">${options}</select>
+            </div>`;
+    });
+
+    container.innerHTML = html;
+}
+
+// applyinh filter to the table 
+
+function applyTableFilters() {
+    document.querySelectorAll('.filter-input').forEach(input => {
+        const col = input.dataset.column;
+        table.column(`${col}:name`).search(input.value.trim());
+    });
+
+    document.querySelectorAll('.filter-dropdown').forEach(select => {
+        const col = select.dataset.column;
+        const val = select.value;
+        if (val === '') {
+            table.column(`${col}:name`).search('');
+        } else {
+            const escaped = val.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            table.column(`${col}:name`).search(`^${escaped}$`, true, false);
+        }
+    });
+
+    table.draw(); // to print the final filtered table
+}
+
+// for modal funtioning
+
+function applyTableFiltersAndClose() {
+    applyTableFilters();
+    const modalEl = document.getElementById('advanceFilterModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    if (modalInstance) modalInstance.hide();
+}
+
+// for clearing the table filters applied earlier
+
+function clearTableFilters() {
+    document.querySelectorAll('.filter-input').forEach(input => input.value = '');
+    document.querySelectorAll('.filter-dropdown').forEach(select => select.value = '');
+    table.columns().every(function () {
+        this.search('');
+    });
+    table.draw(); // to resore the existing table view again back
+}
+
+// exising code started
 
 function openTab(containerId) {
     const targetContainerId = document.querySelector('.nav-link.active').id;
@@ -223,8 +385,9 @@ function openTab(containerId) {
     })
     .then(response=>response.json())
     .then(responseData => {
-        if(responseData.success) {
+        if (responseData.success && responseData.row_values && responseData.row_values.length > 0) {
             updateTable(responseData.row_values, containerId);
+            buildTableFilters(responseData.row_values, containerId); // for table advance filter options
             drawChart(responseData.map_data);
             filterDataToDownload();
             fixLastColumn(containerId);

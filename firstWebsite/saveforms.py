@@ -39,27 +39,27 @@ def save_all_forms(request, form_no):
 
                 lab_no = request.POST.get('lab_no').strip()
                 if not va.nameValidate(request,lab_no,"Lab Number"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 designation = request.POST.get('designation').strip()
                 if not va.nameValidate(request,designation,"Designation"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 emp_id = int(request.POST.get('emp_id') or 0)
                 if not va.numberValidate(request, emp_id, "Employee ID"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 highest_qual = request.POST.get('highest_qualification').strip()
                 if not va.nameValidate(request,highest_qual,"Highest Qualification"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 university_name = request.POST.get('univ_name').strip()
                 if not va.nameValidate(request,university_name,"University Name"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 pshd = int(request.POST.get('pshd') or 0)
                 if not va.numberValidate(request,pshd,"Passing Year of Highest Degree"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 professional_course = request.POST.getlist('professional_courses')
                 if not va.radiocheck(request,professional_course,"Professional Course"):
@@ -68,7 +68,7 @@ def save_all_forms(request, form_no):
                 pan_no = request.POST.get('pan_no').strip()
                 if not va.validate_pan(pan_no) or not pan_no:
                     messages.error(request, "Please enter a valid PAN number")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 dob = request.POST.get('dob')
                 try:
@@ -83,7 +83,7 @@ def save_all_forms(request, form_no):
 
                 except(ValueError, TypeError):
                     messages.error(request,"Please select/enter a valid date of birth.")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 joining_date = request.POST.get('jd')
                 try:
@@ -97,7 +97,7 @@ def save_all_forms(request, form_no):
 
                 except(ValueError, TypeError):
                     messages.error(request,"Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 promotion_date = request.POST.get('pd')
                 if promotion_date == '':
@@ -106,7 +106,7 @@ def save_all_forms(request, form_no):
                 if request.FILES.get('jr'):
                     joining_report = request.FILES['jr']
                     if not va.fileValidate(request,joining_report,"Joining Report"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                 else:
                     messages.error(request,"No file selected for joining report. Please select one!")
                     return redirect('all_forms',pk=form_no)
@@ -114,7 +114,7 @@ def save_all_forms(request, form_no):
                 if request.FILES.get('ol'):
                     offer_letter = request.FILES['jr']
                     if not va.fileValidate(request,offer_letter,"Offer Letter"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                 else:
                     messages.error(request,"No file selected for joining report. Please select one!")
                     return redirect('all_forms',pk=form_no)
@@ -122,7 +122,7 @@ def save_all_forms(request, form_no):
                 if request.FILES.get('hdc'):
                     higher_degree_certificate = request.FILES['hdc']
                     if not va.fileValidate(request,higher_degree_certificate,"Higher Degree Certificate"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                 else:
                     messages.error(request,"No file selected for joining report. Please select one!")
                     return redirect('all_forms',pk=form_no)
@@ -130,14 +130,14 @@ def save_all_forms(request, form_no):
                 if request.FILES.get('ss'):
                     salary_slip = request.FILES['ss']
                     if not va.fileValidate(request,salary_slip,"Salary Slip"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                 else:
                     salary_slip = None
 
                 if request.FILES.get('awards'):
                     certificate = request.FILES['awards']
                     if not va.fileValidate(request,certificate,"Co-curricular Certificate"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                 else:
                     certificate = None
 
@@ -149,31 +149,31 @@ def save_all_forms(request, form_no):
             elif form_no == 1:
                 category = request.POST.get('category').strip()
                 if not va.nameValidate(request,category,"Category"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 top = request.POST.get('top').strip()
                 if not va.nameValidate(request,top,"Title of program"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 mode = request.POST.get('optradio').strip()
                 if not va.radiocheck(request,mode,"mode"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 level = request.POST.get('optradio1').strip()
                 if not va.radiocheck(request,level,"level"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 organizer = request.POST.get('organizer').strip()
                 if not va.nameValidate(request,organizer,"Organizer"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 sponser = request.POST.get('sponser').strip()
                 if not va.nameValidate(request,sponser,"Sponser"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 approval = request.POST.get('optradio2').strip()
                 if not va.radiocheck(request,approval,"(SKIT approved)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 begi_date = request.POST.get('begi_date')
                 try:
@@ -181,12 +181,12 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                     begi_date = selected_date
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -194,12 +194,12 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                     end_date = selected_date
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 num_of_days = (end_date - begi_date).days
 
@@ -210,7 +210,7 @@ def save_all_forms(request, form_no):
                 if request.FILES.get('proof_file'):
                     proof_file_path = request.FILES['proof_file']
                     if not va.fileValidate(request,proof_file_path,"Proof File"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 obj1 = Faculty_participation_data(category=category,top=top,mode=mode,level=level,organizer=organizer,sponsors=sponser,approval=approval,begi_date=begi_date,end_date=end_date,session=session,no_of_days=num_of_days,proof_enclosed=proof_approval,proof_file=proof_file_path,email=faculty_instance)
                 obj1.save()
@@ -238,11 +238,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -250,23 +250,23 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 offer = request.POST.get('ofo').strip()
                 if not va.nameValidate(request, category, "Offering Agency/ Organizer"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 ctype = request.POST.get('optradio1').strip()
                 if not va.radiocheck(request, category, "Certificate Type"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 topper_in = request.POST.get('optradio2').strip()
                 if not va.radiocheck(request, category, "Topper Category"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 remarks = request.POST.get('remarks').strip()
 
@@ -321,11 +321,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -333,11 +333,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 gr = request.POST.get('optradio2').strip()
                 if not va.radiocheck(request,gr,"Grant Recieved"):
@@ -392,15 +392,15 @@ def save_all_forms(request, form_no):
 
                 paf = request.POST.get('paf').strip()
                 if not va.nameValidate(request, noaa, "Position / Award For"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 ao = request.POST.get('ao').strip()
                 if not va.nameValidate(request, noaa, "Agency / Organization"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 prize = request.POST.get('prize').strip()
                 if not va.nameValidate(request, noaa, "Prize"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 ad = request.POST.get('award_date')
                 try:
@@ -408,11 +408,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 remark = request.POST.get('remark').strip()
 
@@ -431,7 +431,7 @@ def save_all_forms(request, form_no):
 
                 nofa = request.POST.get('nofa').strip()
                 if not va.nameValidate(request, nofa, "Name of Funding Agency"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 dop = int(request.POST.get('dop') or 0)
                 if not va.numberValidate(request,dop,"Duration of project"):
@@ -443,7 +443,7 @@ def save_all_forms(request, form_no):
 
                 status = request.POST.get('optradio2').strip()
                 if not va.radiocheck(request, status, "Status"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
@@ -484,64 +484,64 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 isnp = request.POST.get('isnp').strip()
                 if not va.nameValidate(request, isnp, "ISSN number : Print"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 isno = request.POST.get('isno').strip()
                 if not va.nameValidate(request, isno, "ISSN number : Online"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 level = request.POST.get('optradio3').strip()
                 if not va.nameValidate(request, level, "Level (National/ International)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 doi = request.POST.get('doi').strip()
                 if not va.nameValidate(request, pn, "DOI(Digital Object Identifier)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 lwj = request.POST.get('lwj').strip()
                 if not va.nameValidate(request, lwj, "Link to website of the Journal"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 lap = request.POST.get('lap').strip()
                 if not va.nameValidate(request, lap, "Link to article/paper/ abstract of the article"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 lrsj = request.POST.get('lrsj').strip()
                 if not va.nameValidate(request, lrsj, "Link to the recognition in SCOPUS enlistment of the Journal"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 aiop = request.POST.get('aiop').strip()
                 if not va.nameValidate(request, aiop, "Affiliating Institute at the time of publication"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 ssa = request.POST.get('optradio2').strip()
                 if not va.radiocheck(request, ssa, "Is SKIT student associated"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 details = request.POST.get('details').strip()
                 if not va.nameValidate(request, details, "If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 index_by = request.POST.get('optradio1').strip()
                 if not va.radiocheck(request, index_by, "Indexed by"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 quartile = request.POST.get('optradio').strip()
                 if not va.radiocheck(request, quartile, "Quartile"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
                     if not va.fileValidate(request, proof_file, "Proof File"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 obj6 = research_journal(noa=noa,top=top,noj=noj,nop=nop,vi=vi,pn=pn,pd=pd,session=session,isnp=isnp,isno=isno,level=level,doi=doi,lwj=lwj,lap=lap,lrsj=lrsj,aiop=aiop,ssa=ssa,details=details,index_by=index_by,quartile=quartile,proof_file=proof_file,email=faculty_instance)
                 obj6.save()
@@ -549,31 +549,31 @@ def save_all_forms(request, form_no):
             elif form_no == 7:
                 noa = request.POST.get('noa').strip()
                 if not va.nameValidate(request, noa, "Name of the author(s)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 toc = request.POST.get('toc').strip()
                 if not va.nameValidate(request, toc, "Title of Conference"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 top = request.POST.get('top').strip()
                 if not va.nameValidate(request, top, "Title of Paper"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 topc = request.POST.get('topc').strip()
                 if not va.nameValidate(request, topc, "Title of the proceedings of the conference"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 level = request.POST.get('optradio3').strip()
                 if not va.nameValidate(request, level, "Level (National/ International)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 isnp = request.POST.get('isnp').strip()
                 if not va.nameValidate(request, isnp, "ISBN/ISSN number of the proceeding"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 nop = request.POST.get('nop').strip()
                 if not va.nameValidate(request, nop, "Name of the Publisher"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 pd = request.POST.get('begi_date')
                 try:
@@ -581,40 +581,40 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 doi = request.POST.get('doi').strip()
                 if not va.nameValidate(request, doi, "DOI(Digital Object Identifier)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 lwj = request.POST.get('lwj').strip()
                 if not va.nameValidate(request, lwj, "Link to website of the Journal"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 aitp = request.POST.get('aitp').strip()
                 if not va.nameValidate(request, aitp, "Affiliating Institute at the time of publication"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 ssa = request.POST.get('optradio2').strip()
                 if not va.radiocheck(request, ssa, "Is SKIT student associated"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 details = request.POST.get('details').strip()
                 if not va.nameValidate(request, details, "If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 index_by = request.POST.get('index_by').strip()
                 if not va.nameValidate(request, index_by, "Indexed by"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
                     if not va.fileValidate(request, proof_file, "Proof File"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 obj7 = research_conference(noa=noa,toc=toc,top=top,topc=topc,level=level,isnp=isnp,nop=nop,pd=pd,session=session,doi=doi,lwj=lwj,aitp=aitp,ssa=ssa,details=details,index_by=index_by,proof_file=proof_file,email=faculty_instance)
                 obj7.save()
@@ -622,27 +622,27 @@ def save_all_forms(request, form_no):
             elif form_no == 8:
                 noa = request.POST.get('noa').strip()
                 if not va.nameValidate(request, noa, "Name of the author(s)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 tob = request.POST.get('tob').strip()
                 if not va.nameValidate(request, tob, "Title of the book"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 top = request.POST.get('top').strip()
                 if not va.nameValidate(request, top, "Title of the chapter Published"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 level = request.POST.get('optradio3').strip()
                 if not va.radiocheck(request, level, "Level (National/ International)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 isbn = request.POST.get('isbn').strip()
                 if not va.nameValidate(request, isbn, "ISBN"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 nop = request.POST.get('nop').strip()
                 if not va.nameValidate(request, nop, "Name of the Publisher"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 pd = request.POST.get('begi_date')
                 try:
@@ -650,40 +650,40 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 doi = request.POST.get('doi').strip()
                 if not va.nameValidate(request, doi, "DOI(Digital Object Identifier)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 lwj = request.POST.get('lwj').strip()
                 if not va.nameValidate(request, lwj, "Link to website of the Journal"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 aitp = request.POST.get('aitp').strip()
                 if not va.nameValidate(request, aitp, "Affiliating Institute at the time of publication"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 ssa = request.POST.get('optradio2').strip()
                 if not va.radiocheck(request, ssa, "Is SKIT student associated"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 details = request.POST.get('details').strip()
                 if not va.nameValidate(request, details, "Write student(s) details"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 index_by = request.POST.get('index_by').strip()
                 if not va.nameValidate(request, index_by, "Indexed by"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
                     if not va.fileValidate(request, proof_file, "Proof File"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 obj8 = research_book(noa=noa,tob=tob,top=top,level=level,isbn=isbn,nop=nop,pd=pd,session=session,doi=doi,lwj=lwj,aitp=aitp,ssa=ssa,details=details,index_by=index_by,proof_file=proof_file,email=faculty_instance)
                 obj8.save()
@@ -691,23 +691,23 @@ def save_all_forms(request, form_no):
             elif form_no == 9:
                 sop = request.POST.get('optradio1').strip()
                 if not va.radiocheck(request, sop, "Status of Patent"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 gi = request.POST.get('nof').strip()
                 if not va.nameValidate(request, gi, "Granted ID"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 ag = request.POST.get('ag').strip()
                 if not va.nameValidate(request, ag, "Application ID"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 top = request.POST.get('top').strip()
                 if not va.nameValidate(request, top, "Title of Patent"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 gc = request.POST.get('gc').strip()
                 if not va.nameValidate(request, gc, "Granted Country"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 pfd = request.POST.get('filed_date')
                 try:
@@ -715,11 +715,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 pd = request.POST.get('begi_date')
                 try:
@@ -727,30 +727,30 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 pg = request.POST.get('optradio2').strip()
                 if not va.radiocheck(request, pg, "Type of Patent"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 ssa = request.POST.get('optradio').strip()
                 if not va.radiocheck(request, ssa, "Is SKIT student associated"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 details = request.POST.get('details').strip()
                 if not va.nameValidate(request, details, "Write student(s) details"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 link = request.POST.get('link').strip()
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
                     if not va.fileValidate(request, proof_file, "Proof File"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 obj9 = patents(sop=sop,gi=gi, ag=ag, top=top, gc=gc,pfd=pfd, pd=pd, session=session, pg=pg, ssa=ssa, details=details, link=link, proof_file=proof_file,email=faculty_instance)
                 obj9.save()
@@ -758,31 +758,31 @@ def save_all_forms(request, form_no):
             elif form_no == 10:
                 category = request.POST.get('category').strip()
                 if not va.nameValidate(request, category, "Category"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 nos = request.POST.get('nos').strip()
                 if not va.nameValidate(request, nos, "Name of the student Guided"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 ens = request.POST.get('ens').strip()
                 if not va.nameValidate(request, ens, "Enrollment Number of Student"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 urns = request.POST.get('urns').strip()
                 if not va.nameValidate(request, urns, "University Roll Number of Student"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 eys = request.POST.get('enrollmentyear').strip()
                 if not va.nameValidate(request, eys, "Enrollment Year of Student"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 tod = request.POST.get('tod').strip()
                 if not va.nameValidate(request, tod, "Title of the Dissertation"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 visor = request.POST.get('optradio2').strip()
                 if not va.radiocheck(request, visor, "Supervisor / Co-supervisor"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 dov = request.POST.get('dov')
                 try:
@@ -790,15 +790,15 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 noe = request.POST.get('noe').strip()
                 if not va.nameValidate(request, noe, "Name of external examiner"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 obj10 = guided(category=category ,nos=nos, ens=ens, urns=urns, eys=eys, tod=tod, visor=visor, dov=dov, noe=noe, session=session,email=faculty_instance)
                 obj10.save()
@@ -810,19 +810,19 @@ def save_all_forms(request, form_no):
 
                 toe = request.POST.get('toe').strip()
                 if not va.nameValidate(request, toe, "Title of Event/ Exam Name"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 sa = request.POST.get('sa').strip()
                 if not va.nameValidate(request, sa, "Subject Area"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 doe = int(request.POST.get('doe') or 0)
                 if not va.numberValidate(request, doe, "Duration of event (in days)"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 rpt = request.POST.get('optradio2').strip()
                 if not va.radiocheck(request, rpt, "Resource Person Type"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 begi_date = request.POST.get('begi_date')
                 try:
@@ -830,11 +830,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -842,20 +842,20 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 venue = request.POST.get('venue').strip()
                 if not va.nameValidate(request, venue, "Venue"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
                     if not va.fileValidate(request, proof_file, "Proof File"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 obj11 = resource(category=category,toe=toe, sa=sa,doe=doe, rpt=rpt, begi_date=begi_date, end_date=end_date, session=session, venue=venue, proof_file=proof_file,email = faculty_instance)
                 obj11.save()
@@ -867,48 +867,48 @@ def save_all_forms(request, form_no):
 
                 faculty_instance.name = request.POST.get('name').strip()
                 if not va.nameValidate(request, faculty_instance.name, "Name"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.contact_number = request.POST.get('mobile_no').strip()
                 mobilepattern = r'[6789][0-9]{9}'
                 if not re.match(mobilepattern, faculty_instance.contact_number):
                     messages.error(request,"Mobile number should start with 6,7,8,9 and should not conatain any alphabets or special characters.")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.email = request.POST.get('email').strip()
 
                 faculty_instance.gender = request.POST.get('optradio').strip()
                 if not va.radiocheck(request, faculty_instance.gender, "Gender"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.department = request.POST.get('department').strip()
 
                 faculty_instance.emp_id = int(request.POST.get('emp_id') or 0)
                 if not va.numberValidate(request, faculty_instance.emp_id, "Employee ID"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.designation = request.POST.get('designation').strip()
 
                 faculty_instance.aos = request.POST.get('aos').strip()
                 if not va.radiocheck(request, faculty_instance.aos, "Area of Specialization"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.hq = request.POST.get('highest_qualification').strip()
                 if not va.radiocheck(request, faculty_instance.hq, "Highest Qualification"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.univ_name = request.POST.get('univ_name').strip()
                 if not va.nameValidate(request, faculty_instance.univ_name, "University Name"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.pshd = request.POST.get('pshd').strip()
                 if not va.radiocheck(request, faculty_instance.pshd, "Passing Year of Highest Degree"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.pan_no = request.POST.get('pan_no').strip()
                 if not va.validate_pan(faculty_instance.pan_no) or not faculty_instance.pan_no:
                     messages.error(request, "Please enter a valid PAN number")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.dob = request.POST.get('dob')
                 try:
@@ -920,11 +920,11 @@ def save_all_forms(request, form_no):
                     if not min_date < selected_date < max_date:
                         messages.error(request,
                                        f"Please select/enter date of birth in range of 1930-01-01 to 2001-12-31.You selected {selected_date}")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date of birth.")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.jd = request.POST.get('jd')
                 try:
@@ -938,7 +938,7 @@ def save_all_forms(request, form_no):
 
                 except(ValueError, TypeError):
                     messages.error(request,"Please select/enter a valid date")
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.pd = request.POST.get('pd')
                 if faculty_instance.pd == '':
@@ -949,60 +949,60 @@ def save_all_forms(request, form_no):
 
                         if selected_date > timezone.now().date():
                             messages.error(request, "Date cannot be in future")
-                            return redirect('all_forms', pk=form_no)
+                            return redirect('all_forms', form_no=form_no)
 
                     except(ValueError, TypeError):
                         messages.error(request, "Please select/enter a valid date")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.google_scholar = request.POST.get('google_scholar').strip()
                 if not va.nameValidate(request, faculty_instance.google_scholar, "Google Scholar"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.vidwan_profile = request.POST.get('vidwan_profile').strip()
                 if not va.nameValidate(request, faculty_instance.vidwan_profile, "Vidwan Profile"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.personal_website_link = request.POST.get('website_link').strip()
 
                 faculty_instance.address = request.POST.get('address').strip()
                 if not va.addressValidate(request, faculty_instance.address, "Address"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
 
                 if request.FILES.get('profile_picture'):
                     profile_picture = request.FILES.get('profile_picture')
                     if not va.imageFileValidate(request, profile_picture, "Profile Picture"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                     faculty_instance.profile_picture = profile_picture
 
                 if request.FILES.get('jr'):
                     jr = request.FILES.get('jr')
                     if not va.fileValidate(request, jr, "Joining Report"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                     faculty_instance.jr = jr
 
                 if request.FILES.get('ol'):
                     of = request.FILES.get('ol')
                     if not va.fileValidate(request, of, "Offer Letter"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                     faculty_instance.of = of
 
                 if request.FILES.get('hdc'):
                     hdc = request.FILES.get('hdc')
                     if not va.fileValidate(request, hdc, "Higher Degree Certificate"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                     faculty_instance.hdc = hdc
 
                 if request.FILES.get('ss'):
                     ss = request.FILES.get('ss')
                     if not va.fileValidate(request, ss, "Salary Slip"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                     faculty_instance.ss = ss
 
                 if request.FILES.get('awards'):
                     certificate = request.FILES.get('awards')
                     if not va.fileValidate(request, certificate, "Co-curricular Certificate"):
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
                     faculty_instance.certificate = certificate
 
                 faculty_instance.phd_univ = request.POST.get('phd_univ').strip()
@@ -1016,16 +1016,16 @@ def save_all_forms(request, form_no):
 
                         if selected_date > timezone.now().date():
                             messages.error(request, "Date cannot be in future")
-                            return redirect('all_forms', pk=form_no)
+                            return redirect('all_forms', form_no=form_no)
                         faculty_instance.phd_dor = phd_dor
 
                     except(ValueError, TypeError):
                         messages.error(request, "Please select/enter a valid date")
-                        return redirect('all_forms', pk=form_no)
+                        return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.norp = int(request.POST.get('norp') or 0)
                 if not va.numberValidate(request, faculty_instance.norp, "Number of Research Paper"):
-                    return redirect('all_forms', pk=form_no)
+                    return redirect('all_forms', form_no=form_no)
                 faculty_instance.status = "R"
 
                 faculty_instance.save()

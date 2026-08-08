@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pandas as pd
 from django.shortcuts import redirect, render
 from tablib import Dataset
@@ -28,6 +30,11 @@ def new_user_registration(data, username):
 
     return user_instance
 
+def refactorDate(uncleaned_date):
+    if isinstance(uncleaned_date, str):
+        date_obj = datetime.strptime(uncleaned_date, "%d-%m-%Y")
+        return date_obj.strftime("%Y-%m-%d")
+    return uncleaned_date
 
 def upload_excel(request, form_no):
     if form_no and request.method == 'POST':
@@ -49,6 +56,7 @@ def upload_excel(request, form_no):
             .str.replace(r'[^\w]+', '_', regex=True)
             .str.strip('_')
         )
+        print(df.columns)
 
         category_db_val = {choice.label: choice.value for choice in category}
         session_db_val = {label: value for value, label in generate_session_choices()}
@@ -76,16 +84,18 @@ def upload_excel(request, form_no):
                         data['grant_received_from_skit_yes_no'], "N")
                     data['proof_enclosed_yes_no'] = approval_db_val.get(data['proof_enclosed_yes_no'], "N")
                     data['level'] = level_db_val.get(data['level'], "Na")
-                    data['mode_offline_online'] = mode_db_val.get(data['mode_offline_online'], "Of")
+                    data['mode_online_offline'] = mode_db_val.get(data['mode_online_offline'], "Of")
                     data['conference_fdp_workshop_seminar_sttp'] = category_db_val.get(
                         data['conference_fdp_workshop_seminar_sttp'], "OTH")
                     data['session'] = session_db_val.get(data['session'], "2024-25")
+                    data['from_date'] = refactorDate(data['from_date'])
+                    data['to_date'] = refactorDate(data['to_date'])
 
                     user_instance = new_user_registration(data, 'name_of_faculty_memeber')
 
                     value = Faculty_participation_data(category=data['conference_fdp_workshop_seminar_sttp'],
                                                        top=data['title_of_the_program'],
-                                                       mode=data['mode_offline_online'],
+                                                       mode=data['mode_online_offline'],
                                                        level=data['level'], organizer=data['organizer'],
                                                        sponsors=data['sponsored_by'],
                                                        approval=data['grant_received_from_skit_yes_no'],
@@ -98,7 +108,8 @@ def upload_excel(request, form_no):
                 except KeyError as e:
                     return JsonResponse({'status': 'failed', 'error': f'Your Excel does not contain column {e}'})
 
-                except Exception:
+                except Exception as e:
+                    print(e)
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
         elif form_no == 2:
@@ -119,6 +130,8 @@ def upload_excel(request, form_no):
                     data['any_category_from_below'] = topper_db_val.get(data['any_category_from_below'], "NA")
                     data['type_of_course'] = category_db_val.get(data['type_of_course'], "OTH")
                     data['session'] = session_db_val.get(data['session'], "2024-25")
+                    data['start_date_of_course'] = refactorDate(data['start_date_of_course'])
+                    data['end_date_of_course'] = refactorDate(data['end_date_of_course'])
 
                     user_instance = new_user_registration(data, 'name_of_faculty_memeber')
 
@@ -135,7 +148,8 @@ def upload_excel(request, form_no):
                 except KeyError as e:
                     return JsonResponse({'status': 'failed', 'error': f'Your Excel does not contain column {e}'})
 
-                except Exception:
+                except Exception as e:
+                    # print(e)
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
 
@@ -164,6 +178,8 @@ def upload_excel(request, form_no):
                         data['event_report_attached_in_proper_format_yes_no'], "N")
                     data['type_of_event'] = category_db_val.get(data['type_of_event'], "OTH")
                     data['session'] = session_db_val.get(data['academic_session'], "2024-25")
+                    data['start_date_of_the_event'] = refactorDate(data['start_date_of_the_event'])
+                    data['end_date_of_the_event'] = refactorDate(data['end_date_of_the_event'])
 
                     user_instance = new_user_registration(data, '')
 
@@ -175,7 +191,7 @@ def upload_excel(request, form_no):
                                    session=data['academic_session'], ct=data['sponsored_non_sponsored'],
                                    nosa=data['name_of_sponsoring_agency_if_sponsored'],
                                    cd=data['collaboration_details'], begi_date=data['start_date_of_the_event'],
-                                   end_date=data['end_date_the_event'], gr=data['grant_received_yes_no'],
+                                   end_date=data['end_date_of_the_event'], gr=data['grant_received_yes_no'],
                                    gd=data['grant_details'],
                                    awpsfooe=data['association_with_professional_societies_for_organization_of_event'],
                                    nossp=data[
@@ -190,7 +206,8 @@ def upload_excel(request, form_no):
                 except KeyError as e:
                     return JsonResponse({'status': 'failed', 'error': f'Your Excel does not contain column {e}'})
 
-                except Exception:
+                except Exception as e:
+                    print(e)
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
         elif form_no == 4:
@@ -201,6 +218,7 @@ def upload_excel(request, form_no):
 
                     data['category'] = category_db_val.get(data['category'], "OTH")
                     data['session'] = session_db_val.get(data['session'], "2024-25")
+                    data['date_of_award'] = refactorDate(data['date_of_award'])
 
                     user_instance = new_user_registration(data, 'faculty_name')
 
@@ -219,7 +237,8 @@ def upload_excel(request, form_no):
                 except KeyError as e:
                     return JsonResponse({'status': 'failed', 'error': f'Your Excel does not contain column {e}'})
 
-                except Exception:
+                except Exception as e:
+                    print(e)
                     return JsonResponse({'status': 'failed', 'error': 'Internal Server Error occured while saving!'})
 
         elif form_no == 5:
@@ -267,7 +286,7 @@ def upload_excel(request, form_no):
                     data['quartile'] = quartile_db_val.get(data['quartile'], "NA")
                     data['session'] = session_db_val.get(data['session'], "2024-25")
 
-                    user_instance = new_user_registration(data, '')
+                    user_instance = new_user_registration(data, 'name_of_the_author_s')
 
                     value = research_journal(noa=data['name_of_the_author_s'], top=data['title_of_paper'],
                                                    noj=data['name_of_journal'],
@@ -302,7 +321,7 @@ def upload_excel(request, form_no):
                     data['is_skit_student_associated'] = approval_db_val.get(data['is_skit_student_associated'], "N")
                     data['session'] = session_db_val.get(data['session'], "2024-25")
 
-                    user_instance = new_user_registration(data, '')
+                    user_instance = new_user_registration(data, 'name_of_the_author_s')
 
                     value = research_conference(noa=data['name_of_the_author_s'], toc=data['title_of_the_conference'],
                                                    top=data['title_of_paper'],
@@ -336,7 +355,7 @@ def upload_excel(request, form_no):
                     data['is_skit_student_associated'] = approval_db_val.get(data['is_skit_student_associated'], "N")
                     data['session'] = session_db_val.get(data['session'], "2024-25")
 
-                    user_instance = new_user_registration(data, '')
+                    user_instance = new_user_registration(data, 'name_of_the_author_editor')
 
                     value = research_book(noa=data['name_of_the_author_editor'], tob=data['title_of_the_book'],
                                                    top=data['title_of_the_chapter_published'],
@@ -370,6 +389,8 @@ def upload_excel(request, form_no):
                     data['type_of_patent'] = type_of_patent_db_val.get(data['type_of_patent'], "I")
                     data['is_skit_student_associated'] = approval_db_val.get(data['is_skit_student_associated'], "N")
                     data['session'] = session_db_val.get(data['session'], "2024-25")
+                    data['patent_filed_date'] = refactorDate(data['patent_filed_date'])
+                    data['publication_date'] = refactorDate(data['publication_date'])
 
                     user_instance = new_user_registration(data, 'name_of_faculty')
 
@@ -435,6 +456,8 @@ def upload_excel(request, form_no):
                     data['resource_person_in'] = category_db_val.get(data['resource_person_in'], "OTH")
                     data['resource_person_type'] = resource_person_type_db_val.get(data['resource_person_type'],"O")
                     data['session'] = session_db_val.get(data['session'], "2024-25")
+                    data['date_from'] = refactorDate(data['date_from'])
+                    data['date_to'] = refactorDate(data['date_to'])
 
                     user_instance = new_user_registration(data, 'name_of_faculty_member')
 
