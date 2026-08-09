@@ -292,7 +292,7 @@ def download_files(request):
             headers_1 = ['Timestamp', 'Email address', 'Session', 'Name', 'Mobile No', 'Department', 'Lab No',
                          'Designation', 'Employee ID','Highest Qualification', 'University Name',
                          'Passing Year of Highest degree', 'Higher Degree Certificate(Date of Award)' ,'Professional Courses', 'PAN No.', 'Date of Birth',
-                         'Joining Date (DD, MM, YY)', 'Promotion Date ( If any)', 'Joining Report', 'Offer Letter (Appointment Letter)', 'Salary Slip (Recently)',
+                         'Joining Date (DD, MM, YY)', 'Promotion Date (If any)', 'Joining Report', 'Offer Letter (Appointment Letter)', 'Salary Slip (Recently)',
                          'If Awards and recognition received for extension activities (Upload Certificate)'
                          ]
 
@@ -1176,7 +1176,7 @@ def download_files(request):
                     row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(),
                                    item.email.name, item.email.emp_id, item.email.get_designation_display(), item.email.get_department_display(),
                                    item.noaa, item.get_category_display(), item.paf,
-                                   item.ao, item.prize, item.map_sdg,
+                                   item.ao, item.prize,
                                    item.remark, "I AGREE"]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url

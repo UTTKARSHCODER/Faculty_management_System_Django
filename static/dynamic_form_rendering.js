@@ -301,8 +301,10 @@ function buildTableFilters(rowValues, tableId) {
 
             options += `
                 <div class="form-check">
-                    <input class="form-check-input filter-checkbox" type="radio" name="${fieldName}_filter" value="${v}" id="${inputId}">
-                    <label class="form-check-label small" for="${inputId}">${v}</label>
+                    <label class="form-check-label small">
+                        <input class="form-check-input filter-radio" type="radio" name="${fieldName}_filter" value="${v}" id="${inputId}">
+                        ${v}
+                    </label>
                 </div>
             `;
         }));
@@ -396,6 +398,24 @@ document.addEventListener('change', function (e) {
         } else {
             labelBtn.textContent = `${checkedBoxes[0]} + ${checkedBoxes.length - 1} more`;
         }
+    } else if (e.target.classList.contains('filter-radio')) {
+
+        // 1. Find the parent dropdown wrapper container for THIS specific filter
+        const dropdownContainer = e.target.closest('.filter-container');
+        if (!dropdownContainer) return;
+
+        // 2. Find the target toggle button inside THIS container
+        const labelBtn = dropdownContainer.querySelector('.dropdown-label-btn');
+
+        // 3. Find all currently checked checkboxes inside THIS container
+        const selectedRadio = dropdownContainer.querySelector('.filter-radio:checked')
+
+        // 4. Update the button text dynamically
+        if (!selectedRadio) {
+            labelBtn.textContent = 'Select...';
+        } else {
+            labelBtn.textContent = selectedRadio.value;
+        }
     }
 });
 
@@ -467,7 +487,7 @@ function applyTableFilters() {
 
     const updateButtonState = () => {
         const isChecked = Array.from(currentCheckboxes).some(cb => cb.checked);
-        cleanDownloadButton.disabled = !isChecked;
+        cleanDownloadButton.disabled = !isChecked || table.rows({ filter: 'applied' }).count() === 0;
     };
     updateButtonState();
 
@@ -525,8 +545,16 @@ function applyTableFiltersAndClose() {
 // for clearing the table filters applied earlier
 
 function clearTableFilters() {
-    document.querySelectorAll('.filter-input').forEach(input => input.value = '');
-    document.querySelectorAll('.filter-dropdown').forEach(select => select.value = '');
+    const allFilters = document.querySelectorAll('.filter-checkbox, .filter-radio');
+
+    allFilters.forEach(input => {
+        if (input.checked) {
+            input.checked = false;
+
+            // 2. Fire a change event so your existing event listener updates the button text to 'Select...'
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    });
     table.columns().every(function () {
         this.search('');
     });
