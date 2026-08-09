@@ -217,65 +217,64 @@ function fixLastColumn(containerId) {
 // Maping of each nav-tabs all dropdown and text based inputs form number wise
 const TAB_FILTER_CONFIG = {
     '1_1': {
-        text: ['Employee ID', 'Email', 'Name'],
-        dropdown: ['Department', 'Designation', 'Session']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email': 'email'}, {'Name' : 'name'}]
     },
     '1_2': {
-        text: ['Employee ID', 'Email', 'Name'],
-        dropdown: ['Session', 'Department', 'Designation']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Highest Qualfication' : 'highest'}, {'Professional Courses' : 'professional_course'}],
+        radio: [{'Session' : 'session'},{'Employee ID' : 'emp_id'}, {'Email': 'email'}, {'Name' : 'name'}]
     },
     '2': {
-        text: ['Employee ID', 'Email', 'Name of Faculty Member'],
-        dropdown: ['Session', 'Department', 'Designation', 'Mode', 'Level', 'Grant Recieved from SKIT (Yes/No)']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Mode': 'mode'}, {'Level' :'level'}, {'Grant Recieved from SKIT (Yes/No)' : 'grant'}, {'Conference/FDP/ Workshop/Seminar/ STTP' : 'optcheck'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email': 'email'}, {'Name of Faculty Member' : 'name'}]
     },
     '3': {
-        text: ['Employee ID', 'Email address', 'Name of Faculty Member', 'Duration of Course'],
-        dropdown: ['Session', 'Department', 'Designation', 'Certificate Type', 'Any category from below']
+        dropdown: [{'Duration of Course' : 'duration'}, {'Department' : 'department'}, {'Designation' : 'designation'}, {'Certificate Type' : 'certificate'}, {'Any category from below' : 'topper'}, {'Type of Course' : 'optcheck'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty Member' : 'name'}]
     },
     '4': {
-        text: ['Employee ID', 'Email address', 'Name of Faculty Coordinator(s)'],
-        dropdown: ['Department', 'Designation', 'Academic Session', 'Event organized for', 'Sponsored/Non Sponsored',
-                   'Grant Received(Yes/No)', ] //mapped sdg's remaining
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Event organized for' : 'event_org_for'}, {'Sponsored/Non Sponsored' : 'spo_non_spo'},
+            {'Grant Received(Yes/No)' : 'grant'}, {'Type of Event' : 'optcheck'},{"Mapped SDG's" : 'map'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty Coordinator(s)' : 'name'}]
     },
     '5': {
-        text: ['Employee ID', 'Email address', 'Faculty Name'],
-        dropdown: ['Session', 'Department', 'Designation']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Category' : 'optcheck'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Faculty Name' : 'name'}]
     },
     '6': {
-        text: ['Employee ID', 'Email address', 'Name of Candidate (PI/Co PI)'],
-        dropdown: ['Session', 'Department', 'Designation', 'Status']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Status' :'status'}, {'Category' : 'optcheck'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Candidate (PI/Co PI)' : 'name'}]
     },
     '7_1': {
-        text: ['Employee ID', 'Email address', 'Name of the author(s)'],
-        dropdown: ['Session', 'Department','Designation', 'Level (National/ International)', 'Indexed by',
-                   'Quartile', 'Is SKIT student associated?']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Level (National/ International)' : 'level'}, {'Indexed by' : 'optcheck'},
+            {'Quartile' : 'quartile'}, {'Is SKIT student associated?' : 'ssa'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of the author(s)' : 'name'}]
     },
     '7_2': {
-        text: ['Employee ID', 'Email address', 'Name of the author(s)'],
-        dropdown: ['Session', 'Department','Designation', 'Level (National/ International)', 'Is SKIT student associated?']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Level (National/ International)' : 'optcheck'}, {'Is SKIT student associated?' : 'ssa'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of the author(s)' : 'name'}]
     },
     '7_3': {
-        text: ['Employee ID', 'Email address', 'Name of the author/editor'],
-        dropdown: ['Session', 'Department', 'Designation', 'Level (National/ International)', 'Is SKIT student associated?']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Level (National/ International)' : 'optcheck'}, {'Is SKIT student associated?' : 'ssa'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of the author/editor' : 'name'}]
     },
     '7_4': {
-        text: ['Employee ID', 'Email address', 'Name of Faculty'],
-        dropdown: ['Session', 'Department', 'Designation', 'Status of Patent', 'Type of Patent', 'Is SKIT student associated?']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Status of Patent' : 'status'}, {'Type of Patent' : 'optcheck'}, {'Is SKIT student associated?' : 'ssa'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty' : 'name'}]
     },
     '8': {
-        text: ['Employee ID', 'Email address', 'Faculty Name'],
-        dropdown: ['Session', 'Department', 'Designation', 'Enrollment Year of Student', 'Supervisor / Co-supervisor']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Enrollment Year of Student' : 'eys'}, {'Supervisor / Co-supervisor' : 'visor'}, {'Program of Student' : 'optcheck'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Faculty Name' : 'name'}]
     },
     '9': {
-        text: ['Employee ID', 'Email address', 'Name of Faculty Member'],
-        dropdown: ['Session', 'Department', 'Designation', 'Resource Person Type']
+        dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Resource Person Type' : 'rpt'}, {'Resource Person in' : 'optcheck'}],
+        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty Member' : 'name'}]
     }
 };
 
 // use for building table filters
 
-function buildTableFilters(rowValues, tableId) { 
-    // console.log('called', tableId, rowValues); for debug purpose only!
+function buildTableFilters(rowValues, tableId) {
     const container = document.getElementById('filterFieldsContainer');
     container.innerHTML = '';
 
@@ -285,50 +284,233 @@ function buildTableFilters(rowValues, tableId) {
     const sampleRow = rowValues[0];
     let html = '';
 
-    (config.text || []).forEach(colKey => {
+    (config.radio || []).forEach(item => {
+        let [colKey, fieldName] = Object.entries(item)[0];
         if (!(colKey in sampleRow)) return; // column not present for this data, skip silently
+        const uniqueVals = [
+            ...new Set(
+                rowValues
+                    .flatMap(r => (r[colKey] ? String(r[colKey]).split(',') : []))
+                    .map(v => v.trim())
+                )
+            ].filter(Boolean).sort();
+
+        let options = '';
+        uniqueVals.forEach(((v, idx) => {
+            const inputId = `filter_session_${idx}`;
+
+            options += `
+                <div class="form-check">
+                    <input class="form-check-input filter-checkbox" type="radio" name="${fieldName}_filter" value="${v}" id="${inputId}">
+                    <label class="form-check-label small" for="${inputId}">${v}</label>
+                </div>
+            `;
+        }));
+        if (colKey === 'Name of Faculty Coordinator(s)') colKey = 'Faculty Coordinator Name';
+        const reducedName = colKey.split('(')[0].trim();
+
         html += `
             <div class="col-md-3 mb-2">
-                <label class="form-label">${colKey}</label>
-                <input type="text" class="form-control filter-input" data-column="${colKey}" placeholder="Search ${colKey}">
+                <label class="form-label">${reducedName}</label>
+                <div class="dropdown filter-container">
+                    <button type="button" 
+                    class="btn btn-white btn-sm border w-100 dropdown-toggle text-start d-flex justify-content-between align-items-center bg-white dropdown-label-btn text-truncate overflow-hidden" 
+                    data-bs-toggle="dropdown" data-bs-auto-close="outside" style="height: 38px;">
+                        Select...
+                    </button>
+                    <ul class="dropdown-menu p-2 shadow-sm filter-radio" id="form_dropdown" data-column="${colKey}">
+                        <li>${options}</li>
+                    </ul>
+                </div>
             </div>`;
     });
 
-    (config.dropdown || []).forEach(colKey => {
+    (config.dropdown || []).forEach(item => {
+        const [colKey, fieldName] = Object.entries(item)[0];
         if (!(colKey in sampleRow)) return;
-        const uniqueVals = [...new Set(rowValues.map(r => r[colKey]))].filter(Boolean).sort();
-        let options = `<option value="">All</option>`;
-        uniqueVals.forEach(v => { options += `<option value="${v}">${v}</option>`; });
+        const uniqueVals = [
+            ...new Set(
+                rowValues
+                    .flatMap(r => (r[colKey] ? String(r[colKey]).split(',') : []))
+                    .map(v => v.trim())
+                )
+            ].filter(Boolean).sort();
+
+        const sanitizedCol = colKey.replace(/[ ()/\-]/g, '_').toLowerCase();
+        const nameParameter = fieldName + '_filter[]';
+
+        let options = '';
+        uniqueVals.forEach(((v, idx) => {
+            const inputId = `filter_${sanitizedCol}_${idx}`;
+            options += `
+                <div class="form-check">
+                    <input class="form-check-input filter-checkbox" type="checkbox" name="${nameParameter}" value="${v}" id="${inputId}">
+                    <label class="form-check-label small" for="${inputId}">${v}</label>
+                </div>
+            `;
+        }));
+        const reducedName = colKey.split('(')[0].trim();
+
         html += `
             <div class="col-md-3 mb-2">
-                <label class="form-label">${colKey}</label>
-                <select class="form-select filter-dropdown" data-column="${colKey}">${options}</select>
+                <label class="form-label">${reducedName}</label>
+                <div class="dropdown filter-container">
+                    <button type="button" 
+                    class="btn btn-white btn-sm border w-100 dropdown-toggle text-start d-flex justify-content-between align-items-center bg-white dropdown-label-btn text-truncate overflow-hidden" 
+                    data-bs-toggle="dropdown" data-bs-auto-close="outside" style="height: 38px;">
+                        Select...
+                    </button>
+                    <ul class="dropdown-menu p-2 shadow-sm filter-dropdown" id="form_dropdown" data-column="${colKey}">
+                        <li>${options}</li>
+                    </ul>
+                </div>
             </div>`;
     });
 
     container.innerHTML = html;
 }
 
-// applyinh filter to the table 
+// To update the dropdown value of all filter values in filter modal
+// Attach a single listener to the document (or wrapper container)
+document.addEventListener('change', function (e) {
+    // Check if the changed element is one of our filter checkboxes
+    if (e.target.classList.contains('filter-checkbox')) {
 
+        // 1. Find the parent dropdown wrapper container for THIS specific filter
+        const dropdownContainer = e.target.closest('.filter-container');
+        if (!dropdownContainer) return;
+
+        // 2. Find the target toggle button inside THIS container
+        const labelBtn = dropdownContainer.querySelector('.dropdown-label-btn');
+
+        // 3. Find all currently checked checkboxes inside THIS container
+        const checkedBoxes = Array.from(
+            dropdownContainer.querySelectorAll('.filter-checkbox:checked')
+        ).map(cb => cb.value);
+
+        // 4. Update the button text dynamically
+        if (checkedBoxes.length === 0) {
+            labelBtn.textContent = 'Select...';
+        } else if (checkedBoxes.length === 1) {
+            labelBtn.textContent = checkedBoxes[0];
+        } else {
+            labelBtn.textContent = `${checkedBoxes[0]} + ${checkedBoxes.length - 1} more`;
+        }
+    }
+});
+
+// applying filter to the table
+let curr_table_id = '1_1';
 function applyTableFilters() {
-    document.querySelectorAll('.filter-input').forEach(input => {
-        const col = input.dataset.column;
-        table.column(`${col}:name`).search(input.value.trim());
-    });
 
     document.querySelectorAll('.filter-dropdown').forEach(select => {
         const col = select.dataset.column;
-        const val = select.value;
-        if (val === '') {
+        const val = Array.from(select.querySelectorAll('input[type="checkbox"]:checked'))
+                                .map(cb => cb.value);
+        if (val.length === 0) {
             table.column(`${col}:name`).search('');
         } else {
-            const escaped = val.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            const escaped = val.map(v => v.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+            // 1. Join values with pipe | to create an OR pattern: (SDG_1|SDG_2)
+            // 2. Wrap with ^ and $ for exact matching per item
+            const regexPattern = `^(${escaped.join('|')})$`;
+            table.column(`${col}:name`).search(regexPattern, true, false);
+        }
+    });
+
+    document.querySelectorAll('.filter-radio').forEach(select => {
+        const col = select.dataset.column;
+        const radioButton = select.querySelector('input[type="radio"]:checked');
+        if (!radioButton) {
+            table.column(`${col}:name`).search('');
+        } else {
+            const escaped = radioButton.value.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
             table.column(`${col}:name`).search(`^${escaped}$`, true, false);
         }
     });
 
     table.draw(); // to print the final filtered table
+
+    // Preparing data to be attached with download Excel button
+    const valuesToPass = {};
+    const config = TAB_FILTER_CONFIG[curr_table_id];
+
+    (config.dropdown || []).forEach(item => {
+        // 1. Extract key and value from the item object (e.g. {'Department': 'department'})
+        const [key, value] = Object.entries(item)[0];
+
+        // 2. Store in output dictionary
+        valuesToPass[value] = Array.from(
+            document.querySelectorAll(`input[name="${value}_filter[]"]:checked`)
+        ).map(cb => cb.value);
+    });
+
+    (config.radio || []).forEach(item => {
+        const [key, value] = Object.entries(item)[0];
+        let selValues;
+
+        selValues = Array.from(document.querySelectorAll(`input[name='${value}_filter']:checked`)).map(cb => cb.value);
+
+        valuesToPass[value] = selValues;
+    })
+
+
+    // console.log("Final Expected Dictionary is:",valuesToPass);
+
+    // Updating Download Filtered Excel Button status (Enable/Disable)
+    const downloadButton = document.getElementById(`download-button-${curr_table_id}`);
+    // To remove the previous choices attached with button while downloading.
+    const cleanDownloadButton = downloadButton.cloneNode(true);
+    downloadButton.replaceWith(cleanDownloadButton);
+
+    const currentCheckboxes = document.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+
+    const updateButtonState = () => {
+        const isChecked = Array.from(currentCheckboxes).some(cb => cb.checked);
+        cleanDownloadButton.disabled = !isChecked;
+    };
+    updateButtonState();
+
+    cleanDownloadButton.addEventListener('click', function() {
+        const formData = new FormData();
+        Object.entries(valuesToPass).forEach(([key, values]) => {
+            if (!Array.isArray(values) || values.length === 0) return;
+
+            // Check if the HTML element is a radio button in the DOM
+            const isRadio = document.querySelector(`input[name="${key}_filter"][type="radio"]`) !== null;
+
+            if (isRadio) {
+                // Radio button: Send plain key
+                formData.set(`${key}_filter`, values[0]);
+            } else {
+                // Checkboxes: Send key[]
+                values.forEach(val => {
+                    formData.append(`${key}_filter[]`, val);
+                });
+            }
+        });
+        formData.append('form_no', curr_table_id);
+
+        fetch('/download', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    console.log(data.success);
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error is: ', error);
+            });
+    });
+
+
 }
 
 // for modal funtioning
@@ -389,7 +571,8 @@ function openTab(containerId) {
             updateTable(responseData.row_values, containerId);
             buildTableFilters(responseData.row_values, containerId); // for table advance filter options
             drawChart(responseData.map_data);
-            filterDataToDownload();
+            curr_table_id = containerId;
+            // filterDataToDownload();
             fixLastColumn(containerId);
         } else {
             updateTable('', 'empty-table');
@@ -451,7 +634,7 @@ function filterDataToDownload() {
     const cleanDownloadButton = downloadButton.cloneNode(true);
     downloadButton.replaceWith(cleanDownloadButton);
 
-    const currentCheckboxes = document.querySelectorAll('.form-check-input');
+    // const currentCheckboxes = document.querySelectorAll('.form-check-input');
 
     const updateButtonState = () => {
         const isChecked = Array.from(currentCheckboxes).some(cb => cb.checked);

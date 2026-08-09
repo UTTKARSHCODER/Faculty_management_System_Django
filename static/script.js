@@ -50,7 +50,8 @@ const fieldInfo = {
     'Subject Area/Subject Name/Lab Name/Session Name': 'for e.g: Object Oriented Programming Lab, Name of session',
     'Proof (Certificate/Mail)': 'Any proof in (certificate/mail screenshot/document/etc) which validates you as a resource person',
     'Actual Expenditure': 'Only write amount (will be considered in Rs. only)',
-    'Mapped SDGs': 'Event Organized is mapped with which SDGs (Sustainable Development Goals) out of 17 SDGs given below? Select 1 or more options'
+    'Mapped SDGs': 'Event Organized is mapped with which SDGs (Sustainable Development Goals) out of 17 SDGs given below? Select 1 or more options',
+    'Title of the chapter Published': 'Write NA if not applicable i.e  If you are author/editor of complete book write NA.'
 };
 
 const categoryValue = {
@@ -733,9 +734,9 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Actual Expenditure<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Actual Expenditure']}"></label>
+                                        <label class="col-sm-4 col-form-label">Actual Expenditure<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="e.g : 30000"></label>
                                         <div class = "col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Only write amount (for e.g:- 30000)" name = "actual_expenditure" required>
+                                            <input type="number" class="form-control" placeholder="Only write amount (for e.g:- 30000)(evaluated in Rs.)" name = "actual_expenditure" required>
                                             <div class="invalid-feedback">Please provide actual expenditure.</div>
                                         </div>
                                     </div>
@@ -1572,7 +1573,7 @@ function generateSubForms() {
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row align-items-center">
-                                        <label class="col-sm-4 col-form-label">Title of the chapter Published<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
+                                        <label class="col-sm-4 col-form-label">Title of the chapter Published<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the chapter Published']}"></span></label>
                                         <div class = "col-sm-8">
                                             <input type="text" class="form-control" placeholder="Enter title of Paper" name = "top" required>
                                             <div class="invalid-feedback">Please provide Title of the chapter Published.</div>
@@ -2279,64 +2280,99 @@ function initializeBootstrapValidation() {
 
 var curr_count = 0;
 document.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const submitButton = e.target.querySelector('button[type="submit"]');
+    const form = e.target;
 
-    // Disable it immediately to prevent double-clicks
+    // Only intercept submissions for our targeted forms
+    const isSubFor = form.classList.contains('sub-for');
+    const isUplExe = form.classList.contains('upl-exe');
+
+    if (!isSubFor && !isUplExe) {
+        return; // Let standard forms submit normally
+    }
+
+    e.preventDefault(); // Stop native submit only for handled forms
+
+    const submitButton = form.querySelector('button[type="submit"]');
+
     if (submitButton) {
         submitButton.disabled = true;
         submitButton.innerText = "Saving...";
     }
-    console.log(e.target.classList);
-    if(e.target.classList.contains('sub-for')) {
-        const formData = new FormData(e.target);
-        const redirect_url = `/save_all_forms/${form_number}`;
-        fetch(redirect_url, {
+
+    const formData = new FormData(form);
+
+    // -------------------------------------------------------------
+    // FORM TYPE 1: .sub-for
+    // -------------------------------------------------------------
+    if (isSubFor) {
+        fetch(`/save_all_forms/${form_number}`, {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-CSRFToken': `${csrfToken}`
-            }
+            headers: { 'X-CSRFToken': csrfToken }
         })
-        .then(response=>response.json())
-        .then(data=> {
-            if(data.status === 'success') {
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
                 curr_count++;
-                submitButton.innerText = "Saved Successfully!";
-                if(curr_count === totalForms) {
+                if (submitButton) submitButton.innerText = "Saved Successfully!";
+                if (curr_count === totalForms) {
                     window.location.href = '/success';
                 }
             } else {
-                submitButton.disabled = false;
-                submitButton.innerText = "Try Again";
+                if (data.from === 'file') {
+                    // Update modal content directly without attaching cumulative .on() listeners
+                    const $modal = $('#messageModal');
+                    $modal.find('#icon').attr('class', 'fa-solid fa-triangle-exclamation text-dark mt-1 me-2');
+                    $modal.find('#header').css('background-color', '#FEC901');
+                    $modal.find('#modal-title').text('Warning');
+                    $modal.find('#message').html(data.message);
+                    $modal.modal('show');
+                } else {
+                    showMessages(data.message, "danger");
+                }
+
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.innerText = "Try Again";
+                }
             }
         })
         .catch(error => {
-            console.log("Error fetching the result");
+            console.error("Error fetching result:", error);
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.innerText = "Try Again";
+            }
         });
-    } else if (e.target.classList.contains('upl-exe')){
-        const formData = new FormData(e.target);
-        const redirect_url = `/upload_excel/${form_number}`;
-        fetch(redirect_url, {
+    }
+    // -------------------------------------------------------------
+    // FORM TYPE 2: .upl-exe
+    // -------------------------------------------------------------
+    else if (isUplExe) {
+        fetch(`/upload_excel/${form_number}`, {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-CSRFToken': `${csrfToken}`
-            }
+            headers: { 'X-CSRFToken': csrfToken }
         })
-        .then(response=>response.json())
-        .then(data=> {
-            if(data.status === 'success') {
-                submitButton.innerText = "Saved Successfully!";
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                if (submitButton) submitButton.innerText = "Saved Successfully!";
                 window.location.href = '/all_forms/' + form_number;
             } else {
-                submitButton.disabled = false;
-                submitButton.innerText = "Try Again";
-                alert(data.error);
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.innerText = "Try Again";
+                }
+                alert(data.error || 'Upload failed.');
             }
         })
         .catch(error => {
-            console.log("Error fetching the result");
+            console.error("Error fetching result:", error);
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.innerText = "Try Again";
+            }
         });
     }
 });

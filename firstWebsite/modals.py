@@ -32,10 +32,18 @@ def generate_session_choices():
 
   ranging from 2 years in the past to 5 years into the future.
   """
-  current_year = timezone.now().year
+  current_date = timezone.now()
+  current_year = current_date.year
+
+  # If we are before July, the current academic session started last year
+  if current_date.month < 7:
+      base_year = current_year - 1
+  else:
+      base_year = current_year
+
   choices = []
   # Adjust the range as needed (e.g., past 2 years to future 5 years)
-  for year in range(current_year - 2, current_year + 6):
+  for year in range(base_year - 2, base_year + 6):
     next_year_short = str(year + 1)[-2:]
     session_str = f"{year}-{next_year_short}"
     choices.append((session_str, session_str))
@@ -44,9 +52,16 @@ def generate_session_choices():
 
 def get_current_session():
   """Returns the default session string for the current year (e.g., '2026-27')."""
-  current_year = timezone.now().year
-  next_year_short = str(current_year + 1)[-2:]
-  return f"{current_year}-{next_year_short}"
+  current_date = timezone.now()
+  current_year = current_date.year
+
+  # If it's Jan-June, we are still in the session that started last year
+  if current_date.month < 7:
+      start_year = current_year - 1
+  else:
+      start_year = current_year
+  next_year_short = str(start_year + 1)[-2:]
+  return f"{start_year}-{next_year_short}"
 
 class Role(models.TextChoices):
     FACULTY = "FA", "Faculty",
@@ -112,7 +127,7 @@ class forms(models.TextChoices):
 
 class Faculty(models.Model):
     session_version = models.UUIDField(default=uuid.uuid4, editable=False)
-    session=models.CharField(
+    session = models.CharField(
         max_length=7,
         choices=generate_session_choices,
         default=get_current_session
@@ -199,12 +214,12 @@ class Faculty(models.Model):
     dob = models.DateField(default=datetime.date(1970, 1, 1))
     jd = models.DateField(default=datetime.date(1970, 1, 1))
     pd = models.DateField(null=True,blank=True)
-    profile_picture = models.FileField(upload_to='uploads/faculty_documents/profile_picture', default=None, blank = True)
-    jr = models.FileField(upload_to='uploads/faculty_documents/joining_report/', default=None, blank = True)
-    of = models.FileField(upload_to='uploads/faculty_documents/offer_letter/', default=None, blank = True)
-    ss = models.FileField(upload_to='uploads/faculty_documents/salary_slip/', default=None, blank = True)
-    hdc = models.FileField(upload_to='uploads/faculty_documents/higher_degree_certificate/', default=None, blank = True)
-    certificate = models.FileField(upload_to='uploads/faculty_documents/certificate/', default=None, blank = True)
+    profile_picture = models.FileField(upload_to='uploads/faculty_documents/profile_picture', default=None, null = True,blank = True)
+    jr = models.FileField(upload_to='uploads/faculty_documents/joining_report/', default=None, null = True,blank = True)
+    of = models.FileField(upload_to='uploads/faculty_documents/offer_letter/', default=None, null = True,blank = True)
+    ss = models.FileField(upload_to='uploads/faculty_documents/salary_slip/', default=None, null = True,blank = True)
+    hdc = models.FileField(upload_to='uploads/faculty_documents/higher_degree_certificate/', default=None, null = True,blank = True)
+    certificate = models.FileField(upload_to='uploads/faculty_documents/certificate/', default=None, null = True,blank = True)
     phd_univ = models.CharField(max_length=255, null = True, blank = True)
     phd_dor = models.DateField(null=True,blank=True)
     norp = models.IntegerField(default=0)
@@ -270,7 +285,7 @@ class category(models.TextChoices):
 
 def rename_fpd_file(instance, old_filename):
     extension = os.path.splitext(old_filename)[1].lower()
-    username = "".join(map(str.capitalize, instance.name.split()))
+    username = "".join(map(str.capitalize, instance.email.name.split()))
     type_of_event = "_".join(category.get_fullvalue(instance.category).split())
     title_of_program = "_".join(instance.top.split())
     count = Faculty_participation_data.objects.filter(category=instance.category,email=instance.email).values('id').count()
@@ -355,7 +370,7 @@ def rename_mooc_file(instance, old_filename):
     else:
         year = "no_year"
     name_of_course = "_".join(instance.noc.split())
-    username = "".join(map(str.capitalize, instance.name.split()))
+    username = "".join(map(str.capitalize, instance.email.name.split()))
     new_filename = f"{name_of_course}_{username}_{year}{extension}"
     return os.path.join('uploads/mooc_certificate/', new_filename)
 
@@ -417,14 +432,14 @@ class mapped_sdgs(models.TextChoices):
     SDG_6 = "SDG6", "SDG - 6 (Clean Water And Sanitation)",
     SDG_7 = "SDG7", "SDG - 7 (Affordable And Clean Energy)",
     SDG_8 = "SDG8", "SDG - 8 (Decent Work And Economic Growth)",
-    SDG_9 = "SDG9", "SDG - 9 (Industry, Innovation And Infrastructure)",
+    SDG_9 = "SDG9", "SDG - 9 (Industry And Innovation And Infrastructure)",
     SDG_10 = "SDG10", "SDG - 10 (Reduced Inequalities)",
     SDG_11 = "SDG11", "SDG - 11 (Sustainable Cities And Communities)",
     SDG_12 = "SDG12", "SDG - 12 (Responsible Consumption And Production)",
     SDG_13 = "SDG13", "SDG - 13 (Climate Action)",
     SDG_14 = "SDG14", "SDG - 14 (Life Below Water)",
     SDG_15 = "SDG15", "SDG - 15 (Life On Land)",
-    SDG_16 = "SDG16", "SDG - 16 (Peace, Justice, And Strong Institutions)",
+    SDG_16 = "SDG16", "SDG - 16 (Peace And Justice And Strong Institutions)",
     SDG_17 = "SDG17", "SDG - 17 (Partnerships For The Goals)",
 
 def rename_events_file(instance, old_filename):
@@ -492,10 +507,27 @@ class events(models.Model):
     nossp = models.CharField(max_length=255)
     nosmp = models.CharField(max_length=255)
     map_sdg = MultiSelectField(
-        max_length=5,
+        max_length=80,
         choices=mapped_sdgs.choices,
         default=mapped_sdgs.SDG_17
     )
+    @property
+    def map_sdg_display_list(self):
+        data = self.map_sdg
+
+        # If it's empty or None
+        if not data:
+            return []
+
+        # If the database accidentally stored a single string instead of a list
+        if isinstance(data, str):
+            data = [key.strip() for key in data.split(',') if key.strip()]
+
+        choice_dict = dict(mapped_sdgs.choices)
+
+        # Now 'NTS' stays together as one key
+        return [choice_dict.get(key, key) for key in data]
+
     eraipf = models.CharField(
         max_length=1,
         choices=accept.choices
@@ -511,7 +543,7 @@ class events(models.Model):
 
 def rename_awards_file(instance, old_filename):
     extension = os.path.splitext(old_filename)[1].lower()
-    username = "".join(map(str.capitalize, instance.name.split()))
+    username = "".join(map(str.capitalize, instance.email.name.split()))
     name_of_award = "_".join(instance.noaa.split())
     new_filename = f"{instance.session}_{username}_{name_of_award}{extension}"
     return os.path.join('uploads/awards/', new_filename)
@@ -553,7 +585,7 @@ class status(models.TextChoices):
 
 def rename_sponsored_file(instance, old_filename):
     extension = os.path.splitext(old_filename)[1].lower()
-    username = "".join(map(str.capitalize, instance.name.split()))
+    username = "".join(map(str.capitalize, instance.email.name.split()))
     type_of_event = "_".join(category.get_fullvalue(instance.category).split())
     new_filename = f"{instance.session}_{username}_{type_of_event}{extension}"
     return os.path.join('uploads/sponsored_research/', new_filename)
@@ -606,7 +638,7 @@ class quartile(models.TextChoices):
 
 def rename_journal_file(instance, old_filename):
     extension = os.path.splitext(old_filename)[1].lower()
-    username = "".join(map(str.capitalize, instance.name.split()))
+    username = "".join(map(str.capitalize, instance.email.name.split()))
     new_filename = f"{instance.session}_{username}{extension}"
     return os.path.join('uploads/research_journal/', new_filename)
 
@@ -664,7 +696,7 @@ class research_journal(models.Model):
 
 def rename_conference_file(instance, old_filename):
     extension = os.path.splitext(old_filename)[1].lower()
-    username = "".join(map(str.capitalize, instance.name.split()))
+    username = "".join(map(str.capitalize, instance.email.name.split()))
     new_filename = f"{instance.session}_{username}{extension}"
     return os.path.join('uploads/research_conference/', new_filename)
 
@@ -711,7 +743,7 @@ class research_conference(models.Model):
 
 def rename_book_file(instance, old_filename):
     extension = os.path.splitext(old_filename)[1].lower()
-    username = "".join(map(str.capitalize, instance.name.split()))
+    username = "".join(map(str.capitalize, instance.email.name.split()))
     new_filename = f"{instance.session}_{username}{extension}"
     return os.path.join('uploads/research_book/', new_filename)
 
@@ -764,7 +796,7 @@ class status_of_patent(models.TextChoices):
 
 def rename_patent_file(instance, old_filename):
     extension = os.path.splitext(old_filename)[1].lower()
-    username = "".join(map(str.capitalize, instance.name.split()))
+    username = "".join(map(str.capitalize, instance.email.name.split()))
     new_filename = f"{instance.session}_{username}_patent{extension}"
     return os.path.join('uploads/patents/', new_filename)
 

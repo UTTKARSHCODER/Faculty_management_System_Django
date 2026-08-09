@@ -251,7 +251,7 @@ def cookie_not_found(request):
 
 @session_login_required
 def progressdetails(request, form_no, user_token):
-    if request.session.get('topLeftBar') == 'spa' or request.session.get('topLeftBar') == 'ad': # Why not faculty ?
+    if request.session.get('topLeftBar'): # Why not faculty ?
         payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=["HS256"])
         actual_pk = payload['user_pk']
         if form_no == "1_1":

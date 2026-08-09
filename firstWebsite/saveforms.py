@@ -13,7 +13,6 @@ from MyFirstDjangoWebsite import settings
 from firstWebsite.modals import Faculty, non_teaching_staff, Faculty_participation_data, mooc_course, events, \
     awards_and_achievments, sponsored_research, research_journal, research_conference, research_book, patents, guided, \
     resource
-from firstWebsite.validations import nameValidate, radiocheck
 from firstWebsite.views import session_login_required
 import jwt
 
@@ -26,49 +25,60 @@ def save_all_forms(request, form_no):
             faculty_instance = Faculty.objects.get(pk=request.session.get('user_id'))
 
             if form_no == 16:
-                # Profile Picture input can also be added on later discussion
+                # Non - Teaching Profile
+                #  Picture input can also be added on later discussion
                 name = request.POST.get('name').strip()
-                if not va.nameValidate(request,name,"Name"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(name,"Name")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 mobile_no = request.POST.get('mobile_no').strip()
-                if not va.mobileNumberValidate(request,mobile_no):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.mobileNumberValidate(mobile_no)
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 department = request.POST.get('department',"").strip()
 
                 lab_no = request.POST.get('lab_no').strip()
-                if not va.nameValidate(request,lab_no,"Lab Number"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(lab_no, "Lab Number")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 designation = request.POST.get('designation').strip()
-                if not va.nameValidate(request,designation,"Designation"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(designation, "Designation")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 emp_id = int(request.POST.get('emp_id') or 0)
-                if not va.numberValidate(request, emp_id, "Employee ID"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.numberValidate(emp_id, "Employee ID")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 highest_qual = request.POST.get('highest_qualification').strip()
-                if not va.nameValidate(request,highest_qual,"Highest Qualification"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(highest_qual, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 university_name = request.POST.get('univ_name').strip()
-                if not va.nameValidate(request,university_name,"University Name"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(university_name, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 pshd = int(request.POST.get('pshd') or 0)
-                if not va.numberValidate(request,pshd,"Passing Year of Highest Degree"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.numberValidate(pshd, "Passing Year of Highest Degree")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 professional_course = request.POST.getlist('professional_courses')
-                if not va.radiocheck(request,professional_course,"Professional Course"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.radiocheck(professional_course,"Professional Course")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 pan_no = request.POST.get('pan_no').strip()
-                if not va.validate_pan(pan_no) or not pan_no:
+                status, msg = va.validate_pan(pan_no)
+                if not status or not pan_no:
                     messages.error(request, "Please enter a valid PAN number")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 dob = request.POST.get('dob')
                 try:
@@ -79,11 +89,11 @@ def save_all_forms(request, form_no):
 
                     if not min_date < selected_date < max_date:
                         messages.error(request,f"Please select/enter date of birth in range of 1930-01-01 to 2001-12-31.You selected {selected_date}")
-                        return redirect('all_forms',pk=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request,"Please select/enter a valid date of birth.")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 joining_date = request.POST.get('jd')
                 try:
@@ -93,11 +103,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date < min_date:
                         messages.error(request,"Please select/enter date greater than 2000-01-01")
-                        return redirect('all_forms',pk=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request,"Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 promotion_date = request.POST.get('pd')
                 if promotion_date == '':
@@ -105,39 +115,44 @@ def save_all_forms(request, form_no):
 
                 if request.FILES.get('jr'):
                     joining_report = request.FILES['jr']
-                    if not va.fileValidate(request,joining_report,"Joining Report"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(joining_report,"Joining Report")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
                 else:
                     messages.error(request,"No file selected for joining report. Please select one!")
-                    return redirect('all_forms',pk=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 if request.FILES.get('ol'):
                     offer_letter = request.FILES['jr']
-                    if not va.fileValidate(request,offer_letter,"Offer Letter"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(offer_letter,"Offer Letter")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
                 else:
                     messages.error(request,"No file selected for joining report. Please select one!")
-                    return redirect('all_forms',pk=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 if request.FILES.get('hdc'):
                     higher_degree_certificate = request.FILES['hdc']
-                    if not va.fileValidate(request,higher_degree_certificate,"Higher Degree Certificate"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(higher_degree_certificate,"Higher Degree Certificate")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
                 else:
                     messages.error(request,"No file selected for joining report. Please select one!")
-                    return redirect('all_forms',pk=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 if request.FILES.get('ss'):
                     salary_slip = request.FILES['ss']
-                    if not va.fileValidate(request,salary_slip,"Salary Slip"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(salary_slip,"Salary Slip")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
                 else:
                     salary_slip = None
 
                 if request.FILES.get('awards'):
                     certificate = request.FILES['awards']
-                    if not va.fileValidate(request,certificate,"Co-curricular Certificate"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(certificate,"Co-curricular Certificate")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
                 else:
                     certificate = None
 
@@ -148,32 +163,37 @@ def save_all_forms(request, form_no):
 
             elif form_no == 1:
                 category = request.POST.get('category').strip()
-                if not va.nameValidate(request,category,"Category"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(category, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 top = request.POST.get('top').strip()
-                if not va.nameValidate(request,top,"Title of program"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(top, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 mode = request.POST.get('optradio').strip()
-                if not va.radiocheck(request,mode,"mode"):
-                    return redirect('all_forms', form_no=form_no)
+                if not status(request,mode,"mode"):
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 level = request.POST.get('optradio1').strip()
-                if not va.radiocheck(request,level,"level"):
-                    return redirect('all_forms', form_no=form_no)
+                if not status(request,level,"level"):
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 organizer = request.POST.get('organizer').strip()
-                if not va.nameValidate(request,organizer,"Organizer"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(organizer, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 sponser = request.POST.get('sponser').strip()
-                if not va.nameValidate(request,sponser,"Sponser"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(sponser, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 approval = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request,approval,"(SKIT approved)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(approval, "(SKIT approved)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 begi_date = request.POST.get('begi_date')
                 try:
@@ -181,12 +201,12 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
                     begi_date = selected_date
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -194,43 +214,49 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
                     end_date = selected_date
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 num_of_days = (end_date - begi_date).days
 
                 proof_approval = request.POST.get('optradio3').strip()
-                if not va.radiocheck(request,proof_approval,"Proof Approval"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.radiocheck(proof_approval, "Proof Approval")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 if request.FILES.get('proof_file'):
                     proof_file_path = request.FILES['proof_file']
-                    if not va.fileValidate(request,proof_file_path,"Proof File"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(proof_file_path,"Proof File")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 obj1 = Faculty_participation_data(category=category,top=top,mode=mode,level=level,organizer=organizer,sponsors=sponser,approval=approval,begi_date=begi_date,end_date=end_date,session=session,no_of_days=num_of_days,proof_enclosed=proof_approval,proof_file=proof_file_path,email=faculty_instance)
                 obj1.save()
 
             elif form_no == 2:
                 category = request.POST.get('category').strip()
-                if not va.nameValidate(request,category,"Category"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(category, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 timeline = request.POST.get('toc').strip()
-                if not va.nameValidate(request,category,"Timeline of Course"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(timeline, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 noc = request.POST.get('noc').strip()
-                if not va.nameValidate(request,category,"Name of Course"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(noc, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 doc = request.POST.get('optradio3').strip()
-                if not va.nameValidate(request,category,"Duration of Course"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(doc, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 begi_date = request.POST.get('begi_date')
                 try:
@@ -238,11 +264,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -250,70 +276,83 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 offer = request.POST.get('ofo').strip()
-                if not va.nameValidate(request, category, "Offering Agency/ Organizer"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(offer, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 ctype = request.POST.get('optradio1').strip()
-                if not va.radiocheck(request, category, "Certificate Type"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(ctype, "Certificate Type")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 topper_in = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request, category, "Topper Category"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(topper_in, "Topper Category")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 remarks = request.POST.get('remarks').strip()
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
-                    if not va.fileValidate(request,proof_file,"Proof File"):
-                        return redirect('all_forms',pk=form_no)
+                    status, msg = va.fileValidate(proof_file,"Proof File")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message': msg, 'from' : 'file'})
 
                 obj2 = mooc_course(category=category,timeline=timeline,noc=noc,doc=doc,begi_date=begi_date,end_date=end_date,offer=offer,ctype=ctype,topper_in=topper_in,session=session,remarks=remarks,proof_file=proof_file,email=faculty_instance)
                 obj2.save()
 
             elif form_no == 3:
                 category = request.POST.get('category').strip()
-                if not va.nameValidate(request,category,"Category"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(category, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 eof = request.POST.getlist('optradio3')
-                if not va.radiocheck(request,eof,"Event organized for"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.radiocheck(eof, "Event organized for")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 nofc = request.POST.get('nofc').strip()
-                if not va.nameValidate(request,nofc,"Name of Faculty Coordinator(s)"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(nofc, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 topdpo = request.POST.get('topdpo').strip()
-                if not va.nameValidate(request,topdpo,"Title of Professional Development Program Organized"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(topdpo, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 nop = int(request.POST.get('nop') or 0)
-                if not va.numberValidate(request,nop,"Number of participants"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.numberValidate(nop, "Number of participants")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 adcc = request.POST.get('adcc').strip()
-                if not va.nameValidate(request,adcc,"Academic Department"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(adcc, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 ct = request.POST.get('optradio1').strip()
-                if not va.radiocheck(request,ct,"Certificate Type"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.radiocheck(ct, "Certificate Type")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 nosa = request.POST.get('nosa').strip()
-                if not va.nameValidate(request,nosa,"Name of Sponsoring Agency"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(nosa, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 cd = request.POST.get('cd').strip()
-                if not va.nameValidate(request,cd,"Collaboration Details"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(cd, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 begi_date = request.POST.get('begi_date')
                 try:
@@ -321,11 +360,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -333,48 +372,57 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 gr = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request,gr,"Grant Recieved"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.radiocheck(gr, "Grant Recieved")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 gd = request.POST.get('gd').strip()
-                if not va.nameValidate(request,gd,"Grant Details"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(gd, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 acutal_expense = request.POST.get('actual_expenditure').strip()
-                if not va.nameValidate(request, acutal_expense, "Actual Expenditure"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(acutal_expense, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 awpsfooe = request.POST.get('awpsfooe').strip()
-                if not va.nameValidate(request,gr,"Association with professional societies for organization of event"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(awpsfooe, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 nossp = request.POST.get('nossp').strip()
-                if not va.nameValidate(request,gr,"Number of SKIT students participated"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(nossp, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 nosmp = request.POST.get('nosmp').strip()
-                if not va.nameValidate(request,nosmp,"Number of staff member participated"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(nosmp, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 mapped_sdg = request.POST.getlist('optradio4')
-                if not va.radiocheck(request,mapped_sdg, "Mapped SDG"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.radiocheck(mapped_sdg, "Mapped SDG's")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 eraipf = request.POST.get('optradio5').strip()
-                if not va.radiocheck(request,eraipf,"Event Report attached(Yes/No)"):
-                    return redirect('all_fomrs',pk=form_no)
+                status, msg = va.radiocheck(eraipf, "Event Report attached(Yes/No)")
+                if not status:
+                    return redirect('all_fomrs',form_no=form_no)
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
-                    if not va.fileValidate(request,proof_file,"Proof file"):
-                        return redirect('all_forms',pk=form_no)
+                    status, msg = va.fileValidate(proof_file,"Proof file")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 remarks = request.POST.get('remarks')
 
@@ -383,24 +431,29 @@ def save_all_forms(request, form_no):
 
             elif form_no == 4:
                 category = request.POST.get('category').strip()
-                if not va.nameValidate(request,category,"Category"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(category, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 noaa = request.POST.get('noaa').strip()
-                if not va.nameValidate(request,noaa,"Name of award/Achievement"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(noaa, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 paf = request.POST.get('paf').strip()
-                if not va.nameValidate(request, noaa, "Position / Award For"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(paf, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 ao = request.POST.get('ao').strip()
-                if not va.nameValidate(request, noaa, "Agency / Organization"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(ao, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 prize = request.POST.get('prize').strip()
-                if not va.nameValidate(request, noaa, "Prize"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(prize, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 ad = request.POST.get('award_date')
                 try:
@@ -408,75 +461,88 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 remark = request.POST.get('remark').strip()
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
-                    if not va.fileValidate(request,proof_file,"Proof File"):
-                        return redirect('all_forms',pk=form_no)
+                    status, msg = va.fileValidate(proof_file,"Proof File")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 obj4 = awards_and_achievments(category=category,noaa=noaa,paf=paf,ao=ao,prize=prize,ad=ad,remark=remark,session=session,proof_file=proof_file,email=faculty_instance)
                 obj4.save()
 
             elif form_no == 5:
                 category = request.POST.get('category').strip()
-                if not va.nameValidate(request,category,"Category"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(category, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 nofa = request.POST.get('nofa').strip()
-                if not va.nameValidate(request, nofa, "Name of Funding Agency"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(nofa, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 dop = int(request.POST.get('dop') or 0)
-                if not va.numberValidate(request,dop,"Duration of project"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.numberValidate(nofa, "Duration of project")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 amount = int(request.POST.get('amount') or 0)
-                if not va.numberValidate(request,amount,"Amount"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.numberValidate(amount, "Amount")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 status = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request, status, "Status"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(status, "Status")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
-                    if not va.fileValidate(request,proof_file,"Proof File"):
-                        return redirect('all_forms',pk=form_no)
+                    status, msg = va.fileValidate(proof_file,"Proof File")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 obj5 = sponsored_research(category=category,nofa=nofa,dop=dop,amount=amount,session=session,status=status,proof_file=proof_file,email=faculty_instance)
                 obj5.save()
 
             elif form_no == 6:
                 noa = request.POST.get('noa').strip()
-                if not va.nameValidate(request,noa,"Name of the author(s)"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(noa, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 top = request.POST.get('top').strip()
-                if not va.nameValidate(request,top,"Title of paper"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(top, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 noj = request.POST.get('noj').strip()
-                if not va.nameValidate(request,noj,"Name of Journal"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(noj, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 nop = request.POST.get('nop').strip()
-                if not va.nameValidate(request,nop,"Name of the Publisher"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(nop, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 vi = request.POST.get('vi').strip()
-                if not va.nameValidate(request,vi,"Volumne, Issue"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(vi, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 pn = request.POST.get('pn').strip()
-                if not va.nameValidate(request,pn,"Page Number"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(pn, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 pd = request.POST.get('begi_date')
                 try:
@@ -484,96 +550,116 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 isnp = request.POST.get('isnp').strip()
-                if not va.nameValidate(request, isnp, "ISSN number : Print"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(isnp, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 isno = request.POST.get('isno').strip()
-                if not va.nameValidate(request, isno, "ISSN number : Online"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(isno, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 level = request.POST.get('optradio3').strip()
-                if not va.nameValidate(request, level, "Level (National/ International)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(level, "Highest Qualification")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 doi = request.POST.get('doi').strip()
-                if not va.nameValidate(request, pn, "DOI(Digital Object Identifier)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(doi, "DOI(Digital Object Identifier)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 lwj = request.POST.get('lwj').strip()
-                if not va.nameValidate(request, lwj, "Link to website of the Journal"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(lwj, "Link to website of the Journal")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 lap = request.POST.get('lap').strip()
-                if not va.nameValidate(request, lap, "Link to article/paper/ abstract of the article"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(lap, "Link to article/paper/ abstract of the article")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 lrsj = request.POST.get('lrsj').strip()
-                if not va.nameValidate(request, lrsj, "Link to the recognition in SCOPUS enlistment of the Journal"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(lrsj, "Link to the recognition in SCOPUS enlistment of the Journal")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 aiop = request.POST.get('aiop').strip()
-                if not va.nameValidate(request, aiop, "Affiliating Institute at the time of publication"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(aiop, "Affiliating Institute at the time of publication")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 ssa = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request, ssa, "Is SKIT student associated"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(ssa, "Is SKIT student associated?")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 details = request.POST.get('details').strip()
-                if not va.nameValidate(request, details, "If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(details, "If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 index_by = request.POST.get('optradio1').strip()
-                if not va.radiocheck(request, index_by, "Indexed by"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(index_by, "Indexed by")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 quartile = request.POST.get('optradio').strip()
-                if not va.radiocheck(request, quartile, "Quartile"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(quartile, "Quartile")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
-                    if not va.fileValidate(request, proof_file, "Proof File"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(proof_file, "Proof File")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 obj6 = research_journal(noa=noa,top=top,noj=noj,nop=nop,vi=vi,pn=pn,pd=pd,session=session,isnp=isnp,isno=isno,level=level,doi=doi,lwj=lwj,lap=lap,lrsj=lrsj,aiop=aiop,ssa=ssa,details=details,index_by=index_by,quartile=quartile,proof_file=proof_file,email=faculty_instance)
                 obj6.save()
 
             elif form_no == 7:
                 noa = request.POST.get('noa').strip()
-                if not va.nameValidate(request, noa, "Name of the author(s)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(noa, "Name of the author(s)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 toc = request.POST.get('toc').strip()
-                if not va.nameValidate(request, toc, "Title of Conference"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(toc, "Title of Conference")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 top = request.POST.get('top').strip()
-                if not va.nameValidate(request, top, "Title of Paper"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(top, "Title of Paper")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 topc = request.POST.get('topc').strip()
-                if not va.nameValidate(request, topc, "Title of the proceedings of the conference"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(topc, "Title of the proceedings of the conference")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 level = request.POST.get('optradio3').strip()
-                if not va.nameValidate(request, level, "Level (National/ International)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(level, "Level (National/ International)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 isnp = request.POST.get('isnp').strip()
-                if not va.nameValidate(request, isnp, "ISBN/ISSN number of the proceeding"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(isnp, "ISBN/ISSN number of the proceeding")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 nop = request.POST.get('nop').strip()
-                if not va.nameValidate(request, nop, "Name of the Publisher"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(nop, "Name of the Publisher")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 pd = request.POST.get('begi_date')
                 try:
@@ -581,68 +667,81 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 doi = request.POST.get('doi').strip()
-                if not va.nameValidate(request, doi, "DOI(Digital Object Identifier)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(doi, "DOI(Digital Object Identifier)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 lwj = request.POST.get('lwj').strip()
-                if not va.nameValidate(request, lwj, "Link to website of the Journal"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(lwj, "Link to website of the Journal")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 aitp = request.POST.get('aitp').strip()
-                if not va.nameValidate(request, aitp, "Affiliating Institute at the time of publication"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(aitp, "Affiliating Institute at the time of publication")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 ssa = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request, ssa, "Is SKIT student associated"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(ssa, "Is SKIT student associated")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 details = request.POST.get('details').strip()
-                if not va.nameValidate(request, details, "If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(details, "If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 index_by = request.POST.get('index_by').strip()
-                if not va.nameValidate(request, index_by, "Indexed by"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(index_by, "Indexed by")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
-                    if not va.fileValidate(request, proof_file, "Proof File"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(proof_file, "Proof File")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 obj7 = research_conference(noa=noa,toc=toc,top=top,topc=topc,level=level,isnp=isnp,nop=nop,pd=pd,session=session,doi=doi,lwj=lwj,aitp=aitp,ssa=ssa,details=details,index_by=index_by,proof_file=proof_file,email=faculty_instance)
                 obj7.save()
 
             elif form_no == 8:
                 noa = request.POST.get('noa').strip()
-                if not va.nameValidate(request, noa, "Name of the author(s)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(noa, "Name of the author(s)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 tob = request.POST.get('tob').strip()
-                if not va.nameValidate(request, tob, "Title of the book"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(tob, "Title of the book")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 top = request.POST.get('top').strip()
-                if not va.nameValidate(request, top, "Title of the chapter Published"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(top, "Title of the chapter Published")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 level = request.POST.get('optradio3').strip()
-                if not va.radiocheck(request, level, "Level (National/ International)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(level, "Level (National/ International)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 isbn = request.POST.get('isbn').strip()
-                if not va.nameValidate(request, isbn, "ISBN"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(isbn, "ISBN")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 nop = request.POST.get('nop').strip()
-                if not va.nameValidate(request, nop, "Name of the Publisher"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(nop, "Name of the Publisher")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 pd = request.POST.get('begi_date')
                 try:
@@ -650,64 +749,76 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 doi = request.POST.get('doi').strip()
-                if not va.nameValidate(request, doi, "DOI(Digital Object Identifier)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(doi, "DOI(Digital Object Identifier)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 lwj = request.POST.get('lwj').strip()
-                if not va.nameValidate(request, lwj, "Link to website of the Journal"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(lwj, "Link to website of the Journal")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 aitp = request.POST.get('aitp').strip()
-                if not va.nameValidate(request, aitp, "Affiliating Institute at the time of publication"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(aitp, "Affiliating Institute at the time of publication")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 ssa = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request, ssa, "Is SKIT student associated"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(ssa, "Is SKIT student associated")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 details = request.POST.get('details').strip()
-                if not va.nameValidate(request, details, "Write student(s) details"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(details, "Write student(s) details")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 index_by = request.POST.get('index_by').strip()
-                if not va.nameValidate(request, index_by, "Indexed by"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(index_by, "Indexed by")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
-                    if not va.fileValidate(request, proof_file, "Proof File"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(proof_file, "Proof File")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 obj8 = research_book(noa=noa,tob=tob,top=top,level=level,isbn=isbn,nop=nop,pd=pd,session=session,doi=doi,lwj=lwj,aitp=aitp,ssa=ssa,details=details,index_by=index_by,proof_file=proof_file,email=faculty_instance)
                 obj8.save()
 
             elif form_no == 9:
                 sop = request.POST.get('optradio1').strip()
-                if not va.radiocheck(request, sop, "Status of Patent"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(sop, "Status of Patent")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 gi = request.POST.get('nof').strip()
-                if not va.nameValidate(request, gi, "Granted ID"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(gi, "Granted ID")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 ag = request.POST.get('ag').strip()
-                if not va.nameValidate(request, ag, "Application ID"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(ag, "Application ID")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 top = request.POST.get('top').strip()
-                if not va.nameValidate(request, top, "Title of Patent"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(top, "Title of Patent")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 gc = request.POST.get('gc').strip()
-                if not va.nameValidate(request, gc, "Granted Country"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(gc, "Granted Country")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 pfd = request.POST.get('filed_date')
                 try:
@@ -715,11 +826,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 pd = request.POST.get('begi_date')
                 try:
@@ -727,62 +838,73 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 pg = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request, pg, "Type of Patent"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(pg, "Type of Patent")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 ssa = request.POST.get('optradio').strip()
-                if not va.radiocheck(request, ssa, "Is SKIT student associated"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(ssa, "Is SKIT student associated")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 details = request.POST.get('details').strip()
-                if not va.nameValidate(request, details, "Write student(s) details"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(details, "Write student(s) details")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 link = request.POST.get('link').strip()
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
-                    if not va.fileValidate(request, proof_file, "Proof File"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(proof_file, "Proof File")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 obj9 = patents(sop=sop,gi=gi, ag=ag, top=top, gc=gc,pfd=pfd, pd=pd, session=session, pg=pg, ssa=ssa, details=details, link=link, proof_file=proof_file,email=faculty_instance)
                 obj9.save()
 
             elif form_no == 10:
                 category = request.POST.get('category').strip()
-                if not va.nameValidate(request, category, "Category"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(category, "Category")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 nos = request.POST.get('nos').strip()
-                if not va.nameValidate(request, nos, "Name of the student Guided"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(nos, "Name of the student Guided")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 ens = request.POST.get('ens').strip()
-                if not va.nameValidate(request, ens, "Enrollment Number of Student"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(ens, "Enrollment Number of Student")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 urns = request.POST.get('urns').strip()
-                if not va.nameValidate(request, urns, "University Roll Number of Student"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(urns, "University Roll Number of Student")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 eys = request.POST.get('enrollmentyear').strip()
-                if not va.nameValidate(request, eys, "Enrollment Year of Student"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(eys, "Enrollment Year of Student")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 tod = request.POST.get('tod').strip()
-                if not va.nameValidate(request, tod, "Title of the Dissertation"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(tod, "Title of the Dissertation")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 visor = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request, visor, "Supervisor / Co-supervisor"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(visor, "Supervisor / Co-supervisor")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 dov = request.POST.get('dov')
                 try:
@@ -790,39 +912,45 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 noe = request.POST.get('noe').strip()
-                if not va.nameValidate(request, noe, "Name of external examiner"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(noe, "Name of external examiner")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 obj10 = guided(category=category ,nos=nos, ens=ens, urns=urns, eys=eys, tod=tod, visor=visor, dov=dov, noe=noe, session=session,email=faculty_instance)
                 obj10.save()
 
             elif form_no == 11:
                 category = request.POST.get('category').strip()
-                if not va.nameValidate(request,category,"Category"):
-                    return redirect('all_forms',pk=form_no)
+                status, msg = va.nameValidate(category, "Category")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 toe = request.POST.get('toe').strip()
-                if not va.nameValidate(request, toe, "Title of Event/ Exam Name"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(toe, "Title of Event/ Exam Name")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 sa = request.POST.get('sa').strip()
-                if not va.nameValidate(request, sa, "Subject Area"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(sa, "Subject Area")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 doe = int(request.POST.get('doe') or 0)
-                if not va.numberValidate(request, doe, "Duration of event (in days)"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.numberValidate(doe, "Duration of event (in days)")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 rpt = request.POST.get('optradio2').strip()
-                if not va.radiocheck(request, rpt, "Resource Person Type"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.radiocheck(rpt, "Resource Person Type")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 begi_date = request.POST.get('begi_date')
                 try:
@@ -830,11 +958,11 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -842,31 +970,35 @@ def save_all_forms(request, form_no):
 
                     if selected_date > timezone.now().date():
                         messages.error(request, "Date cannot be in future")
-                        return redirect('all_forms', form_no=form_no)
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
                     messages.error(request, "Please select/enter a valid date")
-                    return redirect('all_forms', form_no=form_no)
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 venue = request.POST.get('venue').strip()
-                if not va.nameValidate(request, venue, "Venue"):
-                    return redirect('all_forms', form_no=form_no)
+                status, msg = va.nameValidate(venue, "Venue")
+                if not status:
+                    return JsonResponse({'success' : False, 'message' : msg})
 
                 if request.FILES.get('proof_file'):
                     proof_file = request.FILES['proof_file']
-                    if not va.fileValidate(request, proof_file, "Proof File"):
-                        return redirect('all_forms', form_no=form_no)
+                    status, msg = va.fileValidate(proof_file, "Proof File")
+                    if not status:
+                        return JsonResponse({'success' : False, 'message' : msg})
 
                 obj11 = resource(category=category,toe=toe, sa=sa,doe=doe, rpt=rpt, begi_date=begi_date, end_date=end_date, session=session, venue=venue, proof_file=proof_file,email = faculty_instance)
                 obj11.save()
 
             elif form_no == 13:
+                # Edit Profile
                 payload = jwt.decode(request.POST.get('user_id'), settings.SECRET_KEY, algorithms=["HS256"])
                 actual_pk = payload['user_pk']
                 faculty_instance = Faculty.objects.get(pk=actual_pk)
 
                 faculty_instance.name = request.POST.get('name').strip()
-                if not va.nameValidate(request, faculty_instance.name, "Name"):
+                status, msg = va.nameValidate(faculty_instance.name, "Name")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.contact_number = request.POST.get('mobile_no').strip()
@@ -878,35 +1010,42 @@ def save_all_forms(request, form_no):
                 faculty_instance.email = request.POST.get('email').strip()
 
                 faculty_instance.gender = request.POST.get('optradio').strip()
-                if not va.radiocheck(request, faculty_instance.gender, "Gender"):
+                status, msg = va.radiocheck(faculty_instance.gender, "Gender")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.department = request.POST.get('department').strip()
 
                 faculty_instance.emp_id = int(request.POST.get('emp_id') or 0)
-                if not va.numberValidate(request, faculty_instance.emp_id, "Employee ID"):
+                status, msg = va.numberValidate(faculty_instance.emp_id, "Employee ID")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.designation = request.POST.get('designation').strip()
 
                 faculty_instance.aos = request.POST.get('aos').strip()
-                if not va.radiocheck(request, faculty_instance.aos, "Area of Specialization"):
+                status, msg = va.radiocheck(faculty_instance.aos, "Area of Specialization")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.hq = request.POST.get('highest_qualification').strip()
-                if not va.radiocheck(request, faculty_instance.hq, "Highest Qualification"):
+                status, msg = va.radiocheck(faculty_instance.hq, "Highest Qualification")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.univ_name = request.POST.get('univ_name').strip()
-                if not va.nameValidate(request, faculty_instance.univ_name, "University Name"):
+                status, msg = va.nameValidate(faculty_instance.univ_name, "University Name")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.pshd = request.POST.get('pshd').strip()
-                if not va.radiocheck(request, faculty_instance.pshd, "Passing Year of Highest Degree"):
+                status, msg = va.radiocheck(faculty_instance.pshd, "Passing Year of Highest Degree")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.pan_no = request.POST.get('pan_no').strip()
-                if not va.validate_pan(faculty_instance.pan_no) or not faculty_instance.pan_no:
+                status, msg = va.validate_pan(faculty_instance.pan_no)
+                if not status or not faculty_instance.pan_no:
                     messages.error(request, "Please enter a valid PAN number")
                     return redirect('all_forms', form_no=form_no)
 
@@ -934,7 +1073,7 @@ def save_all_forms(request, form_no):
 
                     if selected_date < min_date:
                         messages.error(request,"Please select/enter date greater than 2000-01-01")
-                        return redirect('all_forms',pk=form_no)
+                        return redirect('all_forms',form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request,"Please select/enter a valid date")
@@ -956,52 +1095,61 @@ def save_all_forms(request, form_no):
                         return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.google_scholar = request.POST.get('google_scholar').strip()
-                if not va.nameValidate(request, faculty_instance.google_scholar, "Google Scholar"):
+                status, msg = va.nameValidate(faculty_instance.google_scholar, "Google Scholar")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.vidwan_profile = request.POST.get('vidwan_profile').strip()
-                if not va.nameValidate(request, faculty_instance.vidwan_profile, "Vidwan Profile"):
+                status, msg = va.nameValidate(faculty_instance.vidwan_profile, "Vidwan Profile")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.personal_website_link = request.POST.get('website_link').strip()
 
                 faculty_instance.address = request.POST.get('address').strip()
-                if not va.addressValidate(request, faculty_instance.address, "Address"):
+                status, msg = va.addressValidate(faculty_instance.address, "Address")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
 
                 if request.FILES.get('profile_picture'):
                     profile_picture = request.FILES.get('profile_picture')
-                    if not va.imageFileValidate(request, profile_picture, "Profile Picture"):
+                    status, msg = va.imageFileValidate(profile_picture, "Profile Picture")
+                    if not status:
                         return redirect('all_forms', form_no=form_no)
                     faculty_instance.profile_picture = profile_picture
 
                 if request.FILES.get('jr'):
                     jr = request.FILES.get('jr')
-                    if not va.fileValidate(request, jr, "Joining Report"):
+                    status, msg = va.fileValidate(jr, "Joining Report")
+                    if not status:
                         return redirect('all_forms', form_no=form_no)
                     faculty_instance.jr = jr
 
                 if request.FILES.get('ol'):
                     of = request.FILES.get('ol')
-                    if not va.fileValidate(request, of, "Offer Letter"):
+                    status, msg = va.fileValidate(of, "Offer Letter")
+                    if not status:
                         return redirect('all_forms', form_no=form_no)
                     faculty_instance.of = of
 
                 if request.FILES.get('hdc'):
                     hdc = request.FILES.get('hdc')
-                    if not va.fileValidate(request, hdc, "Higher Degree Certificate"):
+                    status, msg = va.fileValidate(hdc, "Higher Degree Certificate")
+                    if not status:
                         return redirect('all_forms', form_no=form_no)
                     faculty_instance.hdc = hdc
 
                 if request.FILES.get('ss'):
                     ss = request.FILES.get('ss')
-                    if not va.fileValidate(request, ss, "Salary Slip"):
+                    status, msg = va.fileValidate(ss, "Salary Slip")
+                    if not status:
                         return redirect('all_forms', form_no=form_no)
                     faculty_instance.ss = ss
 
                 if request.FILES.get('awards'):
                     certificate = request.FILES.get('awards')
-                    if not va.fileValidate(request, certificate, "Co-curricular Certificate"):
+                    status, msg = va.fileValidate(certificate, "Co-curricular Certificate")
+                    if not status:
                         return redirect('all_forms', form_no=form_no)
                     faculty_instance.certificate = certificate
 
@@ -1024,7 +1172,8 @@ def save_all_forms(request, form_no):
                         return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.norp = int(request.POST.get('norp') or 0)
-                if not va.numberValidate(request, faculty_instance.norp, "Number of Research Paper"):
+                status, msg = va.numberValidate(faculty_instance.norp, "Number of Research Paper")
+                if not status:
                     return redirect('all_forms', form_no=form_no)
                 faculty_instance.status = "R"
 
@@ -1041,18 +1190,21 @@ def save_all_forms(request, form_no):
                 faculty_instance = Faculty.objects.get(email=request.POST.get('existing_email'))
 
                 faculty_instance.name = request.POST.get('updated_name').strip()
-                if not va.nameValidate(request, faculty_instance.name, "Name"):
+                status, msg = va.nameValidate(faculty_instance.name, "Name")
+                if not status:
                     return redirect(reverse('manage_access'))
 
                 if request.POST.getlist('form_number'):
                     faculty_instance.form_alloted = request.POST.getlist('form_number')
 
                 faculty_instance.contact_number = request.POST.get('updated_number').strip()
-                if not va.mobileNumberValidate(request, faculty_instance.contact_number):
+                status, msg = va.mobileNumberValidate(faculty_instance.contact_number)
+                if not status:
                     return redirect(reverse('manage_access'))
 
                 faculty_instance.email = request.POST.get('updated_email').strip()
-                if not va.emailValidate(request,faculty_instance.email):
+                status, msg = va.emailValidate(faculty_instance.email)
+                if not status:
                     return redirect(reverse('manage_access'))
 
                 faculty_instance.department = request.POST.get('updated_department').strip()
@@ -1061,7 +1213,8 @@ def save_all_forms(request, form_no):
                     faculty_instance.session_version = uuid.uuid4()
 
                 faculty_instance.emp_id = int(request.POST.get('updated_id') or 0)
-                if not va.numberValidate(request, faculty_instance.name, "Employee ID"):
+                status, msg = va.numberValidate(faculty_instance.emp_id, "Employee ID")
+                if not status:
                     return redirect(reverse('manage_access'))
 
                 faculty_instance.status = request.POST.get('updated_status').strip()
@@ -1071,16 +1224,19 @@ def save_all_forms(request, form_no):
 
             elif form_no == 15:
                 emp_id = int(request.POST.get('emp_id') or 0)
-                if not va.numberValidate(request, emp_id, "Employee ID"):
+                status, msg = va.numberValidate(emp_id, "Employee ID")
+                if not status:
                     return redirect(reverse('manage_access'))
 
                 emp_name = request.POST.get('name_per').strip()
-                if not va.nameValidate(request, emp_id, "Name"):
+                status, msg = va.nameValidate(emp_name, "Name")
+                if not status:
                     return redirect(reverse('manage_access'))
 
                 email = request.POST.get('new_email').strip()
 
-                if not va.emailValidate(request, email):
+                status, msg = va.emailValidate(email)
+                if not status:
                     return redirect(reverse('manage_access'))
 
                 if Faculty.objects.filter(email=email).exists():
@@ -1095,7 +1251,8 @@ def save_all_forms(request, form_no):
                     faculty_instance.form_alloted = request.POST.getlist('form_number')
 
                 con_no = request.POST.get('contact_number').strip()
-                if not va.mobileNumberValidate(request, con_no):
+                status, msg = va.mobileNumberValidate(con_no)
+                if not status:
                     return redirect(reverse('manage_access'))
 
                 status = request.POST.get('selected_status').strip()
@@ -1105,7 +1262,7 @@ def save_all_forms(request, form_no):
 
                 return redirect(reverse('manage_access'))
 
-            return JsonResponse({'status': 'success'})
+            return JsonResponse({'success': True})
         # Method not allowed or error saving form
         return render(request, '404.html')
 
@@ -1120,51 +1277,64 @@ def editforms(request, form_no, user_token):
             instance = non_teaching_staff.objects.get(pk=actual_pk)
 
             instance.name = request.POST.get('name')
-            if not va.nameValidate(request, instance.name, "Name"):
+            status, msg = va.nameValidate(instance.name, "Name")
+            if not status:
                 return redirect(redirect_url)
 
             instance.mobile_no = request.POST.get('mobile_no')
-            if not va.nameValidate(request, instance.mobile_no, "Mobile No"):
+            status, msg = va.mobileNumberValidate(instance.mobile_no)
+            if not status:
                 return redirect(redirect_url)
 
             instance.email = request.POST.get('email')
-            if not va.nameValidate(request, instance.email, "Email"):
+            status, msg = va.nameValidate(instance.email, "Email")
+            if not status:
                 return redirect(redirect_url)
 
             instance.department = request.POST.get('department')
-            if not va.radiocheck(request, instance.department, "department"):
+            status, msg = va.radiocheck(instance.department, "department")
+            if not status:
                 return redirect(redirect_url)
 
             instance.Lab_no = request.POST.get('Lab_no')
-            if not va.numberValidate(request, instance.Lab_no, "Lab No"):
+            status, msg = va.numberValidate(instance.Lab_no, "Lab No")
+            if not status:
                 return redirect(redirect_url)
 
             instance.designation = request.POST.get('designation')
-            if not va.nameValidate(request, instance.designation, "Designation"):
+            status, msg = va.nameValidate(instance.designation, "Designation")
+            if not status:
                 return redirect(redirect_url)
 
             instance.emp_id = request.POST.get('emp_id')
-            if not va.numberValidate(request, instance.emp_id, "Employee ID"):
+            status, msg = va.numberValidate(instance.emp_id, "Employee ID")
+            if not status:
                 return redirect(redirect_url)
 
             instance.highest_qual = request.POST.get('highest_qual')
-            if not va.radiocheck(request, instance.designation, "Highest Qualification"):
+            status, msg = va.radiocheck(instance.highest_qual, "Highest Qualification")
+            if not status:
                 return redirect(redirect_url)
 
             instance.university_name = request.POST.get('univ_name')
-            if not va.nameValidate(request, instance.emp_id, "University Name"):
+            status, msg = va.nameValidate(instance.university_name, "University Name")
+            if not status:
                 return redirect(redirect_url)
 
             instance.pshd = request.POST.get('pshd')
-            if not va.numberValidate(request, instance.pshd, "Passing Year of Highest Degree"):
+            status, msg = va.numberValidate(instance.pshd, "Passing Year of Highest Degree")
+            if not status:
                 return redirect(redirect_url)
 
             instance.professional_courses = request.POST.getlist('professional_courses')
-            if not va.radiocheck(request, instance.professional_courses, "Professional Courses"):
+            status, msg = va.radiocheck(instance.professional_courses, "Professional Course")
+            if not status:
                 return redirect(redirect_url)
 
             instance.pan_no = request.POST.getlist('pan_no')
-            if not va.validate_pan(instance.pan_no):
+
+            status, msg = va.validate_pan(instance.pan_no)
+            if not status:
                 return redirect(redirect_url)
 
             instance.dob = request.POST.get('dob')
@@ -1197,31 +1367,36 @@ def editforms(request, form_no, user_token):
 
             if request.FILES.get('joining_report'):
                 joining_report = request.FILES.get('joining_report')
-                if not va.fileValidate(request, joining_report, "Joining Report"):
+                status, msg = va.fileValidate(joining_report, "Joining Report")
+                if not status:
                     return redirect(redirect_url)
                 instance.joining_report = joining_report
 
             if request.FILES.get('offer_letter'):
                 offer_letter = request.FILES.get('offer_letter')
-                if not va.fileValidate(request, offer_letter, "Offer Letter"):
+                status, msg = va.fileValidate(offer_letter, "Offer Letter")
+                if not status:
                     return redirect(redirect_url)
                 instance.offer_letter = offer_letter
 
             if request.FILES.get('higher_degree_certificate'):
                 higher_degree_certificate = request.FILES.get('higher_degree_certificate')
-                if not va.fileValidate(request, higher_degree_certificate, "Higher Degree Certificate"):
+                status, msg = va.fileValidate(higher_degree_certificate, "Higher Degree Certificate")
+                if not status:
                     return redirect(redirect_url)
                 instance.higher_degree_certificate = higher_degree_certificate
 
             if request.FILES.get('salary_slip'):
                 salary_slip = request.FILES.get('salary_slip')
-                if not va.fileValidate(request, salary_slip, "Salary Slip"):
+                status, msg = va.fileValidate(salary_slip, "Salary Slip")
+                if not status:
                     return redirect(redirect_url)
                 instance.salary_slip = salary_slip
 
             if request.FILES.get('certificate'):
                 certificate = request.FILES.get('certificate')
-                if not va.fileValidate(request, certificate, "Certificate"):
+                status, msg = va.fileValidate(certificate, "Certificate")
+                if not status:
                     return redirect(redirect_url)
                 instance.salary_slip = certificate
 
@@ -1231,31 +1406,38 @@ def editforms(request, form_no, user_token):
             instance = Faculty_participation_data.objects.get(pk=actual_pk)
 
             instance.category = request.POST.get('category').strip()
-            if not va.radiocheck(request, instance.category, "Category"):
+            status, msg = va.radiocheck(instance.category, "Category")
+            if not status:
                 return redirect(redirect_url)
 
             instance.top = request.POST.get('top').strip()
-            if not va.nameValidate(request, instance.top, "Title of Program"):
+            status, msg = va.nameValidate(instance.top, "Title of Program")
+            if not status:
                 return redirect(redirect_url)
 
             instance.mode = request.POST.get('optradio').strip()
-            if not va.radiocheck(request, instance.mode, "Mode"):
+            status, msg = va.radiocheck(instance.mode, "Mode")
+            if not status:
                 return redirect(redirect_url)
 
             instance.level = request.POST.get('optradio1').strip()
-            if not va.radiocheck(request, instance.level, "Level"):
+            status, msg = va.radiocheck(instance.level, "Level")
+            if not status:
                 return redirect(redirect_url)
 
             instance.organizer = request.POST.get('organizer').strip()
-            if not va.nameValidate(request, instance.organizer, "Organizer"):
+            status, msg = va.nameValidate(instance.organizer, "Organizer")
+            if not status:
                 return redirect(redirect_url)
 
             instance.sponsors = request.POST.get('sponsor').strip()
-            if not va.nameValidate(request, instance.sponsors, "Sponsors"):
+            status, msg = va.nameValidate(instance.sponsors, "Sponsors")
+            if not status:
                 return redirect(redirect_url)
 
             instance.approval = request.POST.get('optradio2').strip()
-            if not va.radiocheck(request, instance.approval, "Grant"):
+            status, msg = va.radiocheck(instance.approval, "Grant")
+            if not status:
                 return redirect(redirect_url)
 
             instance.begi_date = request.POST.get('begi_date').strip()
@@ -1285,20 +1467,24 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Session Year"):
+            status, msg = va.radiocheck(instance.session, "Session Year")
+            if not status:
                 return redirect(redirect_url)
 
             instance.no_of_days = request.POST.get('num_of_days')
-            if not va.numberValidate(request, instance.no_of_days, "Number of Days"):
+            status, msg = va.numberValidate(instance.no_of_days, "Number of Days")
+            if not status:
                 return redirect(redirect_url)
 
             instance.proof_enclosed = request.POST.get('optradio3').strip()
-            if not va.radiocheck(request, instance.proof_enclosed, "Proof Enclosed"):
+            status, msg = va.radiocheck(instance.proof_enclosed, "Proof Enclosed")
+            if not status:
                 return redirect(redirect_url)
 
             if request.FILES.get('proof_file'):
                 proof_file = request.FILES.get('proof_file')
-                if not va.fileValidate(request, proof_file, "Proof File"):
+                status = va.fileValidate(proof_file, "Proof File")
+                if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
 
@@ -1308,19 +1494,23 @@ def editforms(request, form_no, user_token):
             instance = mooc_course.objects.get(pk=actual_pk)
 
             instance.category = request.POST.get('category').strip()
-            if not va.radiocheck(request, instance.category, "Category"):
+            status, msg = va.radiocheck(instance.category, "Category")
+            if not status:
                 return redirect(redirect_url)
 
             instance.timeline = request.POST.get('toc').strip()
-            if not va.nameValidate(request, instance.timeline, "Timeline of course"):
+            status, msg = va.nameValidate(instance.timeline, "Timeline of course")
+            if not status:
                 return redirect(redirect_url)
 
             instance.noc = request.POST.get('noc').strip()
-            if not va.nameValidate(request, instance.noc, "Name of the Course"):
+            status, msg = va.nameValidate(instance.noc, "Name of the Course")
+            if not status:
                 return redirect(redirect_url)
 
             instance.doc = request.POST.get('optradio3').strip()
-            if not va.radiocheck(request, instance.noc, "Duration of Course"):
+            status, msg = va.radiocheck(instance.doc, "Duration of Course")
+            if not status:
                 return redirect(redirect_url)
 
             instance.begi_date = request.POST.get('begi_date')
@@ -1350,26 +1540,31 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.offer = request.POST.get('ofo').strip()
-            if not va.nameValidate(request, instance.offer, "Offering Agency/ Organizer"):
+            status, msg = va.nameValidate(instance.offer, "Offering Agency/ Organizer")
+            if not status:
                 return redirect(redirect_url)
 
             instance.ctype = request.POST.get('optradio1').strip()
-            if not va.radiocheck(request, instance.ctype, "Certificate Type"):
+            status, msg = va.radiocheck(instance.ctype, "Certificate Type")
+            if not status:
                 return redirect(redirect_url)
 
             instance.topper_in = request.POST.get('optradio2').strip()
-            if not va.radiocheck(request, instance.topper_in, "Any category from below"):
+            status, msg = va.radiocheck(instance.topper_in, "Any category from below")
+            if not status:
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Session"):
+            status, msg = va.radiocheck(instance.session, "Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.remarks = request.POST.get('remarks')
 
             if request.FILES.get('proof_file'):
                 proof_file = request.FILES.get('proof_file')
-                if not va.fileValidate(request, proof_file, "Proof File"):
+                status, msg = va.fileValidate(proof_file, "Proof File")
+                if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
 
@@ -1379,7 +1574,8 @@ def editforms(request, form_no, user_token):
             instance = events.objects.get(pk=actual_pk)
 
             instance.category = request.POST.get('category').strip()
-            if not va.radiocheck(request, instance.category, "Category"):
+            status, msg = va.radiocheck(instance.category, "Category")
+            if not status:
                 return redirect(redirect_url)
 
             instance.begi_date = request.POST.get('begi_date')
@@ -1409,68 +1605,84 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.nofc = request.POST.get('nofc').strip()
-            if not va.nameValidate(request,instance.nofc,"Name of Faculty Coordinator(s)"):
+            status, msg = va.nameValidate(instance.nofc, "Name of Faculty Coordinator(s)")
+            if not status:
                 return redirect(redirect_url)
 
             instance.eof = request.POST.getlist('optradio3').strip()
-            if not va.radiocheck(request,instance.eof,"Event organized for"):
+            status, msg = va.radiocheck(instance.eof, "Event organized for")
+            if not status:
                 return redirect(redirect_url)
 
             instance.topdpo = request.POST.get('topdpo').strip()
-            if not va.nameValidate(request,instance.topdpo,"Title of the Professional Development Program Organized"):
+            status, msg = va.nameValidate(instance.topdpo, "Title of the Professional Development Program Organized")
+            if not status:
                 return redirect(redirect_url)
 
             instance.nop = request.POST.get('nop').strip()
-            if not va.nameValidate(request, instance.nop, "No. of participants"):
+            status, msg = va.nameValidate(instance.nop, "No. of participants")
+            if not status:
                 return redirect(redirect_url)
 
             instance.adcc = request.POST.get('acclc').strip()
-            if not va.nameValidate(request, instance.adcc, "Academic Department/ Cell/ Committees/ Labs/ COE"):
+            status, msg = va.nameValidate(instance.adcc, "Academic Department/ Cell/ Committees/ Labs/ COE")
+            if not status:
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Academic Session"):
+            status, msg = va.radiocheck(instance.session, "Academic Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.ct = request.POST.get('optradio1').strip()
-            if not va.radiocheck(request, instance.ct, "Sponsored/Non Sponsored"):
+            status, msg = va.radiocheck(instance.ct, "Sponsored/Non Sponsored")
+            if not status:
                 return redirect(redirect_url)
 
             instance.nosa = request.POST.get('nosa').strip()
-            if not va.nameValidate(request, instance.nosa, "Name of Sponsoring Agency(if Sponsored)"):
+            status, msg = va.nameValidate(instance.nosa, "Name of Sponsoring Agency(if Sponsored)")
+            if not status:
                 return redirect(redirect_url)
 
             instance.cd = request.POST.get('cd').strip()
-            if not va.nameValidate(request, instance.cd, "Collaboration Details"):
+            status, msg = va.nameValidate(instance.cd, "Collaboration Details")
+            if not status:
                 return redirect(redirect_url)
 
             instance.gr = request.POST.get('optradio2').strip()
-            if not va.radiocheck(request, instance.gr, "Grant Received(YES/NO)"):
+            status, msg = va.radiocheck(instance.gr, "Grant Received(YES/NO)")
+            if not status:
                 return redirect(redirect_url)
 
             instance.gd = request.POST.get('gd').strip()
-            if not va.nameValidate(request, instance.gd, "Grant Details"):
+            status, msg = va.nameValidate(instance.gd, "Grant Details")
+            if not status:
                 return redirect(redirect_url)
 
             instance.awpsfooe = request.POST.get('awpsfooe').strip()
-            if not va.nameValidate(request, instance.gd, "Association with professional societies for organization of event"):
+            status, msg = va.nameValidate(instance.awpsfooe, "Association with professional societies for organization of event")
+            if not status:
                 return redirect(redirect_url)
 
             instance.nossp = request.POST.get('nossp').strip()
-            if not va.nameValidate(request, instance.nossp,"Number of SKIT students participated"):
+            status, msg = va.nameValidate(instance.nossp, "Number of SKIT students participated")
+            if not status:
                 return redirect(redirect_url)
 
             instance.nosmp = request.POST.get('nosmp').strip()
-            if not va.nameValidate(request, instance.nosmp, "Number of staff member participated"):
+            status, msg = va.nameValidate(instance.nosmp, "Number of staff member participated")
+            if not status:
                 return redirect(redirect_url)
 
             instance.eraipf = request.POST.get('optradio4').strip()
-            if not va.radiocheck(request, instance.eraipf, "Event report attached in proper format(YES/NO)"):
+            status, msg = va.radiocheck(instance.eraipf, "Event report attached in proper format(YES/NO)")
+            if not status:
                 return redirect(redirect_url)
 
             if request.FILES.get('proof_file'):
                 proof_file = request.FILES.get('proof_file')
-                if not va.fileValidate(request, proof_file, "Proof File"):
+                status, msg = va.fileValidate(proof_file, "Proof File")
+                if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
 
@@ -1482,38 +1694,54 @@ def editforms(request, form_no, user_token):
             instance = awards_and_achievments.objects.get(pk=actual_pk)
 
             instance.category = request.POST.get('category').strip()
-            if not va.radiocheck(request, instance.category, "Category"):
+            status, msg = va.radiocheck(instance.category, "Category")
+            if not status:
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Academic Session"):
+            status, msg = va.radiocheck(instance.session, "Academic Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.noaa = request.POST.get('noaa').strip()
-            if not va.nameValidate(request, instance.noaa, "Name of the Award/   Achievement"):
+            status, msg = va.nameValidate(instance.noaa, "Name of the Award/ Achievement")
+            if not status:
                 return redirect(redirect_url)
 
             instance.paf = request.POST.get('paf').strip()
-            if not va.nameValidate(request, instance.paf, "Position / Award For"):
+            status, msg = va.nameValidate(instance.paf, "Position / Award For")
+            if not status:
                 return redirect(redirect_url)
 
             instance.ao = request.POST.get('ao').strip()
-            if not va.nameValidate(request, instance.ao, "Agency / Organization"):
+            status, msg = va.nameValidate(instance.ao, "Agency / Organization")
+            if not status:
                 return redirect(redirect_url)
 
             instance.prize = request.POST.get('prize').strip()
-            if not va.nameValidate(request, instance.ao, "Prize"):
+            status, msg = va.nameValidate(instance.prize, "Prize")
+            if not status:
                 return redirect(redirect_url)
 
-            instance.ad = request.POST.get('prize').strip()
-            if not va.nameValidate(request, instance.ad, "Date of Award"):
+            instance.ad = request.POST.get('award_date')
+            try:
+                selected_date = datetime.strptime(instance.ad, '%Y-%m-%d').date()
+
+                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+
+                if selected_date < min_date:
+                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    return redirect(redirect_url)
+            except(ValueError, TypeError):
+                messages.error(request, "Please select/enter a valid date")
                 return redirect(redirect_url)
 
             instance.remark = request.POST.get('remark')
 
             if request.FILES.get('proof_file'):
                 proof_file = request.FILES.get('proof_file')
-                if not va.fileValidate(request, proof_file, "Proof File"):
+                status, msg = va.fileValidate(proof_file, "Proof File")
+                if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
 
@@ -1523,32 +1751,39 @@ def editforms(request, form_no, user_token):
             instance = sponsored_research.objects.get(pk=actual_pk)
 
             instance.category = request.POST.get('category').strip()
-            if not va.radiocheck(request, instance.category, "Category"):
+            status, msg = va.radiocheck(instance.category, "Category")
+            if not status:
                 return redirect(redirect_url)
 
             instance.nofa = request.POST.get('nofa').strip()
-            if not va.nameValidate(request, instance.nofa, "Name of the Funding Agency"):
+            status, msg = va.nameValidate(instance.nofa, "Name of the Funding Agency")
+            if not status:
                 return redirect(redirect_url)
 
             instance.dop = request.POST.get('dop').strip()
-            if not va.nameValidate(request, instance.nofa, "Duration of Project"):
+            status, msg = va.nameValidate(instance.dop, "Duration of Project")
+            if not status:
                 return redirect(redirect_url)
 
             instance.amount = request.POST.get('amount').strip()
-            if not va.nameValidate(request, instance.amount, "Amount in Rs."):
+            status, msg = va.numberValidate(instance.amount, "Amount in Rs.")
+            if not status:
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Academic Session"):
+            status, msg = va.radiocheck(instance.session, "Academic Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.status = request.POST.get('optradio2').strip()
-            if not va.radiocheck(request, instance.session, "Status"):
+            status, msg = va.radiocheck(instance.status, "Status")
+            if not status:
                 return redirect(redirect_url)
 
             if request.FILES.get('proof_file'):
                 proof_file = request.FILES.get('proof_file')
-                if not va.fileValidate(request, proof_file, "Proof File"):
+                status, msg = va.fileValidate(proof_file, "Proof File")
+                if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
 
@@ -1558,27 +1793,33 @@ def editforms(request, form_no, user_token):
             instance = research_journal.objects.get(pk=actual_pk)
 
             instance.noa = request.POST.get('noa').strip()
-            if not nameValidate(request,instance.noa,"Name of author"):
+            status, msg = va.nameValidate(instance.noa, "Name of author")
+            if not status:
                 return redirect(redirect_url)
 
             instance.top = request.POST.get('top').strip()
-            if not nameValidate(request, instance.top, "Title of Paper"):
+            status, msg = va.nameValidate(instance.top, "Title of Paper")
+            if not status:
                 return redirect(redirect_url)
 
             instance.noj = request.POST.get('noj').strip()
-            if not nameValidate(request, instance.noj, "Name of Journal"):
+            status, msg = va.nameValidate(instance.noj, "Name of Journal")
+            if not status:
                 return redirect(redirect_url)
 
             instance.nop = request.POST.get('nop').strip()
-            if not nameValidate(request, instance.nop, "Name of the Publisher"):
+            status, msg = va.nameValidate(instance.nop, "Name of the Publisher")
+            if not status:
                 return redirect(redirect_url)
 
             instance.vi = request.POST.get('vi').strip()
-            if not nameValidate(request, instance.vi, "Volume, Issue"):
+            status, msg = va.nameValidate(instance.vi, "Volume, Issue")
+            if not status:
                 return redirect(redirect_url)
 
             instance.pn = request.POST.get('pn').strip()
-            if not nameValidate(request, instance.pn, "Page No."):
+            status, msg = va.nameValidate(instance.pn, "Page No.")
+            if not status:
                 return redirect(redirect_url)
 
             instance.pd = request.POST.get('pd')
@@ -1595,60 +1836,76 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Session"):
+            status, msg = va.radiocheck(instance.session, "Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.isnp = request.POST.get('isnp').strip()
-            if not nameValidate(request, instance.isnp, "ISSN number : Print"):
+            status, msg = va.nameValidate(instance.isnp, "ISSN number : Print")
+            if not status:
                 return redirect(redirect_url)
 
             instance.isno = request.POST.get('isno').strip()
-            if not nameValidate(request, instance.isno, "ISSN number : Online"):
+            status, msg = va.nameValidate(instance.isno, "ISSN number : Online")
+            if not status:
                 return redirect(redirect_url)
 
             instance.level = request.POST.get('optradio3').strip()
-            if not va.radiocheck(request, instance.level, "Level"):
+            status, msg = va.radiocheck(instance.level, "Level")
+            if not status:
                 return redirect(redirect_url)
 
             instance.doi = request.POST.get('doi').strip()
-            if not nameValidate(request, instance.doi, "DOI(Digital Object Identifier)"):
+            status, msg = va.nameValidate(instance.doi, "DOI(Digital Object Identifier)")
+            if not status:
                 return redirect(redirect_url)
 
             instance.lwj = request.POST.get('lwj').strip()
-            if not nameValidate(request, instance.lwj, "Link to website of the Journal"):
+            status, msg = va.nameValidate(instance.lwj, "Link to website of the Journal")
+            if not status:
                 return redirect(redirect_url)
 
             instance.lap = request.POST.get('lap').strip()
-            if not nameValidate(request, instance.lap, "Link to article"):
+            status, msg = va.nameValidate(instance.lap, "Link to article")
+            if not status:
                 return redirect(redirect_url)
 
             instance.lrsj = request.POST.get('lrsj').strip()
-            if not nameValidate(request, instance.lrsj, "Link to the recognition"):
+            status, msg = va.nameValidate(instance.lrsj, "Link to the recognition")
+            if not status:
                 return redirect(redirect_url)
 
             instance.aiop = request.POST.get('aiop').strip()
-            if not nameValidate(request, instance.aiop, "Affiliating Institute"):
+            status, msg = va.nameValidate(instance.aiop, "Affiliating Institute")
+            if not status:
                 return redirect(redirect_url)
 
             instance.index_by = request.POST.get('optradio1').strip()
-            if not va.radiocheck(request, instance.index_by, "Indexed By"):
+
+            instance.ssa = request.POST.get('ssa').strip()
+            status, msg = va.radiocheck(instance.ssa, "Professional Course")
+            if not status:
                 return redirect(redirect_url)
 
             instance.quartile = request.POST.get('optradio').strip()
-            if not va.radiocheck(request, instance.quartile, "Quartile"):
+            status, msg = va.radiocheck(instance.quartile, "Quartile")
+            if not status:
                 return redirect(redirect_url)
 
             instance.ssa = request.POST.get('optradio2').strip()
-            if not va.radiocheck(request, instance.index_by, "Is SKIT student associated?"):
+            status, msg = va.radiocheck(instance.ssa, "Is SKIT student associated?")
+            if not status:
                 return redirect(redirect_url)
 
             instance.details = request.POST.get('details').strip()
-            if not nameValidate(request, instance.details, "Write student(s) details"):
+            status, msg = va.nameValidate(instance.details, "Write student(s) details")
+            if not status:
                 return redirect(redirect_url)
 
             if request.FILES.get('proof_file'):
                 proof_file = request.FILES.get('proof_file')
-                if not va.fileValidate(request, proof_file, "Proof File"):
+                status, msg = va.fileValidate(proof_file, "Proof File")
+                if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
 
@@ -1658,31 +1915,38 @@ def editforms(request, form_no, user_token):
             instance = research_conference.objects.get(pk=actual_pk)
 
             instance.noa = request.POST.get('noa').strip()
-            if not nameValidate(request, instance.noa, "Name of author"):
+            status, msg = va.nameValidate(instance.noa, "Name of author")
+            if not status:
                 return redirect(redirect_url)
 
             instance.toc = request.POST.get('toc').strip()
-            if not nameValidate(request, instance.toc, "Title of Conference"):
+            status, msg = va.nameValidate(instance.toc, "Title of Conference")
+            if not status:
                 return redirect(redirect_url)
 
             instance.top = request.POST.get('top').strip()
-            if not nameValidate(request, instance.top, "Title of Paper"):
+            status, msg = va.nameValidate(instance.top, "Title of Paper")
+            if not status:
                 return redirect(redirect_url)
 
             instance.topc = request.POST.get('topc').strip()
-            if not nameValidate(request, instance.topc, "Title of the proceedings of the conference"):
+            status, msg = va.nameValidate(instance.topc, "Title of the proceedings of the conference")
+            if not status:
                 return redirect(redirect_url)
 
             instance.level = request.POST.get('optradio3').strip()
-            if not radiocheck(request, instance.level, "Level"):
+            status, msg = va.radiocheck(instance.level, "Level")
+            if not status:
                 return redirect(redirect_url)
 
-            instance.ispn = request.POST.get('isbn').strip()
-            if not radiocheck(request, instance.level, "ISBN/ISSN number of the proceeding"):
+            instance.isnp = request.POST.get('isnp').strip()
+            status, msg = va.nameValidate(instance.level, "ISBN/ISSN number of the proceeding")
+            if not status:
                 return redirect(redirect_url)
 
             instance.nop = request.POST.get('nop').strip()
-            if not radiocheck(request, instance.nop, "Name of the Publisher"):
+            status, msg = va.nameValidate(instance.nop, "Name of the Publisher")
+            if not status:
                 return redirect(redirect_url)
 
             instance.pd = request.POST.get('pd')
@@ -1699,36 +1963,44 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Academic Session"):
+            status, msg = va.radiocheck(instance.session, "Academic Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.doi = request.POST.get('doi').strip()
-            if not nameValidate(request, instance.doi, "DOI(Digital Object Identifier)"):
+            status, msg = va.nameValidate(instance.doi, "DOI(Digital Object Identifier)")
+            if not status:
                 return redirect(redirect_url)
 
-            instance.lwj = request.POST.get('link').strip()
-            if not nameValidate(request, instance.lwj, "Web Link"):
+            instance.lwj = request.POST.get('lwj').strip()
+            status, msg = va.nameValidate(instance.lwj, "Link to website of the Journal")
+            if not status:
                 return redirect(redirect_url)
 
             instance.aitp = request.POST.get('aiop').strip()
-            if not nameValidate(request, instance.aitp, "Affiliating Institute at the time of publication"):
+            status, msg = va.nameValidate(instance.aitp, "Affiliating Institute at the time of publication")
+            if not status:
                 return redirect(redirect_url)
 
-            instance.ssa = request.POST.get('optradio2').strip()
-            if not va.radiocheck(request, instance.index_by, "Is SKIT student associated?"):
+            instance.ssa = request.POST.get('ssa').strip()
+            status, msg = va.radiocheck(instance.ssa, "Professional Course")
+            if not status:
                 return redirect(redirect_url)
 
             instance.details = request.POST.get('details').strip()
-            if not nameValidate(request, instance.details, "Write student(s) details"):
+            status, msg = va.nameValidate(instance.details, "Write student(s) details")
+            if not status:
                 return redirect(redirect_url)
 
             instance.index_by = request.POST.get('index_by').strip()
-            if not va.radiocheck(request, instance.index_by, "Indexed By"):
+            status, msg = va.radiocheck(instance.index_by, "Indexed By")
+            if not status:
                 return redirect(redirect_url)
 
             if request.FILES.get('proof_file'):
                 proof_file = request.FILES.get('proof_file')
-                if not va.fileValidate(request, proof_file, "Proof File"):
+                status, msg = va.fileValidate(proof_file, "Proof File")
+                if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
 
@@ -1738,27 +2010,33 @@ def editforms(request, form_no, user_token):
             instance = research_book.objects.get(pk=actual_pk)
 
             instance.noa = request.POST.get('noa').strip()
-            if not nameValidate(request, instance.noa, "Name of the author/editor"):
+            status, msg = va.nameValidate(instance.noa, "Name of author")
+            if not status:
                 return redirect(redirect_url)
 
             instance.tob = request.POST.get('tob').strip()
-            if not nameValidate(request, instance.tob, "Title of the book"):
+            status, msg = va.nameValidate(instance.tob, "Title of the Book")
+            if not status:
                 return redirect(redirect_url)
 
-            instance.top = request.POST.get('tocp').strip()
-            if not nameValidate(request, instance.top, "Title of the chapter Published"):
+            instance.tocp = request.POST.get('tocp').strip()
+            status, msg = va.nameValidate(instance.tocp, "Title of the chapter Published")
+            if not status:
                 return redirect(redirect_url)
 
             instance.level = request.POST.get('optradio3').strip()
-            if not radiocheck(request, instance.level, "Level"):
+            sta, msg = va.radiocheck(instance.level, "Level")
+            if not status:
                 return redirect(redirect_url)
 
             instance.isbn = request.POST.get('isbn').strip()
-            if not nameValidate(request, instance.isbn, "ISBN"):
+            status, msg = va.nameValidate(instance.isbn, "ISBN")
+            if not status:
                 return redirect(redirect_url)
 
             instance.nop = request.POST.get('nop').strip()
-            if not nameValidate(request, instance.isbn, "Name of the Publisher"):
+            status, msg = va.nameValidate(instance.nop, "Name of the Publisher")
+            if not status:
                 return redirect(redirect_url)
 
             instance.pd = request.POST.get('pd')
@@ -1775,36 +2053,44 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Academic Session"):
+            status, msg = va.radiocheck(instance.session, "Academic Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.doi = request.POST.get('doi').strip()
-            if not nameValidate(request, instance.doi, "DOI(Digital Object Identifier)"):
+            status, msg = va.nameValidate(instance.doi, "DOI(Digital Object Identifier)")
+            if not status:
                 return redirect(redirect_url)
 
-            instance.lwj = request.POST.get('link').strip()
-            if not nameValidate(request, instance.lwj, "Web Link"):
+            instance.lwj = request.POST.get('lwj').strip()
+            status, msg = va.nameValidate(instance.lwj, "Link to website of the Journal")
+            if not status:
                 return redirect(redirect_url)
 
             instance.aitp = request.POST.get('aiop').strip()
-            if not nameValidate(request, instance.aitp, "Affiliating Institute at the time of publication"):
+            status, msg = va.nameValidate(instance.aitp, "Affiliating Institute at the time of publication")
+            if not status:
                 return redirect(redirect_url)
 
             instance.ssa = request.POST.get('optradio2').strip()
-            if not va.radiocheck(request, instance.ssa, "Is SKIT student associated?"):
+            status, msg = va.radiocheck(instance.ssa, "Is SKIT student associated?")
+            if not status:
                 return redirect(redirect_url)
 
             instance.details = request.POST.get('details').strip()
-            if not nameValidate(request, instance.details, "Write student(s) details"):
+            status, msg = va.nameValidate(instance.details, "Write student(s) details")
+            if not status:
                 return redirect(redirect_url)
 
             instance.index_by = request.POST.get('index_by').strip()
-            if not va.radiocheck(request, instance.index_by, "Indexed By"):
+            status, msg = va.radiocheck(instance.index_by, "Indexed By")
+            if not status:
                 return redirect(redirect_url)
 
             if request.FILES.get('proof_file'):
                 proof_file = request.FILES.get('proof_file')
-                if not va.fileValidate(request, proof_file, "Proof File"):
+                status, msg = va.fileValidate(proof_file, "Proof File")
+                if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
 
@@ -1814,31 +2100,38 @@ def editforms(request, form_no, user_token):
             instance = patents.objects.get(pk=actual_pk)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Academic Session"):
+            status, msg = va.radiocheck(instance.session, "Academic Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.sop = request.POST.get('optradio1').strip()
-            if not va.radiocheck(request, instance.sop, "Status of Patent"):
+            status, msg = va.radiocheck(instance.sop, "Status of Patent")
+            if not status:
                 return redirect(redirect_url)
 
             instance.ag = request.POST.get('aid').strip()
-            if not nameValidate(request, instance.ag, "Application ID"):
+            status, msg = va.nameValidate(instance.ag, "Application ID")
+            if not status:
                 return redirect(redirect_url)
 
             instance.gi = request.POST.get('gd').strip()
-            if not nameValidate(request, instance.gi, "Granted ID"):
+            status, msg = va.nameValidate(instance.gi, "Granted ID")
+            if not status:
                 return redirect(redirect_url)
 
             instance.pg = request.POST.get('optradio2').strip()
-            if not radiocheck(request, instance.pg, "Type of Patent"):
+            status, msg = va.radiocheck(instance.pg, "Type of Patent")
+            if not status:
                 return redirect(redirect_url)
 
             instance.top = request.POST.get('top').strip()
-            if not nameValidate(request, instance.details, "Title of Patent"):
+            status, msg = va.nameValidate(instance.top, "Title of Patent")
+            if not status:
                 return redirect(redirect_url)
 
             instance.gc = request.POST.get('gc').strip()
-            if not nameValidate(request, instance.gc, "Granted Country"):
+            status, msg = va.nameValidate(instance.gc, "Granted Country")
+            if not status:
                 return redirect(redirect_url)
 
             instance.pfd = request.POST.get('pfd')
@@ -1868,24 +2161,29 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Academic Session"):
+            status, msg = va.radiocheck(instance.session, "Academic Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.ssa = request.POST.get('optradio2').strip()
-            if not va.radiocheck(request, instance.ssa, "Is SKIT student associated?"):
+            status, msg = va.radiocheck(instance.ssa, "Is SKIT student associated?")
+            if not status:
                 return redirect(redirect_url)
 
             instance.details = request.POST.get('details').strip()
-            if not nameValidate(request, instance.details, "Write student(s) details"):
+            status, msg = va.nameValidate(instance.details, "Write student(s) details")
+            if not status:
                 return redirect(redirect_url)
 
             instance.link = request.POST.get('link').strip()
-            if not nameValidate(request, instance.link, "Web Link"):
+            status, msg = va.nameValidate(instance.link, "Web Link")
+            if not status:
                 return redirect(redirect_url)
 
             if request.FILES.get('proof_file'):
                 proof_file = request.FILES.get('proof_file')
-                if not va.fileValidate(request, proof_file, "Proof File"):
+                status, msg = va.fileValidate(proof_file, "Proof File")
+                if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
 
@@ -1893,35 +2191,43 @@ def editforms(request, form_no, user_token):
             instance = guided.objects.get(pk=actual_pk)
 
             instance.category = request.POST.get('category').strip()
-            if not va.radiocheck(request, instance.category, "Category"):
+            status, msg = va.radiocheck(instance.category, "Category")
+            if not status:
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Academic Session"):
+            status, msg = va.radiocheck(instance.session, "Academic Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.nos = request.POST.get('nos').strip()
-            if not nameValidate(request, instance.nos, "Name of the student Guided"):
+            status, msg = va.nameValidate(instance.nos, "Name of the student Guided")
+            if not status:
                 return redirect(redirect_url)
 
             instance.ens = request.POST.get('ens').strip()
-            if not va.nameValidate(request, instance.ens, "Enrollment Number of Student"):
+            status, msg = va.nameValidate(instance.ens , "Enrollment Number of Student")
+            if not status:
                 return redirect(redirect_url)
 
             instance.urns = request.POST.get('urns').strip()
-            if not va.nameValidate(request, instance.urns, "University Roll Number of Student"):
+            status, msg = va.nameValidate(instance.urns, "University Roll Number of Student")
+            if not status:
                 return redirect(redirect_url)
 
             instance.eys = request.POST.get('eys').strip()
-            if not va.nameValidate(request, instance.urns, "Enrollment Year of Student"):
+            status, msg = va.nameValidate(instance.eys, "Enrollment Year of Student")
+            if not status:
                 return redirect(redirect_url)
 
             instance.tod = request.POST.get('tod').strip()
-            if not va.nameValidate(request, instance.tod, "Title of the Dissertation"):
+            status, msg = va.nameValidate(instance.tod, "Title of the Dissertation")
+            if not status:
                 return redirect(redirect_url)
 
             instance.visor = request.POST.get('optradio2').strip()
-            if not va.nameValidate(request, instance.tod, "Supervisor / Co-supervisor"):
+            status, msg = va.nameValidate(instance.visor, "Supervisor / Co-supervisor")
+            if not status:
                 return redirect(redirect_url)
 
             instance.dov = request.POST.get('dov')
@@ -1938,7 +2244,8 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.noe = request.POST.get('noe').strip()
-            if not va.nameValidate(request, instance.noe, "Name of external examiner"):
+            status, msg = va.nameValidate(instance.noe, "Name of external examiner")
+            if not status:
                 return redirect(redirect_url)
 
             instance.save()
@@ -1947,23 +2254,28 @@ def editforms(request, form_no, user_token):
             instance = resource.objects.get(pk=actual_pk)
 
             instance.category = request.POST.get('category').strip()
-            if not va.radiocheck(request, instance.category, "Category"):
+            status, msg = va.radiocheck(instance.category, "Category")
+            if not status:
                 return redirect(redirect_url)
 
             instance.toe = request.POST.get('toe').strip()
-            if not va.nameValidate(request, instance.toe, "Title of Event/ Exam Name"):
+            status, msg = va.nameValidate(instance.toe , "Title of Event/ Exam Name")
+            if not status:
                 return redirect(redirect_url)
 
             instance.sa = request.POST.get('sa').strip()
-            if not va.nameValidate(request, instance.sa, "Subject Area/Subject Name/Lab Name/Session Name"):
+            status, msg = va.nameValidate(instance.sa, "Subject Area/Subject Name/Lab Name/Session Name")
+            if not status:
                 return redirect(redirect_url)
 
             instance.rpt = request.POST.get('rpt').strip()
-            if not va.radiocheck(request, instance.rpt, "Resource Person Type"):
+            status, msg = va.radiocheck(instance.rpt, "Resource Person Type")
+            if not status:
                 return redirect(redirect_url)
 
             instance.doe = request.POST.get('doe').strip()
-            if not va.nameValidate(request, instance.doe, "Duration of event (in days)"):
+            status, msg = va.nameValidate(instance.doe, "Duration of event (in days)")
+            if not status:
                 return redirect(redirect_url)
 
             instance.begi_date = request.POST.get('begi_date')
@@ -1993,16 +2305,19 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
-            if not va.radiocheck(request, instance.session, "Academic Session"):
+            status, msg = va.radiocheck(instance.session, "Academic Session")
+            if not status:
                 return redirect(redirect_url)
 
             instance.venue = request.POST.get('venue').strip()
-            if not va.nameValidate(request, instance.sa, "Venue"):
+            status, msg = va.nameValidate(instance.venue, "Venue")
+            if not status:
                 return redirect(redirect_url)
 
             if request.FILES.get('proof_file'):
                 proof_file = request.FILES.get('proof_file')
-                if not va.fileValidate(request, proof_file, "Proof File"):
+                status, msg = va.fileValidate(proof_file, "Proof File")
+                if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
 

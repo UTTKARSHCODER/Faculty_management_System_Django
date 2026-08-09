@@ -329,12 +329,13 @@ def showdynamictable(request):
         top_map = {choice.value: choice.label for choice in type_of_patent}
 
         if form_to_load == '1_1':
-            instance = Faculty.objects.filter(status="R").only('name','email','designation','department',
+            instance = Faculty.objects.filter(status="R").only('session','name','email','designation','department',
                         'contact_number','dob','gender','address','aos','hq',
                         'pshd','emp_id','pan_no','jd','profile_picture','jr','of','hdc','ss','pd','phd_univ',
                         'phd_dor','norp','certificate')
 
             col_vals = [('Edit','secure_token','text'),
+                        ('Session', 'get_session_display', 'method'),
                         ('Name','name','text'),
                         ('Email','email','text'),
                         ('Designation','get_designation_display','method'),
@@ -479,6 +480,7 @@ def showdynamictable(request):
             col_vals = [('Edit', 'secure_token', 'text'),
                         ('Email address', 'email.email', 'text'),
                         ('Employee ID', 'email.emp_id', 'text'),
+                        ('Department', 'email.get_department_display', 'method'),
                         ('Start Date of the Event', 'begi_date', 'date'),
                         ('End Date of the Event', 'end_date', 'date'),
                         ('Event organized for', 'eof_display_list', 'method'),
@@ -496,6 +498,7 @@ def showdynamictable(request):
                         ('Association with professional societies for organization of event', 'awpsfooe', 'text'),
                         ('Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)', 'nossp', 'text'),
                         ('Number of staff member participated (Provide list of staff members with  their EMPLOYEE ID & Certificates)', 'nosmp', 'text'),
+                        ("Mapped SDG's", 'map_sdg_display_list', 'method'),
                         ('Event report attached in proper format(Yes/No)', 'get_eraipf_display', 'method'),
                         ('Any Other Remark', 'remarks', 'text'),
                         ('Upload Event Report(File)', 'proof_file', 'file'),
@@ -740,7 +743,8 @@ def showdynamictable(request):
                         ('Name of Faculty Member', 'email.name', 'text'),
                         ('Employee ID', 'email.emp_id', 'text'),
                         ('Department', 'email.get_department_display', 'method'),
-                        ('Resource Person in', 'toe', 'text'),
+                        ('Resource Person in', 'get_category_display', 'method'),
+                        ('Title of Event/ Exam Name ', 'toe', 'text'),
                         ('Subject Area/Subject Name/Lab Name/Session Name', 'sa', 'text'),
                         ('Resource Person Type', 'get_rpt_display', 'method'),
                         ('Duration of event (in days)', 'doe', 'text'),

@@ -6,164 +6,241 @@ import pandas as pd
 from openpyxl.styles import Font
 from django.utils import timezone
 from django.contrib import messages
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.db.models import F
+from django.db.models import Q
 
 from firstWebsite.modals import Faculty, non_teaching_staff, Faculty_participation_data, mooc_course, \
     awards_and_achievments, events, sponsored_research, research_journal, research_conference, research_book, patents, \
-    guided, resource
+    guided, resource, department, doc, sponsors, designation, area_of_spe, highest_qual, accept, level, mode, category, \
+    medals, pertopper, eof_choices, mapped_sdgs, status, index_by, quartile, type_of_patent, status_of_patent, \
+    enrollmentYear, survillance, resource_person_type, designation_non_tech, professional_course
 from firstWebsite.views import session_login_required
 
-def download_filtered_files(request, model_name, results, file_fields, date_time_fields , date_fields, headers, multi_valued = ""):
-    if len(results) > 0:
-        # ['department', 'designation', 'aos', 'hq', 'status', 'role', 'gender']
-        # ['profile_picture', 'jr', 'of', 'hdc', 'ss', 'certificate']
-        # values = request.POST.getlist('optcheck[]')
-        # Faculty.objects.filter(department__in=values, status="R")
-        result_instance = results
+def download_filtered_files(request, model_name, results, file_fields, date_time_fields, date_fields, headers,
+                            multi_valued=None):
+    try:
+        if multi_valued is None:
+            multi_valued = []
 
-        data = []
-        choice_translators = {
-            f.name: dict(f.flatchoices)
-            for f in model_name._meta.fields if f.choices
-        }
-        dept_field = Faculty._meta.get_field('department')
-        desi_field = Faculty._meta.get_field('designation')
-        if dept_field.choices:
-            # We map the Department 'name' choices to our annotation key 'dept_name'
-            choice_translators['department'] = dict(dept_field.flatchoices)
-        if desi_field.choices:
-            choice_translators['designation'] = dict(desi_field.flatchoices)
-        datetime_fields = date_time_fields
-        date_fields = date_fields
-        file_fields = file_fields
-        multi_valued = multi_valued
-        # 2. Iterate and process each instance
-        for result in result_instance:
-            for field_name, translator_dict in choice_translators.items():
-                # Check if this choice field is actually in our current row
-                if field_name in result:
-                    raw_value = result[field_name]
+        if len(results) > 0:
+            # ['department', 'designation', 'aos', 'hq', 'status', 'role', 'gender']
+            # ['profile_picture', 'jr', 'of', 'hdc', 'ss', 'certificate']
+            # values = request.POST.getlist('optcheck[]')
+            # Faculty.objects.filter(department__in=values, status="R")
+            result_instance = results
 
-                    # .get(raw_value, raw_value) means:
-                    # "Try to find the display name. If you can't, just leave the raw value alone."
-                    result[field_name] = translator_dict.get(raw_value, raw_value)
+            data = []
+            choice_translators = {
+                f.name: dict(f.flatchoices)
+                for f in model_name._meta.fields if f.choices
+            }
+            dept_field = Faculty._meta.get_field('department')
+            desi_field = Faculty._meta.get_field('designation')
+            if dept_field.choices:
+                # We map the Department 'name' choices to our annotation key 'dept_name'
+                choice_translators['department'] = dict(dept_field.flatchoices)
+            if desi_field.choices:
+                choice_translators['designation'] = dict(desi_field.flatchoices)
+            datetime_fields = date_time_fields
+            date_fields = date_fields
+            file_fields = file_fields
+            multi_valued = multi_valued
+            # 2. Iterate and process each instance
+            for result in result_instance:
+                for field_name, translator_dict in choice_translators.items():
+                    # Check if this choice field is actually in our current row
+                    if field_name in result:
+                        raw_value = result[field_name]
 
-            for field in file_fields:
-                file_path = result.get(field)
-                if file_path:
-                    hyperlink_text = "https://uttkarsh007.pythonanywhere.com/media/" + file_path
-                    hyperlink_formula = f'=HYPERLINK("{hyperlink_text}", "View File Online")'
-                    result[field] = hyperlink_formula
-                else:
-                    text = "No File"
-                    result[field] = text
+                        # .get(raw_value, raw_value) means:
+                        # "Try to find the display name. If you can't, just leave the raw value alone."
+                        result[field_name] = translator_dict.get(raw_value, raw_value)
 
-            for field in datetime_fields:
-                dt_value = result.get(field)
-                if dt_value:
-                    # Convert to local time and format as 'dd-mm-yyyy hh:mm:ss'
-                    result[field] = timezone.localtime(dt_value).strftime("%d/%m/%Y %H:%M:%S")
-                else:
-                    # Handle null/empty datetime fields gracefully
-                    result[field] = "N/A"
+                for field in file_fields:
+                    file_path = result.get(field)
+                    if file_path:
+                        hyperlink_text = "https://uttkarsh007.pythonanywhere.com/media/" + file_path
+                        hyperlink_formula = f'=HYPERLINK("{hyperlink_text}", "View File Online")'
+                        result[field] = hyperlink_formula
+                    else:
+                        text = "No File"
+                        result[field] = text
 
-            for field in date_fields:
-                date_value = result.get(field)
-                if date_value:
-                    result[field] = date_value.strftime("%d-%m-%Y")
+                for field in datetime_fields:
+                    dt_value = result.get(field)
+                    if dt_value:
+                        # Convert to local time and format as 'dd-mm-yyyy hh:mm:ss'
+                        result[field] = timezone.localtime(dt_value).strftime("%d/%m/%Y %H:%M:%S")
+                    else:
+                        # Handle null/empty datetime fields gracefully
+                        result[field] = "N/A"
 
-            if multi_valued != "":
-                result[multi_valued] = ", ".join(result.get(multi_valued))
+                for field in date_fields:
+                    date_value = result.get(field)
+                    if date_value:
+                        result[field] = date_value.strftime("%d-%m-%Y")
 
-            data.append(result)
+                if len(multi_valued) > 0:
+                    for values in multi_valued:
+                        result[values] = ", ".join(result.get(values))
 
-        df = pd.DataFrame(data)
-        df.rename(columns={'safe_dept': 'dept'}, inplace=True)
-        pd.set_option('display.max_columns', None)
+                data.append(result)
 
-        # For CSV
-        json_data = df.to_json(orient='records', date_format='iso')
-        request.session['csv_data'] = json_data
+            df = pd.DataFrame(data)
+            df.rename(columns={'safe_dept': 'dept'}, inplace=True)
+            pd.set_option('display.max_columns', None)
 
-        # For Excel
-        output = io.BytesIO()
+            # For CSV
+            json_data = df.to_json(orient='records', date_format='iso')
+            request.session['csv_data'] = json_data
 
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            # 1. Write the DataFrame to the buffer first
-            df.to_excel(writer, index=False, sheet_name="faculty_report")
+            # For Excel
+            output = io.BytesIO()
 
-            # 2. Access the underlying XlsxWriter workbook and worksheet objects
-            workbook = writer.book
-            worksheet = writer.sheets['faculty_report']
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                # 1. Write the DataFrame to the buffer first
+                df.to_excel(writer, index=False, sheet_name="faculty_report")
 
-            # ==========================================
-            # 3. DEFINE YOUR FONT STYLES (Formats)
-            # ==========================================
+                # 2. Access the underlying XlsxWriter workbook and worksheet objects
+                workbook = writer.book
+                worksheet = writer.sheets['faculty_report']
 
-            # Format for standard data cells
-            data_font_format = workbook.add_format({
-                'font_name': 'Arial',  # Set your desired font style
-                'font_size': 10  # Set your desired font size
-            })
+                # ==========================================
+                # 3. DEFINE YOUR FONT STYLES (Formats)
+                # ==========================================
 
-            # Format for the header row
-            header_font_format = workbook.add_format({
-                'font_name': 'Arial',
-                'font_size': 11,
-                'bold': True
-            })
+                # Format for standard data cells
+                data_font_format = workbook.add_format({
+                    'font_name': 'Arial',  # Set your desired font style
+                    'font_size': 10  # Set your desired font size
+                })
 
-            link_style_format = workbook.add_format({
-                'font_color': 'blue',
-                'underline': 1
-            })
+                # Format for the header row
+                header_font_format = workbook.add_format({
+                    'font_name': 'Arial',
+                    'font_size': 11,
+                    'bold': True
+                })
 
-            # ==========================================
-            # 4. APPLY FORMATS & AUTOFIT
-            # ==========================================
+                link_style_format = workbook.add_format({
+                    'font_color': 'blue',
+                    'underline': 1
+                })
 
-            # Setting default column of collected headers
-            initial_headers = df.columns
-            df.columns = headers
-            # Apply the header format
-            # Pandas already wrote the headers, so we iterate through them and overwrite
-            # the cells in row 0 with our new custom header format.
-            for col_num, col_name in enumerate(df.columns.values):
-                worksheet.write(0, col_num, col_name, header_font_format)
+                # ==========================================
+                # 4. APPLY FORMATS & AUTOFIT
+                # ==========================================
 
-            # Apply the data format to all columns
-            for col_num in range(len(df.columns)):
-                # set_column arguments: (first_col, last_col, width, format)
-                # Passing 'None' for width means we aren't setting a manual width yet.
-                worksheet.set_column(col_num, col_num, None, data_font_format)
+                # Setting default column of collected headers
+                initial_headers = df.columns
+                df.columns = headers
+                # Apply the header format
+                # Pandas already wrote the headers, so we iterate through them and overwrite
+                # the cells in row 0 with our new custom header format.
+                for col_num, col_name in enumerate(df.columns.values):
+                    worksheet.write(0, col_num, col_name, header_font_format)
 
-            # Applying link color
-            for file_col in file_fields:
-                col_idx = initial_headers.get_loc(file_col)
-                worksheet.set_column(col_idx, col_idx, None, link_style_format)
+                # Apply the data format to all columns
+                for col_num in range(len(df.columns)):
+                    # set_column arguments: (first_col, last_col, width, format)
+                    # Passing 'None' for width means we aren't setting a manual width yet.
+                    worksheet.set_column(col_num, col_num, None, data_font_format)
 
-            # Autofit the column widths
-            # This built-in method calculates the maximum width of the data in each
-            # column (including the header) and sizes the column perfectly.
-            worksheet.autofit()
-        output.seek(0)
-        excel_data = base64.b64encode(output.getvalue())
-        request.session['excel_data'] = excel_data.decode('utf-8')
+                # Applying link color
+                for file_col in file_fields:
+                    col_idx = initial_headers.get_loc(file_col)
+                    worksheet.set_column(col_idx, col_idx, None, link_style_format)
+
+                # Autofit the column widths
+                # This built-in method calculates the maximum width of the data in each
+                # column (including the header) and sizes the column perfectly.
+                worksheet.autofit()
+            output.seek(0)
+            excel_data = base64.b64encode(output.getvalue())
+            request.session['excel_data'] = excel_data.decode('utf-8')
+            return True, 'All Ok'
+    except Exception as e:
+        return False, str(e)
+
+
+# Fetching code values to filter out data
+sponsors_label_to_value = {choice.label: choice.value for choice in sponsors}
+department_label_to_value = {choice.label: choice.value for choice in department}
+desgination_label_to_value = {choice.label: choice.value for choice in designation}
+area_of_spe_label_to_value = {choice.label: choice.value for choice in area_of_spe}
+high_qual_label_to_value = {choice.label: choice.value for choice in highest_qual}
+accept_label_to_value = {choice.label: choice.value for choice in accept}
+level_label_to_value = {choice.label: choice.value for choice in level}
+mode_label_to_value = {choice.label: choice.value for choice in mode}
+category_label_to_value = {choice.label: choice.value for choice in category}
+doc_label_to_value = {choice.label: choice.value for choice in doc}
+medals_label_to_value = {choice.label: choice.value for choice in medals}
+pertopper_label_to_value = {choice.label: choice.value for choice in pertopper}
+eof_choices_label_to_value = {choice.label: choice.value for choice in eof_choices}
+mapped_sdg_label_to_value = {choice.label: choice.value for choice in mapped_sdgs}
+status_label_to_value = {choice.label: choice.value for choice in status}
+index_by_label_to_value = {choice.label: choice.value for choice in index_by}
+quartile_label_to_value = {choice.label: choice.value for choice in quartile}
+type_of_patent_label_to_value = {choice.label: choice.value for choice in type_of_patent}
+status_of_patent_label_to_value = {choice.label: choice.value for choice in status_of_patent}
+enrollementYear_label_to_value = {choice.label: choice.value for choice in enrollmentYear}
+survillance_label_to_value = {choice.label: choice.value for choice in survillance}
+resource_person_type_label_to_value = {choice.label: choice.value for choice in resource_person_type}
+designation_non_tech_label_to_value = {choice.label: choice.value for choice in designation_non_tech}
+professinal_course_label_to_value = {choice.label: choice.value for choice in professional_course}
 
 @session_login_required
 def download_files(request):
     # Data Filteration
     if request.method == "POST":
         form_no = request.POST.get('form_no')
-        values = request.POST.getlist('optcheck[]')
+
+        dept_label_to_value = {choice.label: choice.value for choice in department}
+        # Basic Filters
+        basic_filtering_values = request.POST.getlist('optcheck_filter[]')
+        session_filter = request.POST.get('session_filter')
+        emp_id_filter = request.POST.get('emp_id_filter')
+        email_filter = request.POST.get('email_filter')
+        name_filter = request.POST.get('name_filter')
+        department_filter = request.POST.getlist('department_filter[]')
+        department_filter = [dept_label_to_value.get(item, item) for item in department_filter]
+        designation_filter = request.POST.getlist('designation_filter[]')
+        designation_filter = [desgination_label_to_value.get(item, item) for item in designation_filter]
+
+        filter_mappings = {
+            'session': session_filter,
+            'email__department__in': department_filter,
+            'email__emp_id': emp_id_filter,
+            'email__email': email_filter,
+            'email__name': name_filter,
+        }
+
+        query = Q()
+
         date_time_fields = ['created_at']
         file_fields = ['proof_file']
         if form_no == '1_1': # or '1_1' in forms_to_download
+
             file_fields = ['jr','of','hdc','ss','certificate']
             date_fields = ['dob','jd','pd','phd_dor']
-            result = Faculty.objects.filter(department__in=values, status="R").values(
+
+            filter_mappings = {
+                'session': session_filter,
+                'department__in': department_filter,
+                'emp_id': emp_id_filter,
+                'email': email_filter,
+                'name': name_filter,
+                'designation__in': designation_filter,
+                'status': "R"
+            }
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = Faculty.objects.filter(query).values(
                 'created_at','email','session','name','contact_number','department','designation',
                 'aos','emp_id','hq','univ_name','pshd','pan_no','dob','jd','pd','jr','of','ss','hdc','phd_univ',
                 'phd_dor','norp','certificate'
@@ -178,13 +255,36 @@ def download_files(request):
                          'If Awards and recognition received for extension activities(Upload Certificate)'
                           ]
 
-            download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields,headers_0)
+            success, message = download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields,headers_0)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '1_2':
             file_fields = ['higher_degree_certificate', 'joining_report', 'offer_letter', 'salary_slip', 'certificate']
             date_fields = ['dob','joining_date','promotion_date']
             multi_select_field = 'professional_course'
-            result = non_teaching_staff.objects.all().values(
+
+            # Addditional Filters
+            highest_filter = request.POST.getlist('highest_filter[]')
+            highest_filter = [high_qual_label_to_value.get(item, item) for item in highest_filter]
+            professional_course_filter = request.POST.getlist('professional_course_filter[]')
+            professional_course_filter = [professinal_course_label_to_value.get(item, item) for item in professional_course_filter]
+
+            filter_mappings = {
+                'session': session_filter,
+                'department__in': department_filter,
+                'emp_id': emp_id_filter,
+                'email': email_filter,
+                'name': name_filter,
+                'designation__in': designation_filter,
+                'highest_qual__in': highest_filter,
+                'professional_course__contains': professional_course_filter
+            }
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = non_teaching_staff.objects.filter(query).values(
                 'created_at','email','session','name','mobile_no','department','Lab_no',
                 'designation','emp_id','highest_qual','university_name','pshd','professional_course',
                 'pan_no','dob','joining_date','promotion_date'
@@ -196,11 +296,32 @@ def download_files(request):
                          'If Awards and recognition received for extension activities (Upload Certificate)'
                          ]
 
-            download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields, headers_1, multi_select_field)
+            success, message = download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields, headers_1, multi_select_field)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '2':
             date_fields = ['begi_date', 'end_date']
-            result = Faculty_participation_data.objects.filter(category__in=values).annotate(
+
+            # Additional Filters
+            mode_filter = request.POST.getlist('mode_filter[]')
+            mode_filter = [mode_label_to_value.get(item, item) for item in mode_filter]
+            level_filter = request.POST.getlist('level_filter[]')
+            level_filter = [level_label_to_value.get(item, item) for item in level_filter]
+            grant_filter = request.POST.getlist('grant_filter[]')
+            grant_filter = [accept_label_to_value.get(item, item) for item in grant_filter]
+            basic_filtering_values = [category_label_to_value.get(item, item) for item in basic_filtering_values]
+
+
+            filter_mappings['category__in'] = basic_filtering_values
+            filter_mappings['mode__in'] = mode_filter
+            filter_mappings['level__in'] = level_filter
+            filter_mappings['approval__in'] = grant_filter
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = Faculty_participation_data.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
@@ -210,15 +331,37 @@ def download_files(request):
                 'organizer', 'sponsors', 'approval', 'begi_date', 'end_date', 'session', 'no_of_days', 'proof_enclosed','proof_file'
             )
             headers_2 = ['Timestamp', 'Email address', 'Employee ID', 'Department', 'Name of Faculty Memeber',
-                         'Title of Program', 'Conference/FDP/ Workshop/Seminar/ STTP', 'Mode (Online/Offline)', 'Level',
+                         'Title of the Program', 'Conference/FDP/ Workshop/Seminar/ STTP', 'Mode (Offline/Online)', 'Level',
                          'Organizer', 'Sponsored By', 'Grant received from SKIT (Yes/No)', 'From Date', 'To Date',
                          'Session', 'No. of Days', 'Proof Enclosed (Yes/No)','Upload Certificate/Proof']
 
-            download_filtered_files(request, Faculty_participation_data, result, file_fields, date_time_fields, date_fields, headers_2)
+            success, message = download_filtered_files(request, Faculty_participation_data, result, file_fields, date_time_fields, date_fields, headers_2)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '3':
             date_fields = ['begi_date', 'end_date']
-            result = mooc_course.objects.filter(category__in=values).annotate(
+
+            # Additional Filters
+            duration_filter = request.POST.getlist('duration_filter[]')
+            duration_filter = [doc_label_to_value.get(item, item) for item in duration_filter]
+            certificate_filter = request.POST.getlist('certificate_filter[]')
+            certificate_filter = [medals_label_to_value.get(item, item) for item in certificate_filter]
+            topper_filter = request.POST.getlist('topper_filter[]')
+            topper_filter = [pertopper_label_to_value.get(item, item) for item in topper_filter]
+            basic_filtering_values = [category_label_to_value.get(item, item) for item in basic_filtering_values]
+
+            filter_mappings['category__in'] = basic_filtering_values
+            filter_mappings['doc__in'] = duration_filter
+            filter_mappings['ctype__in'] = certificate_filter
+            filter_mappings['topper_in__in'] = topper_filter
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            print("Dictionary with values is:",filter_mappings)
+            print("Sql query is: ",query)
+            result = mooc_course.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
@@ -232,42 +375,81 @@ def download_files(request):
                          'Type of Course', 'Timeline of course', 'Name of the Course', 'Duration of Course',
                          'Start Date of Course',
                          'End Date of Course', 'Offering Agency / Organizer', 'Certificate Type',
-                         'Any  category from below ',
-                         'Remarks (if any)', 'Upload Certificate/Proof']
+                         'Any category from below ',
+                         'Remark (if any)', 'Upload Certificate']
 
-            download_filtered_files(request, mooc_course, result, file_fields, date_time_fields,
+            print("Calling function with results....", result)
+            success, message = download_filtered_files(request, mooc_course, result, file_fields, date_time_fields,
                                     date_fields, headers_3)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '4':
             date_fields = ['begi_date', 'end_date']
-            multi_select_field = 'eof'
-            result = events.objects.filter(category__in=values).annotate(
+            multi_select_field = ['eof', 'map_sdg']
+
+            # Additional Filters
+            event_org_for_filter = request.POST.getlist('event_org_for_filter[]')
+            event_org_for_filter = [eof_choices_label_to_value.get(item, item) for item in event_org_for_filter]
+            spo_non_spo_filter = request.POST.getlist('spo_non_spo_filter[]')
+            spo_non_spo_filter = [sponsors_label_to_value.get(item, item) for item in spo_non_spo_filter]
+            grant_filter = request.POST.getlist('grant_filter[]')
+            grant_filter = [accept_label_to_value.get(item, item) for item in grant_filter]
+            map_filter = request.POST.getlist('map_filter[]')
+            map_filter = [mapped_sdg_label_to_value.get(item, item) for item in map_filter]
+            basic_filtering_values = [category_label_to_value.get(item, item) for item in basic_filtering_values]
+
+            filter_mappings['category__in'] = basic_filtering_values
+            filter_mappings['eof__contains'] = event_org_for_filter
+            filter_mappings['ct__in'] = spo_non_spo_filter
+            filter_mappings['gr__in'] = grant_filter
+            filter_mappings['map_sdg__contains'] = map_filter
+
+            print(filter_mappings)
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = events.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
                 name=F('email__name')
             ).values(
                 'created_at', 'safe_email', 'begi_date', 'end_date', 'eof', 'category', 'nofc', 'topdpo', 'nop',
-                'adcc', 'session', 'ct', 'nosa', 'cd', 'gr', 'gd', 'awpsfooe', 'nossp', 'nosmp', 'eraipf', 'remarks', 'proof_file'
+                'adcc', 'session', 'ct', 'nosa', 'cd', 'gr', 'gd', 'actual_expenditure', 'awpsfooe', 'nossp', 'nosmp', 'map_sdg','eraipf', 'remarks', 'proof_file'
             )
-            headers_4 = ['Timestamp', 'Email address', 'Start Date of the Event', 'End Date  the Event ',
+            headers_4 = ['Timestamp', 'Email address', 'Start Date of the Event', 'End Date of the Event',
                          'Event Organized for', 'Type of Event', 'Name of Faculty Coordinator(s)',
                          'Title of the Professional Development Program Organized', 'No. of participants',
                          'Academic Department/ Cell / Committees/ Labs /COE',
                          'Academic Session', 'Sponsored/Non Sponsored',
                          'Name of Sponsoring Agency (if Sponsored)', 'Collaboration Details',
-                         'Grant Received (YES/NO)', 'Grant Details',
+                         'Grant Received (YES/NO)', 'Grant Details', 'Actual Expenditure',
                          'Association with professional societies for organization of event',
-                         'Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)s',
+                         'Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)',
                          'Number of staff member participated(Provide list of staff members with  their EMPLOYEE ID & Certificates)',
-                         'Event report attached in proper format(YES/NO)', 'Any Other Remark', 'Upload Event Report']
+                         'Mapped SDGs', 'Event report attached in proper format(YES/NO)',
+                         'Any Other Remark', 'Upload Event Report']
 
-            download_filtered_files(request, events, result, file_fields, date_time_fields,
+            print(result)
+            success, message = download_filtered_files(request, events, result, file_fields, date_time_fields,
                                     date_fields, headers_4, multi_select_field)
+
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '5':
             date_fields = ['ad']
-            result = awards_and_achievments.objects.filter(category__in=values).annotate(
+
+            basic_filtering_values = [category_label_to_value.get(item, item) for item in basic_filtering_values]
+
+            filter_mappings['category__in'] = basic_filtering_values
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = awards_and_achievments.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
@@ -280,14 +462,28 @@ def download_files(request):
             headers_5 = ['Timestamp', 'Email address', 'Session', 'Faculty Name', 'Employee ID',
                          'Designation', 'Department', 'Name of the Award/Achievement', 'Category',
                          'Position / Award For',
-                         'Agency/Organization', 'Prize', 'Award Date', 'Remark', 'Upload Award Certificate/Proof'
+                         'Agency/Organization', 'Prize', 'Date of Award', 'Remark', 'Upload Award Certificate/Proof'
                          ]
 
-            download_filtered_files(request, awards_and_achievments, result, file_fields, date_time_fields,
+            success, message = download_filtered_files(request, awards_and_achievments, result, file_fields, date_time_fields,
                                     date_fields, headers_5)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '6':
-            result = sponsored_research.objects.filter(category__in=values).annotate(
+
+            # Additional Filters
+            status_filter = request.POST.getlist('status_filter[]')
+            status_filter = [status_label_to_value.get(item, item) for item in status_filter]
+            basic_filtering_values = [category_label_to_value.get(item, item) for item in basic_filtering_values]
+
+            filter_mappings['status__in'] = status_filter
+            filter_mappings['category__in'] = basic_filtering_values
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = sponsored_research.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
@@ -301,12 +497,32 @@ def download_files(request):
                          'Duration of Project (in Years)',
                          'Amount in Rs.', 'Session in which grant/research project/consultancy received', 'Status', 'Upload Proof']
 
-            download_filtered_files(request, sponsored_research, result, file_fields, date_time_fields,
+            success, message = download_filtered_files(request, sponsored_research, result, file_fields, date_time_fields,
                                     [], headers_6)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '7_1':
             date_fields = ['pd']
-            result = research_journal.objects.filter(index_by__in=values).annotate(
+
+            # Additional Filters
+            level_filter = request.POST.getlist('level_filter[]')
+            level_filter = [level_label_to_value.get(item, item) for item in level_filter]
+            quartile_filter = request.POST.getlist('quartile_filter[]')
+            quartile_filter = [quartile_label_to_value.get(item, item) for item in quartile_filter]
+            ssa_filter = request.POST.getlist('ssa_filter[]')
+            ssa_filter = [accept_label_to_value.get(item, item) for item in ssa_filter]
+
+            filter_mappings['level__in'] = level_filter
+            filter_mappings['quartile__in'] = quartile_filter
+            filter_mappings['ssa__in'] = ssa_filter
+            basic_filtering_values = [index_by_label_to_value.get(item, item) for item in basic_filtering_values]
+            filter_mappings['index_by__in'] = basic_filtering_values
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = research_journal.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
@@ -316,7 +532,7 @@ def download_files(request):
                 'pd', 'session', 'isnp', 'isno', 'level', 'doi', 'lwj','lap', 'lrsj', 'aiop', 'index_by', 'quartile', 'ssa',
                 'details', 'proof_file'
             )
-            headers_7_1 = ['Timestamp', 'Email address', 'Employee ID', 'Name of the author', 'Department',
+            headers_7_1 = ['Timestamp', 'Email address', 'Employee ID', 'Name of the author(s)', 'Department',
                          'Title of Paper', 'Name of Journal', 'Name of the Publisher', 'Volume, Issue', 'Page No.',
                          'Published Date',
                          'Session', 'ISSN number : Print', 'ISSN number : Online', 'Level (National/International)',
@@ -328,12 +544,26 @@ def download_files(request):
                          'Is SKIT student associated ?',
                          'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)', 'Upload Full Paper']
 
-            download_filtered_files(request, research_journal, result, file_fields, date_time_fields,
+            success, message = download_filtered_files(request, research_journal, result, file_fields, date_time_fields,
                                     date_fields, headers_7_1)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '7_2':
             date_fields = ['pd']
-            result = research_conference.objects.filter(level__in=values).annotate(
+
+            # Additional Filter
+            ssa_filter = request.POST.getlist('ssa_filter[]')
+            ssa_filter = [accept_label_to_value.get(item, item) for item in ssa_filter]
+
+            filter_mappings['ssa__in'] = ssa_filter
+            basic_filtering_values = [level_label_to_value.get(item, item) for item in basic_filtering_values]
+            filter_mappings['level__in'] = basic_filtering_values
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = research_conference.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
@@ -342,20 +572,34 @@ def download_files(request):
                 'created_at', 'safe_email', 'department', 'emp_id', 'noa', 'toc', 'top', 'topc',
                 'level', 'isnp', 'nop', 'pd', 'session', 'doi', 'lwj','aitp', 'index_by', 'ssa', 'details', 'proof_file'
             )
-            headers_7_2 = ['Timestamp', 'Email address', 'Department', 'Employee ID', 'Name of author',
+            headers_7_2 = ['Timestamp', 'Email address', 'Department', 'Employee ID', 'Name of author(s)',
                          'Title of the Conference', 'Title of paper', 'Title of the proceedings of the conference',
                          'Level(National/International)', 'ISBN/ISSN number of the proceeding', 'Name of the Publisher',
                          'Published Date', 'Session',
                          'DOI', 'Web Link', 'Affiliating Institute at the time of publication', 'Indexed by',
-                         'Is SKIT stuacdent associated?',
+                         'Is SKIT student associated?',
                          'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)','Upload Full Paper']
 
-            download_filtered_files(request, research_conference, result, file_fields, date_time_fields,
+            success, message = download_filtered_files(request, research_conference, result, file_fields, date_time_fields,
                                     date_fields, headers_7_2)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '7_3':
             date_fields = ['pd']
-            result = research_book.objects.filter(level__in=values).annotate(
+
+            # Addtional Filter
+            ssa_filter = request.POST.getlist('ssa_filter[]')
+            ssa_filter = [accept_label_to_value.get(item, item) for item in ssa_filter]
+            basic_filtering_values = [level_label_to_value.get(item, item) for item in basic_filtering_values]
+
+            filter_mappings['level__in'] = basic_filtering_values
+            filter_mappings['ssa__in'] = ssa_filter
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = research_book.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
@@ -369,12 +613,29 @@ def download_files(request):
                                'ISBN', 'Name of the Publisher', 'Published Date', 'Session', 'DOI', 'Web Link', 'Affiliating Institute at the time of publication',
                                'Indexed By', 'Is SKIT student associated', 'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)', 'Upload Proof (Book Chapter/Front Page/Document etc.)']
 
-            download_filtered_files(request, research_book, result, file_fields, date_time_fields,
+            success, message = download_filtered_files(request, research_book, result, file_fields, date_time_fields,
                                     date_fields, headers_7_3)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '7_4':
             date_fields = ['pd']
-            result = patents.objects.filter(pg__in=values).annotate(
+
+            # Additional Filter
+            status_filter = request.POST.getlist('status_filter[]')
+            status_filter = [status_of_patent_label_to_value.get(item, item) for item in status_filter]
+            ssa_filter = request.POST.getlist('ssa_filter[]')
+            ssa_filter = [accept_label_to_value.get(item, item) for item in ssa_filter]
+            basic_filtering_values = [type_of_patent_label_to_value.get(item, item) for item in basic_filtering_values]
+
+            filter_mappings['pg__in'] = basic_filtering_values
+            filter_mappings['ssa__in'] = ssa_filter
+            filter_mappings['sop__in'] = status_filter
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = patents.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
@@ -389,12 +650,29 @@ def download_files(request):
                           'Is SKIT student associated?',
                           'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name) ', 'Link', 'Upload Proof']
 
-            download_filtered_files(request, patents, result, file_fields, date_time_fields,
+            success, message = download_filtered_files(request, patents, result, file_fields, date_time_fields,
                                     date_fields, headers_7_4)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '8':
             date_fields = ['dov']
-            result = guided.objects.filter(category__in=values).annotate(
+
+            # Addtional Filter
+            eys_filter = request.POST.getlist('eys_filter[]')
+            eys_filter = [enrollementYear_label_to_value.get(item, item) for item in eys_filter]
+            visor_filter = request.POST.getlist('visor_filter[]')
+            visor_filter = [survillance_label_to_value.get(item, item) for item in visor_filter]
+            basic_filtering_values = [category_label_to_value.get(item, item) for item in basic_filtering_values]
+
+            filter_mappings['category__in'] = basic_filtering_values
+            filter_mappings['eys__in'] = eys_filter
+            filter_mappings['visor__in'] = visor_filter
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = guided.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
@@ -408,12 +686,27 @@ def download_files(request):
                                'University Roll Number of Student', 'Enrollment Year of Student', 'Title of the Dissertation', 'Supervisor / Co-supervisor', 'Date of Viva-Voce',
                                'Name of external examiner']
 
-            download_filtered_files(request, guided, result, [], date_time_fields,
+            success, message = download_filtered_files(request, guided, result, [], date_time_fields,
                                     date_fields, headers_8)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '9':
             date_fields = ['begi_date', 'end_date']
-            result = resource.objects.filter(category__in=values).annotate(
+
+            # Additional Filter
+            rpt_filter = request.POST.getlist('rpt_filter[]')
+            rpt_filter = [resource_person_type_label_to_value.get(item, item) for item in rpt_filter]
+            basic_filtering_values = [category_label_to_value.get(item, item) for item in basic_filtering_values]
+
+
+            filter_mappings['category__in'] = basic_filtering_values
+            filter_mappings['rpt__in'] = rpt_filter
+
+            for lookup, val in filter_mappings.items():
+                if val:  # Only add to query if val is not None, '', or []
+                    query &= Q(**{lookup: val})
+
+            result = resource.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
                 department=F('email__department'),
@@ -425,10 +718,11 @@ def download_files(request):
                                'Resource Person in', 'Title of Event/ Exam Name', 'Subject Area/Subject Name/Lab Name/Session Name',
                                'Resource Person Type', 'Duration of event (in days)', 'Date From', 'Date to', 'Venue', 'Proof (Certificate/Mail)']
 
-            download_filtered_files(request, resource, result, file_fields, date_time_fields,
+            success, message = download_filtered_files(request, resource, result, file_fields, date_time_fields,
                                     date_fields, headers_9)
+            return JsonResponse({'success': success, 'message': message}, safe=False)
 
-        return HttpResponse(status=204)
+        return JsonResponse({'success': True, 'message': 'All Ok'})
 
     elif request.method == "GET":
         # Data fetching
@@ -689,7 +983,7 @@ def download_files(request):
             if '2' in forms_to_download:
                 # --- Faculty Participartion ---
                 sheet2 = workbook.create_sheet("2. Faculty Participation")
-                headers_2 = ['Timestamp','Email address','Employee ID','Department','Name of Faculty Memeber','Title of Program','Conference/FDP/ Workshop/Seminar/ STTP','Mode (Online/Offline)','Level','Organizer','Sponsored By','Grant received from SKIT (Yes/No)','From Date','To Date','Session','No. of Days','Proof Enclosed (Yes/No)']
+                headers_2 = ['Timestamp','Email address','Employee ID','Department','Name of Faculty Memeber','Title of the Program','Conference/FDP/ Workshop/Seminar/ STTP','Mode (Offline/Online)','Level','Organizer','Sponsored By','Grant received from SKIT (Yes/No)','From Date','To Date','Session','No. of Days','Proof Enclosed (Yes/No)']
                 if user_type == "ad" or user_type == "spa":
                     headers_2.append('Upload Certificate/Proof')
                 sheet2.append(headers_2)
@@ -746,9 +1040,9 @@ def download_files(request):
                              'Start Date of Course',
                              'End Date of Course', 'Offering Agency / Organizer', 'Certificate Type',
                              'Any  category from below ',
-                             'Remarks (if any)']
+                             'Remark (if any)']
                 if user_type == 'ad' or user_type == 'spa':
-                    headers_3.insert(15, 'Upload Certificate/Proof')
+                    headers_3.insert(15, 'Upload Certificate')
                 sheet3.append(headers_3)
 
                 # for making text bold
@@ -800,17 +1094,18 @@ def download_files(request):
             if '4' in forms_to_download:
                 # --- 4. Events Organized by Department ---
                 sheet4 = workbook.create_sheet("4. Events Organized by Dept")
-                headers_4 = ['Timestamp', 'Email address', 'Start Date of the Event', 'End Date  the Event ',
+                headers_4 = ['Timestamp', 'Email address', 'Start Date of the Event', 'End Date of the Event ',
                              'Event Organized for', 'Type of Event', 'Name of Faculty Coordinator(s)',
                              'Title of the Professional Development Program Organized', 'No. of participants',
                              'Academic Department/ Cell / Committees/ Labs /COE',
                              'Academic Session', 'Sponsored/Non Sponsored',
                              'Name of Sponsoring Agency (if Sponsored)', 'Collaboration Details',
-                             'Grant Received (YES/NO)', 'Grant Details',
+                             'Grant Received (YES/NO)', 'Grant Details', 'Actual Expenditure',
                              'Association with professional societies for organization of event',
-                             'Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)s',
+                             'Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)',
                              'Number of staff member participated(Provide list of staff members with  their EMPLOYEE ID & Certificates)',
-                             'Event report attached in proper format(YES/NO)', 'Any Other Remark']
+                             'Mapped SDGs', 'Event report attached in proper format(YES/NO)', 'Any Other Remark']
+
                 if user_type == 'ad' or user_type == 'spa':
                     headers_4.insert(19, 'Upload Event Report')
                 sheet4.append(headers_4)
@@ -827,7 +1122,7 @@ def download_files(request):
                                 item.nofc, item.topdpo, item.nop,
                                 item.adcc, item.get_session_display(), item.get_ct_display(),
                                 item.nosa, item.cd,
-                                item.get_gr_display(), item.gd, item.awpsfooe, item.nossp, item.nosmp,
+                                item.get_gr_display(), item.gd, item.actual_expenditure, item.awpsfooe, item.nossp, item.nosmp, ", ".join(item.map_sdg),
                                 item.get_eraipf_display(),
                                 item.remarks]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
@@ -867,7 +1162,7 @@ def download_files(request):
                 sheet5 = workbook.create_sheet("5. Faculty Awards & Achievement")
                 headers_5 = ['Timestamp', 'Email address', 'Session', 'Faculty Name', 'Employee ID',
                                'Designation', 'Department', 'Name of the Award/Achievement', 'Category','Position / Award For',
-                               'Agency/Organization', 'Prize', 'Remark',
+                               'Agency/Organization', 'Prize', 'Date of Award', 'Remark',
                                'All information filled by me is correct and I will submit proof and other related document whenever is asked']
                 if user_type == 'ad' or user_type == 'spa':
                     headers_5.insert(12,'Upload Award Certificate/Proof')
@@ -881,7 +1176,7 @@ def download_files(request):
                     row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(),
                                    item.email.name, item.email.emp_id, item.email.get_designation_display(), item.email.get_department_display(),
                                    item.noaa, item.get_category_display(), item.paf,
-                                   item.ao, item.prize,
+                                   item.ao, item.prize, item.map_sdg,
                                    item.remark, "I AGREE"]
                     if item.proof_file and (user_type == 'ad' or user_type == 'spa'):
                         proof_file = "https://uttkarsh007.pythonanywhere.com" + item.proof_file.url
@@ -972,7 +1267,7 @@ def download_files(request):
             if '7_1' in forms_to_download:
                 # --- 7.1 Research Publication - Journal ---
                 sheet7 = workbook.create_sheet("7.1Research Publication-Journal")
-                headers_7 = ['Timestamp', 'Email address', 'Employee ID', 'Name of the author', 'Department',
+                headers_7 = ['Timestamp', 'Email address', 'Employee ID', 'Name of the author(s)', 'Department',
                                'Title of Paper', 'Name of Journal', 'Name of the Publisher', 'Volume, Issue', 'Page No.', 'Published Date',
                                'Session', 'ISSN number : Print', 'ISSN number : Online', 'Level (National/International)', 'DOI',
                                'Link to website of the Journal', 'Link to article/paper/abstract of the article (Direct link to the webpage where the abstract of paper is displayed)',
@@ -1031,7 +1326,7 @@ def download_files(request):
                 sheet8 = workbook.create_sheet("7.2 Conference Publication")
                 headers_8 = ['Timestamp', 'Email address', 'Department', 'Employee ID', 'Name of author',
                                'Title of the Conference', 'Title of paper', 'Title of the proceedings of the conference','Level(National/International)', 'ISBN/ISSN number of the proceeding','Name of the Publisher', 'Published Date', 'Session',
-                               'DOI', 'Web Link', 'Affiliating Institute at the time of publication', 'Indexed by', 'Is SKIT stuacdent associated?', 'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']
+                               'DOI', 'Web Link', 'Affiliating Institute at the time of publication', 'Indexed by', 'Is SKIT student associated?', 'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)']
                 if user_type == 'ad' or user_type == 'spa':
                     headers_8.append('Upload Full Paper')
                 sheet8.append(headers_8)
