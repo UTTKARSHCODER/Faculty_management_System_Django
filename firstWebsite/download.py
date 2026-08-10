@@ -1,5 +1,6 @@
 import base64
 import io
+import re
 
 import openpyxl
 import pandas as pd
@@ -15,10 +16,28 @@ from firstWebsite.modals import Faculty, non_teaching_staff, Faculty_participati
     awards_and_achievments, events, sponsored_research, research_journal, research_conference, research_book, patents, \
     guided, resource, department, doc, sponsors, designation, area_of_spe, highest_qual, accept, level, mode, category, \
     medals, pertopper, eof_choices, mapped_sdgs, status, index_by, quartile, type_of_patent, status_of_patent, \
-    enrollmentYear, survillance, resource_person_type, designation_non_tech, professional_course
+    enrollmentYear, survillance, resource_person_type, designation_non_tech, professional_course, forms
 from firstWebsite.views import session_login_required
 
-def download_filtered_files(request, model_name, results, file_fields, date_time_fields, date_fields, headers,
+forms_value_to_label = {
+    '1_1' : 'faculty_profile_report',
+    '1_2' : 'non_teaching_staff_report',
+    '2' : 'faculty_participation_report',
+    '3' : 'mooc_short_term_course_report',
+    '4' : 'events_organized_report',
+    '5' : 'faculty_awards_report',
+    '6' : 'sponsored_research_report',
+    '7_1' : 'research_journal_report',
+    '7_2' : 'research_conference_report',
+    '7_3' : 'research_book_report',
+    '7_4' : 'patents_report',
+    '8' : 'mtech_phd_report',
+    '9' : 'resource_person_report',
+}
+
+ori_forms_value_to_label = {choice.value: choice.label for choice in forms}
+
+def download_filtered_files(request, model_name, results, file_fields, date_time_fields, date_fields, headers, form_no,
                             multi_valued=None):
     try:
         if multi_valued is None:
@@ -33,8 +52,7 @@ def download_filtered_files(request, model_name, results, file_fields, date_time
 
             data = []
             choice_translators = {
-                f.name: dict(f.flatchoices)
-                for f in model_name._meta.fields if f.choices
+                f.name: dict(f.flatchoices) for f in model_name._meta.fields if f.choices
             }
             dept_field = Faculty._meta.get_field('department')
             desi_field = Faculty._meta.get_field('designation')
@@ -51,6 +69,7 @@ def download_filtered_files(request, model_name, results, file_fields, date_time
             for result in result_instance:
                 for field_name, translator_dict in choice_translators.items():
                     # Check if this choice field is actually in our current row
+                    # To get the label value corresponding to it's value
                     if field_name in result:
                         raw_value = result[field_name]
 
@@ -101,11 +120,12 @@ def download_filtered_files(request, model_name, results, file_fields, date_time
 
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
                 # 1. Write the DataFrame to the buffer first
-                df.to_excel(writer, index=False, sheet_name="faculty_report")
+                sheet_name = forms_value_to_label.get(form_no, 'new_report')
+                df.to_excel(writer, index=False, sheet_name=sheet_name)
 
                 # 2. Access the underlying XlsxWriter workbook and worksheet objects
                 workbook = writer.book
-                worksheet = writer.sheets['faculty_report']
+                worksheet = writer.sheets[sheet_name]
 
                 # ==========================================
                 # 3. DEFINE YOUR FONT STYLES (Formats)
@@ -160,6 +180,7 @@ def download_filtered_files(request, model_name, results, file_fields, date_time
             output.seek(0)
             excel_data = base64.b64encode(output.getvalue())
             request.session['excel_data'] = excel_data.decode('utf-8')
+            request.session['curr_form_no'] = form_no
             return True, 'All Ok'
     except Exception as e:
         return False, str(e)
@@ -204,6 +225,7 @@ def download_files(request):
         emp_id_filter = request.POST.get('emp_id_filter')
         email_filter = request.POST.get('email_filter')
         name_filter = request.POST.get('name_filter')
+        print(f"Email filter is: {email_filter}, Name filter is: {name_filter}, emp_id filter is: {emp_id_filter}")
         department_filter = request.POST.getlist('department_filter[]')
         department_filter = [dept_label_to_value.get(item, item) for item in department_filter]
         designation_filter = request.POST.getlist('designation_filter[]')
@@ -212,9 +234,9 @@ def download_files(request):
         filter_mappings = {
             'session': session_filter,
             'email__department__in': department_filter,
-            'email__emp_id': emp_id_filter,
-            'email__email': email_filter,
-            'email__name': name_filter,
+            'email__emp_id__exact': emp_id_filter,
+            'email__email__icontains': email_filter,
+            'email__name__icontains': name_filter,
         }
 
         query = Q()
@@ -229,9 +251,9 @@ def download_files(request):
             filter_mappings = {
                 'session': session_filter,
                 'department__in': department_filter,
-                'emp_id': emp_id_filter,
-                'email': email_filter,
-                'name': name_filter,
+                'emp_id__exact': emp_id_filter,
+                'email__icontains': email_filter,
+                'name__icontains': name_filter,
                 'designation__in': designation_filter,
                 'status': "R"
             }
@@ -239,6 +261,7 @@ def download_files(request):
             for lookup, val in filter_mappings.items():
                 if val:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
+            print("Query is: {}".format(query))
 
             result = Faculty.objects.filter(query).values(
                 'created_at','email','session','name','contact_number','department','designation',
@@ -255,7 +278,7 @@ def download_files(request):
                          'If Awards and recognition received for extension activities(Upload Certificate)'
                           ]
 
-            success, message = download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields,headers_0)
+            success, message = download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields,headers_0,form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '1_2':
@@ -272,9 +295,9 @@ def download_files(request):
             filter_mappings = {
                 'session': session_filter,
                 'department__in': department_filter,
-                'emp_id': emp_id_filter,
-                'email': email_filter,
-                'name': name_filter,
+                'emp_id__exact': emp_id_filter,
+                'email__icontains': email_filter,
+                'name__icontains': name_filter,
                 'designation__in': designation_filter,
                 'highest_qual__in': highest_filter,
                 'professional_course__contains': professional_course_filter
@@ -296,7 +319,7 @@ def download_files(request):
                          'If Awards and recognition received for extension activities (Upload Certificate)'
                          ]
 
-            success, message = download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields, headers_1, multi_select_field)
+            success, message = download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields, headers_1, form_no,multi_select_field)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '2':
@@ -335,7 +358,7 @@ def download_files(request):
                          'Organizer', 'Sponsored By', 'Grant received from SKIT (Yes/No)', 'From Date', 'To Date',
                          'Session', 'No. of Days', 'Proof Enclosed (Yes/No)','Upload Certificate/Proof']
 
-            success, message = download_filtered_files(request, Faculty_participation_data, result, file_fields, date_time_fields, date_fields, headers_2)
+            success, message = download_filtered_files(request, Faculty_participation_data, result, file_fields, date_time_fields, date_fields, headers_2, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '3':
@@ -380,7 +403,7 @@ def download_files(request):
 
             print("Calling function with results....", result)
             success, message = download_filtered_files(request, mooc_course, result, file_fields, date_time_fields,
-                                    date_fields, headers_3)
+                                    date_fields, headers_3, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '4':
@@ -434,7 +457,7 @@ def download_files(request):
 
             print(result)
             success, message = download_filtered_files(request, events, result, file_fields, date_time_fields,
-                                    date_fields, headers_4, multi_select_field)
+                                    date_fields, headers_4, form_no, multi_select_field)
 
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
@@ -466,7 +489,7 @@ def download_files(request):
                          ]
 
             success, message = download_filtered_files(request, awards_and_achievments, result, file_fields, date_time_fields,
-                                    date_fields, headers_5)
+                                    date_fields, headers_5, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '6':
@@ -498,7 +521,7 @@ def download_files(request):
                          'Amount in Rs.', 'Session in which grant/research project/consultancy received', 'Status', 'Upload Proof']
 
             success, message = download_filtered_files(request, sponsored_research, result, file_fields, date_time_fields,
-                                    [], headers_6)
+                                    [], headers_6, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '7_1':
@@ -545,7 +568,7 @@ def download_files(request):
                          'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)', 'Upload Full Paper']
 
             success, message = download_filtered_files(request, research_journal, result, file_fields, date_time_fields,
-                                    date_fields, headers_7_1)
+                                    date_fields, headers_7_1, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '7_2':
@@ -581,7 +604,7 @@ def download_files(request):
                          'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)','Upload Full Paper']
 
             success, message = download_filtered_files(request, research_conference, result, file_fields, date_time_fields,
-                                    date_fields, headers_7_2)
+                                    date_fields, headers_7_2, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '7_3':
@@ -614,7 +637,7 @@ def download_files(request):
                                'Indexed By', 'Is SKIT student associated', 'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name)', 'Upload Proof (Book Chapter/Front Page/Document etc.)']
 
             success, message = download_filtered_files(request, research_book, result, file_fields, date_time_fields,
-                                    date_fields, headers_7_3)
+                                    date_fields, headers_7_3, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '7_4':
@@ -651,7 +674,7 @@ def download_files(request):
                           'If Yes , Write student(s) details (Program, Branch, RollNo/EnrollNo, Name) ', 'Link', 'Upload Proof']
 
             success, message = download_filtered_files(request, patents, result, file_fields, date_time_fields,
-                                    date_fields, headers_7_4)
+                                    date_fields, headers_7_4, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '8':
@@ -687,7 +710,7 @@ def download_files(request):
                                'Name of external examiner']
 
             success, message = download_filtered_files(request, guided, result, [], date_time_fields,
-                                    date_fields, headers_8)
+                                    date_fields, headers_8, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '9':
@@ -719,7 +742,7 @@ def download_files(request):
                                'Resource Person Type', 'Duration of event (in days)', 'Date From', 'Date to', 'Venue', 'Proof (Certificate/Mail)']
 
             success, message = download_filtered_files(request, resource, result, file_fields, date_time_fields,
-                                    date_fields, headers_9)
+                                    date_fields, headers_9, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         return JsonResponse({'success': True, 'message': 'All Ok'})
@@ -734,7 +757,9 @@ def download_files(request):
                     retrieved_excel_data,
                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 )
-                response['Content-Disposition'] = 'attachment; filename="faculty_report.xlsx"'
+                curr_form_no = request.session.get('curr_form_no')
+                filename = ori_forms_value_to_label.get(curr_form_no, curr_form_no)
+                response['Content-Disposition'] = f'attachment; filename="{filename}_report.xlsx"'
                 return response
             else:
                 messages.error(request, 'Please select at least one filter')

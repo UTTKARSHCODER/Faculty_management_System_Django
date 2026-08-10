@@ -217,58 +217,71 @@ function fixLastColumn(containerId) {
 // Maping of each nav-tabs all dropdown and text based inputs form number wise
 const TAB_FILTER_CONFIG = {
     '1_1': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email': 'email'}, {'Name' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email': 'email'}, {'Name' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '1_2': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email': 'email'}, {'Name' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Highest Qualfication' : 'highest'}, {'Professional Courses' : 'professional_course'}],
-        radio: [{'Session' : 'session'},{'Employee ID' : 'emp_id'}, {'Email': 'email'}, {'Name' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '2': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email': 'email'}, {'Name of Faculty Member' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Mode': 'mode'}, {'Level' :'level'}, {'Grant Recieved from SKIT (Yes/No)' : 'grant'}, {'Conference/FDP/ Workshop/Seminar/ STTP' : 'optcheck'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email': 'email'}, {'Name of Faculty Member' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '3': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty Member' : 'name'}],
         dropdown: [{'Duration of Course' : 'duration'}, {'Department' : 'department'}, {'Designation' : 'designation'}, {'Certificate Type' : 'certificate'}, {'Any category from below' : 'topper'}, {'Type of Course' : 'optcheck'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty Member' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '4': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty Coordinator(s)' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Event organized for' : 'event_org_for'}, {'Sponsored/Non Sponsored' : 'spo_non_spo'},
             {'Grant Received(Yes/No)' : 'grant'}, {'Type of Event' : 'optcheck'},{"Mapped SDG's" : 'map'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty Coordinator(s)' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '5': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Faculty Name' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Category' : 'optcheck'}],
         radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Faculty Name' : 'name'}]
     },
     '6': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Candidate (PI/Co PI)' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Status' :'status'}, {'Category' : 'optcheck'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Candidate (PI/Co PI)' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '7_1': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of the author(s)' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Level (National/ International)' : 'level'}, {'Indexed by' : 'optcheck'},
             {'Quartile' : 'quartile'}, {'Is SKIT student associated?' : 'ssa'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of the author(s)' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '7_2': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of the author(s)' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Level (National/ International)' : 'optcheck'}, {'Is SKIT student associated?' : 'ssa'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of the author(s)' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '7_3': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of the author/editor' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Level (National/ International)' : 'optcheck'}, {'Is SKIT student associated?' : 'ssa'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of the author/editor' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '7_4': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Status of Patent' : 'status'}, {'Type of Patent' : 'optcheck'}, {'Is SKIT student associated?' : 'ssa'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '8': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Faculty Name' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Enrollment Year of Student' : 'eys'}, {'Supervisor / Co-supervisor' : 'visor'}, {'Program of Student' : 'optcheck'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Faculty Name' : 'name'}]
+        radio: [{'Session' : 'session'}]
     },
     '9': {
+        text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty Member' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Resource Person Type' : 'rpt'}, {'Resource Person in' : 'optcheck'}],
-        radio: [{'Session' : 'session'}, {'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty Member' : 'name'}]
+        radio: [{'Session' : 'session'}]
     }
 };
 
@@ -283,6 +296,16 @@ function buildTableFilters(rowValues, tableId) {
 
     const sampleRow = rowValues[0];
     let html = '';
+
+    (config.text || []).forEach(item => {
+        let [colKey, fieldName] = Object.entries(item)[0];
+        if (!(colKey in sampleRow)) return; // column not present for this data, skip silently
+        html += `
+            <div class="col-md-3 mb-2">
+                <label class="form-label">${colKey}</label>
+                <input type="text" class="form-control filter-input" data-column="${colKey}" placeholder="Search ${colKey}" name="${fieldName}_filter">
+            </div>`;
+    });
 
     (config.radio || []).forEach(item => {
         let [colKey, fieldName] = Object.entries(item)[0];
@@ -423,6 +446,17 @@ document.addEventListener('change', function (e) {
 let curr_table_id = '1_1';
 function applyTableFilters() {
 
+    document.querySelectorAll('.filter-input').forEach(input => {
+        const col = input.dataset.column;
+        if (input.value.trim() !== '') {
+            if (col === 'Employee ID') {
+                table.column(`${col}:name`).search(`^${input.value.trim()}$`, true, false);
+            } else {
+                table.column(`${col}:name`).search(input.value.trim());
+            }
+        }
+    });
+
     document.querySelectorAll('.filter-dropdown').forEach(select => {
         const col = select.dataset.column;
         const val = Array.from(select.querySelectorAll('input[type="checkbox"]:checked'))
@@ -434,6 +468,7 @@ function applyTableFilters() {
             // 1. Join values with pipe | to create an OR pattern: (SDG_1|SDG_2)
             // 2. Wrap with ^ and $ for exact matching per item
             const regexPattern = `^(${escaped.join('|')})$`;
+            console.log(`Checkbox regexPattern with col name ${col} is: `,regexPattern);
             table.column(`${col}:name`).search(regexPattern, true, false);
         }
     });
@@ -472,10 +507,17 @@ function applyTableFilters() {
         selValues = Array.from(document.querySelectorAll(`input[name='${value}_filter']:checked`)).map(cb => cb.value);
 
         valuesToPass[value] = selValues;
-    })
+    });
+
+    (config.text || []).forEach(item => {
+        const [key, value] = Object.entries(item)[0];
+
+        valuesToPass[value] = document.querySelector(`input[name='${value}_filter']`).value;
+        console.log(valuesToPass[value]);
+    });
 
 
-    // console.log("Final Expected Dictionary is:",valuesToPass);
+    console.log("Final Expected Dictionary is:",valuesToPass);
 
     // Updating Download Filtered Excel Button status (Enable/Disable)
     const downloadButton = document.getElementById(`download-button-${curr_table_id}`);
@@ -487,26 +529,33 @@ function applyTableFilters() {
 
     const updateButtonState = () => {
         const isChecked = Array.from(currentCheckboxes).some(cb => cb.checked);
-        cleanDownloadButton.disabled = !isChecked || table.rows({ filter: 'applied' }).count() === 0;
+        const textInputs = document.querySelectorAll('input[type="text"]');
+        const haveInput = Array.from(textInputs).some(input => input.value.trim() !== '');
+        cleanDownloadButton.disabled = (!isChecked && !haveInput) || table.rows({ filter: 'applied' }).count() === 0;
     };
     updateButtonState();
 
     cleanDownloadButton.addEventListener('click', function() {
         const formData = new FormData();
         Object.entries(valuesToPass).forEach(([key, values]) => {
-            if (!Array.isArray(values) || values.length === 0) return;
+            // console.log("VAlues are: ", key, values);
+            if (Array.isArray(values) && values.length > 1) {
 
-            // Check if the HTML element is a radio button in the DOM
-            const isRadio = document.querySelector(`input[name="${key}_filter"][type="radio"]`) !== null;
+                // Check if the HTML element is a radio button in the DOM
+                const isRadio = document.querySelector(`input[name="${key}_filter"][type="radio"]`) !== null;
 
-            if (isRadio) {
-                // Radio button: Send plain key
-                formData.set(`${key}_filter`, values[0]);
-            } else {
-                // Checkboxes: Send key[]
-                values.forEach(val => {
-                    formData.append(`${key}_filter[]`, val);
-                });
+                if (!isRadio) {
+                    // Checkboxes: Send key[]
+                    values.forEach(val => {
+                        formData.append(`${key}_filter[]`, val);
+                    });
+                } else {
+                    // Radio button && Input Tag: Send plain key
+                    formData.set(`${key}_filter`, values[0]);
+                }
+            } else if (!Array.isArray(values)) {
+                console.log("VAlues are: ", key, values);
+                formData.set(`${key}_filter`, values);
             }
         });
         formData.append('form_no', curr_table_id);
@@ -546,6 +595,7 @@ function applyTableFiltersAndClose() {
 
 function clearTableFilters() {
     const allFilters = document.querySelectorAll('.filter-checkbox, .filter-radio');
+     document.querySelectorAll('.filter-input').forEach(input => input.value = '');
 
     allFilters.forEach(input => {
         if (input.checked) {
