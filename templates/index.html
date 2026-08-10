@@ -1,10 +1,194 @@
-{% extends 'base.html' %}
+ {% extends 'base.html' %}
+
 
 {% block content %}
 
+<!-- <style>
+    .dept-card {
+        background: linear-gradient(135deg, #3F51B5, #5C6BC0);
+        border-radius: 1.2rem;
+        padding: 1.1rem 1.2rem;
+        color: #fff;
+        transition: transform .15s ease;
+        height: 100%;
+    }
+    .dept-card:hover { transform: translateY(-3px); }
+
+    .dept-card .card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 700;
+        font-size: 1.05rem;
+        margin-bottom: .6rem;
+    }
+
+    .dept-card .stats { font-size: .85rem; margin-bottom: .8rem; }
+    .dept-card .stats .row-line {
+        display: flex;
+        justify-content: space-between;
+        padding: 2px 0;
+        color: rgba(255,255,255,.85);
+    }
+    .dept-card .stats .row-line b { color: #fff; }
+
+    .chart-wrap { text-align: center; }
+    .chart-label { font-size: .75rem; font-weight: 600; color: rgba(255,255,255,.85); margin-bottom: 6px; }
+
+    .pie {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        position: relative;
+        margin: 0 auto;
+        /* Prof 40% | Assoc 30% | Asst 20% | Visiting 10% */
+        background: conic-gradient(
+            #2563eb 0deg 144deg,
+            #60a5fa 144deg 252deg,
+            #f59e0b 252deg 324deg,
+            #9ca3af 324deg 360deg
+        );
+    }
+    .pie::after {
+        content: "";
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 55px; height: 55px;
+        background: #ffffff33;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        font-size: .68rem;
+        color: rgba(255,255,255,.9);
+        margin-top: 10px;
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 4px; }
+    .legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+</style> -->
+
 <style>
-   
-    
+    .dept-card {
+        background: #ffffff;
+        border-radius: 1rem;
+        border-top: 4px solid #e15a5a;
+        box-shadow: 0 2px 10px rgba(0,0,0,.08);
+        padding: 1.2rem 1.3rem;
+        max-width: 380px;
+    }
+
+    .dept-card .card-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #1f2937;
+        margin-bottom: 14px;
+    }
+    .icon-badge {
+        width: 34px; height: 34px;
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        background: #dbeafe;
+        color: #2563eb;
+        font-size: 16px;
+    }
+
+    .card-body {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .stats .row-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 6px 0;
+        font-size: .92rem;
+        color: #4b5563;
+    }
+    .stats .row-line b { color: #111827; }
+
+    .chart-wrap { text-align: center; }
+    .chart-label {
+        font-size: .8rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+
+    .pie {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        position: relative;
+        margin: 0 auto;
+        /* Prof 40% | Assoc 30% | Asst 20% | Visiting 10% */
+        background: conic-gradient(
+            #2563eb 0deg 144deg,
+            #60a5fa 144deg 252deg,
+            #f59e0b 252deg 324deg,
+            #9ca3af 324deg 360deg
+        );
+    }
+    .pie::after {
+        content: "";
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 70px; height: 70px;
+        background: #ffffff;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .pie-pct {
+        position: absolute;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+    }
+    .pct-prof  { top: 32%; left: 76%; }
+    .pct-assoc { top: 70%; left: 25%; }
+    .pct-asst  { top: 32%; left: 4%;  color: #7c5210; }
+    .pct-visit { top: 2%;  left: 34%; color: #374151; }
+
+    .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        font-size: .78rem;
+        color: #4b5563;
+        margin-top: 16px;
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+     .faculty-redirection{
+        display:inline-flex;
+        text-decoration: none;
+        position:relative;
+        color:#1a73e8;
+          
+        transition: transform .1s ease;
+     }
+    .faculty-redirection:hover{
+        color:#0d47a1;
+      transform:scale(1.11);
+
+
+    }
+</style>
+
+<!-- <style>
     .card {
         background: linear-gradient(135deg, #3F51B5, #5C6BC0);
         border-radius: 1.5rem;
@@ -15,8 +199,8 @@
     }
    
     
-</style>
-<div class="container " >
+</style> -->
+ <!-- <div class="container " >
     <div class="row mb-3 " style="margin-left: 1.1rem;">
         {% for ins in dir_ins %}
         <div class="col-md-4 col-sm-6" >
@@ -27,6 +211,86 @@
         </div>
         {% endfor %}
     </div>
-</div>
+</div>  -->
 
-{% endblock %}
+<div class="container d-flex justify-content-start flex-wrap align-items-center">
+    {% for ins in dir_ins %}
+        <div class="col-md-4 col-sm-6" >
+           <div class="dept-card mt-2 m-2">
+                <div class=" d-flex justify-content-between">
+                    <div class="d-flex card-head">
+                    <span class="icon-badge">&lt;/&gt;</span> {{ins.department}}
+                    </div>
+                    <div class="faculty-redirection" style="text-decoration: none;">
+                         <a href = "/faculty/{{ins.department}}" style = "text-decoration: None;">
+                        View all Faculties >
+                    </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="stats">
+                        <div class="row-line"><span>Total Faculty</span><b>32</b></div>
+                        <div class="row-line"><span>Registered</span><b>28</b></div>
+                        <div class="row-line"><span>Active</span><b>25</b></div>
+                        <div class="row-line"><span>Visiting</span><b>4</b></div>
+                    </div>
+
+                    <div class="chart-wrap">
+                        <div class="chart-label">By Designation</div>
+                        <div class="pie">
+                            <span class="pie-pct pct-prof">40</span>
+                            <span class="pie-pct pct-assoc">30</span>
+                            <span class="pie-pct pct-asst">20</span>
+                            <span class="pie-pct pct-visit">10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <span><i style="background:#2563eb"></i>Prof.</span>
+                    <span><i style="background:#60a5fa"></i>Assoc. Prof.</span>
+                    <span><i style="background:#f59e0b"></i>Asst. Prof.</span>
+                    <span><i style="background:#9ca3af"></i>Visiting</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+</div>
+<!-- <div class="col-lg-3 col-md-4 col-sm-6">
+    <a href="#" style="text-decoration:none;">
+       <div class="dept-card">
+  <div class="card-head">
+    <span class="icon-badge">&lt;/&gt;</span> CSE (AI)
+  </div>
+
+  <div class="card-body">
+    <div class="stats">
+      <div class="row-line"><span>Total Faculty</span><b>32</b></div>
+      <div class="row-line"><span>Registered</span><b>28</b></div>
+      <div class="row-line"><span>Active</span><b>25</b></div>
+      <div class="row-line"><span>Visiting</span><b>4</b></div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-label">By Designation</div>
+      <div class="pie">
+        <span class="pie-pct pct-prof">40%</span>
+        <span class="pie-pct pct-assoc">30%</span>
+        <span class="pie-pct pct-asst">20%</span>
+        <span class="pie-pct pct-visit">10%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:#2563eb"></i>Prof.</span>
+    <span><i style="background:#60a5fa"></i>Assoc. Prof.</span>
+    <span><i style="background:#f59e0b"></i>Asst. Prof.</span>
+    <span><i style="background:#9ca3af"></i>Visiting</span>
+  </div>
+</div>
+    </a>
+</div> -->
+{% endblock %} 
+

@@ -539,7 +539,7 @@ function applyTableFilters() {
         const formData = new FormData();
         Object.entries(valuesToPass).forEach(([key, values]) => {
             // console.log("VAlues are: ", key, values);
-            if (Array.isArray(values) && values.length > 1) {
+            if (Array.isArray(values) && values.length > 0) {
 
                 // Check if the HTML element is a radio button in the DOM
                 const isRadio = document.querySelector(`input[name="${key}_filter"][type="radio"]`) !== null;
