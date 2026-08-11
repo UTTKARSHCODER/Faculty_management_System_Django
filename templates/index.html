@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block content %}
 <style>
+    .dept-card-container {
+        position: relative;
+        display: inline-block;
+    }
+
     .dept-card {
         background: #ffffff;
         border-radius: 1rem;
@@ -75,25 +81,58 @@
         transform: translate(-50%, -50%);
     }
 
+    .pie_enlarged {
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        position: relative;
+        margin: 0 auto;
+        /* Prof 40% | Assoc 30% | Asst 20% | Visiting 10% */
+
+    }
+    .pie_enlarged::after {
+        content: "";
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 70px; height: 70px;
+        background: #ffffff;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+
     /* Container for bottom-right fixed positioning */
     .legend-card {
-      position: static;
-      bottom: 24px;
-      right: 24px;
+      position: absolute;
+      top: 0;              /* Align with the top of the card */
+      left: calc(100% + 15px); /* Position it to the right with a 15px gap */
       background-color: #ffffff;
       border-radius: 16px;
       padding: 20px 24px;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
       border: 1px solid #e5e7eb;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      {#font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;#}
       min-width: 280px;
       z-index: 100;
+
+      /* Initial hidden state */
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-10px); /* (faded and shifted slightly to the left) */
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+      pointer-events: none;
+    }
+
+    /* Modifier Class: Flip to the LEFT for cards near the right screen edge */
+    .dept-card-container.flip-left .legend-card {
+        left: auto;
+        right: calc(100% + 15px); /* Appears on the left instead */
+        transform: translateX(10px); /* Adjust slide direction */
     }
 
     .legend-header {
       font-size: 13px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
       color: #111827;
       margin-bottom: 16px;
       text-transform: uppercase;
@@ -103,7 +142,13 @@
     .legend-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+      row-gap: 12px;
       column-gap: 20px;
+    }
+
+    .legend-entries {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
       row-gap: 12px;
     }
 
@@ -127,6 +172,13 @@
       white-space: nowrap;
     }
 
+    /* Tooltip Hover State (Visible) */
+    .dept-card-container:hover .legend-card {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0); /* Slides right into its final spot */
+      pointer-events: auto;
+    }
     /* Legend Colors matching the Dashboard Palette */
     .color-fdp {
       background-color: #2563eb; /* Blue */
@@ -179,7 +231,7 @@
         text-decoration: none;
         position:relative;
         color:#1a73e8;
-          
+
         transition: transform .1s ease;
      }
     .faculty-redirection:hover{
@@ -202,131 +254,99 @@
       z-index: 99999; /* Forces the box to render on top of all canvas elements */
       transform: translate(-50%, -110%); /* Shifts the container neatly above your cursor */
     }
-    /* Tooltip Initial State (Hidden) */
-    #hidden_info {
-      position: absolute;
-      bottom: 110%; /* Position it just above the card */
-      left: 50%;
-      transform: translateX(-50%) translateY(10px); /* Center horizontally and shift down slightly */
 
-      background-color: #333;
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 4px;
-      font-size: 14px;
-      white-space: nowrap;
-
-      /* Hide and setup transition */
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-
-      pointer-events: none; /* Prevents tooltip from interfering with mouse events */
-      z-index: 10;
-    }
-
-    /* Optional: Add a little arrow to the tooltip */
-    #hidden_info::after {
-      content: "";
-      position: absolute;
-      top: 100%; /* Bottom of the tooltip */
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 5px;
-      border-style: solid;
-      border-color: #333 transparent transparent transparent;
-    }
-
-    /* Tooltip Hover State (Visible) */
-    .dept-card:hover #hidden_info {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) translateY(0); /* Slide back to its natural position */
-    }
 
 </style>
 
 <div class="container d-flex justify-content-start flex-wrap align-items-center">
     {% for ins in dir_ins %}
-        <div class="col-md-4 col-sm-6" >
-           <div class="dept-card mt-2 m-2">
-                <div class=" d-flex justify-content-between">
-                    <div class="d-flex card-head">
-                    <span class="icon-badge">&lt;/&gt;</span> {{ins.department}}
-                    </div>
-                    <div class="faculty-redirection" style="text-decoration: none;">
-                         <a href = "/faculty/{{ins.department}}" style = "text-decoration: None;">
-                        View all Faculties >
-                    </a>
-                    </div>
-                </div>
-
-                <div class="card-body">
-                    <div class="stats">
-                        <div class="row-line"><span>Faculty Members</span><b>{{ ins.count }}</b></div>
+        {% with department=ins.department %}
+            <div class="col-md-4 col-sm-6 dept-card-container {% if forloop.counter|divisibleby:3 or forloop.counter == 2 %}flip-left{% endif %}" >
+                <div class="dept-card mt-2 m-2">
+                    <div class=" d-flex justify-content-between">
+                        <div class="d-flex card-head">
+                            <span class="icon-badge">&lt;/&gt;</span> {{department}}
+                        </div>
+                        <div class="faculty-redirection" style="text-decoration: none;">
+                            <a href = "/faculty/{{department}}" style = "text-decoration: None;">
+                                View all Faculties >
+                            </a>
+                        </div>
                     </div>
 
-                    <div class="chart-wrap">
-                        <div class="chart-label">Total Forms Filled</div>
-                        <div class="pie">
-                            <canvas id="formsEntryChart_{{ ins.department }}"></canvas>
+                    <div class="card-body">
+                        <div class="stats">
+                            <div class="row-line"><span>Faculty Members:</span><b>{{ ins.count }}</b></div>
+                        </div>
+
+                        <div class="chart-wrap">
+                            <div class="chart-label">Total Forms Filled</div>
+                            <div class="pie">
+                                <canvas id="formsEntryChart_{{ department }}"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-
+                <div class="legend-card">
+                    <h5 class="text-center">{{ department }}</h5>
+                    <div class="legend-header">DATA LEGEND</div>
+                    <div class="legend-grid">
+                        <div class="legend-entries">
+                            <div class="legend-item">
+                                <span class="legend-color color-fdp"></span>
+                                <span class="legend-label">Faculty Participation Data : <b>{{ chartData.fdp_entries|get_item:department }} Entries</b></span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-mooc"></span>
+                                <span class="legend-label">MOOC/Short Term Courses Data : <b>{{ chartData.mooc_entries|get_item:department }} Entries</b></span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-events"></span>
+                                <span class="legend-label">Events Organised Data : <b>{{ chartData.events_org_entries|get_item:department }} Entries</b></span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-awards"></span>
+                                <span class="legend-label">Awards Data : <b>{{ chartData.faculty_awards_entries|get_item:department }} Entries</b></span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-sponsored"></span>
+                                <span class="legend-label">Sponsored Research Data : <b>{{ chartData.sponsored_research_entries|get_item:department }} Entries</b></span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-journal"></span>
+                                <span class="legend-label">Research - Journal Data : <b>{{ chartData.research_journal_entries|get_item:department }} Entries</b></span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-confernece"></span>
+                                <span class="legend-label">Research - Conference Data : <b>{{ chartData.research_conference_entries|get_item:department }} Entries</b></span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-books"></span>
+                                <span class="legend-label">Research - Books Data : <b>{{ chartData.research_book_entries|get_item:department }} Entries</b></span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-patents"></span>
+                                <span class="legend-label">Patents : <b>{{ chartData.patents_entries|get_item:department }} Entries</b></span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-guided"></span>
+                                <span class="legend-label">M.Tech/ Ph.D. Guided Data : <b>{{ chartData.mtech_guided_entries|get_item:department }} Entries</b></span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color color-resource"></span>
+                                <span class="legend-label">Resource Person Data : <b>{{ chartData.resource_person_entries|get_item:department }} Entries</b></span>
+                            </div>
+                        </div>
+                        <div class="chart-wrap">
+                            <div class="chart-label">Total Forms Filled</div>
+                            <div class="pie_enlarged">
+                                <canvas id="formsEntryChart_{{ department }}_enlargerd"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="legend-card" id="hidden_info">
-          <div class="legend-header">DATA LEGEND</div>
-          <div class="legend-grid">
-            <div class="legend-item">
-              <span class="legend-color color-fdp"></span>
-              <span class="legend-label">Faculty Participation Data</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color color-mooc"></span>
-              <span class="legend-label">MOOC/Short Term Courses Data</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color color-events"></span>
-              <span class="legend-label">Events Organised Data</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color color-awards"></span>
-              <span class="legend-label">Awards Data</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color color-sponsored"></span>
-              <span class="legend-label">Sponsored Research Data</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color color-journal"></span>
-              <span class="legend-label">Research - Journal Data</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color color-confernece"></span>
-              <span class="legend-label">Research - Conference Data</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color color-books"></span>
-              <span class="legend-label">Research - Books Data</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color color-patents"></span>
-              <span class="legend-label">Patents</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color color-guided"></span>
-              <span class="legend-label">M.Tech/ Ph.D. Guided Data</span>
-            </div>
-            <div class="legend-item">
-              <span class="legend-color color-resource"></span>
-              <span class="legend-label">Resource Person Data</span>
-            </div>
-              <div class="legend-item"></div>
-          </div>
-        </div>
+        {% endwith %}
     {% endfor %}
 
 </div>
@@ -344,8 +364,87 @@
             chartEntries.push(entry[1][dept]);
         })
         const ctx = document.getElementById(`formsEntryChart_${dept}`).getContext('2d');
+        const ctx_enlarge = document.getElementById(`formsEntryChart_${dept}_enlargerd`).getContext('2d');
 
         new Chart(ctx, {
+            type: 'doughnut', // Specifies the doughnut chart type
+            data: {
+                labels: chartLabels, // Example categories
+                datasets: [{
+                    data: chartEntries, // The values shown in your chart segments
+                    backgroundColor: [
+                        '#2563eb', // Blue (40)
+                        '#60a5fa', // Light Blue (30)
+                        '#f59e0b', // Orange (20)
+                        '#9ca3af',  // Gray (10)
+                        '#8b5cf6', // Purple
+                        '#ec4899', // Pink
+                        '#10b981', // Emerald Green
+                        '#14b8a6', // Teal
+                        '#f97316', // Bright Orange
+                        '#6366f1', // Indigo
+                        '#64748b' // Slate Gray
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false, // Turn off the native, clipping canvas tooltip layout completely
+                        external: function(context) {
+                            // Locate or create the HTML tooltip wrapper
+                            let tooltipEl = document.getElementById('chartjs-custom-tooltip');
+                            if (!tooltipEl) {
+                                tooltipEl = document.createElement('div');
+                                tooltipEl.id = 'chartjs-custom-tooltip';
+                                document.body.appendChild(tooltipEl);
+                            }
+
+                            const tooltipModel = context.tooltip;
+                            // Hide the element if there is no current active hover state
+                            if (tooltipModel.opacity === 0) {
+                                tooltipEl.style.opacity = 0;
+                                return;
+                            }
+
+                            // --- NEW BLOCK: EXTRACT LABEL AND COUNT ---
+                            if (tooltipModel.dataPoints && tooltipModel.dataPoints.length > 0) {
+                                const dataPoint = tooltipModel.dataPoints[0];
+
+                                // Pulls the text label (e.g., "sponsored_search_entries")
+                                const label = dataPoint.label || '';
+
+                                // Pulls the numeric count value (e.g., 16)
+                                const value = dataPoint.formattedValue || dataPoint.raw;
+
+                                // Render it beautifully with clean markup
+                                tooltipEl.innerHTML = `
+                                    <div style="margin-bottom: 4px; color: #aaa; font-size: 11px; text-transform: uppercase;">Label</div>
+                                    <div style="font-weight: bold; margin-bottom: 8px;">${label}</div>
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <span style="background: ${dataPoint.dataset.backgroundColor[dataPoint.dataIndex]}; width: 10px; height: 10px; display: inline-block; border-radius: 2px;"></span>
+                                        <span><strong>${value}</strong> entries</span>
+                                    </div>
+                                `;
+                            }
+
+                            // Map absolute element page positioning coordinates
+                            const position = context.chart.canvas.getBoundingClientRect();
+                            tooltipEl.style.opacity = 1;
+                            tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+                            tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
+                        }
+                        // Forces the tooltip box to sit completely *above* the hovered arc
+                    }
+                }
+            }
+        });
+        new Chart(ctx_enlarge, {
             type: 'doughnut', // Specifies the doughnut chart type
             data: {
                 labels: chartLabels, // Example categories

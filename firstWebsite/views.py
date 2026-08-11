@@ -9,7 +9,7 @@ from django.urls import reverse
 from MyFirstDjangoWebsite import settings
 from firstWebsite.modals import Faculty, Faculty_participation_data, mooc_course, events, awards_and_achievments, \
     sponsored_research, research_journal, research_conference, research_book, patents, guided, resource, \
-    non_teaching_staff, category
+    non_teaching_staff, category, department
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 import json
@@ -210,7 +210,7 @@ def index(request):
         'mtech_guided_entries' : { choice['email__department']: choice['count'] for choice in mtech_guided_entries},
         'resource_person_entries' : { choice['email__department']: choice['count'] for choice in resource_person_entries}
     }
-    print(total_forms_entries)
+    print(total_forms_entries['fdp_entries']['CSE'])
     context = {'dir_ins': fac_dir_instance, 'chartData' : total_forms_entries}
     return render(request, 'index.html', context=context)
 
@@ -226,15 +226,16 @@ def about(request):
     return render(request,'about.html')
 
 
-def fac_card_details(request,department):
-    if department:
-        department = Faculty.objects.filter(department = department)
-        if department:
+def fac_card_details(request,department_val):
+    department_label_to_value = {choice.value: choice.label for choice in department}
+    if department_val:
+        department_data = Faculty.objects.filter(department = department_val)
+        if department_data:
             if 'topLeftBar' in request.session:
                 user = request.session.get('topLeftBar')
             else:
                 user = None
-            context = {'fac_data': department,'user': user }
+            context = {'fac_data': department_data,'user': user,'department': department_label_to_value.get(department_val,department_val) }
             return render(request,'faculty_details.html',context=context)
         else:
             return render(request,'index.html')
