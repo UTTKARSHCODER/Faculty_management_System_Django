@@ -1,77 +1,6 @@
- {% extends 'base.html' %}
-
+{% extends 'base.html' %}
 
 {% block content %}
-
-<!-- <style>
-    .dept-card {
-        background: linear-gradient(135deg, #3F51B5, #5C6BC0);
-        border-radius: 1.2rem;
-        padding: 1.1rem 1.2rem;
-        color: #fff;
-        transition: transform .15s ease;
-        height: 100%;
-    }
-    .dept-card:hover { transform: translateY(-3px); }
-
-    .dept-card .card-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-weight: 700;
-        font-size: 1.05rem;
-        margin-bottom: .6rem;
-    }
-
-    .dept-card .stats { font-size: .85rem; margin-bottom: .8rem; }
-    .dept-card .stats .row-line {
-        display: flex;
-        justify-content: space-between;
-        padding: 2px 0;
-        color: rgba(255,255,255,.85);
-    }
-    .dept-card .stats .row-line b { color: #fff; }
-
-    .chart-wrap { text-align: center; }
-    .chart-label { font-size: .75rem; font-weight: 600; color: rgba(255,255,255,.85); margin-bottom: 6px; }
-
-    .pie {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        position: relative;
-        margin: 0 auto;
-        /* Prof 40% | Assoc 30% | Asst 20% | Visiting 10% */
-        background: conic-gradient(
-            #2563eb 0deg 144deg,
-            #60a5fa 144deg 252deg,
-            #f59e0b 252deg 324deg,
-            #9ca3af 324deg 360deg
-        );
-    }
-    .pie::after {
-        content: "";
-        position: absolute;
-        top: 50%; left: 50%;
-        width: 55px; height: 55px;
-        background: #ffffff33;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .legend {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
-        font-size: .68rem;
-        color: rgba(255,255,255,.9);
-        margin-top: 10px;
-    }
-    .legend span { display: inline-flex; align-items: center; gap: 4px; }
-    .legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-</style> -->
-
 <style>
     .dept-card {
         background: #ffffff;
@@ -79,7 +8,9 @@
         border-top: 4px solid #e15a5a;
         box-shadow: 0 2px 10px rgba(0,0,0,.08);
         padding: 1.2rem 1.3rem;
-        max-width: 380px;
+        max-width: 580px;
+        cursor: pointer;
+        position: relative;
     }
 
     .dept-card .card-head {
@@ -126,18 +57,13 @@
     }
 
     .pie {
-        width: 130px;
+        width: 170px;
         height: 130px;
         border-radius: 50%;
         position: relative;
         margin: 0 auto;
         /* Prof 40% | Assoc 30% | Asst 20% | Visiting 10% */
-        background: conic-gradient(
-            #2563eb 0deg 144deg,
-            #60a5fa 144deg 252deg,
-            #f59e0b 252deg 324deg,
-            #9ca3af 324deg 360deg
-        );
+
     }
     .pie::after {
         content: "";
@@ -149,28 +75,104 @@
         transform: translate(-50%, -50%);
     }
 
-    .pie-pct {
-        position: absolute;
-        font-size: 1rem;
-        font-weight: 700;
-        color: #fff;
+    /* Container for bottom-right fixed positioning */
+    .legend-card {
+      position: static;
+      bottom: 24px;
+      right: 24px;
+      background-color: #ffffff;
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e5e7eb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-width: 280px;
+      z-index: 100;
     }
-    .pct-prof  { top: 32%; left: 76%; }
-    .pct-assoc { top: 70%; left: 25%; }
-    .pct-asst  { top: 32%; left: 4%;  color: #7c5210; }
-    .pct-visit { top: 2%;  left: 34%; color: #374151; }
 
-    .legend {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        justify-content: center;
-        font-size: .78rem;
-        color: #4b5563;
-        margin-top: 16px;
+    .legend-header {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #111827;
+      margin-bottom: 16px;
+      text-transform: uppercase;
     }
-    .legend span { display: inline-flex; align-items: center; gap: 5px; }
-    .legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+    /* 2-Column layout for legend items */
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 20px;
+      row-gap: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      white-space: nowrap;
+    }
+
+    /* Legend Colors matching the Dashboard Palette */
+    .color-fdp {
+      background-color: #2563eb; /* Blue */
+    }
+
+    .color-mooc {
+      background-color: #60a5fa; /* Light Blue */
+    }
+
+    .color-events {
+      background-color: #f59e0b; /* Orange/Yellow */
+    }
+
+    .color-awards {
+      background-color: #9ca3af; /* Gray */
+    }
+
+    .color-sponsored {
+      background-color: #8b5cf6; /* Purple */
+    }
+
+    .color-journal {
+      background-color: #ec4899; /* Pink */
+    }
+
+    .color-confernece {
+      background-color: #10b981; /* Emerald Green */
+    }
+
+    .color-books {
+      background-color: #14b8a6; /* Teal */
+    }
+
+    .color-patents {
+      background-color: #f97316; /* Bright Orange */
+    }
+
+    .color-guided {
+      background-color: #6366f1; /* Indigo */
+    }
+
+    .color-resource {
+      background-color: #64748b; /* Slate Gray */
+    }
+
+
 
      .faculty-redirection{
         display:inline-flex;
@@ -182,36 +184,67 @@
      }
     .faculty-redirection:hover{
         color:#0d47a1;
-      transform:scale(1.11);
-
-
+        transform:scale(1.11);
     }
+    #chartjs-custom-tooltip {
+      opacity: 0;
+      position: absolute;
+      background: rgba(20, 24, 33, 0.95); /* Deep dark theme background */
+      color: #ffffff;
+      border-radius: 6px;
+      padding: 8px 12px;
+      pointer-events: none;
+      font-family: sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+      transition: opacity 0.15s ease;
+      z-index: 99999; /* Forces the box to render on top of all canvas elements */
+      transform: translate(-50%, -110%); /* Shifts the container neatly above your cursor */
+    }
+    /* Tooltip Initial State (Hidden) */
+    #hidden_info {
+      position: absolute;
+      bottom: 110%; /* Position it just above the card */
+      left: 50%;
+      transform: translateX(-50%) translateY(10px); /* Center horizontally and shift down slightly */
+
+      background-color: #333;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      white-space: nowrap;
+
+      /* Hide and setup transition */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+
+      pointer-events: none; /* Prevents tooltip from interfering with mouse events */
+      z-index: 10;
+    }
+
+    /* Optional: Add a little arrow to the tooltip */
+    #hidden_info::after {
+      content: "";
+      position: absolute;
+      top: 100%; /* Bottom of the tooltip */
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 5px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+
+    /* Tooltip Hover State (Visible) */
+    .dept-card:hover #hidden_info {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0); /* Slide back to its natural position */
+    }
+
 </style>
-
-<!-- <style>
-    .card {
-        background: linear-gradient(135deg, #3F51B5, #5C6BC0);
-        border-radius: 1.5rem;
-        height: 7rem;
-        padding: 1.3rem;
-        transition: transform .1s ease;
-        font-size: 1.2rem;
-    }
-   
-    
-</style> -->
- <!-- <div class="container " >
-    <div class="row mb-3 " style="margin-left: 1.1rem;">
-        {% for ins in dir_ins %}
-        <div class="col-md-4 col-sm-6" >
-            <a href = "/faculty/{{ins.department}}" style = "text-decoration: None;"><div class="card text-white text-center mt-3" style = "width: 100%">
-                <p class = "mt-2 mb-0">{{ins.department}}</p>
-                <p>{{ins.count}} Faculty Members</p>
-            </div></a>
-        </div>
-        {% endfor %}
-    </div>
-</div>  -->
 
 <div class="container d-flex justify-content-start flex-wrap align-items-center">
     {% for ins in dir_ins %}
@@ -230,67 +263,167 @@
 
                 <div class="card-body">
                     <div class="stats">
-                        <div class="row-line"><span>Total Faculty</span><b>32</b></div>
-                        <div class="row-line"><span>Registered</span><b>28</b></div>
-                        <div class="row-line"><span>Active</span><b>25</b></div>
-                        <div class="row-line"><span>Visiting</span><b>4</b></div>
+                        <div class="row-line"><span>Faculty Members</span><b>{{ ins.count }}</b></div>
                     </div>
 
                     <div class="chart-wrap">
-                        <div class="chart-label">By Designation</div>
+                        <div class="chart-label">Total Forms Filled</div>
                         <div class="pie">
-                            <span class="pie-pct pct-prof">40</span>
-                            <span class="pie-pct pct-assoc">30</span>
-                            <span class="pie-pct pct-asst">20</span>
-                            <span class="pie-pct pct-visit">10</span>
+                            <canvas id="formsEntryChart_{{ ins.department }}"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <div class="legend">
-                    <span><i style="background:#2563eb"></i>Prof.</span>
-                    <span><i style="background:#60a5fa"></i>Assoc. Prof.</span>
-                    <span><i style="background:#f59e0b"></i>Asst. Prof.</span>
-                    <span><i style="background:#9ca3af"></i>Visiting</span>
-                </div>
+
             </div>
         </div>
-        {% endfor %}
+        <div class="legend-card" id="hidden_info">
+          <div class="legend-header">DATA LEGEND</div>
+          <div class="legend-grid">
+            <div class="legend-item">
+              <span class="legend-color color-fdp"></span>
+              <span class="legend-label">Faculty Participation Data</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color color-mooc"></span>
+              <span class="legend-label">MOOC/Short Term Courses Data</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color color-events"></span>
+              <span class="legend-label">Events Organised Data</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color color-awards"></span>
+              <span class="legend-label">Awards Data</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color color-sponsored"></span>
+              <span class="legend-label">Sponsored Research Data</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color color-journal"></span>
+              <span class="legend-label">Research - Journal Data</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color color-confernece"></span>
+              <span class="legend-label">Research - Conference Data</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color color-books"></span>
+              <span class="legend-label">Research - Books Data</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color color-patents"></span>
+              <span class="legend-label">Patents</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color color-guided"></span>
+              <span class="legend-label">M.Tech/ Ph.D. Guided Data</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color color-resource"></span>
+              <span class="legend-label">Resource Person Data</span>
+            </div>
+              <div class="legend-item"></div>
+          </div>
+        </div>
+    {% endfor %}
+
 </div>
-<!-- <div class="col-lg-3 col-md-4 col-sm-6">
-    <a href="#" style="text-decoration:none;">
-       <div class="dept-card">
-  <div class="card-head">
-    <span class="icon-badge">&lt;/&gt;</span> CSE (AI)
-  </div>
+{{ chartData|json_script:'my-chart-data' }}
+<script>
+    const chartData = JSON.parse(document.getElementById('my-chart-data').textContent);
 
-  <div class="card-body">
-    <div class="stats">
-      <div class="row-line"><span>Total Faculty</span><b>32</b></div>
-      <div class="row-line"><span>Registered</span><b>28</b></div>
-      <div class="row-line"><span>Active</span><b>25</b></div>
-      <div class="row-line"><span>Visiting</span><b>4</b></div>
-    </div>
+    const chartLabels = Object.keys(chartData);
 
-    <div class="chart-wrap">
-      <div class="chart-label">By Designation</div>
-      <div class="pie">
-        <span class="pie-pct pct-prof">40%</span>
-        <span class="pie-pct pct-assoc">30%</span>
-        <span class="pie-pct pct-asst">20%</span>
-        <span class="pie-pct pct-visit">10%</span>
-      </div>
-    </div>
-  </div>
+    const dept = ['CSE', 'CSE(AI)', 'CSE(DS)', 'CSE(IOT)'];
 
-  <div class="legend">
-    <span><i style="background:#2563eb"></i>Prof.</span>
-    <span><i style="background:#60a5fa"></i>Assoc. Prof.</span>
-    <span><i style="background:#f59e0b"></i>Asst. Prof.</span>
-    <span><i style="background:#9ca3af"></i>Visiting</span>
-  </div>
-</div>
-    </a>
-</div> -->
+    dept.forEach(dept => {
+        let chartEntries = [];
+        Object.entries(chartData).forEach(entry => {
+            chartEntries.push(entry[1][dept]);
+        })
+        const ctx = document.getElementById(`formsEntryChart_${dept}`).getContext('2d');
+
+        new Chart(ctx, {
+            type: 'doughnut', // Specifies the doughnut chart type
+            data: {
+                labels: chartLabels, // Example categories
+                datasets: [{
+                    data: chartEntries, // The values shown in your chart segments
+                    backgroundColor: [
+                        '#2563eb', // Blue (40)
+                        '#60a5fa', // Light Blue (30)
+                        '#f59e0b', // Orange (20)
+                        '#9ca3af',  // Gray (10)
+                        '#8b5cf6', // Purple
+                        '#ec4899', // Pink
+                        '#10b981', // Emerald Green
+                        '#14b8a6', // Teal
+                        '#f97316', // Bright Orange
+                        '#6366f1', // Indigo
+                        '#64748b' // Slate Gray
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false, // Turn off the native, clipping canvas tooltip layout completely
+                        external: function(context) {
+                            // Locate or create the HTML tooltip wrapper
+                            let tooltipEl = document.getElementById('chartjs-custom-tooltip');
+                            if (!tooltipEl) {
+                                tooltipEl = document.createElement('div');
+                                tooltipEl.id = 'chartjs-custom-tooltip';
+                                document.body.appendChild(tooltipEl);
+                            }
+
+                            const tooltipModel = context.tooltip;
+                            // Hide the element if there is no current active hover state
+                            if (tooltipModel.opacity === 0) {
+                                tooltipEl.style.opacity = 0;
+                                return;
+                            }
+
+                            // --- NEW BLOCK: EXTRACT LABEL AND COUNT ---
+                            if (tooltipModel.dataPoints && tooltipModel.dataPoints.length > 0) {
+                                const dataPoint = tooltipModel.dataPoints[0];
+
+                                // Pulls the text label (e.g., "sponsored_search_entries")
+                                const label = dataPoint.label || '';
+
+                                // Pulls the numeric count value (e.g., 16)
+                                const value = dataPoint.formattedValue || dataPoint.raw;
+
+                                // Render it beautifully with clean markup
+                                tooltipEl.innerHTML = `
+                                    <div style="margin-bottom: 4px; color: #aaa; font-size: 11px; text-transform: uppercase;">Label</div>
+                                    <div style="font-weight: bold; margin-bottom: 8px;">${label}</div>
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <span style="background: ${dataPoint.dataset.backgroundColor[dataPoint.dataIndex]}; width: 10px; height: 10px; display: inline-block; border-radius: 2px;"></span>
+                                        <span><strong>${value}</strong> entries</span>
+                                    </div>
+                                `;
+                            }
+
+                            // Map absolute element page positioning coordinates
+                            const position = context.chart.canvas.getBoundingClientRect();
+                            tooltipEl.style.opacity = 1;
+                            tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+                            tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
+                        }
+                        // Forces the tooltip box to sit completely *above* the hovered arc
+                    }
+                }
+            }
+        });
+    });
+</script>
 {% endblock %} 
 

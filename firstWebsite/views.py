@@ -2,7 +2,7 @@ from functools import wraps
 
 import jwt
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
@@ -183,10 +183,35 @@ def custom_logout(request):
 # Create your views here.
 
 def index(request):
-    fac_dir_instance = Faculty.objects.values('department').annotate(
-        count=Count('id')
-    ).order_by('department')
-    context = {'dir_ins': fac_dir_instance}
+    fac_dir_instance = Faculty.objects.values('department').annotate(count=Count('id')).order_by('department')
+
+    fdp_entries = list(Faculty_participation_data.objects.values('email__department').annotate(count=Count('id')))
+    mooc_entries = list(mooc_course.objects.values('email__department').annotate(count=Count('id')))
+    events_org_entries = list(events.objects.values('email__department').annotate(count=Count('id')))
+    faculty_awards_entries = list(awards_and_achievments.objects.values('email__department').annotate(count=Count('id')))
+    sponsored_research_entries = list(sponsored_research.objects.values('email__department').annotate(count=Count('id')))
+    research_journal_entries = list(research_journal.objects.values('email__department').annotate(count=Count('id')))
+    research_conference_entries = list(research_conference.objects.values('email__department').annotate(count=Count('id')))
+    research_book_entries = list(research_book.objects.values('email__department').annotate(count=Count('id')))
+    patents_entries = list(patents.objects.values('email__department').annotate(count=Count('id')))
+    mtech_guided_entries = list(guided.objects.values('email__department').annotate(count=Count('id')))
+    resource_person_entries = list(resource.objects.values('email__department').annotate(count=Count('id')))
+
+    total_forms_entries = {
+        'fdp_entries' : { choice['email__department']: choice['count'] for choice in fdp_entries },
+        'mooc_entries' : { choice['email__department']: choice['count'] for choice in mooc_entries},
+        'events_org_entries' : { choice['email__department']: choice['count'] for choice in events_org_entries},
+        'faculty_awards_entries' : { choice['email__department']: choice['count'] for choice in faculty_awards_entries},
+        'sponsored_research_entries' : { choice['email__department']: choice['count'] for choice in sponsored_research_entries},
+        'research_journal_entries' : { choice['email__department']: choice['count'] for choice in research_journal_entries},
+        'research_conference_entries' : { choice['email__department']: choice['count'] for choice in research_conference_entries},
+        'research_book_entries' : { choice['email__department']: choice['count'] for choice in research_book_entries},
+        'patents_entries' : { choice['email__department']: choice['count'] for choice in patents_entries},
+        'mtech_guided_entries' : { choice['email__department']: choice['count'] for choice in mtech_guided_entries},
+        'resource_person_entries' : { choice['email__department']: choice['count'] for choice in resource_person_entries}
+    }
+    print(total_forms_entries)
+    context = {'dir_ins': fac_dir_instance, 'chartData' : total_forms_entries}
     return render(request, 'index.html', context=context)
 
 @session_login_required
