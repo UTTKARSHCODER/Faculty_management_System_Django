@@ -268,11 +268,11 @@ table.dataTable th,
 table.dataTable td {
   box-sizing: border-box;
 }
-table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date,
+/* table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date,
 table.dataTable td.dt-type-numeric,
 table.dataTable td.dt-type-date {
-  text-align: right;
-}
+  text-align: center;
+} */
 table.dataTable th.dt-type-numeric div.dt-column-header,
 table.dataTable th.dt-type-numeric div.dt-column-footer, table.dataTable th.dt-type-date div.dt-column-header,
 table.dataTable th.dt-type-date div.dt-column-footer,
