@@ -440,7 +440,7 @@ class mapped_sdgs(models.TextChoices):
     SDG_14 = "SDG14", "SDG - 14 (Life Below Water)",
     SDG_15 = "SDG15", "SDG - 15 (Life On Land)",
     SDG_16 = "SDG16", "SDG - 16 (Peace And Justice And Strong Institutions)",
-    SDG_17 = "SDG17", "SDG - 17 (Partnerships For The Goals)",
+    SDG_17 = "SDG17", "SDG - 17 (Partnerships For The Goals)"
 
 def rename_events_file(instance, old_filename):
     extension = os.path.splitext(old_filename)[1].lower()
@@ -462,7 +462,7 @@ class events(models.Model):
         choices=category.choices,
         default=category.OTHER
     )
-    eof = models.JSONField(default=list, blank=True)
+    eof = models.JSONField(default=list, blank=True, choices=eof_choices)
     @property
     def eof_display_list(self):
         data = self.eof
@@ -953,7 +953,7 @@ class designation_non_tech(models.TextChoices):
     CLERK = "C", "Clerk",
     OTHER = "O", "Other"
 
-class professional_course(models.TextChoices):
+class ProfessionalCourseChoices(models.TextChoices):
     CCNA = "CCNA", "CCNA",
     HARWARE_NETWORKING = "HN", "Hardware & Networking",
     LEVEL_0_A = "O/A", "O Level/ A level",
@@ -993,7 +993,7 @@ class non_teaching_staff(models.Model):
     )
     university_name = models.CharField(max_length=255)
     pshd = models.IntegerField()
-    professional_course = models.JSONField(default=list, blank=True)
+    professional_course = models.JSONField(default=list, blank=True, choices=ProfessionalCourseChoices.choices)
     @property
     def professional_display_list(self):
         data = self.professional_course
@@ -1006,7 +1006,7 @@ class non_teaching_staff(models.Model):
         if not data:
             return []
 
-        choice_dict = dict(professional_course.choices)
+        choice_dict = dict(ProfessionalCourseChoices.choices)
 
         # Now 'NTS' stays together as one key
         return ", ".join([choice_dict.get(key, key) for key in data])

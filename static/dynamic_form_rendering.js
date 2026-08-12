@@ -300,6 +300,7 @@ function buildTableFilters(rowValues, tableId) {
     (config.text || []).forEach(item => {
         let [colKey, fieldName] = Object.entries(item)[0];
         if (!(colKey in sampleRow)) return; // column not present for this data, skip silently
+        if (colKey === 'Name of Faculty Coordinator(s)') colKey = 'Faculty Coordinator Name';
         html += `
             <div class="col-md-3 mb-2">
                 <label class="form-label">${colKey}</label>
@@ -331,7 +332,6 @@ function buildTableFilters(rowValues, tableId) {
                 </div>
             `;
         }));
-        if (colKey === 'Name of Faculty Coordinator(s)') colKey = 'Faculty Coordinator Name';
         const reducedName = colKey.split('(')[0].trim();
 
         html += `
@@ -467,7 +467,7 @@ function applyTableFilters() {
             const escaped = val.map(v => v.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
             // 1. Join values with pipe | to create an OR pattern: (SDG_1|SDG_2)
             // 2. Wrap with ^ and $ for exact matching per item
-            const regexPattern = `^(${escaped.join('|')})$`;
+            const regexPattern = `(^|,\\s*)(${escaped.join('|')})(\\s*,|$)`;
             console.log(`Checkbox regexPattern with col name ${col} is: `,regexPattern);
             table.column(`${col}:name`).search(regexPattern, true, false);
         }

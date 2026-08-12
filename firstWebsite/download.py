@@ -1,6 +1,8 @@
 import base64
 import io
+import operator
 import re
+from functools import reduce
 
 import openpyxl
 import pandas as pd
@@ -16,7 +18,7 @@ from firstWebsite.modals import Faculty, non_teaching_staff, Faculty_participati
     awards_and_achievments, events, sponsored_research, research_journal, research_conference, research_book, patents, \
     guided, resource, department, doc, sponsors, designation, area_of_spe, highest_qual, accept, level, mode, category, \
     medals, pertopper, eof_choices, mapped_sdgs, status, index_by, quartile, type_of_patent, status_of_patent, \
-    enrollmentYear, survillance, resource_person_type, designation_non_tech, professional_course, forms
+    enrollmentYear, survillance, resource_person_type, designation_non_tech, ProfessionalCourseChoices, forms
 from firstWebsite.views import session_login_required
 
 forms_value_to_label = {
@@ -37,11 +39,8 @@ forms_value_to_label = {
 
 ori_forms_value_to_label = {choice.value: choice.label for choice in forms}
 
-def download_filtered_files(request, model_name, results, file_fields, date_time_fields, date_fields, headers, form_no,
-                            multi_valued=None):
+def download_filtered_files(request, model_name, results, file_fields, date_time_fields, date_fields, headers, form_no):
     try:
-        if multi_valued is None:
-            multi_valued = []
 
         if len(results) > 0:
             # ['department', 'designation', 'aos', 'hq', 'status', 'role', 'gender']
@@ -54,6 +53,7 @@ def download_filtered_files(request, model_name, results, file_fields, date_time
             choice_translators = {
                 f.name: dict(f.flatchoices) for f in model_name._meta.fields if f.choices
             }
+            print("Choice translators dict is: ",choice_translators)
             dept_field = Faculty._meta.get_field('department')
             desi_field = Faculty._meta.get_field('designation')
             if dept_field.choices:
@@ -64,18 +64,26 @@ def download_filtered_files(request, model_name, results, file_fields, date_time
             datetime_fields = date_time_fields
             date_fields = date_fields
             file_fields = file_fields
-            multi_valued = multi_valued
             # 2. Iterate and process each instance
             for result in result_instance:
+                # print("Result Dict from download_filtered_files function is: ",result)
                 for field_name, translator_dict in choice_translators.items():
                     # Check if this choice field is actually in our current row
                     # To get the label value corresponding to it's value
                     if field_name in result:
+                        print(f"Field {field_name} is instance of: ",type(field_name))
                         raw_value = result[field_name]
+                        print(f"Raw Value {raw_value} is instance of: ", type(raw_value))
+                        if isinstance(raw_value, list) and len(raw_value) > 0:
+                            result[field_name] = ", ".join([translator_dict.get(value, value) for value in raw_value])
+
+                        elif isinstance(raw_value, str) and "," in raw_value:
+                            result[field_name] = model_name.map_sdg_display_list
 
                         # .get(raw_value, raw_value) means:
                         # "Try to find the display name. If you can't, just leave the raw value alone."
-                        result[field_name] = translator_dict.get(raw_value, raw_value)
+                        else:
+                            result[field_name] = translator_dict.get(raw_value, raw_value)
 
                 for field in file_fields:
                     file_path = result.get(field)
@@ -100,10 +108,6 @@ def download_filtered_files(request, model_name, results, file_fields, date_time
                     date_value = result.get(field)
                     if date_value:
                         result[field] = date_value.strftime("%d-%m-%Y")
-
-                if len(multi_valued) > 0:
-                    for values in multi_valued:
-                        result[values] = ", ".join(result.get(values))
 
                 data.append(result)
 
@@ -210,7 +214,7 @@ enrollementYear_label_to_value = {choice.label: choice.value for choice in enrol
 survillance_label_to_value = {choice.label: choice.value for choice in survillance}
 resource_person_type_label_to_value = {choice.label: choice.value for choice in resource_person_type}
 designation_non_tech_label_to_value = {choice.label: choice.value for choice in designation_non_tech}
-professinal_course_label_to_value = {choice.label: choice.value for choice in professional_course}
+professinal_course_label_to_value = {choice.label: choice.value for choice in ProfessionalCourseChoices}
 
 @session_login_required
 def download_files(request):
@@ -222,10 +226,12 @@ def download_files(request):
         # Basic Filters
         basic_filtering_values = request.POST.getlist('optcheck_filter[]')
         session_filter = request.POST.get('session_filter')
-        emp_id_filter = request.POST.get('emp_id_filter')
+        if request.POST.get('emp_id_filter') != '':
+            emp_id_filter = int(request.POST.get('emp_id_filter'))
+        else:
+            emp_id_filter = 0
         email_filter = request.POST.get('email_filter')
         name_filter = request.POST.get('name_filter')
-        print(f"Email filter is: {email_filter}, Name filter is: {name_filter}, emp_id filter is: {emp_id_filter}")
         department_filter = request.POST.getlist('department_filter[]')
         department_filter = [dept_label_to_value.get(item, item) for item in department_filter]
         designation_filter = request.POST.getlist('designation_filter[]')
@@ -234,7 +240,7 @@ def download_files(request):
         filter_mappings = {
             'session': session_filter,
             'email__department__in': department_filter,
-            'email__emp_id__exact': emp_id_filter,
+            'email__emp_id': emp_id_filter,
             'email__email__icontains': email_filter,
             'email__name__icontains': name_filter,
         }
@@ -251,7 +257,7 @@ def download_files(request):
             filter_mappings = {
                 'session': session_filter,
                 'department__in': department_filter,
-                'emp_id__exact': emp_id_filter,
+                'emp_id': emp_id_filter,
                 'email__icontains': email_filter,
                 'name__icontains': name_filter,
                 'designation__in': designation_filter,
@@ -259,9 +265,8 @@ def download_files(request):
             }
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
-            print("Query is: {}".format(query))
 
             result = Faculty.objects.filter(query).values(
                 'created_at','email','session','name','contact_number','department','designation',
@@ -284,7 +289,6 @@ def download_files(request):
         elif form_no == '1_2':
             file_fields = ['higher_degree_certificate', 'joining_report', 'offer_letter', 'salary_slip', 'certificate']
             date_fields = ['dob','joining_date','promotion_date']
-            multi_select_field = 'professional_course'
 
             # Addditional Filters
             highest_filter = request.POST.getlist('highest_filter[]')
@@ -295,16 +299,22 @@ def download_files(request):
             filter_mappings = {
                 'session': session_filter,
                 'department__in': department_filter,
-                'emp_id__exact': emp_id_filter,
+                'emp_id': emp_id_filter,
                 'email__icontains': email_filter,
                 'name__icontains': name_filter,
                 'designation__in': designation_filter,
                 'highest_qual__in': highest_filter,
-                'professional_course__contains': professional_course_filter
+                'professional_course__icontains': professional_course_filter
             }
 
+            print("Filter mappings non-tech are: ", filter_mappings)
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if lookup == 'professional_course__icontains' and isinstance(val, list):
+                    grouped_query = Q()
+                    for v in val:
+                        grouped_query |= Q(professional_course__icontains=f'"{v}"')
+                    query &= grouped_query
+                elif val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = non_teaching_staff.objects.filter(query).values(
@@ -319,7 +329,7 @@ def download_files(request):
                          'If Awards and recognition received for extension activities (Upload Certificate)'
                          ]
 
-            success, message = download_filtered_files(request, Faculty, result, file_fields, date_time_fields, date_fields, headers_1, form_no,multi_select_field)
+            success, message = download_filtered_files(request, non_teaching_staff, result, file_fields, date_time_fields, date_fields, headers_1, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '2':
@@ -341,7 +351,7 @@ def download_files(request):
             filter_mappings['approval__in'] = grant_filter
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = Faculty_participation_data.objects.filter(query).annotate(
@@ -379,11 +389,9 @@ def download_files(request):
             filter_mappings['topper_in__in'] = topper_filter
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
-            print("Dictionary with values is:",filter_mappings)
-            print("Sql query is: ",query)
             result = mooc_course.objects.filter(query).annotate(
                 safe_email=F('email__email'),
                 emp_id=F('email__emp_id'),
@@ -401,14 +409,12 @@ def download_files(request):
                          'Any category from below ',
                          'Remark (if any)', 'Upload Certificate']
 
-            print("Calling function with results....", result)
             success, message = download_filtered_files(request, mooc_course, result, file_fields, date_time_fields,
                                     date_fields, headers_3, form_no)
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
         elif form_no == '4':
             date_fields = ['begi_date', 'end_date']
-            multi_select_field = ['eof', 'map_sdg']
 
             # Additional Filters
             event_org_for_filter = request.POST.getlist('event_org_for_filter[]')
@@ -420,17 +426,41 @@ def download_files(request):
             map_filter = request.POST.getlist('map_filter[]')
             map_filter = [mapped_sdg_label_to_value.get(item, item) for item in map_filter]
             basic_filtering_values = [category_label_to_value.get(item, item) for item in basic_filtering_values]
+            print(basic_filtering_values)
 
             filter_mappings['category__in'] = basic_filtering_values
-            filter_mappings['eof__contains'] = event_org_for_filter
+            filter_mappings['eof__icontains'] = event_org_for_filter
             filter_mappings['ct__in'] = spo_non_spo_filter
             filter_mappings['gr__in'] = grant_filter
-            filter_mappings['map_sdg__contains'] = map_filter
+            filter_mappings['map_sdg__icontains'] = map_filter
 
-            print(filter_mappings)
+            print("Filter mappings dictionay is: ",filter_mappings)
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if (lookup == 'eof__icontains' or lookup == 'map_sdg__icontains') and isinstance(val, list):
+                    grouped_query = Q()
+                    for v in val:
+                        if lookup == 'map_sdg__icontains':
+                            # Since values are separated by commas, the key v (e.g., 'SDG1') can only exist in four possible positions within the database string:
+
+                            # 1. Only value: 'SDG1'
+                            # 2. At the start: 'SDG1,SDG2'
+                            # 3. At the end: 'SDG5,SDG1'
+                            # 4. In the middle: 'SDG3,SDG1,SDG5'
+
+                            # To match 'SDG1' without matching 'SDG17', check for commas around the boundaries:
+                            sdg_exact_query = (
+                                    Q(map_sdg=v) |  # 1. Only item
+                                    Q(map_sdg__startswith=f"{v},") |  # 2. First item in list
+                                    Q(map_sdg__endswith=f",{v}") |  # 3. Last item in list
+                                    Q(map_sdg__contains=f",{v},")  # 4. Middle item in list
+                            )
+                            grouped_query |= sdg_exact_query
+                        elif lookup == 'eof__icontains':
+                            grouped_query |= Q(eof__icontains=f'"{v}"')
+
+                    query &= grouped_query
+                elif val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = events.objects.filter(query).annotate(
@@ -455,9 +485,10 @@ def download_files(request):
                          'Mapped SDGs', 'Event report attached in proper format(YES/NO)',
                          'Any Other Remark', 'Upload Event Report']
 
-            print(result)
+            print("Events query is: ",query)
+            print("Events result is: ",result)
             success, message = download_filtered_files(request, events, result, file_fields, date_time_fields,
-                                    date_fields, headers_4, form_no, multi_select_field)
+                                    date_fields, headers_4, form_no)
 
             return JsonResponse({'success': success, 'message': message}, safe=False)
 
@@ -467,9 +498,10 @@ def download_files(request):
             basic_filtering_values = [category_label_to_value.get(item, item) for item in basic_filtering_values]
 
             filter_mappings['category__in'] = basic_filtering_values
+            filter_mappings['designation__in'] = designation_filter
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = awards_and_achievments.objects.filter(query).annotate(
@@ -503,7 +535,7 @@ def download_files(request):
             filter_mappings['category__in'] = basic_filtering_values
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = sponsored_research.objects.filter(query).annotate(
@@ -542,7 +574,7 @@ def download_files(request):
             filter_mappings['index_by__in'] = basic_filtering_values
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = research_journal.objects.filter(query).annotate(
@@ -583,7 +615,7 @@ def download_files(request):
             filter_mappings['level__in'] = basic_filtering_values
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = research_conference.objects.filter(query).annotate(
@@ -619,7 +651,7 @@ def download_files(request):
             filter_mappings['ssa__in'] = ssa_filter
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = research_book.objects.filter(query).annotate(
@@ -655,7 +687,7 @@ def download_files(request):
             filter_mappings['sop__in'] = status_filter
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = patents.objects.filter(query).annotate(
@@ -692,7 +724,7 @@ def download_files(request):
             filter_mappings['visor__in'] = visor_filter
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = guided.objects.filter(query).annotate(
@@ -726,7 +758,7 @@ def download_files(request):
             filter_mappings['rpt__in'] = rpt_filter
 
             for lookup, val in filter_mappings.items():
-                if val:  # Only add to query if val is not None, '', or []
+                if val and val != 0:  # Only add to query if val is not None, '', or []
                     query &= Q(**{lookup: val})
 
             result = resource.objects.filter(query).annotate(
