@@ -6,6 +6,7 @@
     .dept-card-container {
         position: relative;
         display: inline-block;
+        width: 27rem;
     }
 
     .dept-card {
@@ -14,7 +15,8 @@
         border-top: 4px solid #e15a5a;
         box-shadow: 0 2px 10px rgba(0,0,0,.08);
         padding: 1.2rem 1.3rem;
-        max-width: 580px;
+        /* max-width: 580px; */
+        width: 26rem;
         cursor: pointer;
         position: relative;
     }
@@ -129,6 +131,17 @@
         transform: translateX(10px); /* Adjust slide direction */
     }
 
+    /* Modifier Class: Flip to the LEFT for cards near the right screen edge */
+    .dept-card-container.flip-top .legend-card {
+        /* margin-top: -100px; */
+        top: auto;
+        bottom: calc(12%); /* Positions it directly above the card with a 15px gap */
+        left: calc(100% + 15px);                    /* Align with the left edge of the card */
+        right: auto;
+        margin-right: 20rem;
+        transform: translateY(10px); 
+    }
+
     .legend-header {
       font-size: 13px;
       font-weight: 700;
@@ -141,7 +154,7 @@
     /* 2-Column layout for legend items */
     .legend-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       row-gap: 12px;
       column-gap: 20px;
     }
@@ -261,18 +274,17 @@
 <div class="container d-flex justify-content-start flex-wrap align-items-center">
     {% for ins in dir_ins %}
         {% with department=ins.department %}
-            <div class="col-md-4 col-sm-6 dept-card-container {% if forloop.counter|divisibleby:3 or forloop.counter == 2 %}flip-left{% endif %}" >
-                <div class="dept-card mt-2 m-2">
-                    <div class=" d-flex justify-content-between">
-                        <div class="d-flex card-head">
-                            <span class="icon-badge">&lt;/&gt;</span> {{department}}
+            <a href = "/faculty/{{department}}">
+            <div class="col-md-4 col-sm-6 dept-card-container {% if forloop.counter|divisibleby:3 or forloop.counter == 2 %}flip-left {% elif forloop.counter == 4 %} flip-top {% endif %}">
+                    <div class="dept-card mt-2 m-2">
+                        <div class=" d-flex justify-content-between">
+                            <div class="d-flex card-head">
+                                <span class="icon-badge">&lt;/&gt;</span> {{department}}
+                            </div>
+                            <div class="faculty-redirection" style="text-decoration: none;">
+                                View all Faculties
+                            </div>
                         </div>
-                        <div class="faculty-redirection" style="text-decoration: none;">
-                            <a href = "/faculty/{{department}}" style = "text-decoration: None;">
-                                View all Faculties >
-                            </a>
-                        </div>
-                    </div>
 
                     <div class="card-body">
                         <div class="stats">
@@ -337,6 +349,7 @@
                                 <span class="legend-label">Resource Person Data : <b>{{ chartData.resource_person_entries|get_item:department }} Entries</b></span>
                             </div>
                         </div>
+                        <div class="vr"></div>
                         <div class="chart-wrap">
                             <div class="chart-label">Total Forms Filled</div>
                             <div class="pie_enlarged">
@@ -346,6 +359,7 @@
                     </div>
                 </div>
             </div>
+            </a>
         {% endwith %}
     {% endfor %}
 

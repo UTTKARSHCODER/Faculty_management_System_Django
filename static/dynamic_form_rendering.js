@@ -46,7 +46,7 @@ let table = new DataTable(`#tb_empty`, {
 function updateTable(values, table_id) {
     const table_to_update = document.getElementById('dynamic_table');
     if (table_id === 'empty-table') {
-        // table_to_update.innerHTML = noDataAvailableTableStructure;
+        table_to_update.innerHTML = noDataAvailableTableStructure;
         table = new DataTable(`#empty_table`, {
             paging: false,
             scrollY: false,

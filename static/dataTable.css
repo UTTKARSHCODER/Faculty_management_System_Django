@@ -268,11 +268,11 @@ table.dataTable th,
 table.dataTable td {
   box-sizing: border-box;
 }
-table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date,
+/* table.dataTable th.dt-type-numeric, table.dataTable th.dt-type-date,
 table.dataTable td.dt-type-numeric,
 table.dataTable td.dt-type-date {
-  text-align: right;
-}
+  text-align: center;
+} */
 table.dataTable th.dt-type-numeric div.dt-column-header,
 table.dataTable th.dt-type-numeric div.dt-column-footer, table.dataTable th.dt-type-date div.dt-column-header,
 table.dataTable th.dt-type-date div.dt-column-footer,
@@ -444,6 +444,7 @@ table.table.dataTable > tbody > tr.selected a {
   color: rgb(var(--dt-row-selected-link));
 }
 table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
+  text-align: left;
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-stripe), 0.05);
 }
 table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1).selected > * {
