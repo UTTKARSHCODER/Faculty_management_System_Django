@@ -1011,7 +1011,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label for="top" class="col-sm-4 col-form-label">Name of the Funding Agency (MSME/DST/CSIR/SERB /Industry etc.)</label>
                                         <div class = "col-md-8">
-                                            <input type="text" class="form-control custom-back" id="nofa" placeholder="Enter title of the program" name="nofa" required>
+                                            <input type="text" class="form-control custom-back" id="nofa" placeholder="Enter Name of Funding Agency" name="nofa" required>
                                             <div class="invalid-feedback">Please provide the name of the funding agency.</div>
                                         </div>
                                     </div>
@@ -1020,7 +1020,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Duration of Project (in Years)<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter organizer" name = "dop" required>
+                                            <input type="number" class="form-control" placeholder="Enter Duration" name = "dop" required>
                                             <div class="invalid-feedback">Please provide duration of project.</div>
                                         </div>
                                     </div>
@@ -1029,7 +1029,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">Amount in Rs.<span class="ms-1" style="color: red;">*</span></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" placeholder="Enter organizer" name = "amount" required>
+                                            <input type="number" class="form-control" placeholder="Enter Amount" name = "amount" required>
                                             <div class="invalid-feedback">Please provide amount in Rs.</div>
                                         </div>
                                     </div>
@@ -1178,7 +1178,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">ISSN number : Print<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter details" name = "isnp" required>
+                                            <input type="text" class="form-control" placeholder="Enter ISSN number: Print" name = "isnp" required>
                                             <div class="invalid-feedback">Please provide ISSN number : Print.</div>
                                         </div>
                                     </div>
@@ -1187,7 +1187,7 @@ function generateSubForms() {
                                     <div class="row align-items-center">
                                         <label class="col-sm-4 col-form-label">ISSN number : Online<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Not Applicable']}"></span></label>
                                         <div class = "col-sm-8">
-                                            <input type="text" class="form-control" placeholder="Enter details" name = "isno" required>
+                                            <input type="text" class="form-control" placeholder="Enter ISSN number: online" name = "isno" required>
                                             <div class="invalid-feedback">Please provide ISSN number : Online.</div>
                                         </div>
                                     </div>

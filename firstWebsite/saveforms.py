@@ -30,56 +30,67 @@ def save_all_forms(request, form_no):
                 name = request.POST.get('name').strip()
                 status, msg = va.nameValidate(name,"Name")
                 if not status:
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request, msg)
+                    return redirect('all_forms', form_no=form_no)
 
                 mobile_no = request.POST.get('mobile_no').strip()
                 status, msg = va.mobileNumberValidate(mobile_no)
                 if not status:
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request, msg)
+                    return redirect('all_forms', form_no=form_no)
 
                 department = request.POST.get('department',"").strip()
 
                 lab_no = request.POST.get('lab_no').strip()
                 status, msg = va.nameValidate(lab_no, "Lab Number")
                 if not status:
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request, msg)
+                    return redirect('all_forms', form_no=form_no)
 
                 designation = request.POST.get('designation').strip()
                 status, msg = va.nameValidate(designation, "Designation")
                 if not status:
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request, msg)
+                    return redirect('all_forms', form_no=form_no)
 
                 emp_id = int(request.POST.get('emp_id') or 0)
                 status, msg = va.numberValidate(emp_id, "Employee ID")
                 if not status:
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request, msg)
+                    return redirect('all_forms', form_no=form_no)
 
                 highest_qual = request.POST.get('highest_qualification').strip()
                 status, msg = va.nameValidate(highest_qual, "Highest Qualification")
                 if not status:
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request, msg)
+                    return redirect('all_forms', form_no=form_no)
 
                 university_name = request.POST.get('univ_name').strip()
-                status, msg = va.nameValidate(university_name, "Highest Qualification")
+                status, msg = va.nameValidate(university_name, "University Name")
                 if not status:
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request, msg)
+                    return redirect('all_forms', form_no=form_no)
 
                 pshd = int(request.POST.get('pshd') or 0)
-                status, msg = va.numberValidate(pshd, "Passing Year of Highest Degree")
+                # json response sending, but pop-over not coming even after adding sub-for class.
+                # for year > current_year
+                status, msg = va.pshdValidate(pshd, "Passing Year of Highest Degree")
                 if not status:
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request, msg)
+                    return redirect('all_forms', form_no=form_no)
 
                 professional_course = request.POST.getlist('professional_courses')
                 status, msg = va.radiocheck(professional_course,"Professional Course")
                 if not status:
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request, msg)
+                    return redirect('all_forms', form_no=form_no)
 
                 pan_no = request.POST.get('pan_no').strip()
+                print(pan_no)
                 status, msg = va.validate_pan(pan_no)
                 if not status or not pan_no:
-                    messages.error(request, "Please enter a valid PAN number")
-                    return JsonResponse({'success' : False, 'message' : msg})
-
+                    messages.error(request, msg)
+                    return redirect('all_forms', form_no=form_no)
                 dob = request.POST.get('dob')
                 try:
                     selected_date = datetime.strptime(dob,'%Y-%m-%d').date()
@@ -89,11 +100,11 @@ def save_all_forms(request, form_no):
 
                     if not min_date < selected_date < max_date:
                         messages.error(request,f"Please select/enter date of birth in range of 1930-01-01 to 2001-12-31.You selected {selected_date}")
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
                     messages.error(request,"Please select/enter a valid date of birth.")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return redirect('all_forms', form_no=form_no)
 
                 joining_date = request.POST.get('jd')
                 try:
@@ -102,12 +113,12 @@ def save_all_forms(request, form_no):
                     min_date = datetime.strptime('2000-01-01','%Y-%m-%d').date()
 
                     if selected_date < min_date:
-                        messages.error(request,"Please select/enter date greater than 2000-01-01")
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        messages.error(request,"Please select/enter joining date greater than 2000-01-01")
+                        return redirect('all_forms', form_no=form_no)
 
                 except(ValueError, TypeError):
-                    messages.error(request,"Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request,"Please select/enter a valid joining date")
+                    return redirect('all_forms', form_no=form_no)
 
                 promotion_date = request.POST.get('pd')
                 if promotion_date == '':
@@ -117,34 +128,38 @@ def save_all_forms(request, form_no):
                     joining_report = request.FILES['jr']
                     status, msg = va.fileValidate(joining_report,"Joining Report")
                     if not status:
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        messages.error(request, msg)
+                        return redirect('all_forms', form_no=form_no)
                 else:
                     messages.error(request,"No file selected for joining report. Please select one!")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return redirect('all_forms', form_no=form_no)
 
                 if request.FILES.get('ol'):
-                    offer_letter = request.FILES['jr']
+                    offer_letter = request.FILES['ol']
                     status, msg = va.fileValidate(offer_letter,"Offer Letter")
                     if not status:
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        messages.error(request, msg)
+                        return redirect('all_forms', form_no=form_no)
                 else:
-                    messages.error(request,"No file selected for joining report. Please select one!")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request,"No file selected for offer letter. Please select one!")
+                    return redirect('all_forms', form_no=form_no)
 
                 if request.FILES.get('hdc'):
                     higher_degree_certificate = request.FILES['hdc']
                     status, msg = va.fileValidate(higher_degree_certificate,"Higher Degree Certificate")
                     if not status:
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        messages.error(request, msg)
+                        return redirect('all_forms', form_no=form_no)
                 else:
-                    messages.error(request,"No file selected for joining report. Please select one!")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    messages.error(request,"No file selected for higher degree certificate. Please select one!")
+                    return redirect('all_forms', form_no=form_no)
 
                 if request.FILES.get('ss'):
                     salary_slip = request.FILES['ss']
                     status, msg = va.fileValidate(salary_slip,"Salary Slip")
                     if not status:
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        messages.error(request, msg)
+                        return redirect('all_forms', form_no=form_no)
                 else:
                     salary_slip = None
 
@@ -152,7 +167,8 @@ def save_all_forms(request, form_no):
                     certificate = request.FILES['awards']
                     status, msg = va.fileValidate(certificate,"Co-curricular Certificate")
                     if not status:
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        messages.error(request, msg)
+                        return redirect('all_forms', form_no=form_no)
                 else:
                     certificate = None
 
@@ -163,30 +179,32 @@ def save_all_forms(request, form_no):
 
             elif form_no == 1:
                 category = request.POST.get('category').strip()
-                status, msg = va.nameValidate(category, "Highest Qualification")
+                status, msg = va.nameValidate(category, "category")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 top = request.POST.get('top').strip()
-                status, msg = va.nameValidate(top, "Highest Qualification")
+                status, msg = va.nameValidate(top, "Title of Program")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 mode = request.POST.get('optradio').strip()
-                if not status(request,mode,"mode"):
+                status, msg = va.radiocheck(mode, "Mode")
+                if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 level = request.POST.get('optradio1').strip()
-                if not status(request,level,"level"):
+                status, msg = va.radiocheck(level, "Level")
+                if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 organizer = request.POST.get('organizer').strip()
-                status, msg = va.nameValidate(organizer, "Highest Qualification")
+                status, msg = va.nameValidate(organizer, "Organizer")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 sponser = request.POST.get('sponser').strip()
-                status, msg = va.nameValidate(sponser, "Highest Qualification")
+                status, msg = va.nameValidate(sponser, "Sponsor")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -239,22 +257,22 @@ def save_all_forms(request, form_no):
 
             elif form_no == 2:
                 category = request.POST.get('category').strip()
-                status, msg = va.nameValidate(category, "Highest Qualification")
+                status, msg = va.nameValidate(category, "Category")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 timeline = request.POST.get('toc').strip()
-                status, msg = va.nameValidate(timeline, "Highest Qualification")
+                status, msg = va.nameValidate(timeline, "Timeline")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 noc = request.POST.get('noc').strip()
-                status, msg = va.nameValidate(noc, "Highest Qualification")
+                status, msg = va.nameValidate(noc, "Name of the Course")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 doc = request.POST.get('optradio3').strip()
-                status, msg = va.nameValidate(doc, "Highest Qualification")
+                status, msg = va.nameValidate(doc, "Duration of Course")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -283,7 +301,7 @@ def save_all_forms(request, form_no):
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 offer = request.POST.get('ofo').strip()
-                status, msg = va.nameValidate(offer, "Highest Qualification")
+                status, msg = va.nameValidate(offer, "Offering Agency / Organizer")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -310,7 +328,7 @@ def save_all_forms(request, form_no):
 
             elif form_no == 3:
                 category = request.POST.get('category').strip()
-                status, msg = va.nameValidate(category, "Highest Qualification")
+                status, msg = va.nameValidate(category, "Category")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -320,12 +338,12 @@ def save_all_forms(request, form_no):
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 nofc = request.POST.get('nofc').strip()
-                status, msg = va.nameValidate(nofc, "Highest Qualification")
+                status, msg = va.nameValidate(nofc, "Number of Faculty Coordinators")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 topdpo = request.POST.get('topdpo').strip()
-                status, msg = va.nameValidate(topdpo, "Highest Qualification")
+                status, msg = va.nameValidate(topdpo, "Title of the Professional Development Program Organized ")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -335,7 +353,7 @@ def save_all_forms(request, form_no):
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 adcc = request.POST.get('adcc').strip()
-                status, msg = va.nameValidate(adcc, "Highest Qualification")
+                status, msg = va.nameValidate(adcc, "Academic Department/ Cell / Committees/ Labs /COE ")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -345,12 +363,12 @@ def save_all_forms(request, form_no):
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 nosa = request.POST.get('nosa').strip()
-                status, msg = va.nameValidate(nosa, "Highest Qualification")
+                status, msg = va.nameValidate(nosa, "Name of Sponsoring Agency ")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 cd = request.POST.get('cd').strip()
-                status, msg = va.nameValidate(cd, "Highest Qualification")
+                status, msg = va.nameValidate(cd, "Collaboration Details")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -384,27 +402,27 @@ def save_all_forms(request, form_no):
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 gd = request.POST.get('gd').strip()
-                status, msg = va.nameValidate(gd, "Highest Qualification")
+                status, msg = va.nameValidate(gd, "Grant Details")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 acutal_expense = request.POST.get('actual_expenditure').strip()
-                status, msg = va.nameValidate(acutal_expense, "Highest Qualification")
+                status, msg = va.nameValidate(acutal_expense, "Actual Expenditure")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 awpsfooe = request.POST.get('awpsfooe').strip()
-                status, msg = va.nameValidate(awpsfooe, "Highest Qualification")
+                status, msg = va.nameValidate(awpsfooe, "Association with professional societies for organization of event")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 nossp = request.POST.get('nossp').strip()
-                status, msg = va.nameValidate(nossp, "Highest Qualification")
+                status, msg = va.nameValidate(nossp, "Number of SKIT students participated (Provide list of students with their RTU roll no. & Certificates)")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 nosmp = request.POST.get('nosmp').strip()
-                status, msg = va.nameValidate(nosmp, "Highest Qualification")
+                status, msg = va.nameValidate(nosmp, "Number of staff member participated")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -431,27 +449,27 @@ def save_all_forms(request, form_no):
 
             elif form_no == 4:
                 category = request.POST.get('category').strip()
-                status, msg = va.nameValidate(category, "Highest Qualification")
+                status, msg = va.nameValidate(category, "Category")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 noaa = request.POST.get('noaa').strip()
-                status, msg = va.nameValidate(noaa, "Highest Qualification")
+                status, msg = va.nameValidate(noaa, "Number of Awards and Achievements")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 paf = request.POST.get('paf').strip()
-                status, msg = va.nameValidate(paf, "Highest Qualification")
+                status, msg = va.nameValidate(paf, "Position / Award For ")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 ao = request.POST.get('ao').strip()
-                status, msg = va.nameValidate(ao, "Highest Qualification")
+                status, msg = va.nameValidate(ao, "Agency / Organization ")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 prize = request.POST.get('prize').strip()
-                status, msg = va.nameValidate(prize, "Highest Qualification")
+                status, msg = va.nameValidate(prize, "Prize")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -480,12 +498,12 @@ def save_all_forms(request, form_no):
 
             elif form_no == 5:
                 category = request.POST.get('category').strip()
-                status, msg = va.nameValidate(category, "Highest Qualification")
+                status, msg = va.nameValidate(category, "Category")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 nofa = request.POST.get('nofa').strip()
-                status, msg = va.nameValidate(nofa, "Highest Qualification")
+                status, msg = va.nameValidate(nofa, " Name of the funding agency ")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -515,32 +533,32 @@ def save_all_forms(request, form_no):
 
             elif form_no == 6:
                 noa = request.POST.get('noa').strip()
-                status, msg = va.nameValidate(noa, "Highest Qualification")
+                status, msg = va.nameValidate(noa, "Name of the author(s)")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 top = request.POST.get('top').strip()
-                status, msg = va.nameValidate(top, "Highest Qualification")
+                status, msg = va.nameValidate(top, "Title of paper")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 noj = request.POST.get('noj').strip()
-                status, msg = va.nameValidate(noj, "Highest Qualification")
+                status, msg = va.nameValidate(noj, "Name of journal")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 nop = request.POST.get('nop').strip()
-                status, msg = va.nameValidate(nop, "Highest Qualification")
+                status, msg = va.nameValidate(nop, "Name of the publisher")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 vi = request.POST.get('vi').strip()
-                status, msg = va.nameValidate(vi, "Highest Qualification")
+                status, msg = va.nameValidate(vi, "Volume Issue")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 pn = request.POST.get('pn').strip()
-                status, msg = va.nameValidate(pn, "Highest Qualification")
+                status, msg = va.nameValidate(pn, "Page No.")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -557,17 +575,17 @@ def save_all_forms(request, form_no):
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 isnp = request.POST.get('isnp').strip()
-                status, msg = va.nameValidate(isnp, "Highest Qualification")
+                status, msg = va.nameValidate(isnp, "ISSN number : Print")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 isno = request.POST.get('isno').strip()
-                status, msg = va.nameValidate(isno, "Highest Qualification")
+                status, msg = va.nameValidate(isno, "ISSN number : Online")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 level = request.POST.get('optradio3').strip()
-                status, msg = va.nameValidate(level, "Highest Qualification")
+                status, msg = va.nameValidate(level, "Level(National/ International)")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -1038,8 +1056,10 @@ def save_all_forms(request, form_no):
                 if not status:
                     return redirect('all_forms', form_no=form_no)
 
-                faculty_instance.pshd = request.POST.get('pshd').strip()
-                status, msg = va.radiocheck(faculty_instance.pshd, "Passing Year of Highest Degree")
+                faculty_instance.pshd = int(request.POST.get('pshd') or 0)
+                # json response sending, but pop-over not coming even after adding sub-for class.
+                # for year > current_year
+                status, msg = va.pshdValidate(faculty_instance.pshd, "Passing Year of Highest Degree")
                 if not status:
                     return redirect('all_forms', form_no=form_no)
 
@@ -1279,72 +1299,85 @@ def editforms(request, form_no, user_token):
             instance.name = request.POST.get('name')
             status, msg = va.nameValidate(instance.name, "Name")
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
             instance.mobile_no = request.POST.get('mobile_no')
             status, msg = va.mobileNumberValidate(instance.mobile_no)
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
-            instance.email = request.POST.get('email')
-            status, msg = va.nameValidate(instance.email, "Email")
-            if not status:
-                return redirect(redirect_url)
+            # instance.email = request.POST.get('email')
+            # status, msg = va.nameValidate(instance.email, "Email")
+            # if not status:
+            #     return redirect(redirect_url)
 
             instance.department = request.POST.get('department')
             status, msg = va.radiocheck(instance.department, "department")
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
             instance.Lab_no = request.POST.get('Lab_no')
-            status, msg = va.numberValidate(instance.Lab_no, "Lab No")
+            status, msg = va.nameValidate(instance.Lab_no, "Lab No")
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
             instance.designation = request.POST.get('designation')
             status, msg = va.nameValidate(instance.designation, "Designation")
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
             instance.emp_id = request.POST.get('emp_id')
             status, msg = va.numberValidate(instance.emp_id, "Employee ID")
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
-            instance.highest_qual = request.POST.get('highest_qual')
+            instance.highest_qual = request.POST.get('highest_qualification')
             status, msg = va.radiocheck(instance.highest_qual, "Highest Qualification")
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
             instance.university_name = request.POST.get('univ_name')
             status, msg = va.nameValidate(instance.university_name, "University Name")
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
-            instance.pshd = request.POST.get('pshd')
-            status, msg = va.numberValidate(instance.pshd, "Passing Year of Highest Degree")
+            instance.pshd = int(request.POST.get('pshd') or 0)
+            # json response sending, but pop-over not coming even after adding sub-for class.
+            # for year > current_year
+            status, msg = va.pshdValidate(instance.pshd, "Passing Year of Highest Degree")
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
-            instance.professional_courses = request.POST.getlist('professional_courses')
-            status, msg = va.radiocheck(instance.professional_courses, "Professional Course")
+            instance.professional_course = request.POST.getlist('professional_courses')
+            print(instance.professional_course)
+            status, msg = va.radiocheck(instance.professional_course, "Professional Course")
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
-            instance.pan_no = request.POST.getlist('pan_no')
-
+            instance.pan_no = request.POST.get('pan_no')
             status, msg = va.validate_pan(instance.pan_no)
             if not status:
+                messages.error(request, msg)
                 return redirect(redirect_url)
 
             instance.dob = request.POST.get('dob')
             try:
                 selected_date = datetime.strptime(instance.dob, '%Y-%m-%d').date()
 
-                min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+                min_date = datetime.strptime('1926-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter date of birth greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
                 messages.error(request, "Please select/enter a valid date")
@@ -1357,7 +1390,7 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter joining date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
                 messages.error(request, "Please select/enter a valid date")
@@ -1369,6 +1402,7 @@ def editforms(request, form_no, user_token):
                 joining_report = request.FILES.get('joining_report')
                 status, msg = va.fileValidate(joining_report, "Joining Report")
                 if not status:
+                    messages.error(request, msg)
                     return redirect(redirect_url)
                 instance.joining_report = joining_report
 
@@ -1376,6 +1410,7 @@ def editforms(request, form_no, user_token):
                 offer_letter = request.FILES.get('offer_letter')
                 status, msg = va.fileValidate(offer_letter, "Offer Letter")
                 if not status:
+                    messages.error(request, msg)
                     return redirect(redirect_url)
                 instance.offer_letter = offer_letter
 
@@ -1383,6 +1418,7 @@ def editforms(request, form_no, user_token):
                 higher_degree_certificate = request.FILES.get('higher_degree_certificate')
                 status, msg = va.fileValidate(higher_degree_certificate, "Higher Degree Certificate")
                 if not status:
+                    messages.error(request, msg)
                     return redirect(redirect_url)
                 instance.higher_degree_certificate = higher_degree_certificate
 
@@ -1390,6 +1426,7 @@ def editforms(request, form_no, user_token):
                 salary_slip = request.FILES.get('salary_slip')
                 status, msg = va.fileValidate(salary_slip, "Salary Slip")
                 if not status:
+                    messages.error(request, msg)
                     return redirect(redirect_url)
                 instance.salary_slip = salary_slip
 
@@ -1397,6 +1434,7 @@ def editforms(request, form_no, user_token):
                 certificate = request.FILES.get('certificate')
                 status, msg = va.fileValidate(certificate, "Certificate")
                 if not status:
+                    messages.error(request, msg)
                     return redirect(redirect_url)
                 instance.salary_slip = certificate
 
@@ -1609,7 +1647,7 @@ def editforms(request, form_no, user_token):
             if not status:
                 return redirect(redirect_url)
 
-            instance.eof = request.POST.getlist('optradio3').strip()
+            instance.eof = request.POST.getlist('optradio3')
             status, msg = va.radiocheck(instance.eof, "Event organized for")
             if not status:
                 return redirect(redirect_url)

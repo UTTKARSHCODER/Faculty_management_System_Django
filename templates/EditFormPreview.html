@@ -64,7 +64,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Lab No</label>
                             <div class="col-sm-8">
-                                <input type="number" class="form-control" name="Lab_no" value="{{data.Lab_no}}" required>
+                                <input type="text" class="form-control" name="Lab_no" value="{{data.Lab_no}}" required>
                             </div>
                         </div>
                     </div>
@@ -73,12 +73,12 @@
                             <label class="col-sm-4 col-form-label">Desgination</label>
                             <div class="col-sm-8">
                                 <select class="form-select custom-back-select" name="designation" id="designation" required>
-                                    <option value="" selected disabled>Select your Highest Qualification</option>
-                                    <option value="OA">Office Assistant</option>
-                                    <option value="TA">Technical Assistant</option>
-                                    <option value="A">Assistant</option>
-                                    <option value="C">Clerk</option>
-                                    <option value="O" id="Other">Other</option>
+                                    <option value=""  {% if data.department == '' %}selected{% endif %} disabled>Select your Highest Qualification</option>
+                                    <option value="OA" {% if data.department == 'OA' %}selected{% endif %}>Office Assistant</option>
+                                    <option value="TA" {% if data.department == 'TA' %}selected{% endif %}>Technical Assistant</option>
+                                    <option value="A"  {% if data.department == 'A' %}selected{% endif %}>Assistant</option>
+                                    <option value="C" {% if data.department == 'C' %}selected{% endif %}>Clerk</option>
+                                    <option value="O" {% if data.department == 'O' %}selected{% endif %} id="Other">Other</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your designation.</div>
                             </div>
@@ -97,13 +97,13 @@
                             <label class="col-sm-4 col-form-label">Highest Qualification</label>
                             <div class="col-sm-8">
                                 <select class="form-select custom-back-select" name="highest_qualification" id="highest_qualification" required>
-                                    <option value="" selected disabled>Select your Highest Qualification</option>
-                                    <option value="BT">B.E. / B.Tech</option>
-                                    <option value="MT">M.E. / M.Tech</option>
-                                    <option value="MS">M.S.</option>
-                                    <option value="MBA">MBA</option>
-                                    <option value="PHD">Ph.D.</option>
-                                    <option value="PD">Post-Doctoral Research (Post-Doc)</option>
+                                    <option value=""  {% if data.highest_qualification == '' %}selected{% endif %} disabled>Select your Highest Qualification</option>
+                                    <option value="BT" {% if data.highest_qualification == 'BT' %}selected{% endif %}>B.E. / B.Tech</option>
+                                    <option value="MT" {% if data.highest_qualification == 'MT' %}selected{% endif %}>M.E. / M.Tech</option>
+                                    <option value="MS" {% if data.highest_qualification == 'MS' %}selected{% endif %}>M.S.</option>
+                                    <option value="MBA" {% if data.highest_qualification == 'MBA' %}selected{% endif %}>MBA</option>
+                                    <option value="PHD" {% if data.highest_qualification == 'PHD' %}selected{% endif %}>Ph.D.</option>
+                                    <option value="PD" {% if data.highest_qualification == 'PD' %}selected{% endif %}>Post-Doctoral Research (Post-Doc)</option>
                                     <option value="O" id="hqOther">Other</option>
                                 </select>
                             </div>
@@ -212,7 +212,7 @@
                         <div class="row align-items-center">
                             <div class="col-sm-8">
                                 {% if data.joining_report %}
-                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
+                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.joining_report}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                 {% else %}
                                 <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                 {% endif %}
@@ -232,7 +232,7 @@
                         <div class="row align-items-center">
                             <div class="col-sm-8">
                                 {% if data.offer_letter %}
-                                <button type = "button" class="btn btn-primary" style="margin-top: 36px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
+                                <button type = "button" class="btn btn-primary" style="margin-top: 36px;" onclick = "window.open('/media/{{data.offer_letter}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                 {% else %}
                                 <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                 {% endif %}
@@ -243,7 +243,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Higher Degree Certificate(Date of Award)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                             <div class="col-sm-8">
-                                <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="higher_degree_certificate" {% if not data.joining_report.higher_degree_certificate %}required{% endif %}>
+                                <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="higher_degree_certificate" {% if not data.higher_degree_certificate %}required{% endif %}>
                                 <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                             </div>
                         </div>
@@ -252,7 +252,7 @@
                         <div class="row align-items-center">
                             <div class="col-sm-8">
                                 {% if data.higher_degree_certificate %}
-                                <button type = "button" class="btn btn-primary" style="margin-top: 48px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
+                                <button type = "button" class="btn btn-primary" style="margin-top: 48px;" onclick = "window.open('/media/{{data.higher_degree_certificate}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                 {% else %}
                                 <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                 {% endif %}
@@ -263,7 +263,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Salary Slip (Recently)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                             <div class="col-sm-8">
-                                <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="salary_slip" {% if not data.salary_slip %}required{% endif %}>
+                                <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="salary_slip">
                                 <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                             </div>
                         </div>
@@ -272,7 +272,7 @@
                         <div class="row align-items-center">
                             <div class="col-sm-8">
                                 {% if data.salary_slip %}
-                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
+                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.salary_slip}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                 {% else %}
                                 <h5 style="margin-top: 30px;">No File was uploaded previously.</h5>
                                 {% endif %}
@@ -283,7 +283,7 @@
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">If Awards and recognition received for extension activities (Upload Certificate)<h5 class="font-small mt-2" style="font-size: 14px;color: gray;">Old File (If exists) will be replaced with new file (MAX SIZE:- 2MB)</h5></label>
                             <div class="col-sm-8">
-                                <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="certificate" {% if not data.certificate %}required{% endif %}>
+                                <input type="file" class="form-control" placeholder="Upload files" accept=".pdf,.jpg,.jpeg,.png" name="certificate">
                                 <div class="invalid-feedback">Please upload a PDF or Image file only.</div>
                             </div>
                         </div>
@@ -292,7 +292,7 @@
                         <div class="row align-items-center">
                             <div class="col-sm-8">
                                 {% if data.certificate %}
-                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.proof_file}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
+                                <button type = "button" class="btn btn-primary" style="margin-top: 24px;" onclick = "window.open('/media/{{data.certificate}}')"><i class="fa-solid fa-eye"></i>View Old File</button>
                                 {% else %}
                                 <h5 style="margin-top: 68px;">No File was uploaded previously.</h5>
                                 {% endif %}

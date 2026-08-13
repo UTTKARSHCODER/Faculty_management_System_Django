@@ -1,3 +1,4 @@
+import datetime
 import os
 import re
 
@@ -19,7 +20,7 @@ def mobileNumberValidate(key):
         error_message = f"Mobile Number cannot contains special characters,digits,tabs or newline."
         return False, error_message
     else:
-        return True
+        return True, ''
 
 def validate_pan(pan_number):
     # The Regex Pattern
@@ -37,6 +38,20 @@ def validate_pan(pan_number):
         return True, ''
     else:
         return False, 'Please enter a valid PAN Number'
+
+# this is for the validation of the pshd -> Passing Year of Highest Degree
+def pshdValidate(key, tag):
+    if key is None or key == "":
+        error_message = f"{tag} cannot be empty"
+        return False, error_message
+
+    current_year = datetime.now().year
+
+    if int(key) > current_year:
+        error_message = f"{tag} cannot be greater than {current_year}"
+        return False, error_message
+
+    return True, ''
 
 def nameValidate(key,tag):
     if not key or key == '':

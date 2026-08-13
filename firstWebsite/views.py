@@ -210,7 +210,6 @@ def index(request):
         'mtech_guided_entries' : { choice['email__department']: choice['count'] for choice in mtech_guided_entries},
         'resource_person_entries' : { choice['email__department']: choice['count'] for choice in resource_person_entries}
     }
-    print(total_forms_entries['fdp_entries']['CSE'])
     context = {'dir_ins': fac_dir_instance, 'chartData' : total_forms_entries}
     return render(request, 'index.html', context=context)
 
