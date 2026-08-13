@@ -3,19 +3,24 @@
 
 {% block content %}
 <style>
+  /* .container{
+    overflow-y: auto;
+  } */
+ 
     .dept-card-container {
         position: relative;
         display: inline-block;
         width: 27rem;
+        /* overflow-y: hidden; */
     }
 
     .dept-card {
         background: #ffffff;
         border-radius: 1rem;
+        
         border-top: 4px solid #e15a5a;
         box-shadow: 0 2px 10px rgba(0,0,0,.08);
         padding: 1.2rem 1.3rem;
-        /* max-width: 580px; */
         width: 26rem;
         cursor: pointer;
         position: relative;
@@ -70,8 +75,6 @@
         border-radius: 50%;
         position: relative;
         margin: 0 auto;
-        /* Prof 40% | Assoc 30% | Asst 20% | Visiting 10% */
-
     }
     .pie::after {
         content: "";
@@ -89,8 +92,6 @@
         border-radius: 50%;
         position: relative;
         margin: 0 auto;
-        /* Prof 40% | Assoc 30% | Asst 20% | Visiting 10% */
-
     }
     .pie_enlarged::after {
         content: "";
@@ -102,46 +103,6 @@
         transform: translate(-50%, -50%);
     }
 
-    /* Container for bottom-right fixed positioning */
-    .legend-card {
-      position: absolute;
-      top: 0;              /* Align with the top of the card */
-      left: calc(100% + 15px); /* Position it to the right with a 15px gap */
-      background-color: #ffffff;
-      border-radius: 16px;
-      padding: 20px 24px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-      border: 1px solid #e5e7eb;
-      {#font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;#}
-      min-width: 280px;
-      z-index: 100;
-
-      /* Initial hidden state */
-      opacity: 0;
-      visibility: hidden;
-      transform: translateX(-10px); /* (faded and shifted slightly to the left) */
-      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-      pointer-events: none;
-    }
-
-    /* Modifier Class: Flip to the LEFT for cards near the right screen edge */
-    .dept-card-container.flip-left .legend-card {
-        left: auto;
-        right: calc(100% + 15px); /* Appears on the left instead */
-        transform: translateX(10px); /* Adjust slide direction */
-    }
-
-    /* Modifier Class: Flip to the LEFT for cards near the right screen edge */
-    .dept-card-container.flip-top .legend-card {
-        /* margin-top: -100px; */
-        top: auto;
-        bottom: calc(12%); /* Positions it directly above the card with a 15px gap */
-        left: calc(100% + 15px);                    /* Align with the left edge of the card */
-        right: auto;
-        margin-right: 20rem;
-        transform: translateY(10px); 
-    }
-
     .legend-header {
       font-size: 13px;
       font-weight: 700;
@@ -151,7 +112,6 @@
       text-transform: uppercase;
     }
 
-    /* 2-Column layout for legend items */
     .legend-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -185,76 +145,35 @@
       white-space: nowrap;
     }
 
-    /* Tooltip Hover State (Visible) */
-    .dept-card-container:hover .legend-card {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(0); /* Slides right into its final spot */
-      pointer-events: auto;
-    }
     /* Legend Colors matching the Dashboard Palette */
-    .color-fdp {
-      background-color: #2563eb; /* Blue */
-    }
+    .color-fdp { background-color: #2563eb; }
+    .color-mooc { background-color: #60a5fa; }
+    .color-events { background-color: #f59e0b; }
+    .color-awards { background-color: #9ca3af; }
+    .color-sponsored { background-color: #8b5cf6; }
+    .color-journal { background-color: #ec4899; }
+    .color-confernece { background-color: #10b981; }
+    .color-books { background-color: #14b8a6; }
+    .color-patents { background-color: #f97316; }
+    .color-guided { background-color: #6366f1; }
+    .color-resource { background-color: #64748b; }
 
-    .color-mooc {
-      background-color: #60a5fa; /* Light Blue */
-    }
-
-    .color-events {
-      background-color: #f59e0b; /* Orange/Yellow */
-    }
-
-    .color-awards {
-      background-color: #9ca3af; /* Gray */
-    }
-
-    .color-sponsored {
-      background-color: #8b5cf6; /* Purple */
-    }
-
-    .color-journal {
-      background-color: #ec4899; /* Pink */
-    }
-
-    .color-confernece {
-      background-color: #10b981; /* Emerald Green */
-    }
-
-    .color-books {
-      background-color: #14b8a6; /* Teal */
-    }
-
-    .color-patents {
-      background-color: #f97316; /* Bright Orange */
-    }
-
-    .color-guided {
-      background-color: #6366f1; /* Indigo */
-    }
-
-    .color-resource {
-      background-color: #64748b; /* Slate Gray */
-    }
-
-
-
-     .faculty-redirection{
+    .faculty-redirection{
         display:inline-flex;
         text-decoration: none;
         position:relative;
         color:#1a73e8;
-
         transition: transform .1s ease;
      }
     .faculty-redirection:hover{
         color:#0d47a1;
         transform:scale(1.11);
     }
+
     #chartjs-custom-tooltip {
       opacity: 0;
       position: absolute;
-      background: rgba(20, 24, 33, 0.95); /* Deep dark theme background */
+      background: rgba(20, 24, 33, 0.95);
       color: #ffffff;
       border-radius: 6px;
       padding: 8px 12px;
@@ -264,18 +183,39 @@
       font-weight: 600;
       box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
       transition: opacity 0.15s ease;
-      z-index: 99999; /* Forces the box to render on top of all canvas elements */
-      transform: translate(-50%, -110%); /* Shifts the container neatly above your cursor */
+      z-index: 99999;
+      transform: translate(-50%, -110%);
     }
 
+    .legend-card {
+        position: absolute;
+        background-color: #ffffff;
+        border-radius: 16px;
+        padding: 20px 24px;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
+        border: 1px solid #e5e7eb;
+        min-width: 280px;
+        width:620px;
+        z-index: 100;
 
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+        pointer-events: none;
+    }
+
+    .legend-card.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
 </style>
 
 <div class="container d-flex justify-content-start flex-wrap align-items-center">
     {% for ins in dir_ins %}
         {% with department=ins.department %}
             <a href = "/faculty/{{department}}">
-            <div class="col-md-4 col-sm-6 dept-card-container {% if forloop.counter|divisibleby:3 or forloop.counter == 2 %}flip-left {% elif forloop.counter == 4 %} flip-top {% endif %}">
+            <div class="col-md-4 col-sm-6 dept-card-container">
                     <div class="dept-card mt-2 m-2">
                         <div class=" d-flex justify-content-between">
                             <div class="d-flex card-head">
@@ -298,7 +238,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                    </div>
                 <div class="legend-card">
                     <h5 class="text-center">{{ department }}</h5>
                     <div class="legend-header">DATA LEGEND</div>
@@ -366,6 +306,71 @@
 </div>
 {{ chartData|json_script:'my-chart-data' }}
 <script>
+  document.querySelectorAll('.dept-card-container').forEach(function(container) {
+    const legend = container.querySelector('.legend-card');
+    if (!legend) return; // safety check
+
+    container.addEventListener('mouseenter', function() {
+        legend.style.left = '';
+        legend.style.right = '';
+        legend.style.top = '';
+        legend.style.bottom = '';
+
+        const cardRect = container.getBoundingClientRect();
+        const legendWidth = legend.offsetWidth;
+        const legendHeight = legend.offsetHeight;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const gap = 15;
+
+        // Horizontal
+        let spaceRight = viewportWidth - cardRect.right;
+        let spaceLeft = cardRect.left;
+
+        if (spaceRight >= legendWidth + gap) {
+            legend.style.left = (cardRect.width + gap) + 'px';
+        } else if (spaceLeft >= legendWidth + gap) {
+            legend.style.left = (-legendWidth - gap) + 'px';
+        } else {
+            if (spaceRight >= spaceLeft) {
+                legend.style.left = (cardRect.width + gap) + 'px';
+                const overflowRight = (cardRect.left + cardRect.width + gap + legendWidth) - viewportWidth;
+                if (overflowRight > 0) {
+                    legend.style.left = (cardRect.width + gap - overflowRight - 10) + 'px';
+                }
+            } else {
+                legend.style.left = (-legendWidth - gap) + 'px';
+                const overflowLeft = legendWidth + gap - cardRect.left;
+                if (overflowLeft > 0) {
+                    legend.style.left = (-legendWidth - gap + overflowLeft + 10) + 'px';
+                }
+            }
+        }
+
+        // Vertical
+        let spaceBelow = viewportHeight - cardRect.top;
+        let spaceAbove = cardRect.bottom;
+
+        if (spaceBelow >= legendHeight) {
+            legend.style.top = '0px';
+        } else if (spaceAbove >= legendHeight) {
+            legend.style.top = 'auto';
+            legend.style.bottom = '0px';
+        } else {
+            const overflowBottom = (cardRect.top + legendHeight) - viewportHeight;
+            legend.style.top = (-overflowBottom - 10) + 'px';
+        }
+
+        legend.classList.add('is-visible');
+    });
+
+    container.addEventListener('mouseleave', function() {
+        legend.classList.remove('is-visible');
+    });
+});
+
+
+
     const chartData = JSON.parse(document.getElementById('my-chart-data').textContent);
 
     const chartLabels = Object.keys(chartData);
