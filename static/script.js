@@ -325,7 +325,10 @@ function buildForm(category){
         `;
     } else if(form_number === '2') {
         subForm.innerHTML = `
-            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;">
+                <b>${category} #${i}</b>
+                <button type="button" class="discard-btn" title="Discard this form" aria-label="Discard this form">&times;</button>
+            </div>
             <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
             <input type = "hidden" name = "category" value = "${categoryValue[category]}">
             <div class="sub-form-fields">
@@ -495,16 +498,19 @@ function buildForm(category){
                         </div>
                     </div>
                     <div class="subform-actions">
-      <button type="button" class="btn btn-blue btn-submit">Submit</button>
-      <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
-    </div>
+                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
+                    </div>
                 </div>
             </div>
             <hr>
         `;
     } else if (form_number === '3') {
         subForm.innerHTML = `
-            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;">
+                <b>${category} #${i}</b>
+                <button type="button" class="discard-btn" title="Discard this form" aria-label="Discard this form">&times;</button>
+            </div>
             <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
             <input type = "hidden" name = "category" value = "${categoryValue[category]}">
             <div class="sub-form-fields">
@@ -818,10 +824,9 @@ function buildForm(category){
                             </div>
                         </div>
                     </div>
-                    <div class = "col-md-12">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
-                        </div>
+                   <div class="subform-actions">
+                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
             </div>
@@ -829,7 +834,10 @@ function buildForm(category){
         `;
     } else if(form_number === '4') {
         subForm.innerHTML = `
-            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;">
+                <b>${category} #${i}</b>
+                <button type="button" class="discard-btn" title="Discard this form" aria-label="Discard this form">&times;</button>
+            </div>
             <input type = "hidden" name = "category" value = "${categoryValue[category]}">
             <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
             <div class="sub-form-fields">
@@ -924,10 +932,9 @@ function buildForm(category){
                             </div>
                         </div>
                     </div>
-                    <div class = "col-md-12">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
-                        </div>
+                    <div class="subform-actions">
+                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
             </div>
@@ -935,7 +942,10 @@ function buildForm(category){
         `;
     } else if (form_number === '5') {
         subForm.innerHTML = `
-            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;">
+                <b>${category} #${i}</b>
+                <button type="button" class="discard-btn" title="Discard this form" aria-label="Discard this form">&times;</button>
+            </div>
             <input type = "hidden" name = "category" value = "${categoryValue[category]}">
             <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
             <div class="sub-form-fields">
@@ -1023,7 +1033,10 @@ function buildForm(category){
         `;
     } else if(form_number === '6') {
         subForm.innerHTML = `
-            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;">
+                <b>${category} #${i}</b>
+                <button type="button" class="discard-btn" title="Discard this form" aria-label="Discard this form">&times;</button>
+            </div>
             <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
             <div class="sub-form-fields">
                 <div class="row g-3">
@@ -1285,10 +1298,9 @@ function buildForm(category){
                             </div>
                         </div>
                     </div>
-                    <div class = "col-md-12">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
-                        </div>
+                    <div class="subform-actions">
+                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
             </div>
@@ -1296,7 +1308,10 @@ function buildForm(category){
         `;
     } else if(form_number === '7') {
         subForm.innerHTML = `
-            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;">
+                <b>${category} #${i}</b>
+                <button type="button" class="discard-btn" title="Discard this form" aria-label="Discard this form">&times;</button>
+            </div>
             <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
             <div class="sub-form-fields">
                 <div class="row g-3">
@@ -1471,10 +1486,9 @@ function buildForm(category){
                             </div>
                         </div>
                     </div>
-                    <div class = "col-md-12">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
-                        </div>
+                   <div class="subform-actions">
+                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
             </div>
@@ -1648,10 +1662,9 @@ function buildForm(category){
                             </div>
                         </div>
                     </div>
-                    <div class = "col-md-12">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
-                        </div>
+                    <div class="subform-actions">
+                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
             </div>
@@ -1659,7 +1672,10 @@ function buildForm(category){
         `;
     } else if (form_number === '9') {
         subForm.innerHTML = `
-            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;">
+                <b>${category} #${i}</b>
+                <button type="button" class="discard-btn" title="Discard this form" aria-label="Discard this form">&times;</button>
+            </div>
             <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
             <div class="sub-form-fields">
                 <div class="row g-3">
@@ -1816,10 +1832,9 @@ function buildForm(category){
                             </div>
                         </div>
                     </div>
-                    <div class = "col-md-12">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
-                        </div>
+                   <div class="subform-actions">
+                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
             </div>
@@ -1827,7 +1842,10 @@ function buildForm(category){
         `;
     } else if (form_number === '10') {
         subForm.innerHTML = `
-            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;">
+                <b>${category} #${i}</b>
+                <button type="button" class="discard-btn" title="Discard this form" aria-label="Discard this form">&times;</button>
+            </div>
             <input type = "hidden" name = "category" value = "${categoryValue[category]}">
             <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
             <div class="sub-form-fields">
@@ -1935,10 +1953,9 @@ function buildForm(category){
                             </div>
                         </div>
                     </div>
-                    <div class = "col-md-12">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
-                        </div>
+                   <div class="subform-actions">
+                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
             </div>
@@ -1946,7 +1963,10 @@ function buildForm(category){
         `;
     } else if (form_number === '11') {
         subForm.innerHTML = `
-            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;">
+                <b>${category} #${i}</b>
+                <button type="button" class="discard-btn" title="Discard this form" aria-label="Discard this form">&times;</button>
+            </div>
             <input type = "hidden" name = "category" value = "${categoryValue[category]}">
             <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
             <div class="sub-form-fields">
@@ -2108,10 +2128,9 @@ function buildForm(category){
                             </div>
                         </div>
                     </div>
-                    <div class = "col-md-12 mt-4">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
-                        </div>
+                    <div class="subform-actions">
+                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
             </div>
