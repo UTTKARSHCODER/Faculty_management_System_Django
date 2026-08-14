@@ -2211,7 +2211,6 @@ function getLiveForms() {
 
 function updateFormCountUI() {
     const liveCount = getLiveForms().length;
-    // console.log(liveCount);
     subformCount.textContent = `${liveCount} form${liveCount === 1 ? "" : "s"}`;
     emptyStateText.style.display = liveCount === 0 ? "block" : "none";
     toggleRegenerateButton(liveCount);
