@@ -116,20 +116,12 @@ if(!csrfToken) {
 
 checkboxGroup.addEventListener('change', (e) => {
     if (e.target.tagName === 'SELECT') {
-        // generateInputFields();
-    }
-});
-
-checkboxGroup.addEventListener('change', (e) => {
-    if (e.target.tagName === 'SELECT') {
-        // If checkbox is unchecked, remove its quantity
-        if (!e.target.checked) {
-            const value = e.target.value;
-            delete quantities[value];
-        }
-        // generateInputFields();\
         const selectedField = document.querySelector('select[name="optradio"]').value;
         currentCategory = selectedField;
+
+        // reset everything
+        subFormsContainer.innerHTML = "";
+        formCounter = 0;
         buildForm(currentCategory);
 
         updateFormCountUI();
@@ -498,7 +490,7 @@ function buildForm(category){
                         </div>
                     </div>
                     <div class="subform-actions">
-                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="submit" class="btn btn-blue btn-submit">Submit</button>
                         <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
@@ -825,7 +817,7 @@ function buildForm(category){
                         </div>
                     </div>
                    <div class="subform-actions">
-                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="submit" class="btn btn-blue btn-submit">Submit</button>
                         <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
@@ -925,15 +917,15 @@ function buildForm(category){
                     </div>
                     <div class="col-md-12">
                         <div class="row align-items-center">
-                            <label class="col-sm-8 col-form-label">All information filled by me is correct and I will submit proof and other related document whenever is asked<span class="ms-1" style="color: red;">*</span></label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-2 col-md-12">
                                 <input type="checkbox" class="form-check-input" name = "num_of_days" required>
                                 <div class="invalid-feedback">Please confirm the information.</div>
+                                <label class="col-form-label" style="padding: 0">All information filled by me is correct and I will submit proof and other related document whenever is asked<span class="ms-1" style="color: red;">*</span></label>
                             </div>
                         </div>
                     </div>
                     <div class="subform-actions">
-                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="submit" class="btn btn-blue btn-submit">Submit</button>
                         <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
@@ -1022,10 +1014,9 @@ function buildForm(category){
                             </div>
                         </div>
                     </div>
-                    <div class = "col-md-12">
-                        <div class="row align-items-center justify-content-center">
-                            <button type = "submit" class="btn btn-primary rounded-pill" style = "width: 10%;">Submit</button>
-                        </div>
+                    <div class="subform-actions">
+                        <button type="submit" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
             </div>
@@ -1299,7 +1290,7 @@ function buildForm(category){
                         </div>
                     </div>
                     <div class="subform-actions">
-                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="submit" class="btn btn-blue btn-submit">Submit</button>
                         <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
@@ -1487,7 +1478,7 @@ function buildForm(category){
                         </div>
                     </div>
                    <div class="subform-actions">
-                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="submit" class="btn btn-blue btn-submit">Submit</button>
                         <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
@@ -1496,7 +1487,10 @@ function buildForm(category){
         `;
     } else if(form_number === '8') {
         subForm.innerHTML = `
-            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;"><b>${category} #${i}</b></div>
+            <div class="sub-form-title" style = "font-size: 1.5rem; color: #667eea;">
+                <b>${category} #${i}</b>
+                <button type="button" class="discard-btn" title="Discard this form" aria-label="Discard this form">&times;</button>
+            </div>
             <input type = "hidden" name = "csrfmiddlewaretoken" value = "${csrfToken}">
             <div class="sub-form-fields">
                 <div class="row g-3">
@@ -1663,7 +1657,7 @@ function buildForm(category){
                         </div>
                     </div>
                     <div class="subform-actions">
-                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="submit" class="btn btn-blue btn-submit">Submit</button>
                         <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
@@ -1833,7 +1827,7 @@ function buildForm(category){
                         </div>
                     </div>
                    <div class="subform-actions">
-                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="submit" class="btn btn-blue btn-submit">Submit</button>
                         <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
@@ -1954,7 +1948,7 @@ function buildForm(category){
                         </div>
                     </div>
                    <div class="subform-actions">
-                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="submit" class="btn btn-blue btn-submit">Submit</button>
                         <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
@@ -2129,7 +2123,7 @@ function buildForm(category){
                         </div>
                     </div>
                     <div class="subform-actions">
-                        <button type="button" class="btn btn-blue btn-submit">Submit</button>
+                        <button type="submit" class="btn btn-blue btn-submit">Submit</button>
                         <button type="button" class="btn btn-outline btn-addform">+ Add Form</button>
                     </div>
                 </div>
@@ -2158,6 +2152,13 @@ function buildForm(category){
       const newForms = subFormsContainer.querySelectorAll(".sub-form");
       newForms[newForms.length - 1].scrollIntoView({ behavior: "smooth", block: "center" });
     });
+
+    // Initialize Bootstrap validation for all newly created forms
+    setTimeout(() => {
+        initializeBootstrapValidation();
+        attachLinkValidation(); // ADD THIS LINE HERE
+    }, 100);
+
 }
 
 // keeps the visible titles sequential (FDP #1, FDP #2, ...) after a discard
@@ -2169,7 +2170,16 @@ function buildForm(category){
   }
 
 function handleDiscard(subForm) {
-    const confirmed = confirm("Discard this form? Any data entered in it will be lost.");
+    // const form;
+    // const submitButton;
+    // const isSubFor;
+    const isSubFor = subForm.classList.contains('sub-form');
+    const submitButton = subForm.querySelector('button[type="submit"]');
+    let confirmed;
+    if(submitButton.textContent === "Saved Successfully!")
+        confirmed = confirm("Form is saved successfully and it will be Discarded");
+    else 
+        confirmed = confirm("Discard this form? Any data entered in it will be lost.");
     if (!confirmed) return;
 
     subForm.remove();
@@ -2254,15 +2264,6 @@ function attachLinkValidation() {
         });
     });
 }
-function stopScrollNumberIncrement() {
-    const numberInputs = document.querySelectorAll('input[type="number"]')
-
-    numberInputs.forEach(function(input) {
-        input.addEventListener('wheel', function(event) {
-            event.preventDefault();
-        }, {passive : false});
-    });
-}
 
 function validateLinkField(field, pattern) {
     const val = field.value.trim();
@@ -2277,9 +2278,9 @@ function validateLinkField(field, pattern) {
 }
 
 function initializeBootstrapValidation() {
-    'use strict'
+    'use strict';
     
-    const forms = document.querySelectorAll('.needs-validation')
+    const forms = document.querySelectorAll('.needs-validation');
     
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
@@ -2298,16 +2299,15 @@ function initializeBootstrapValidation() {
             
             // Then check standard HTML5 validation
             if (!form.checkValidity() || hasInvalidLinks) {
-                event.preventDefault()
-                event.stopPropagation()
+                event.preventDefault();
+                event.stopPropagation();
             }
             
-            form.classList.add('was-validated')
+            form.classList.add('was-validated');
         }, false)
     })
 }
 
-var curr_count = 0;
 document.addEventListener('submit', function(e) {
     const form = e.target;
 
@@ -2342,11 +2342,9 @@ document.addEventListener('submit', function(e) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                curr_count++;
+                showMessages(data.message, "success");
+                renderTable();
                 if (submitButton) submitButton.innerText = "Saved Successfully!";
-                if (curr_count === formCounter) {
-                    window.location.href = '/success';
-                }
             } else {
                 if (data.from === 'file') {
                     // Update modal content directly without attaching cumulative .on() listeners

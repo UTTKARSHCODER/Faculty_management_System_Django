@@ -247,8 +247,13 @@
   .form-check-input.is-valid + .form-check-label {
     color: #198754;
   }
+  .table-responsive {
+    width: 100% !important;
+    overflow-x: auto; /* Adds a horizontal scrollbar only when needed */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile devices */
+  }
 </style>
-<div class="conatiner">
+<div class="container">
   {% if form_number == 16 %}
   <div class="row form-row-non-tech">
     <form
@@ -826,7 +831,9 @@
         </div>
       </div>
     </form>
+   
     <script>
+      
       (function () {
         "use strict";
 
@@ -893,7 +900,7 @@
           );
         }
       })();
-
+      
       // file validation for pdf file
       document.addEventListener("change", function (event) {
         const input = event.target;
@@ -926,6 +933,7 @@
     </script>
   </div>
   {% else %}
+  {% if request.session.topLeftBar == 'ad' %}
   <div class="d-flex justify-content-center align-items-center">
     <button
       class="btn btn-primary mt-3"
@@ -936,6 +944,7 @@
       Upload Previous Year Data
     </button>
   </div>
+  {% endif %}
   <div class="row form-row m-3">
     <div class="row">
       <div class="col-md-8">
@@ -1023,8 +1032,16 @@
       </div>
     </div>
   </div>
+  
   <div class="row form-row m-3">
-    <div class="d-flex column-gap-4 mt-4 text-wrap" id="checkboxGroup">
+    <!-- Dynamic Table rendering -->
+     <!-- <div class="col-md-10"> -->
+      <h5 >Your Filled Forms: </h5>
+        <div class="table-responsive pt-2 " id="filled_forms_dynamic_table"></div>
+     <!-- </div> -->
+  </div>
+  <div class="row form-row m-3">
+    <div class="d-flex column-gap-4 mt-4 text-wrap align-items-center" id="checkboxGroup">
       {% if form_number == 1 %}
       <span>
         <label for="eop" class="form-label"
@@ -1035,7 +1052,7 @@
       <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1060,7 +1077,7 @@
        <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1069,7 +1086,7 @@
       </select>
       {% elif form_number == 3 %}
 
-      <div class="col-1">
+      <div class="col-1" style="width: 12.333%;">
         <div class="row">
           <span>
             <label for="eop" class="form-label"
@@ -1082,7 +1099,7 @@
        <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1111,7 +1128,7 @@
        <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1132,7 +1149,7 @@
        <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1151,7 +1168,7 @@
        <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1168,7 +1185,7 @@
        <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1185,7 +1202,7 @@
        <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1203,7 +1220,7 @@
        <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1221,7 +1238,7 @@
        <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1229,11 +1246,11 @@
         <option value="Ph.D">Ph.D</option>
       </select>
       {% elif form_number == 11 %}
-      <div class="col-1">
+      <div class="col-1" style="width: 12.333%;">
         <div class="row">
           <span>
             <label for="eop" class="form-label"
-              ><b>Type of Event</b
+              ><b>Resource Person in</b
               ><span class="ms-1" style="color: red">*</span> :-</label
             >
           </span>
@@ -1242,7 +1259,7 @@
       <select
         id="categorySelect"
         class="category-select form-select"
-        style="width: 20%"
+        style="width: 20%; height: 20%;"
         name="optradio"
       >
         <option value="">-- Select category --</option>
@@ -1266,52 +1283,38 @@
       </select>
       {% endif %}
       <!-- Screenshot simulation -->
-      <div
-        style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden"
-      >
-        <div
-          style="
-            background: #1a1a2e;
-            padding: 10px 14px;
-            font-size: 12px;
-            color: #e2e8f0;
-            line-height: 1.6;
-            text-align: center;
-          "
-        >
-          A Session e.g 2024-25 starts at<br />July 2024 and ends at June 2025
+      <div class="col-12 col-md-7 d-flex justify-content-end">
+        <div style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; max-width: 340px;">
+
+            <!-- Heading -->
+            <div style="background: #fff8e1; border-bottom: 1px solid #f0d080; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 13px; font-weight: 600; color: #7a5c00;">&#9432; Note:</span>
+            </div>
+
+            <!-- Body -->
+            <div style="padding: 12px 14px 14px; background: #fff;">
+                <p style="margin: 0 0 12px; font-size: 12.5px; color: #555; line-height: 1.6;">
+                    For more information on any field, hover over the
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; border:1px solid #aaa; font-size:9px; font-weight:600; color:#555; vertical-align:middle; margin:0 2px;">i</span>
+                    icon as shown below:
+                </p>
+
+                <!-- Screenshot simulation -->
+                <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                    <div style="background: #1a1a2e; padding: 10px 14px; font-size: 12px; color: #e2e8f0; line-height: 1.6; text-align: center;">
+                        A Session e.g 2024-25 starts at<br>July 2024 and ends at June 2025
+                    </div>
+                    <div style="background: #f8f9fa; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 13px; font-weight: 500;">Session</span>
+                        <span style="color: #dc3545;">*</span>
+                        <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; border:1px solid #aaa; font-size:10px; font-weight:500; color:#555;">i</span>
+                        <span style="font-size: 11px; color: #999; margin-left: 4px;">← hover this</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div
-          style="
-            background: #f8f9fa;
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-          "
-        >
-          <span style="font-size: 13px; font-weight: 500">Session</span>
-          <span style="color: #dc3545">*</span>
-          <span
-            style="
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-              width: 16px;
-              height: 16px;
-              border-radius: 50%;
-              border: 1px solid #aaa;
-              font-size: 10px;
-              font-weight: 500;
-              color: #555;
-            "
-            >i</span
-          >
-          <span style="font-size: 11px; color: #999; margin-left: 4px"
-            >← hover this</span
-          >
-        </div>
-      </div>
+    </div>
     </div>
   </div>
 
@@ -1451,6 +1454,65 @@
       </div>
     </div>
   </form>
+   <!-- The Delete Modal -->
+<div class="modal fade" id="deleteFormEntry">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header bg-danger">
+        <h4 class="modal-title text-white">Delete Entry Permanently</h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        Are you sure you want to delete this entry permanently?
+        <p class="mt-2">
+          <strong>Employee Id:</strong> <span id="modal-emp-id"></span>
+        </p>
+        <p>
+          <strong id="modal-head-main"></strong>: 
+          <span id="modal-entry-main"></span>
+        </p>
+        <p>
+          <strong id="modal-sub-head"></strong>: 
+          <span id="modal-sub-entry"></span>
+        </p>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <form id="deleteForm" method="POST">
+          {% csrf_token %}
+          <div class="dflex justify-content-end">
+            <input type="hidden" id="pk" name="pk" value="" />
+            <input type="hidden" id="form_no" name="form_no" value="" />
+            <!-- <input type="hidden" id="tab_no" name="tab_no" value="" /> -->
+            <input type="hidden" name="next" value="{{ request.path }}" />
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="submit"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Delete Entry
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
   <!-- Bulk Upload Modal Ends -->
   <script>
     document.addEventListener("keydown", function (event) {
@@ -1668,10 +1730,34 @@
   {% endif %}
   <!-- Dynamically loading forms from this js -->
   {% if form_number != 16 %}
+  <script src="{% static 'filled_forms_table.js' %}"></script>
   <script src="{% static 'script.js' %}"></script>
   {% endif %}
 
   <script>
+    // For delete Modal
+      $(document).ready(function() {
+          $('#deleteFormEntry').on('show.bs.modal', function(event) {
+              const link = $(event.relatedTarget);
+              const faculty_id = link.data('empId');
+              const pk = link.data('pk');
+              const form_no = link.data('form_no');
+              const heading_main = link.data('headMain');
+              const heading_main_entry = link.data('headMainEntry');
+              const heading_sub_head = link.data('subHead');
+              const heading_sub_head_entry = link.data('subHeadEntry');
+              const modal = $(this);
+              modal.find('#modal-emp-id').text(faculty_id);
+              modal.find('#modal-head-main').text(heading_main);
+              modal.find('#modal-entry-main').text(heading_main_entry);
+              modal.find('#modal-sub-head').text(heading_sub_head);
+              modal.find('#modal-sub-entry').text(heading_sub_head_entry);
+              modal.find('#pk').val(pk);
+              modal.find('#form_no').val(form_no);
+              // modal.find('#tab_no').val(form_no);
+              modal.find('#deleteForm').attr('action', '/deleteformdata');
+          });
+      });
     document.addEventListener("DOMContentLoaded", function () {
       // --- Checkbox Validation Logic ---
       const checkboxGroup = document.getElementById("checkboxGroup");

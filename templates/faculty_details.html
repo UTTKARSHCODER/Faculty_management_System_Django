@@ -3,6 +3,16 @@
 {% block content %}
 
 <style>
+
+    .form-row {
+        /* margin-bottom: 10px; */
+        margin-top: 0;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+        width: 40%;
+    }
     
     .faculty-card {
         border-radius: 10px;
@@ -68,7 +78,12 @@
 </style>
 
 <div class="container-fluid p-4">
-    <h5 class="text-center">{{ department }}</h5>
+    <div class="d-flex justify-content-center">
+        <div class="form-row text-center">
+            <h5 class="text-center" style="font-weight: 900;">{{ department }}</h5>
+        </div>
+    </div>
+    
     <div class="mb-4" style="display: flex; justify-content: flex-end; align-items: center;">
         <!-- search can be done on any field like name, designation or email -->
         <label for="searchInput" ><b>Search:</b></label>

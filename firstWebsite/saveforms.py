@@ -174,7 +174,7 @@ def save_all_forms(request, form_no):
 
                 obj = non_teaching_staff(session=session, name=name, mobile_no=mobile_no, email=faculty_instance, department=department, Lab_no=lab_no, designation=designation, emp_id=emp_id, highest_qual=highest_qual, university_name=university_name, pshd=pshd, professional_course=professional_course, pan_no=pan_no,dob=dob, joining_date=joining_date, promotion_date=promotion_date, joining_report=joining_report, offer_letter=offer_letter, higher_degree_certificate=higher_degree_certificate, salary_slip=salary_slip, certificate=certificate)
                 obj.save()
-                messages.success(request, 'Form filled successfully!')
+                messages.success(request, 'Form submitted successfully!')
                 return redirect(reverse('fdp'))
 
             elif form_no == 1:
@@ -218,13 +218,11 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(begi_date, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        return JsonResponse({'success' : False, 'message' : "Date cannot be in future"})
                     begi_date = selected_date
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -236,8 +234,7 @@ def save_all_forms(request, form_no):
                     end_date = selected_date
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
 
                 num_of_days = (end_date - begi_date).days
 
@@ -285,8 +282,7 @@ def save_all_forms(request, form_no):
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -297,8 +293,7 @@ def save_all_forms(request, form_no):
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
 
                 offer = request.POST.get('ofo').strip()
                 status, msg = va.nameValidate(offer, "Offering Agency / Organizer")
@@ -381,8 +376,7 @@ def save_all_forms(request, form_no):
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
 
                 end_date = request.POST.get('end_date')
                 try:
@@ -393,8 +387,7 @@ def save_all_forms(request, form_no):
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
 
                 gr = request.POST.get('optradio2').strip()
                 status, msg = va.radiocheck(gr, "Grant Recieved")
@@ -482,8 +475,7 @@ def save_all_forms(request, form_no):
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
 
                 remark = request.POST.get('remark').strip()
 
@@ -571,8 +563,7 @@ def save_all_forms(request, form_no):
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
 
                 isnp = request.POST.get('isnp').strip()
                 status, msg = va.nameValidate(isnp, "ISSN number : Print")
@@ -688,8 +679,7 @@ def save_all_forms(request, form_no):
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
 
                 doi = request.POST.get('doi').strip()
                 status, msg = va.nameValidate(doi, "DOI(Digital Object Identifier)")
@@ -770,8 +760,7 @@ def save_all_forms(request, form_no):
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
 
                 doi = request.POST.get('doi').strip()
                 status, msg = va.nameValidate(doi, "DOI(Digital Object Identifier)")
@@ -843,24 +832,20 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(pfd, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        return JsonResponse({'success' : False, 'message' : "Filed Date cannot be in future"})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid Filed date"})
 
                 pd = request.POST.get('begi_date')
                 try:
                     selected_date = datetime.strptime(pd, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        return JsonResponse({'success' : False, 'message' : "Start Date cannot be in future"})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid Start date"})
 
                 pg = request.POST.get('optradio2').strip()
                 status, msg = va.radiocheck(pg, "Type of Patent")
@@ -929,12 +914,10 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(dov, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        return JsonResponse({'success' : False, 'message' : "Viva-Voice Date cannot be in future"})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date of viva-voice"})
 
                 noe = request.POST.get('noe').strip()
                 status, msg = va.nameValidate(noe, "Name of external examiner")
@@ -975,24 +958,20 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(begi_date, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        return JsonResponse({'success' : False, 'message' : "Start Date cannot be in future"})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid start date"})
 
                 end_date = request.POST.get('end_date')
                 try:
                     selected_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
-                        return JsonResponse({'success' : False, 'message' : msg})
+                        return JsonResponse({'success' : False, 'message' : "End Date cannot be in future"})
 
                 except(ValueError, TypeError):
-                    messages.error(request, "Please select/enter a valid date")
-                    return JsonResponse({'success' : False, 'message' : msg})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid end date"})
 
                 venue = request.POST.get('venue').strip()
                 status, msg = va.nameValidate(venue, "Venue")
@@ -1282,7 +1261,7 @@ def save_all_forms(request, form_no):
 
                 return redirect(reverse('manage_access'))
 
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'message' : 'Form submitted successfully!'})
         # Method not allowed or error saving form
         return render(request, '404.html')
 
