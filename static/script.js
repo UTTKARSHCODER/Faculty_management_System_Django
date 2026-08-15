@@ -873,7 +873,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Agency / Organization<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Agency / Organization']}"></span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter organizer" name = "ao" required>
+                                <input type="text" class="form-control" placeholder="Enter Agency / Organization" name = "ao" required>
                                 <div class="invalid-feedback">Please provide agency / organization.</div>
                             </div>
                         </div>
@@ -882,7 +882,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Prize<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Prize']}"></span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter organizer" name = "prize" required>
+                                <input type="text" class="form-control" placeholder="Enter prize" name = "prize" required>
                                 <div class="invalid-feedback">Please provide prize.</div>
                             </div>
                         </div>
@@ -910,7 +910,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Remark<span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Remark']}"></span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter organizer" name = "remark">
+                                <input type="text" class="form-control" placeholder="Enter remark" name = "remark">
                                 <div class="invalid-feedback">Please provide remark.</div>
                             </div>
                         </div>
@@ -1507,7 +1507,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Title of the book<span class="ms-1" style="color: red;">*</span></label>
                             <div class = "col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter Title of the conference" name = "tob" required>
+                                <input type="text" class="form-control" placeholder="Enter title of the book" name = "tob" required>
                                 <div class="invalid-feedback">Please provide Title of the book.</div>
                             </div>
                         </div>
@@ -1516,7 +1516,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Title of the chapter Published<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of the chapter Published']}"></span></label>
                             <div class = "col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter title of Paper" name = "top" required>
+                                <input type="text" class="form-control" placeholder="Enter title of chapter" name = "top" required>
                                 <div class="invalid-feedback">Please provide Title of the chapter Published.</div>
                             </div>
                         </div>
@@ -1757,7 +1757,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Granted Country<span class="ms-1" style="color: red;">*</span></label>
                             <div class = "col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter detail" name = "gc" required>
+                                <input type="text" class="form-control" placeholder="Enter Granted Country" name = "gc" required>
                                 <div class="invalid-feedback">Please provide Granted Country.</div>
                             </div>
                         </div>
@@ -1883,7 +1883,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">University Roll Number of Student<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter organizer" name = "urns" required>
+                                <input type="text" class="form-control" placeholder="Enter University Roll Number of Student" name = "urns" required>
                                 <div class="invalid-feedback">Please enter University Roll Number of Student.</div>
                             </div>
                         </div>
@@ -1906,7 +1906,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Title of the Dissertation<span class="ms-1" style="color: red;">*</span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter organizer" name = "tod" required>
+                                <input type="text" class="form-control" placeholder="Enter Title of the Dissertation" name = "tod" required>
                                 <div class="invalid-feedback">Please enter Title of the Dissertation.</div>
                             </div>
                         </div>
@@ -1986,7 +1986,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label for="top" class="col-sm-4 col-form-label">Title of Event/ Exam Name<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Title of Event/ Exam Name']}"></span></label>
                             <div class = "col-md-8">
-                                <input type="text" class="form-control custom-back" id="top" placeholder="Enter Name of the student Guided" name="toe" required>
+                                <input type="text" class="form-control custom-back" id="top" placeholder="Enter Title of Event/ Exam Name" name="toe" required>
                                 <div class="invalid-feedback">Please provide Title of Event/ Exam Name.</div>
                             </div>
                         </div>
@@ -1995,7 +1995,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Subject Area/Subject Name/Lab Name/Session Name<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Subject Area/Subject Name/Lab Name/Session Name']}"></span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" placeholder="Enter Enrollment Number of Student" name = "sa" required>
+                                <input type="text" class="form-control" placeholder="Enter Subject Area/Subject Name/Lab Name/Session Name" name = "sa" required>
                                 <div class="invalid-feedback">Please enter Subject Area/Subject Name/Lab Name/Session Name.</div>
                             </div>
                         </div>
