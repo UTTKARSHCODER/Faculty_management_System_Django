@@ -1898,9 +1898,7 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.index_by = request.POST.get('optradio1').strip()
-
-            instance.ssa = request.POST.get('ssa').strip()
-            status, msg = va.radiocheck(instance.ssa, "Professional Course")
+            status, msg = va.radiocheck(instance.index_by, "Index By")
             if not status:
                 return redirect(redirect_url)
 
@@ -1999,8 +1997,8 @@ def editforms(request, form_no, user_token):
             if not status:
                 return redirect(redirect_url)
 
-            instance.ssa = request.POST.get('ssa').strip()
-            status, msg = va.radiocheck(instance.ssa, "Professional Course")
+            instance.index_by = request.POST.get('index_by').strip()
+            status, msg = va.nameValidate(instance.index_by, "Index by")
             if not status:
                 return redirect(redirect_url)
 
