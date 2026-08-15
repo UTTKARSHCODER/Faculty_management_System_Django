@@ -128,10 +128,6 @@ def edit_profile(request, user_token=-1):
         messages.error(request,error_message)
         return render(request,'404.html')
 
-def successfulsubmission(request):
-    return render(request,'submitSuccess.html')
-
-
 def deleteuser(request):
     if request.method == "POST":
 

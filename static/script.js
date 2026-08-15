@@ -2342,8 +2342,11 @@ document.addEventListener('submit', function(e) {
         .then(data => {
             if (data.success) {
                 showMessages(data.message, "success");
-                renderTable();
                 if (submitButton) submitButton.innerText = "Saved Successfully!";
+                // Yield to main thread so the browser paints the text update, then execute renderTable
+                setTimeout(() => {
+                  renderTable();
+                }, 0)
             } else {
                 if (data.from === 'file') {
                     // Update modal content directly without attaching cumulative .on() listeners

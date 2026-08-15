@@ -252,6 +252,19 @@
     overflow-x: auto; /* Adds a horizontal scrollbar only when needed */
     -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile devices */
   }
+  .animated-dots::after {
+      content: '.';
+      display: inline-block;
+      width: 1.2em; /* Prevents surrounding layout shift as dots change */
+      text-align: left;
+      animation: loadingDots 1.5s steps(1, end) infinite;
+  }
+
+  @keyframes loadingDots {
+      0%   { content: '.'; }
+      33%  { content: '..'; }
+      66%  { content: '...'; }
+  }
 </style>
 <div class="container">
   {% if form_number == 16 %}
@@ -265,7 +278,7 @@
     >
       {% csrf_token %}
       <div class="row g-3">
-        <div class="col-md-4" style="margin-top: 2.5rem">
+        <div class="col-md-4">
           <div class="row align-items-center">
             <label class="col-sm-4 col-form-label"
               >Session<span class="ms-1" style="color: red">*</span
@@ -552,7 +565,31 @@
             </div>
           </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-4" style="margin-top: 3.4rem">
+          <div class="row align-items-center">
+            <label class="col-sm-4 col-form-label"
+              >Pan No.<span class="ms-1" style="color: red">*</span></label
+            >
+            <div class="col-sm-8">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="ABCDE1234F"
+                name="pan_no"
+                id="pan_no"
+                pattern="[A-Z]{3}[PCHFATBLJG][A-Z][0-9]{4}[A-Z]"
+                maxlength="10"
+                oninput="this.value = this.value.toUpperCase()"
+                required
+              />
+              <div class="invalid-feedback">
+                Please enter a valid 10-digit PAN (e.g., ABCDE1234F).
+              </div>
+              <div class="valid-feedback">Format looks correct!</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
           <div class="row align-items-center">
             <label class="col-sm-2 col-form-label"
               >Professional Courses<span class="ms-1" style="color: red"
@@ -635,30 +672,6 @@
               >
                 Please select at least one professional course.
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4" style="margin-top: 1.7rem">
-          <div class="row align-items-center">
-            <label class="col-sm-4 col-form-label"
-              >Pan No.<span class="ms-1" style="color: red">*</span></label
-            >
-            <div class="col-sm-8">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="ABCDE1234F"
-                name="pan_no"
-                id="pan_no"
-                pattern="[A-Z]{3}[PCHFATBLJG][A-Z][0-9]{4}[A-Z]"
-                maxlength="10"
-                oninput="this.value = this.value.toUpperCase()"
-                required
-              />
-              <div class="invalid-feedback">
-                Please enter a valid 10-digit PAN (e.g., ABCDE1234F).
-              </div>
-              <div class="valid-feedback">Format looks correct!</div>
             </div>
           </div>
         </div>
@@ -1035,10 +1048,13 @@
   
   <div class="row form-row m-3">
     <!-- Dynamic Table rendering -->
-     <!-- <div class="col-md-10"> -->
       <h5 >Your Filled Forms: </h5>
-        <div class="table-responsive pt-2 " id="filled_forms_dynamic_table"></div>
-     <!-- </div> -->
+      <div class="table-responsive pt-2 " id="filled_forms_dynamic_table">
+          <!-- Loading Spinner -->
+          <div class="d-flex align-items-center">
+              <strong>Loading<span class="animated-dots"></span></strong>
+          </div>
+      </div>
   </div>
   <div class="row form-row m-3">
     <div class="d-flex column-gap-4 mt-4 text-wrap align-items-center" id="checkboxGroup">
