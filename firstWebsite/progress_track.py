@@ -397,7 +397,7 @@ def showdynamictable(request):
                         ('Joining Report(File)', 'joining_report', 'file'),
                         ('Offer Letter (Appointment Letter)(File)', 'offer_letter', 'file'),
                         ('Salary Slip (Recently)(File)', 'salary_slip', 'file'),
-                        ('If Awards and recognition received for extension activities (Upload Certificate)', 'certificate', 'file')
+                        ('If Awards and recognition received for extension activities (Upload Certificate)(File)', 'certificate', 'file')
                         ]
 
             datatosend = return_data(instance, col_vals)

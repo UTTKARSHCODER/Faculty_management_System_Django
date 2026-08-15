@@ -82,7 +82,7 @@ function updateTable(values, table_id) {
                 table_html_structure += `<td><a href = "forms_listing/progressdetails/${table_id}/${row_val[col_val]}" style = "text-decoration: none; color: black;"><i class="fa-solid fa-pen"></i></a></td>`;
             } else if (col_val.includes('(File)')){
                 if (row_val[col_val] !== 'Not Uploaded Yet') {
-                    table_html_structure += `<td><a href="/media/${row_val[col_val]}" target="_blank" class="text-info">Click Here</a></td>`
+                    table_html_structure += `<td><a href="${row_val[col_val]}" target="_blank" class="text-info">Click Here</a></td>`
                 } else {
                     table_html_structure += `<td>${row_val[col_val]}</td>`;
                 }
