@@ -218,23 +218,23 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(begi_date, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        return JsonResponse({'success' : False, 'message' : "Date cannot be in future"})
+                        return JsonResponse({'success' : False, 'message' : "From Date cannot be in future"})
                     begi_date = selected_date
 
                 except(ValueError, TypeError):
-                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid From date"})
 
                 end_date = request.POST.get('end_date')
                 try:
                     selected_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
+                        messages.error(request, "To Date cannot be in future")
                         return JsonResponse({'success' : False, 'message' : msg})
                     end_date = selected_date
 
                 except(ValueError, TypeError):
-                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid To date"})
 
                 num_of_days = (end_date - begi_date).days
 
@@ -278,22 +278,22 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(begi_date, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
+                        messages.error(request, "From Date cannot be in future")
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid From date"})
 
                 end_date = request.POST.get('end_date')
                 try:
                     selected_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
+                        messages.error(request, "To Date cannot be in future")
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid To date"})
 
                 offer = request.POST.get('ofo').strip()
                 status, msg = va.nameValidate(offer, "Offering Agency / Organizer")
@@ -372,22 +372,22 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(begi_date, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
+                        messages.error(request, "From Date cannot be in future")
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid From date"})
 
                 end_date = request.POST.get('end_date')
                 try:
                     selected_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
+                        messages.error(request, "To Date cannot be in future")
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid To date"})
 
                 gr = request.POST.get('optradio2').strip()
                 status, msg = va.radiocheck(gr, "Grant Recieved")
@@ -471,11 +471,11 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(ad, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
+                        messages.error(request, "Award Date cannot be in future")
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid Award date"})
 
                 remark = request.POST.get('remark').strip()
 
@@ -559,11 +559,11 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(pd, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
+                        messages.error(request, "Published Date cannot be in future")
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid Published date"})
 
                 isnp = request.POST.get('isnp').strip()
                 status, msg = va.nameValidate(isnp, "ISSN number : Print")
@@ -675,11 +675,11 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(pd, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
+                        messages.error(request, "Published Date cannot be in future")
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid Published date"})
 
                 doi = request.POST.get('doi').strip()
                 status, msg = va.nameValidate(doi, "DOI(Digital Object Identifier)")
@@ -756,11 +756,11 @@ def save_all_forms(request, form_no):
                     selected_date = datetime.strptime(pd, '%Y-%m-%d').date()
 
                     if selected_date > timezone.now().date():
-                        messages.error(request, "Date cannot be in future")
+                        messages.error(request, "Published Date cannot be in future")
                         return JsonResponse({'success' : False, 'message' : msg})
 
                 except(ValueError, TypeError):
-                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid date"})
+                    return JsonResponse({'success' : False, 'message' : "Please select/enter a valid Published date"})
 
                 doi = request.POST.get('doi').strip()
                 status, msg = va.nameValidate(doi, "DOI(Digital Object Identifier)")
@@ -1071,11 +1071,11 @@ def save_all_forms(request, form_no):
                     min_date = datetime.strptime('2000-01-01','%Y-%m-%d').date()
 
                     if selected_date < min_date:
-                        messages.error(request,"Please select/enter date greater than 2000-01-01")
+                        messages.error(request,"Please select/enter joining date greater than 2000-01-01")
                         return redirect('all_forms',form_no=form_no)
 
                 except(ValueError, TypeError):
-                    messages.error(request,"Please select/enter a valid date")
+                    messages.error(request,"Please select/enter a valid Joining date")
                     return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.pd = request.POST.get('pd')
@@ -1086,11 +1086,11 @@ def save_all_forms(request, form_no):
                         selected_date = datetime.strptime(faculty_instance.pd, '%Y-%m-%d').date()
 
                         if selected_date > timezone.now().date():
-                            messages.error(request, "Date cannot be in future")
+                            messages.error(request, "Promotion Date cannot be in future")
                             return redirect('all_forms', form_no=form_no)
 
                     except(ValueError, TypeError):
-                        messages.error(request, "Please select/enter a valid date")
+                        messages.error(request, "Please select/enter a valid promotion date")
                         return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.google_scholar = request.POST.get('google_scholar').strip()
@@ -1162,12 +1162,12 @@ def save_all_forms(request, form_no):
                         selected_date = datetime.strptime(phd_dor, '%Y-%m-%d').date()
 
                         if selected_date > timezone.now().date():
-                            messages.error(request, "Date cannot be in future")
+                            messages.error(request, "PH.D Registration Date cannot be in future")
                             return redirect('all_forms', form_no=form_no)
                         faculty_instance.phd_dor = phd_dor
 
                     except(ValueError, TypeError):
-                        messages.error(request, "Please select/enter a valid date")
+                        messages.error(request, "Please select/enter a valid phd registration date")
                         return redirect('all_forms', form_no=form_no)
 
                 faculty_instance.norp = int(request.POST.get('norp') or 0)
@@ -1359,7 +1359,7 @@ def editforms(request, form_no, user_token):
                     messages.error(request, "Please select/enter date of birth greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid date of birth.")
                 return redirect(redirect_url)
 
             instance.joining_date = request.POST.get('joining_date')
@@ -1372,7 +1372,7 @@ def editforms(request, form_no, user_token):
                     messages.error(request, "Please select/enter joining date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid joining date")
                 return redirect(redirect_url)
 
             instance.promotion_date = request.POST.get('promotion_date')
@@ -1464,10 +1464,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter From date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid From date")
                 return redirect(redirect_url)
 
             instance.end_date = request.POST.get('end_date').strip()
@@ -1477,10 +1477,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter To date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid To date")
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
@@ -1537,10 +1537,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter From date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid From date")
                 return redirect(redirect_url)
 
             instance.end_date = request.POST.get('end_date')
@@ -1550,10 +1550,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter To date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid To date")
                 return redirect(redirect_url)
 
             instance.offer = request.POST.get('ofo').strip()
@@ -1602,10 +1602,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter From date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid From date")
                 return redirect(redirect_url)
 
             instance.end_date = request.POST.get('end_date')
@@ -1615,10 +1615,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter To date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid To date")
                 return redirect(redirect_url)
 
             instance.nofc = request.POST.get('nofc').strip()
@@ -1740,17 +1740,17 @@ def editforms(request, form_no, user_token):
             if not status:
                 return redirect(redirect_url)
 
-            instance.ad = request.POST.get('award_date')
+            instance.ad = request.POST.get('ad')
             try:
                 selected_date = datetime.strptime(instance.ad, '%Y-%m-%d').date()
 
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter award date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid award date")
                 return redirect(redirect_url)
 
             instance.remark = request.POST.get('remark')
@@ -1846,10 +1846,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter Published date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid Published date")
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
@@ -1971,10 +1971,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter Published date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid Published date")
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
@@ -2061,10 +2061,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter Published date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid Published date")
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
@@ -2098,7 +2098,7 @@ def editforms(request, form_no, user_token):
                 return redirect(redirect_url)
 
             instance.index_by = request.POST.get('index_by').strip()
-            status, msg = va.radiocheck(instance.index_by, "Indexed By")
+            status, msg = va.nameValidate(instance.index_by, "Indexed By")
             if not status:
                 return redirect(redirect_url)
 
@@ -2156,10 +2156,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter patent filed date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid patent filed date")
                 return redirect(redirect_url)
 
             instance.pd = request.POST.get('pd')
@@ -2169,10 +2169,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter publication date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid publication date")
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()
@@ -2180,7 +2180,7 @@ def editforms(request, form_no, user_token):
             if not status:
                 return redirect(redirect_url)
 
-            instance.ssa = request.POST.get('optradio2').strip()
+            instance.ssa = request.POST.get('optradio').strip()
             status, msg = va.radiocheck(instance.ssa, "Is SKIT student associated?")
             if not status:
                 return redirect(redirect_url)
@@ -2201,6 +2201,8 @@ def editforms(request, form_no, user_token):
                 if not status:
                     return redirect(redirect_url)
                 instance.proof_file = proof_file
+
+            instance.save()
 
         elif form_no == '8':
             instance = guided.objects.get(pk=actual_pk)
@@ -2252,10 +2254,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter date of viva-voice greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid date of viva-voice")
                 return redirect(redirect_url)
 
             instance.noe = request.POST.get('noe').strip()
@@ -2283,7 +2285,7 @@ def editforms(request, form_no, user_token):
             if not status:
                 return redirect(redirect_url)
 
-            instance.rpt = request.POST.get('rpt').strip()
+            instance.rpt = request.POST.get('optradio2').strip()
             status, msg = va.radiocheck(instance.rpt, "Resource Person Type")
             if not status:
                 return redirect(redirect_url)
@@ -2300,10 +2302,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter From date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid From date")
                 return redirect(redirect_url)
 
             instance.end_date = request.POST.get('end_date')
@@ -2313,10 +2315,10 @@ def editforms(request, form_no, user_token):
                 min_date = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
 
                 if selected_date < min_date:
-                    messages.error(request, "Please select/enter date greater than 2000-01-01")
+                    messages.error(request, "Please select/enter To date greater than 2000-01-01")
                     return redirect(redirect_url)
             except(ValueError, TypeError):
-                messages.error(request, "Please select/enter a valid date")
+                messages.error(request, "Please select/enter a valid To date")
                 return redirect(redirect_url)
 
             instance.session = request.POST.get('sessionyear').strip()

@@ -1057,7 +1057,7 @@
                             <div class="row align-items-center">
                                 <label for="nofa" class="col-sm-4 col-form-label">Name of the Funding Agency (MSME/DST/CSIR   /SERB /Industry etc.)</label>
                                 <div class = "col-md-8">
-                                    <input type="text" class="form-control custom-back" id="nofa" value="{{data.nofa}}" required>
+                                    <input type="text" class="form-control custom-back" id="nofa" name="nofa" value="{{data.nofa}}" required>
                                 </div>
                             </div>
                         </div>
@@ -1460,7 +1460,7 @@
                             <div class="row align-items-center">
                                 <label class="col-sm-4 col-form-label">ISBN/ISSN number of the proceeding</label>
                                 <div class = "col-sm-8">
-                                    <input type="text" class="form-control" name="isbn" value="{{data.isnp}}" required>
+                                    <input type="text" class="form-control" name="isnp" value="{{data.isnp}}" required>
                                 </div>
                             </div>
                         </div>
@@ -1507,7 +1507,7 @@
                             <div class="row align-items-center">
                                 <label class="col-sm-4 col-form-label">Web Link</label>
                                 <div class = "col-sm-8">
-                                    <input type="text" class="form-control" name="link" value="{{data.lwj}}" required>
+                                    <input type="text" class="form-control" name="lwj" value="{{data.lwj}}" required>
                                 </div>
                             </div>
                         </div>
@@ -1523,7 +1523,7 @@
                             <div class="row align-items-center">
                                 <label class="col-sm-4 col-form-label">Indexed by</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" placeholder="Enter indexed by" name = "index_by" required>
+                                    <input type="text" class="form-control" placeholder="Enter indexed by" name = "index_by" value="{{data.index_by}}" required>
                                     <div class="invalid-feedback">Please provide Indexed by.</div>
                                 </div>
                             </div>
@@ -1680,7 +1680,7 @@
                             <div class="row align-items-center">
                                 <label class="col-sm-4 col-form-label">Web Link</label>
                                 <div class = "col-sm-8">
-                                    <input type="text" class="form-control" name="link" value="{{data.lwj}}" required>
+                                    <input type="text" class="form-control" name="lwj" value="{{data.lwj}}" required>
                                 </div>
                             </div>
                         </div>
@@ -1696,7 +1696,7 @@
                             <div class="row align-items-center">
                                 <label class="col-sm-3 col-form-label">Indexed by</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" placeholder="Enter indexed by" name = "index_by" required>
+                                    <input type="text" class="form-control" placeholder="Enter indexed by" name = "index_by" value="{{ data.index_by }}" required>
                                     <div class="invalid-feedback">Please provide Indexed by.</div>
                                 </div>
                             </div>
