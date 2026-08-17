@@ -1,6 +1,9 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 <!--<script src = "/static/script.js"></script>-->
 <style>
+    th {
+        white-space: nowrap;
+    }
   /* regenerate button (shown when 0 forms remain but a category is selected) */
   #regenerateBtn {
     display: none;
@@ -952,28 +955,29 @@
   </div>
   {% else %}
   {% if request.session.topLeftBar == 'ad' %}
-  <div class="d-flex justify-content-center mt-3">
+  <div class="d-flex justify-content-between m-3">
         <div class="form-row text-center mb-0">
             <h4 class="text-center" style="font-weight: 900;">{{ form_name }}</h4>
         </div>
-    </div>
-  <div class="d-flex justify-content-center align-items-center">
-    <button
-      class="btn btn-primary mt-3"
-      type="button"
-      data-bs-toggle="modal"
-      data-bs-target="#upload_file"
-    >
-      Upload Previous Year Data
-    </button>
+      <button
+              class="btn btn-primary mt-3"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#upload_file"
+              style="height: 60%"
+      >
+          Upload Previous Year Data
+      </button>
   </div>
+  <!-- <div class="d-flex justify-content-center align-items-center">
+  </div> -->
   {% endif %}
   <div class="row form-row m-3">
-    <div class="row">
-      <div class="col-md-8">
+    <div class="d-flex justify-content-between">
+      <div>
         <div class="section-title">Step1: Verify Basic Details(read-only)</div>
       </div>
-      <div class="col-md-4">
+      <div>
         <a
           href="/forms_listing/filled_forms"
           class="btn"

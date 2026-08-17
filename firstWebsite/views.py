@@ -229,7 +229,7 @@ def about(request):
 def fac_card_details(request,department_val):
     department_label_to_value = {choice.value: choice.label for choice in department}
     if department_val:
-        department_data = Faculty.objects.filter(department = department_val)
+        department_data = Faculty.objects.filter(department = department_val).order_by('name')
         if department_data:
             if 'topLeftBar' in request.session:
                 user = request.session.get('topLeftBar')
@@ -277,6 +277,11 @@ def cookie_not_found(request):
 
 @session_login_required
 def progressdetails(request, form_no, user_token):
+    form_name = ""
+    for values in forms:
+        if str(values['no_']).replace('.', '_') == form_no:
+            form_name = values['form']
+
     if request.session.get('topLeftBar'): # Why not faculty ?
         payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=["HS256"])
         actual_pk = payload['user_pk']
@@ -312,7 +317,7 @@ def progressdetails(request, form_no, user_token):
 
         return render(request,
                       'EditFormPreview.html',
-                      context={'form_number': form_no, 'data': instance, 'key_id': user_token,'category': category}
+                      context={'form_number': form_no, 'data': instance, 'key_id': user_token,'category': category, 'form_name': form_name}
                       )
     else:
         return render(request, '404.html')

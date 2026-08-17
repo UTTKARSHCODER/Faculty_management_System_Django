@@ -12,8 +12,20 @@
     .col-form-label{
         font-weight: bold;
     }
+    .form-row {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+    }
 </style>
 <div class="contanier-fluid">
+    <div class="d-flex justify-content-center mt-3">
+        <div class="form-row text-center mb-0">
+            <h4 class="text-center" style="font-weight: 900;">{{ form_name }}</h4>
+        </div>
+    </div>
     <div class="section m-3">
     {% if form_number == '1_2' %}
         <form action = "/edit_form/{{ form_number }}/{{key_id}}" method="post" enctype="multipart/form-data">

@@ -1,3 +1,4 @@
+import string
 import uuid
 from datetime import datetime
 
@@ -993,7 +994,7 @@ def save_all_forms(request, form_no):
                 actual_pk = payload['user_pk']
                 faculty_instance = Faculty.objects.get(pk=actual_pk)
 
-                faculty_instance.name = request.POST.get('name').strip()
+                faculty_instance.name = string.capwords(request.POST.get('name').strip())
                 status, msg = va.nameValidate(faculty_instance.name, "Name")
                 if not status:
                     return redirect('all_forms', form_no=form_no)
@@ -1997,8 +1998,8 @@ def editforms(request, form_no, user_token):
             if not status:
                 return redirect(redirect_url)
 
-            instance.index_by = request.POST.get('index_by').strip()
-            status, msg = va.nameValidate(instance.index_by, "Index by")
+            instance.ssa = request.POST.get('optradio2').strip()
+            status, msg = va.nameValidate(instance.ssa, "Is SKIT student associated?")
             if not status:
                 return redirect(redirect_url)
 
