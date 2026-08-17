@@ -510,8 +510,9 @@ def save_all_forms(request, form_no):
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
-                status = request.POST.get('optradio2').strip()
-                status, msg = va.radiocheck(status, "Status")
+                status_val = request.POST.get('optradio2').strip()
+                print("Status value from backend is: ", status)
+                status, msg = va.radiocheck(status_val, "Status")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
 
@@ -521,7 +522,7 @@ def save_all_forms(request, form_no):
                     if not status:
                         return JsonResponse({'success' : False, 'message' : msg})
 
-                obj5 = sponsored_research(category=category,nofa=nofa,dop=dop,amount=amount,session=session,status=status,proof_file=proof_file,email=faculty_instance)
+                obj5 = sponsored_research(category=category,nofa=nofa,dop=dop,amount=amount,session=session,status=status_val,proof_file=proof_file,email=faculty_instance)
                 obj5.save()
 
             elif form_no == 6:
