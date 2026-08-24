@@ -296,7 +296,7 @@ def progressdetails(request, form_no, user_token):
 
         return render(request,
                       'EditFormPreview.html',
-                      context={'form_number': form_no, 'data': instance, 'key_id': user_token,'category': category, 'form_name': form_name}
+                      context={'form_number': form_no, 'data': instance, 'key_id': user_token,'category': category, 'form_name': form_name ,'session': instance.session}
                       )
     else:
         return render(request, '404.html')
@@ -357,18 +357,22 @@ def verify_otp_and_flush_data(request):
         if otp_and_filter.get('code') == request.session['otp_secret']:
             session_filter = otp_and_filter.get('session_filter')
             print("Session Filter value is: ", session_filter)
-            deleted_count, details = mooc_course.objects.filter(session=session_filter).delete()
-            # Faculty_participation_data.objects.filter(session=session_filter).delete()
-            # events.objects.filter(session=session_filter).delete()
-            # awards_and_achievments.objects.filter(session=session_filter).delete()
-            # sponsored_research.objects.filter(session=session_filter).delete()
-            # research_journal.objects.filter(session=session_filter).delete()
-            # research_conference.objects.filter(session=session_filter).delete()
-            # research_book.objects.filter(session=session_filter).delete()
-            # patents.objects.filter(session=session_filter).delete()
-            # guided.objects.filter(session=session_filter).delete()
-            # resource.objects.filter(session=session_filter).delete()
-            return JsonResponse({"message": f"Date Flushed Successfully!\nDeleted {deleted_count} records!"}, status=200)
+            deleted_count_fdp, details_fdp = Faculty_participation_data.objects.filter(session=session_filter).delete()
+            deleted_count_mooc, details_mooc = mooc_course.objects.filter(session=session_filter).delete()
+            deleted_count_events, details_events = events.objects.filter(session=session_filter).delete()
+            deleted_count_faa, details_faa =awards_and_achievments.objects.filter(session=session_filter).delete()
+            deleted_count_sp, details_sp = sponsored_research.objects.filter(session=session_filter).delete()
+            deleted_count_rj, details_ri = research_journal.objects.filter(session=session_filter).delete()
+            deleted_count_rc, details_rc = research_conference.objects.filter(session=session_filter).delete()
+            deleted_count_rb, details_rb = research_book.objects.filter(session=session_filter).delete()
+            deleted_count_pa, details_pa = patents.objects.filter(session=session_filter).delete()
+            deleted_count_gui, details_gui = guided.objects.filter(session=session_filter).delete()
+            deleted_count_res, details_res = resource.objects.filter(session=session_filter).delete()
+
+            total_deleted_entries = deleted_count_fdp + deleted_count_mooc + deleted_count_events + deleted_count_faa
+            total_deleted_entries += deleted_count_sp + deleted_count_rj + deleted_count_rc + deleted_count_rb + deleted_count_pa
+            total_deleted_entries += deleted_count_gui + deleted_count_res
+            return JsonResponse({"message": f"Date Flushed Successfully!\nDeleted {total_deleted_entries} records!"}, status=200)
         else:
             return JsonResponse({"error": "Please re-check the OTP and enter the correct OTP!"}, status=400)
 

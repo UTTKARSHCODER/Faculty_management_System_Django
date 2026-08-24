@@ -928,6 +928,13 @@ class resource_person_type(models.TextChoices):
     DRC_MEMBER = "DM", "DRC Member",
     OTHER = "O", "Other"
 
+def rename_resource_file(instance, old_filename):
+    extension = os.path.splitext(old_filename)[1].lower()
+    type_of_event = "_".join(category.get_fullvalue(instance.category).split())
+    username = "".join(map(str.capitalize, instance.email.name.split()))
+    new_filename = f"{instance.session}_{username}_{type_of_event}{extension}"
+    return os.path.join('uploads/resource/', new_filename)
+
 class resource(models.Model):
     @property
     def secure_token(self):
@@ -957,7 +964,7 @@ class resource(models.Model):
         default=get_current_session
     )
     venue = models.CharField(max_length=255)
-    proof_file = models.FileField(upload_to='uploads/resource/')
+    proof_file = models.FileField(upload_to=rename_resource_file)
     email = models.ForeignKey(Faculty, on_delete=CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
