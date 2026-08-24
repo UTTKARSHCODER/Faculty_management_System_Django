@@ -14,7 +14,7 @@ from MyFirstDjangoWebsite import settings
 from firstWebsite.modals import Faculty, non_teaching_staff, Faculty_participation_data, mooc_course, events, \
     awards_and_achievments, sponsored_research, research_journal, research_conference, research_book, patents, guided, \
     resource
-from firstWebsite.views import session_login_required
+from firstWebsite.decorators import session_login_required
 import jwt
 
 @session_login_required
@@ -511,7 +511,6 @@ def save_all_forms(request, form_no):
                     return JsonResponse({'success' : False, 'message' : msg})
 
                 status_val = request.POST.get('optradio2').strip()
-                print("Status value from backend is: ", status)
                 status, msg = va.radiocheck(status_val, "Status")
                 if not status:
                     return JsonResponse({'success' : False, 'message' : msg})
@@ -1183,7 +1182,6 @@ def save_all_forms(request, form_no):
 
                 if request.POST.get('user_id') == Faculty.objects.get(pk=request.session.get('user_id')).pk:
                     return redirect(reverse('editProfile'))
-                print("From saveForms pk is: ",request.POST.get('user_id'))
                 return redirect('manageProfile', user_token=request.POST.get('user_id'))
 
             elif form_no == 14:

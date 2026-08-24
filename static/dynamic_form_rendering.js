@@ -240,7 +240,7 @@ const TAB_FILTER_CONFIG = {
         text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Name of Faculty Coordinator(s)' : 'name'}],
         dropdown: [{'Department' : 'department'}, {'Designation' : 'designation'}, {'Event organized for' : 'event_org_for'}, {'Sponsored/Non Sponsored' : 'spo_non_spo'},
             {'Grant Received(Yes/No)' : 'grant'}, {'Type of Event' : 'optcheck'},{"Mapped SDG's" : 'map'}],
-        radio: [{'Session' : 'session'}]
+        radio: [{'Academic Session' : 'session'}]
     },
     '5': {
         text: [{'Employee ID' : 'emp_id'}, {'Email address': 'email'}, {'Faculty Name' : 'name'}],

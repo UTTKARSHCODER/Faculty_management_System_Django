@@ -1,0 +1,146 @@
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal Card */
+.modal-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    text-align: center;
+}
+
+.modal-overlay.active .modal-card {
+    transform: translateY(0);
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #64748b;
+    cursor: pointer;
+}
+.close-btn:hover { color: #0f172a; }
+
+/* Icon & Typography */
+.icon-box {
+    width: 56px;
+    height: 56px;
+    background: #e0e7ff;
+    color: #4f46e5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+.icon-box svg { width: 28px; height: 28px; fill: currentColor; }
+
+.modal-card h2 {
+    font-size: 1.25rem;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.modal-card p {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.4;
+    margin-bottom: 24px;
+}
+
+.user-email {
+    font-weight: 600;
+    color: #334155;
+}
+
+/* OTP Input Group */
+.otp-inputs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.otp-field {
+    width: 48px;
+    height: 56px;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.otp-field:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+}
+
+/* Action Buttons */
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #4f46e5;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.submit-btn:hover { background-color: #4338ca; }
+.submit-btn:disabled { background-color: #94a3b8; cursor: not-allowed; }
+
+.resend-text {
+    margin-top: 20px;
+    margin-bottom: 0;
+    font-size: 0.85rem;
+}
+
+.resend-btn {
+    background: none;
+    border: none;
+    color: #4f46e5;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+.resend-btn:disabled {
+    color: #94a3b8;
+    cursor: not-allowed;
+}

@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 from firstWebsite.modals import Faculty
+from django.contrib import messages
 
 
 class CustomAuthForceLogoutMiddleware:
@@ -19,9 +20,11 @@ class CustomAuthForceLogoutMiddleware:
 
                 if cookie_version != db_version:
                     request.session.flush()
+                    messages.warning(request,"Your role have been updated or you were logged out. Please log in again.")
                     return redirect('login')
             except ObjectDoesNotExist:
                 request.session.flush()
+                messages.warning(request,"User not found!")
                 return redirect('login')
 
         return self.get_response(request)

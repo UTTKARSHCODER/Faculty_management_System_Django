@@ -29,6 +29,15 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 #Remove localhost before committing
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
+# Used to send Emails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('SENDER_EMAIL')
+EMAIL_HOST_PASSWORD = os.getenv('SENDER_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 SITE_ID = 2
 # Application definition
 
@@ -45,7 +54,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google'
+    'allauth.socialaccount.providers.google',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 GOOGLE_OAUTH_CLIENT_ID = os.getenv('GOOGLE_OAUTH_CLIENT_ID')

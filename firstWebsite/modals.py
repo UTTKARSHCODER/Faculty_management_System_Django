@@ -2,6 +2,7 @@ import datetime
 import os
 import uuid
 
+from django.contrib import messages
 from django.db import models
 from django.db.models import CASCADE
 from django.utils.dateparse import parse_date
@@ -9,6 +10,7 @@ from multiselectfield import MultiSelectField
 from django.utils import timezone
 import jwt
 from MyFirstDjangoWebsite import settings
+from django.utils.deconstruct import deconstructible
 
 class batch(models.TextChoices):
     CS_A = "3CS-A",
@@ -28,40 +30,40 @@ class sponsors(models.TextChoices):
     NON_SPONSORED = "NS", "Non-Sponsored"
 
 def generate_session_choices():
-  """Generates a list of academic sessions dynamically,
+    """Generates a list of academic sessions dynamically,
 
-  ranging from 2 years in the past to 5 years into the future.
-  """
-  current_date = timezone.now()
-  current_year = current_date.year
+    ranging from 2 years in the past to 5 years into the future.
+    """
+    current_date = timezone.now()
+    current_year = current_date.year
 
-  # If we are before July, the current academic session started last year
-  if current_date.month < 7:
-      base_year = current_year - 1
-  else:
-      base_year = current_year
+    # If we are before July, the current academic session started last year
+    if current_date.month < 7:
+        base_year = current_year - 1
+    else:
+        base_year = current_year
 
-  choices = []
-  # Adjust the range as needed (e.g., past 2 years to future 5 years)
-  for year in range(base_year - 2, base_year + 6):
-    next_year_short = str(year + 1)[-2:]
-    session_str = f"{year}-{next_year_short}"
-    choices.append((session_str, session_str))
-  return choices
+    choices = []
+    # Adjust the range as needed (e.g., past 2 years to future 5 years)
+    for year in range(base_year - 4, base_year + 1):
+        next_year_short = str(year + 1)[-2:]
+        session_str = f"{year}-{next_year_short}"
+        choices.append((session_str, session_str))
+    return choices
 
 
 def get_current_session():
-  """Returns the default session string for the current year (e.g., '2026-27')."""
-  current_date = timezone.now()
-  current_year = current_date.year
+    """Returns the default session string for the current year (e.g., '2026-27')."""
+    current_date = timezone.now()
+    current_year = current_date.year
 
-  # If it's Jan-June, we are still in the session that started last year
-  if current_date.month < 7:
-      start_year = current_year - 1
-  else:
-      start_year = current_year
-  next_year_short = str(start_year + 1)[-2:]
-  return f"{start_year}-{next_year_short}"
+    # If it's Jan-June, we are still in the session that started last year
+    if current_date.month < 7:
+        start_year = current_year - 1
+    else:
+        start_year = current_year
+    next_year_short = str(start_year + 1)[-2:]
+    return f"{start_year}-{next_year_short}"
 
 class Role(models.TextChoices):
     FACULTY = "FA", "Faculty",
@@ -125,6 +127,22 @@ class forms(models.TextChoices):
     FORM_9 = "9", "Resource Person",
     NO_FORM = "0", "No Form"
 
+@deconstructible
+class RenameFile:
+    def __init__(self, modal_name, destination_path, doc_type=""):
+        self.destination_path = f'uploads/{modal_name}/{destination_path}/'
+        self.doc_type = doc_type
+
+    def __call__(self, instance, filename):
+        username = "".join(map(str.capitalize, instance.name.split()))
+        extension = os.path.splitext(filename)[1].lower()
+
+        # Access instance attributes or generate custom names
+        new_filename = f"{username} {self.doc_type}{extension}"
+
+        # Combine destination directory and new file name
+        return os.path.join(self.destination_path, new_filename)
+
 class Faculty(models.Model):
     session_version = models.UUIDField(default=uuid.uuid4, editable=False)
     session = models.CharField(
@@ -184,6 +202,11 @@ class Faculty(models.Model):
             only_one = [forms.NO_FORM]
             self.form_alloted = only_one
 
+        if self.pk:
+            old_role = Faculty.objects.get(pk=self.pk).role
+            if old_role != self.role:
+                self.session_version = uuid.uuid4()  # Invalidates current session versions
+
         super().save(*args, **kwargs)
     status = models.CharField(
         max_length=2,
@@ -214,12 +237,12 @@ class Faculty(models.Model):
     dob = models.DateField(default=datetime.date(1970, 1, 1))
     jd = models.DateField(default=datetime.date(1970, 1, 1))
     pd = models.DateField(null=True,blank=True)
-    profile_picture = models.FileField(upload_to='uploads/faculty_documents/profile_picture', default=None, null = True,blank = True)
-    jr = models.FileField(upload_to='uploads/faculty_documents/joining_report/', default=None, null = True,blank = True)
-    of = models.FileField(upload_to='uploads/faculty_documents/offer_letter/', default=None, null = True,blank = True)
-    ss = models.FileField(upload_to='uploads/faculty_documents/salary_slip/', default=None, null = True,blank = True)
-    hdc = models.FileField(upload_to='uploads/faculty_documents/higher_degree_certificate/', default=None, null = True,blank = True)
-    certificate = models.FileField(upload_to='uploads/faculty_documents/certificate/', default=None, null = True,blank = True)
+    profile_picture = models.FileField(upload_to=RenameFile('faculty_documents', 'profile_picture','Profile Picture'), default=None, null = True,blank = True)
+    jr = models.FileField(upload_to=RenameFile('faculty_documents', 'joining_report', 'Joining Report'), default=None, null = True,blank = True)
+    of = models.FileField(upload_to=RenameFile('faculty_documents', 'offer_letter', 'Offer Letter'), default=None, null = True,blank = True)
+    ss = models.FileField(upload_to=RenameFile('faculty_documents', 'salary_slip', 'Salary Slip'), default=None, null = True,blank = True)
+    hdc = models.FileField(upload_to=RenameFile('faculty_documents', 'higher_degree_certificate', 'Higher Degree Certificate'), default=None, null = True,blank = True)
+    certificate = models.FileField(upload_to=RenameFile('faculty_documents', 'certificate', 'Certificate'), default=None, null = True,blank = True)
     phd_univ = models.CharField(max_length=255, null = True, blank = True)
     phd_dor = models.DateField(null=True,blank=True)
     norp = models.IntegerField(default=0)
@@ -228,9 +251,6 @@ class Faculty(models.Model):
 
     def __str__(self):
         return self.email
-
-# class faculty_data(models.Model):
-#
 
 class accept(models.TextChoices):
     YES = "y", "Yes",
@@ -1015,11 +1035,11 @@ class non_teaching_staff(models.Model):
     dob = models.DateField()
     joining_date = models.DateField()
     promotion_date = models.DateField(null=True,blank=True)
-    joining_report = models.FileField(upload_to="uploads/non_tech_staff/joining_report/")
-    offer_letter = models.FileField(upload_to="uploads/non_tech_staff/offer_letter/")
-    higher_degree_certificate = models.FileField(upload_to="uploads/non_tech_staff/higher_degree_certificate/")
-    salary_slip = models.FileField(upload_to="uploads/non_tech_staff/salary_slip/",default=None,null = True)
-    certificate = models.FileField(upload_to="uploads/non_tech_staff/certificates/",default=None,null = True)
+    joining_report = models.FileField(upload_to=RenameFile('non_tech_staff', 'joining_report', 'Joining Report'))
+    offer_letter = models.FileField(upload_to=RenameFile('non_tech_staff', 'offer_letter', 'Offer Letter'))
+    higher_degree_certificate = models.FileField(upload_to=RenameFile('non_tech_staff', 'higher_degree_certificate', 'Higher Degree Certificate'))
+    salary_slip = models.FileField(upload_to=RenameFile('non_tech_staff', 'salary_slip', 'Salary Slip'),default=None,null = True)
+    certificate = models.FileField(upload_to=RenameFile('non_tech_staff', 'certificate', 'Certificate'),default=None,null = True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

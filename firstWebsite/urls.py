@@ -28,5 +28,8 @@ urlpatterns = [
     path('forms_listing/progressdetails/<str:form_no>/<str:user_token>',views.progressdetails,name="progressDetails"), # Security Breach Possible
     path('edit_form/<str:form_no>/<str:user_token>',saveforms.editforms,name="editForms"), # Security Breach Possible
     path('faculty/<str:user_token>/detailed-info-profile/',views.detailed_info_profile,name="detailed-info-profile"), # Security Breach Possible
-    path('forms_report',progress_track.showdynamictable, name="formsReport")
+    path('forms_report',progress_track.showdynamictable, name="formsReport"),
+    path('back_up_data',views.back_up_data, name="backUpData"),
+    path('send_otp',views.send_otp, name="sendOtp"),
+    path('verify_otp_and_flush_data',views.verify_otp_and_flush_data, name="verifyOtpAndFlushData")
 ]

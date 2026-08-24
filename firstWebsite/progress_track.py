@@ -9,8 +9,8 @@ from django.db.models import Count
 from MyFirstDjangoWebsite import settings
 from firstWebsite.modals import Faculty, awards_and_achievments, category as cat, events, Faculty_participation_data, \
     guided, mooc_course, patents, research_book, research_conference, research_journal, resource, sponsored_research, \
-    non_teaching_staff, department, index_by, level, type_of_patent
-from firstWebsite.views import session_login_required
+    non_teaching_staff, department, index_by, level, type_of_patent, generate_session_choices
+from firstWebsite.decorators import session_login_required
 import jwt
 
 
@@ -169,6 +169,7 @@ def forms_listing(request, form_type):
 @session_login_required
 def report(request):
     if request.session.get('topLeftBar') == 'spa' or request.session.get('topLeftBar') == 'ad':
+        session_choices = generate_session_choices()
         faculty_member = Faculty.objects.get(pk=request.session.get('user_id'))
 
         department_map = {choice.value: choice.label for choice in department}
@@ -273,7 +274,7 @@ def report(request):
 
         context = {'user': request.session.get('topLeftBar'),'form_to_show' : paired_form, 'fac_ins' : Faculty.objects.filter(status="R").all(),
                    # This data is sent for Chart rendering
-                   'form_alloted_data_list' : faculty_member.form_alloted, 'first_tab_data': first_tab_data}
+                   'form_alloted_data_list' : faculty_member.form_alloted, 'first_tab_data': first_tab_data, 'sessions': session_choices, 'user_email' : faculty_member.email}
 
         return render(request, 'entire_report.html', context)
     else:

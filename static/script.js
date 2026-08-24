@@ -92,6 +92,22 @@ const categoryValue = {
     'Other' : 'OTH'
 }
 
+function generateYears(yearsBack = 4) {
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear - yearsBack;
+    const years = [];
+
+    for (let year = startYear; year <= currentYear; year++) {
+        // Get the last two digits of the next year (e.g., 2025 -> "25")
+        if (new Date().getMonth() < 7 && year === currentYear) continue;
+        const nextYearShort = String(year + 1).slice(-2);
+        const val = `${year}-${nextYearShort}`;
+        years.push(val);
+    }
+
+    return years;
+}
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -257,15 +273,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please select a session.</div>
                             </div>
                         </div>
@@ -329,15 +337,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please select a session.</div>
                             </div>
                         </div>
@@ -587,15 +587,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Academic Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please select a session.</div>
                             </div>
                         </div>
@@ -838,15 +830,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please select an option.</div>
                             </div>
                         </div>
@@ -973,15 +957,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Session in which grant/research project/consultancy received<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please select an option.</div>
                             </div>
                         </div>
@@ -1098,15 +1074,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please select academic session.</div>
                             </div>
                         </div>
@@ -1391,15 +1359,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please provide academic session.</div>
                             </div>
                         </div>
@@ -1570,15 +1530,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please select academic session.</div>
                             </div>
                         </div>
@@ -1677,15 +1629,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please select Academic Session.-${i}</div>
                             </div>
                         </div>
@@ -1848,15 +1792,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please select Session.</div>
                             </div>
                         </div>
@@ -1969,15 +1905,7 @@ function buildForm(category){
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
                             <div class="col-sm-8">
-                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required>
-                                    <option value="" selected disabled>Select your Session</option>
-                                    <option value="2024-25">2024-25</option>
-                                    <option value="2025-26">2025-26</option>
-                                    <option value="2026-27">2026-27</option>
-                                    <option value="2027-28">2027-28</option>
-                                    <option value="2028-29">2028-29</option>
-                                    <option value="2029-30">2029-30</option>
-                                </select>
+                                <select class="form-select custom-back-select" name="sessionyear" id="sessionyear" required></select>
                                 <div class="invalid-feedback">Please select Session.</div>
                             </div>
                         </div>
@@ -2132,6 +2060,27 @@ function buildForm(category){
         `;
     }
     subFormsContainer.appendChild(subForm);
+    const selectElement = document.getElementById('sessionyear');
+    const sessionRanges = generateYears(4);
+
+    const option = document.createElement('option');
+
+    option.value = "";
+    option.textContent = "Select your Session...";
+    option.selected = true;
+    option.disabled = true;
+
+    selectElement.appendChild(option);
+    sessionRanges.forEach(session => {
+        const option = document.createElement('option');
+        // Setting value format (e.g., "2022-06-01 to 2022-06-30" or just the start year)
+        const sessionValue = `${session}`;
+
+        option.value = sessionValue;
+        option.textContent = sessionValue;
+
+        selectElement.appendChild(option);
+    });
 
 
     const tooltips = subForm.querySelectorAll('[data-bs-toggle="tooltip"]');

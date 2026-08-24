@@ -1,350 +1,720 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
-<link rel="stylesheet" href="/static/dataTable.css" />
-<script src="/static/dataTables.js"></script>
-<script src="/static/dataTables.bootstrap5.js"></script>
-<link
-  rel="stylesheet"
-  href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.bootstrap5.min.css"
-/>
-<script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"
-  integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"
-></script>
-<style>
-  th {
-    white-space: nowrap;
-  }
-  .tab-hidden {
-    visibility: hidden !important;
-    position: absolute !important;
-    top: -9999px !important;
-    left: -9999px !important;
-    display: block !important; /* Keep it 'block' so width is calculated */
-  }
+    <link rel="stylesheet" href="/static/dataTable.css" />
+    <script src="/static/dataTables.js"></script>
+    <script src="/static/dataTables.bootstrap5.js"></script>
+    <link
+            rel="stylesheet"
+            href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.bootstrap5.min.css"
+    />
+    <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"
+            integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function generateYears(yearsBack = 4) {
+            const currentYear = new Date().getFullYear();
+            const startYear = currentYear - yearsBack;
+            const years = [];
 
-  @media (min-width: 1100px) {
-    #pieChart {
-      width: 440px !important;
-      height: 410px !important;
-    }
-    .nav-link.active {
-      background-color: #003366 !important;
-      color: #ffffff !important;
-    }
-    .nav-link {
-      border: 0.5px solid lightgray !important;
-    }
-  }
+            for (let year = startYear; year <= currentYear; year++) {
+                // Get the last two digits of the next year (e.g., 2025 -> "25")
+                if (new Date().getMonth() < 7 && year === currentYear) continue;
+                const nextYearShort = String(year + 1).slice(-2);
+                const val = `${year}-${nextYearShort}`;
+                years.push(val);
+            }
 
-  @media (max-width: 1100px) {
-    .container.ms-5 {
-      margin-left: 0.5rem !important;
-      margin-right: 0.5rem !important;
-    }
+            return years;
+        }
+    </script>
+    <link rel="stylesheet" href="{% static 'otpModal.css' %}" />
+    <style>
+        th {
+            white-space: nowrap;
+        }
+        .tab-hidden {
+            visibility: hidden !important;
+            position: absolute !important;
+            top: -9999px !important;
+            left: -9999px !important;
+            display: block !important; /* Keep it 'block' so width is calculated */
+        }
 
-    .row.g-3 {
-      flex-direction: column !important;
-    }
+        @media (min-width: 1100px) {
+            #pieChart {
+                width: 440px !important;
+                height: 410px !important;
+            }
+            .nav-link.active {
+                background-color: #003366 !important;
+                color: #ffffff !important;
+            }
+            .nav-link {
+                border: 0.5px solid lightgray !important;
+            }
+        }
 
-    .row.g-3 > [class*="col-"] {
-      width: 100% !important;
-      max-width: 100% !important;
-      flex: 0 0 100% !important;
-    }
+        @media (max-width: 1100px) {
+            .container.ms-5 {
+                margin-left: 0.5rem !important;
+                margin-right: 0.5rem !important;
+            }
 
-    #pieChart {
-      width: 300px !important;
-      height: 300px !important;
-      display: block;
-      margin: 0 auto;
-    }
+            .row.g-3 {
+                flex-direction: column !important;
+            }
 
-    .chart-container {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
+            .row.g-3 > [class*="col-"] {
+                width: 100% !important;
+                max-width: 100% !important;
+                flex: 0 0 100% !important;
+            }
 
-    .total_count {
-      text-align: center;
-    }
-  }
-</style>
-<div class="container ms-2 mt-4 mb-3">
-  <div class="row g-3">
-    <!-- ye top wale section ka code hai  -->
-    <div class="container col-12 col-md-7">
-      <div class="container" style="width: 175%">
-        <ul class="nav nav-tabs" role="tablist">
-          {% for form_no, form_name in form_to_show %} {% if forloop.first %}
-          <li>
-            <button
-              class="nav-link active"
-              id="{{ form_no }}"
-              onclick="openTab('{{ form_no }}')"
-            >
-              {{ form_no }} {{ form_name }}
-            </button>
-          </li>
-          {% else %}
-          <li>
-            <button
-              class="nav-link"
-              id="{{form_no}}"
-              onclick="openTab('{{ form_no }}')"
-            >
-              {{ form_no }} {{ form_name }}
-            </button>
-          </li>
-          {% endif %} {% endfor %}
-        </ul>
-      </div>
+            #pieChart {
+                width: 300px !important;
+                height: 300px !important;
+                display: block;
+                margin: 0 auto;
+            }
 
-      <!-- filter options -->
+            .chart-container {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
 
-      <!-- Advance Filter trigger button -->
-<button type="button" style="margin-top: 1rem; margin-left: 36rem;" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#advanceFilterModal">
-    <i class="fa-solid fa-filter"></i> Advance Filter
-</button>
-
-<!-- Advance Filter Modal -->
-<div class="modal fade" id="advanceFilterModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Advance Filter</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                
-                <div class="row g-3" id="filterFieldsContainer">
-                    <!-- filled dynamically per tab by buildTableFilters() -->
+            .total_count {
+                text-align: center;
+            }
+        }
+    </style>
+    <div class="container ms-2 mt-4 mb-3">
+        <div class="row g-3">
+            <!-- ye top wale section ka code hai  -->
+            <div class="container col-12 col-md-7">
+                <div class="container" style="width: 175%">
+                    <ul class="nav nav-tabs" role="tablist">
+                        {% for form_no, form_name in form_to_show %} {% if forloop.first %}
+                            <li>
+                                <button
+                                        class="nav-link active"
+                                        id="{{ form_no }}"
+                                        onclick="openTab('{{ form_no }}')"
+                                >
+                                    {{ form_no }} {{ form_name }}
+                                </button>
+                            </li>
+                        {% else %}
+                            <li>
+                                <button
+                                        class="nav-link"
+                                        id="{{form_no}}"
+                                        onclick="openTab('{{ form_no }}')"
+                                >
+                                    {{ form_no }} {{ form_name }}
+                                </button>
+                            </li>
+                        {% endif %} {% endfor %}
+                    </ul>
                 </div>
-                <!-- <div class="d-flex justify-content-center" id="checkBoxGroup"></div> -->
+
+                <!-- filter options -->
+
+                <!-- Advance Filter trigger button -->
+                <div class="d-flex justify-content-end mt-3">
+                    {% if user == 'spa' %}
+                        <div class="mx-2">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#backupModal">
+                                <i class="fa-solid fa-cloud"></i> Back Up Data
+                            </button>
+                        </div>
+                        <div class="mx-2">
+                            <button type="button" class="btn btn-danger" id="flushData" onclick="flushDataConfirmation()">
+                                <i class="fa-solid fa-trash"></i> Flush Data
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="mx-2">
+                        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#advanceFilterModal">
+                            <i class="fa-solid fa-filter"></i> Advance Filter
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advance Filter Modal -->
+                <div class="modal fade" id="advanceFilterModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Advance Filter</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row g-3" id="filterFieldsContainer">
+                                    <!-- filled dynamically per tab by buildTableFilters() -->
+                                </div>
+                                <!-- <div class="d-flex justify-content-center" id="checkBoxGroup"></div> -->
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-outline-secondary" id="clearFilterBtn" onclick="clearTableFilters()">Clear Filters</button>
+                                <button class="btn btn-primary" id="applyFilterBtn" onclick="applyTableFiltersAndClose()">Apply Filter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Table rendering -->
+                <div class="tab-content table-responsive pt-2" id="dynamic_table"></div>
+
+                <div class="d-flex justify-content-center mx-3">
+                    <div class="dropdown">
+                        <button
+                                class="btn btn-success dropdown-toggle"
+                                id="download-button"
+                                data-bs-toggle="dropdown"
+                                disabled
+                        >
+                            Download Filtered Data
+                        </button>
+                        <ul class="dropdown-menu">
+                            <!-- href = "/download?file_type=fdc_dir_data&{% for form_no in form_alloted_data_list %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}" -->
+                            <li id="excel">
+                                <a class="dropdown-item" id="excel-download" href="/download?file_type=fdc_dir_data_zip_filtered">Download Zip File</a>
+                            </li>
+                            <!-- <li id="csv-download">
+                              <a
+                                class="dropdown-item"
+                                href="/download?file_type=fdc_dir_data_csv_filtered"
+                                >CSV</a
+                              >
+                            </li> -->
+                        </ul>
+                    </div>
+                    <div class="dropdown ms-3">
+                        <a href="/download?file_type=fdc_dir_data_excel_full&{% for form_no in form_alloted_data_list %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}">
+                            <button class="btn btn-primary">
+                                Download MasterSheet
+                            </button>
+                        </a>
+                        <!-- <ul class="dropdown-menu">
+                            <li id="excel-full">
+                                <a
+                                        class="dropdown-item"
+                                        id="excel-download-full"
+                                        href="/download?file_type=fdc_dir_data_excel_full&{% for form_no in form_alloted_data_list %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}"
+                                >Excel</a
+                                >
+                            </li> -->
+                            <!-- <li id="csv-download-full">
+                              <a
+                                class="dropdown-item"
+                                href="/download?file_type=fdc_dir_data_csv_full"
+                                >CSV</a
+                              > -->
+                            <!-- </li>
+                        </ul> -->
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline-secondary" id="clearFilterBtn" onclick="clearTableFilters()">Clear Filters</button>
-                <button class="btn btn-primary" id="applyFilterBtn" onclick="applyTableFiltersAndClose()">Apply Filter</button>
+            <!-- ye chart ka hai  -->
+            <!-- <div class="vr mx-3" style="width: 1px;"></div> -->
+            <div
+                    class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-center"
+                    style="margin-top: 6rem; padding: 2rem;"
+            >
+                <div class="chart-container">
+                    <canvas id="pieChart" class="mt-1"></canvas>
+                </div>
+                <div class="total_count mt-2">
+                    <h5 id="total_count"></h5>
+                </div>
             </div>
         </div>
     </div>
-</div>
-      
-      <!-- Dynamic Table rendering -->
-      <div class="tab-content table-responsive pt-2" id="dynamic_table"></div>
+    <!-- The Delete Modal -->
+    <div class="modal fade" id="deleteUser">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header bg-danger">
+                    <h4 class="modal-title text-white">Delete Entry Permanently</h4>
+                    <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                    ></button>
+                </div>
 
-      <div class="d-flex justify-content-center mx-3">
-        <div class="dropdown">
-          <button
-            class="btn btn-success dropdown-toggle"
-            id="download-button"
-            data-bs-toggle="dropdown"
-            disabled
-          >
-            Download Filtered Data
-          </button>
-          <ul class="dropdown-menu">
-            <!-- href = "/download?file_type=fdc_dir_data&{% for form_no in form_alloted_data_list %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}" -->
-            <li id="excel">
-              <a
-                class="dropdown-item"
-                id="excel-download"
-                href="/download?file_type=fdc_dir_data_excel_filtered"
-                >Excel</a
-              >
-            </li>
-            <!-- <li id="csv-download">
-              <a
-                class="dropdown-item"
-                href="/download?file_type=fdc_dir_data_csv_filtered"
-                >CSV</a
-              >
-            </li> -->
-          </ul>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Are you sure you want to delete this entry permanently?
+                    <p class="mt-2">
+                        <strong>Employee Id:</strong> <span id="modal-emp-id"></span>
+                    </p>
+                    <p>
+                        <strong id="modal-head-main"></strong>:
+                        <span id="modal-entry-main"></span>
+                    </p>
+                    <p>
+                        <strong id="modal-sub-head"></strong>:
+                        <span id="modal-sub-entry"></span>
+                    </p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <form id="deleteForm" method="POST">
+                        {% csrf_token %}
+                        <div class="dflex justify-content-end">
+                            <input type="hidden" id="pk" name="pk" value="" />
+                            <input type="hidden" id="form_no" name="form_no" value="" />
+                            <input type="hidden" id="tab_no" name="tab_no" value="" />
+                            <input type="hidden" name="next" value="{{ request.path }}" />
+                            <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                            >
+                                Close
+                            </button>
+                            <button
+                                    type="submit"
+                                    class="btn btn-danger"
+                                    data-bs-dismiss="modal"
+                            >
+                                Delete Entry
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="dropdown ms-3">
-          <button
-            class="btn btn-primary dropdown-toggle"
-            data-bs-toggle="dropdown"
-          >
-            Download MasterSheet
-          </button>
-          <ul class="dropdown-menu">
-            <li id="excel-full">
-              <a
-                class="dropdown-item"
-                id="excel-download-full"
-                href="/download?file_type=fdc_dir_data_excel_full&{% for form_no in form_alloted_data_list %}form_id={{form_no}}{% if not forloop.last %}&{% endif %}{% endfor %}"
-                >Excel</a
-              >
-            </li>
-            <!-- <li id="csv-download-full">
-              <a
-                class="dropdown-item"
-                href="/download?file_type=fdc_dir_data_csv_full"
-                >CSV</a
-              > -->
-            </li>
-          </ul>
+    </div>
+    <!-- Delete Model Ends -->
+    <!-- Back Up Modal Begins -->
+    <div class="modal fade" id="backupModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- modal header -->
+                <div class="modal-header">
+                    <h4 class="modal-title custom-font">Back Up Data</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <!-- modal body -->
+                <form action="/back_up_data" method="get">
+                    <div class="modal-body">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                            <div class="col-sm-8">
+                                <select class="form-select custom-back-select" name="session_filter" id="sessionyear" required>
+                                    <option value="" selected disabled>Select your Session</option>
+                                    <script>
+                                        const selectElement = document.getElementById('sessionyear');
+                                        const sessionRanges = generateYears(4);
+
+                                        sessionRanges.forEach(session => {
+                                            const option = document.createElement('option');
+                                            // Setting value format (e.g., "2022-06-01 to 2022-06-30" or just the start year)
+                                            const sessionValue = `${session}`;
+
+                                            option.value = sessionValue;
+                                            option.textContent = sessionValue;
+
+                                            selectElement.appendChild(option);
+                                        });
+                                    </script>
+                                </select>
+                                <div class="invalid-feedback">Please select Session.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Back Up Now</button>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
-    <!-- ye chart ka hai  -->
-    <!-- <div class="vr mx-3" style="width: 1px;"></div> -->
-    <div
-      class="col-12 col-md-5 d-flex flex-column align-items-center justify-content-center"
-      style="margin-top: 6rem; padding: 2rem;" 
-    >
-      <div class="chart-container">
-        <canvas id="pieChart" class="mt-1"></canvas>
-      </div>
-      <div class="total_count mt-2">
-        <h5 id="total_count"></h5>
-      </div>
+    <!-- Back Up Modal Ends -->
+    <!-- Flush Data Up Modal Begins -->
+    <div class="modal fade" id="flushDataModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- modal header -->
+                <div class="modal-header">
+                    <h4 class="modal-title custom-font">Flush Data</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <!-- modal body -->
+                <form action="/flush_data" method="post">
+                    <div class="modal-body">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Session<span class="ms-1" style="color: red;">*</span><span class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-placement="top" title="${fieldInfo['Session']}"></span></label>
+                            <div class="col-sm-8">
+                                <select class="form-select custom-back-select" name="session_filter" id="sessionyear2" required>
+                                    <option value="" selected disabled>Select your Session</option>
+                                    <script>
+                                        const selectElement2 = document.getElementById('sessionyear2');
+                                        const sessionRanges2 = generateYears(4);
+
+                                        sessionRanges.forEach(session => {
+                                            const option2 = document.createElement('option');
+                                            // Setting value format (e.g., "2022-06-01 to 2022-06-30" or just the start year)
+                                            const sessionValue2 = `${session}`;
+
+                                            option2.value = sessionValue2;
+                                            option2.textContent = sessionValue2;
+
+                                            selectElement2.appendChild(option2);
+                                        });
+                                    </script>
+                                </select>
+                                <div class="invalid-feedback">Please select Session.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-<!-- The Delete Modal -->
-<div class="modal fade" id="deleteUser">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- Modal Header -->
-      <div class="modal-header bg-danger">
-        <h4 class="modal-title text-white">Delete Entry Permanently</h4>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-        ></button>
-      </div>
+    <!-- Flush Data Up Modal Ends -->
+    <!-- Confirmation Model With OTP Verification Starts -->
+    <!-- Modal Container -->
+    <div class="modal-overlay" id="otpModal">
+        <div class="modal-card">
+            <button class="close-btn" id="closeModal">&times;</button>
 
-      <!-- Modal body -->
-      <div class="modal-body">
-        Are you sure you want to delete this entry permanently?
-        <p class="mt-2">
-          <strong>Employee Id:</strong> <span id="modal-emp-id"></span>
-        </p>
-        <p>
-          <strong id="modal-head-main"></strong>: 
-          <span id="modal-entry-main"></span>
-        </p>
-        <p>
-          <strong id="modal-sub-head"></strong>: 
-          <span id="modal-sub-entry"></span>
-        </p>
-      </div>
+            <div class="icon-box">
+                <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            </div>
 
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <form id="deleteForm" method="POST">
-          {% csrf_token %}
-          <div class="dflex justify-content-end">
-            <input type="hidden" id="pk" name="pk" value="" />
-            <input type="hidden" id="form_no" name="form_no" value="" />
-            <input type="hidden" id="tab_no" name="tab_no" value="" />
-            <input type="hidden" name="next" value="{{ request.path }}" />
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              type="submit"
-              class="btn btn-danger"
-              data-bs-dismiss="modal"
-            >
-              Delete Entry
-            </button>
-          </div>
-        </form>
-      </div>
+            <h2>Security Verification</h2>
+            <p>Enter the 6-digit code sent to<br><span class="user-email">{{ user_email }}</span></p>
+
+            <form id="otpForm">
+                <div class="otp-inputs">
+                    <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+                    <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+                    <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+                    <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+                    <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+                    <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required />
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Verify Code</button>
+            </form>
+
+            <p class="resend-text">
+                Didn't receive code?
+                <button class="resend-btn" id="resendBtn" disabled>Resend (<span id="timer">30</span>s)</button>
+            </p>
+        </div>
     </div>
-  </div>
-</div>
-<!-- Delete Model Ends -->
-<!-- Data from backend converted to JSON for security reasons -->
-{{ form_alloted_data_list|json_script:"data-form-alloted" }} 
-{{first_tab_data|json_script:"data-first-form" }}
+    <!-- Confirmation Model With OTP Verification Ends -->
+    <!-- Data from backend converted to JSON for security reasons -->
+    {{ form_alloted_data_list|json_script:"data-form-alloted" }}
+    {{first_tab_data|json_script:"data-first-form" }}
 
-<script src="{% static 'reportChart.js' %}"></script>
-<script src="{% static 'dynamic_form_rendering.js' %}"></script>
-<script>
+    <script src="{% static 'reportChart.js' %}"></script>
+    <script src="{% static 'dynamic_form_rendering.js' %}"></script>
+    <script>
 
-      const form_numbers_list = JSON.parse(document.getElementById('data-form-alloted').textContent);
-      // To find out which form is the first one, assigned to different admins
-      if (form_numbers_list.length > 0) {
-          const f_value = form_numbers_list[0];
-          const data = JSON.parse(document.getElementById(`data-first-form`).textContent);
-          drawChart(data);
-          openTab(form_numbers_list[0]);
-      }
+        const form_numbers_list = JSON.parse(document.getElementById('data-form-alloted').textContent);
+        // To find out which form is the first one, assigned to different admins
+        if (form_numbers_list.length > 0) {
+            const f_value = form_numbers_list[0];
+            const data = JSON.parse(document.getElementById(`data-first-form`).textContent);
+            drawChart(data);
+            openTab(form_numbers_list[0]);
+        }
 
-      /* Update data of deletion modal */
-      $(document).ready(function() {
-          $('#deleteUser').on('show.bs.modal', function(event) {
-              const link = $(event.relatedTarget);
-              const faculty_id = link.data('empId');
-              const pk = link.data('pk');
-              const form_no = link.data('form_no');
-              const heading_main = link.data('headMain');
-              const heading_main_entry = link.data('headMainEntry');
-              const heading_sub_head = link.data('subHead');
-              const heading_sub_head_entry = link.data('subHeadEntry');
-              const modal = $(this);
-              modal.find('#modal-emp-id').text(faculty_id);
-              modal.find('#modal-head-main').text(heading_main);
-              modal.find('#modal-entry-main').text(heading_main_entry);
-              modal.find('#modal-sub-head').text(heading_sub_head);
-              modal.find('#modal-sub-entry').text(heading_sub_head_entry);
-              modal.find('#pk').val(pk);
-              modal.find('#form_no').val(form_no);
-              modal.find('#tab_no').val(form_no);
-              modal.find('#deleteForm').attr('action', '/deleteformdata');
-          });
-      });
+        /* Update data of deletion modal */
+        $(document).ready(function() {
+            $('#deleteUser').on('show.bs.modal', function(event) {
+                const link = $(event.relatedTarget);
+                const faculty_id = link.data('empId');
+                const pk = link.data('pk');
+                const form_no = link.data('form_no');
+                const heading_main = link.data('headMain');
+                const heading_main_entry = link.data('headMainEntry');
+                const heading_sub_head = link.data('subHead');
+                const heading_sub_head_entry = link.data('subHeadEntry');
+                const modal = $(this);
+                modal.find('#modal-emp-id').text(faculty_id);
+                modal.find('#modal-head-main').text(heading_main);
+                modal.find('#modal-entry-main').text(heading_main_entry);
+                modal.find('#modal-sub-head').text(heading_sub_head);
+                modal.find('#modal-sub-entry').text(heading_sub_head_entry);
+                modal.find('#pk').val(pk);
+                modal.find('#form_no').val(form_no);
+                modal.find('#tab_no').val(form_no);
+                modal.find('#deleteForm').attr('action', '/deleteformdata');
+            });
+        });
 
-      fixLastColumn(form_numbers_list[0]);
-      /* To set the landing page same as current tab after deletion of any entry -starts- */
-      document.addEventListener('DOMContentLoaded', function() {
-          // 1. Get the ID from the URL
-          const params = new URLSearchParams(window.location.search);
-          const button_form_no = params.get('tab');
+        fixLastColumn(form_numbers_list[0]);
+        /* To set the landing page same as current tab after deletion of any entry -starts- */
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Get the ID from the URL
+            const params = new URLSearchParams(window.location.search);
+            const button_form_no = params.get('tab');
 
-          if (button_form_no) {
-              // 2. Find the button that matches this ID
-              const targetButton = document.getElementById(button_form_no);
+            if (button_form_no) {
+                // 2. Find the button that matches this ID
+                const targetButton = document.getElementById(button_form_no);
 
-              // 3. If the button exists on the page, natively click it
-              if (targetButton) {
-                  targetButton.click(); // This automatically sends the 'event' to openTab!
-              } else {
-                  console.warn("Tab with ID " + button_form_no + " not found.");
-              }
-          }
-      });
-      /* To set the landing page same as current tab after deletion of any entry -ends- */
-      {#const slowResources = performance.getEntriesByType("resource")#}
-      {#.filter(res => res.duration > 500); // Finds anything taking longer than 0.5s#}
-      {##}
-      {#console.table(slowResources.map(res => ({#}
-      {#    Name: res.name,#}
-      {#    Duration: res.duration.toFixed(2) + " ms"#}
-      //)));
-      {#(index)#}
-  {#Name#}
-  {#Duration#}
-  {#0	'https://unpkg.com/lucide@latest'	'568.20 ms'#}
-  {#1	'https://cdn.jsdelivr.net/npm/chart.js'	'580.50 ms'#}
-  {#2	'https://cdnjs.cloudflare.com/ajax/libs/chartjs-plu…datalabels/2.2.0/chartjs-plugin-datalabels.min.js'	'578.20 ms'#}
-  {#3	'http://127.0.0.1:8000/static/reportChart.js'	'579.50 ms'#}
-  {#4	'http://127.0.0.1:8000/static/dynamic_message.js'	'600.30 ms'#}
-  {#5	'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'	'708.80 ms'#}
-</script>
+                // 3. If the button exists on the page, natively click it
+                if (targetButton) {
+                    targetButton.click(); // This automatically sends the 'event' to openTab!
+                } else {
+                    console.warn("Tab with ID " + button_form_no + " not found.");
+                }
+            }
+        });
+
+        let selectedOption;
+
+        const session_year_list = generateYears(4);
+        const session_year = {};
+        session_year_list.forEach(year => {
+            session_year[year] = year;
+        })
+        console.log("Session year options dict is: ",session_year);
+        function flushDataConfirmation() {
+            Swal.fire({
+                title: 'Please Back Up your Data before flushing the data.',
+                text: 'All forms data will be deleted permanently.\nAre you sure you want to continue?',
+                icon: 'warning',
+                input: 'select',
+                inputLabel: 'Please Select a Session',
+                inputOptions: session_year,
+                inputPlaceholder: 'Select session...',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'You must select an option to proceed!';
+                    }
+                },
+                didOpen: () => {
+                    // Access and style the native input label element
+                    const label = Swal.getInputLabel();
+                    const input = Swal.getInput();
+                    if (label) {
+                        label.style.textAlign = 'left';
+                        label.style.fontWeight = 'bold';
+                        label.style.display = 'block';
+                        label.style.width = '100%';
+                        label.style.marginBottom = '4px';
+                        label.style.paddingLeft = '36px';
+                    }
+                    if (input) {
+                        input.style.marginTop = '0';
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    selectedOption = result.value;
+                    // 1. Show persistent message (duration = 0) and store dismiss trigger
+                    const dismissLoading = showMessages("Sending OTP...", "info", 0);
+                    // Insert logic to flush data here
+                    fetch('/send_otp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-type' : 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({'session_filter' : selectedOption})
+                    })
+                        .then(response => {
+                            // Parse JSON body and attach HTTP status flags
+                            return response.json().then(data => ({
+                                ok: response.ok,
+                                data: data
+                            }));
+                        })
+                        .then(res => {
+                            if (res.ok) {
+                                dismissLoading();
+
+                                showMessages(res.data.message, 'success');
+                                otpModalGeneration();
+                            } else {
+                                alert(res.data.error);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Fetch Error:', error);
+                            alert('A network error occurred. Please try again.');
+                        })
+                }
+            });
+
+            //const confirmed = confirm('Please Back Up your Data before flushing the data. \nAre you sure you want to continue?');
+            //if (!confirmed) return;
+
+            //const sessionValue = document.querySelector('select[id="sessionFlushDataModal"]').value;
+
+            //const formData = new FormData();
+            //formData.append('session_filter', sessionValue);
+
+        }
+
+        function otpModalGeneration() {
+            const modal = document.getElementById('otpModal');
+            // const openBtn = document.getElementById('openModal');
+            const closeBtn = document.getElementById('closeModal');
+            const inputs = document.querySelectorAll('.otp-field');
+            const resendBtn = document.getElementById('resendBtn');
+            const timerSpan = document.getElementById('timer');
+            const otpForm = document.getElementById('otpForm');
+
+            let countdown = 30;
+            let timerId = null;
+
+            // Modal Visibility Toggle
+            modal.classList.add('active');
+            inputs[0].focus();
+            startTimer();
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            function closeModal() {
+                modal.classList.remove('active');
+                resetForm();
+            }
+
+            // OTP Field Interactivity
+            inputs.forEach((input, index) => {
+                // Advance focus on digit input
+                input.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    if (value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+
+                // Handle Backspace navigation
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+
+                // Handle direct pasting of 6-digit code
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').trim();
+                    if (/^\d{6}$/.test(pastedData)) {
+                        pastedData.split('').forEach((char, i) => {
+                            if (inputs[i]) inputs[i].value = char;
+                        });
+                        inputs[inputs.length - 1].focus();
+                    }
+                });
+            });
+
+            // Resend Timer Logic
+            function startTimer() {
+                clearInterval(timerId);
+                countdown = 30;
+                resendBtn.disabled = true;
+                // Dynamically query the current timer span in the DOM
+                const getTimerSpan = () => document.getElementById('timer');
+
+                if (getTimerSpan()) getTimerSpan().textContent = countdown;
+
+                timerId = setInterval(() => {
+                    countdown--;
+                    const currentSpan = getTimerSpan();
+                    if (currentSpan) currentSpan.textContent = countdown;
+                    if (countdown <= 0) {
+                        clearInterval(timerId);
+                        resendBtn.disabled = false;
+                        resendBtn.innerHTML = 'Resend Code';
+                    }
+                }, 1000);
+            }
+
+            resendBtn.addEventListener('click', () => {
+                if (!resendBtn.disabled) {
+                    resendBtn.innerHTML = 'Resend (<span id="timer">30</span>s)';
+                    startTimer();
+                    // Add backend API trigger for resend code here
+                }
+            });
+
+            // Form Submission Logic
+            otpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const otpCode = Array.from(inputs).map(i => i.value).join('');
+                // alert(`Entered OTP: ${otpCode}`);
+                // Add backend verification call here
+                fetch('verify_otp_and_flush_data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type' : 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({'code' : otpCode, 'session_filter' : selectedOption})
+                }).then(response => {
+                            // Parse JSON body and attach HTTP status flags
+                    return response.json().then(data => ({
+                        ok: response.ok,
+                        data: data
+                    }));
+                }).then(res => {
+                    if (res.ok) {
+                        showMessages(res.data.message, 'success');
+                        closeModal();
+                    } else {
+                        alert(res.data.error);
+                    }
+                }).catch(err => {
+                    alert(`Error from backend: ${err}`);
+                })
+            });
+
+            function resetForm() {
+                otpForm.reset();
+                clearInterval(timerId);
+            }
+        }
+        /* To set the landing page same as current tab after deletion of any entry -ends- */
+        {#const slowResources = performance.getEntriesByType("resource")#}
+        {#.filter(res => res.duration > 500); // Finds anything taking longer than 0.5s#}
+        {##}
+        {#console.table(slowResources.map(res => ({#}
+        {#    Name: res.name,#}
+        {#    Duration: res.duration.toFixed(2) + " ms"#}
+        //)));
+        {#(index)#}
+        {#Name#}
+        {#Duration#}
+        {#0	'https://unpkg.com/lucide@latest'	'568.20 ms'#}
+        {#1	'https://cdn.jsdelivr.net/npm/chart.js'	'580.50 ms'#}
+        {#2	'https://cdnjs.cloudflare.com/ajax/libs/chartjs-plu…datalabels/2.2.0/chartjs-plugin-datalabels.min.js'	'578.20 ms'#}
+        {#3	'http://127.0.0.1:8000/static/reportChart.js'	'579.50 ms'#}
+        {#4	'http://127.0.0.1:8000/static/dynamic_message.js'	'600.30 ms'#}
+        {#5	'https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js'	'708.80 ms'#}
+
+    </script>
 
 {% endblock %}

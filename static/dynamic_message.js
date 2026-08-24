@@ -1,4 +1,4 @@
-function showMessages(message,tags) {
+function showMessages(message,tags,duration=5000) {
     let div1 = document.createElement("div");
     let div2 = document.createElement("div");
     div1.className = "d-flex justify-content-end";
@@ -24,8 +24,7 @@ function showMessages(message,tags) {
 
 
     // --- TRIGGER EXIT ANIMATION ---
-    setTimeout(() => {
-        // 1. Slide back out and fade
+    const dismiss = () => {
         div1.style.opacity = "0";
         div1.style.transform = "translateX(50px)";
 
@@ -33,6 +32,11 @@ function showMessages(message,tags) {
         setTimeout(() => {
             div1.remove();
         }, 500);
+    };
 
-    }, 5000);
+    if (duration > 0) {
+        setTimeout(dismiss, duration);
+    }
+
+    return dismiss;
 }

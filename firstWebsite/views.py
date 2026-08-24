@@ -1,12 +1,16 @@
-from functools import wraps
+import secrets
+import uuid
 
 import jwt
 from django.contrib import messages
-from django.db.models import Count, Q
+from django.core.mail import send_mail
+from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from MyFirstDjangoWebsite import settings
+from firstWebsite.decorators import session_login_required
+from firstWebsite.download import download_files
 from firstWebsite.modals import Faculty, Faculty_participation_data, mooc_course, events, awards_and_achievments, \
     sponsored_research, research_journal, research_conference, research_book, patents, guided, resource, \
     non_teaching_staff, category, department
@@ -52,6 +56,8 @@ def gsi_verify_login(request):
                     # If login is successful:
                     request.session['user_id'] = user.pk
                     request.session['topLeftBar'] = users_post
+                    user.session_version = uuid.uuid4()
+                    user.save()
                     request.session['session_version'] = str(user.session_version)
                     messages.success(request,"Logged in successfully!")
                     return JsonResponse({
@@ -85,39 +91,12 @@ def gsi_verify_login(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=401)
 
     return JsonResponse({'success': False, 'error': 'Invalid method.'}, status=405)
-
-
-def session_login_required(view_func):
-    """
-    A custom decorator that checks for a specific key
-    to determine if a user is logged in.
-    """
-
-    @wraps(view_func)
-    def wrapper(request, *args, **kwargs):
-        # 1. Check for the session key
-        # We assume you set request.session['user_id'] or request.session['is_logged_in']
-        # upon successful manual login.
-
-        # Check if the 'user_id' is set in the session
-        if request.session.get('user_id'):
-            # User is "logged in" based on the session key
-            return view_func(request, *args, **kwargs)
-        else:
-            # User is not "logged in", redirect to the login page
-            # We use settings.LOGIN_URL for consistency, but you can hardcode a URL too.
-            login_url = getattr(settings, 'LOGIN_URL', '/login')
-            return redirect(f'{login_url}?next={request.path}')
-
-    return wrapper
-
 @session_login_required
 def edit_profile(request, user_token=-1):
     try:
         if user_token != -1:
             payload = jwt.decode(user_token, settings.SECRET_KEY, algorithms=["HS256"])
             actual_pk = payload['user_pk']
-            print("From edit_profile pk is: ",actual_pk)
             faculty_instance = Faculty.objects.get(pk=actual_pk)
         else:
             faculty_instance = Faculty.objects.get(pk=request.session.get('user_id'))
@@ -330,3 +309,67 @@ def detailed_info_profile(request, user_token):
         return render(request, 'detailed-info-profile.html', {'faculty': faculty})
     else:
         return render(request, '404.html')
+@session_login_required
+def back_up_data(request):
+    if request.method == 'GET':
+        return download_files(request, True)
+    else:
+        return render(request, '404.html')
+
+@session_login_required
+def send_otp(request):
+    # 1. Validation and Response
+    to_mail = Faculty.objects.values_list('email', flat=True).get(pk=request.session['user_id'])
+    if not to_mail:
+        return JsonResponse({"error": "Email not found in the session."}, status=400)
+
+    # 2. Cryptographically secure 6-digit OTP generation
+    otp = "".join(str(secrets.randbelow(10)) for _ in range(6))
+    session_info_obj = json.loads(request.body)
+    session_info = session_info_obj.get('session_filter')
+    # 3. Django Session Management
+    request.session['otp_email'] = to_mail
+    request.session['otp_secret'] = otp
+    print("OTP is: ",otp)
+
+    # 4. Django Mail Abstraction
+    subject = "OTP Verification"
+    message = f"OTP to flush data for session {session_info} from your account is: {otp}"
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [to_mail]
+
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=from_email,
+            recipient_list=recipient_list,
+            fail_silently=False,
+        )
+        return JsonResponse({"message": "OTP sent successfully!"}, status=200)
+    except Exception as e:
+        return JsonResponse({"error": f"Failed to send email: {str(e)}"}, status=500)
+
+@session_login_required
+def verify_otp_and_flush_data(request):
+    if request.method == 'POST':
+        otp_and_filter = json.loads(request.body)
+        if otp_and_filter.get('code') == request.session['otp_secret']:
+            session_filter = otp_and_filter.get('session_filter')
+            print("Session Filter value is: ", session_filter)
+            deleted_count, details = mooc_course.objects.filter(session=session_filter).delete()
+            # Faculty_participation_data.objects.filter(session=session_filter).delete()
+            # events.objects.filter(session=session_filter).delete()
+            # awards_and_achievments.objects.filter(session=session_filter).delete()
+            # sponsored_research.objects.filter(session=session_filter).delete()
+            # research_journal.objects.filter(session=session_filter).delete()
+            # research_conference.objects.filter(session=session_filter).delete()
+            # research_book.objects.filter(session=session_filter).delete()
+            # patents.objects.filter(session=session_filter).delete()
+            # guided.objects.filter(session=session_filter).delete()
+            # resource.objects.filter(session=session_filter).delete()
+            return JsonResponse({"message": f"Date Flushed Successfully!\nDeleted {deleted_count} records!"}, status=200)
+        else:
+            return JsonResponse({"error": "Please re-check the OTP and enter the correct OTP!"}, status=400)
+
+    return render(request, '404.html')

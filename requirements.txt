@@ -32,3 +32,4 @@ urllib3==2.6.0
 xlsxwriter==3.2.9
 django-multiselectfield
 python-dotenv
+django-cleanup==9.0.0
