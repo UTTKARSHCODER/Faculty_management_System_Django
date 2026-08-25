@@ -490,11 +490,10 @@
         session_year_list.forEach(year => {
             session_year[year] = year;
         })
-        console.log("Session year options dict is: ",session_year);
         function flushDataConfirmation() {
             Swal.fire({
-                title: 'Please Back Up your Data before flushing the data.',
-                text: 'All forms data will be deleted permanently.\nAre you sure you want to continue?',
+                title: 'Confirm Data Backup and Deletion',
+                text: 'Your selected session data will be backed up once you verify your OTP. Following this, all forms data will be deleted permanently.\nAre you sure you want to proceed?',
                 icon: 'warning',
                 input: 'select',
                 inputLabel: 'Please Select a Session',
@@ -553,6 +552,21 @@
 
                                 showMessages(res.data.message, 'success');
                                 otpModalGeneration();
+                                const form = document.createElement('form');
+                                form.method = 'GET';
+                                form.action = '/back_up_data'; // Replace with your Django URL route
+                                form.style.display = 'none'; // Keep hidden from UI
+
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = 'session_filter';
+                                input.value = selectedOption;
+                                form.appendChild(input);
+
+                                // 3. Append to body, submit to trigger download, and cleanup
+                                document.body.appendChild(form);
+                                form.submit();
+                                document.body.removeChild(form);
                             } else {
                                 alert(res.data.error);
                             }
@@ -658,6 +672,37 @@
                     resendBtn.innerHTML = 'Resend (<span id="timer">30</span>s)';
                     startTimer();
                     // Add backend API trigger for resend code here
+                    const dismissLoading = showMessages("Sending OTP...", "info", 0);
+                    // Insert logic to flush data here
+                    fetch('/send_otp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-type' : 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({'session_filter' : selectedOption})
+                    })
+                        .then(response => {
+                            // Parse JSON body and attach HTTP status flags
+                            return response.json().then(data => ({
+                                ok: response.ok,
+                                data: data
+                            }));
+                        })
+                        .then(res => {
+                            if (res.ok) {
+                                dismissLoading();
+
+                                showMessages(res.data.message, 'success');
+                                otpModalGeneration();
+                            } else {
+                                alert(res.data.error);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Fetch Error:', error);
+                            alert('A network error occurred. Please try again.');
+                        })
                 }
             });
 

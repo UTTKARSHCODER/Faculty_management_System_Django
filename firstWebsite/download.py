@@ -241,7 +241,7 @@ professinal_course_label_to_value = {choice.label: choice.value for choice in Pr
 @session_login_required
 def download_files(request, back_up_data=False):
     # Data Filteration
-    if request.method == "POST":
+    if request.method == "POST" and not back_up_data:
         form_no = request.POST.get('form_no')
 
         dept_label_to_value = {choice.label: choice.value for choice in department}
@@ -875,7 +875,7 @@ def download_files(request, back_up_data=False):
                     else:
                         custom_query = Q(session=session_filter)
 
-                    for item in Faculty.objects.filter(custom_query):
+                    for item in Faculty.objects.filter(custom_query).order_by('session','emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email,
                                     item.get_session_display(),
                                     item.name, item.contact_number, item.get_department_display(),
@@ -1004,7 +1004,7 @@ def download_files(request, back_up_data=False):
                         cell.font = Font(name='Arial', size=11, bold=True)
 
                     file_path_links = []
-                    for item in non_teaching_staff.objects.filter(query):
+                    for item in non_teaching_staff.objects.filter(query).order_by('session','emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(),
                                        item.name, item.mobile_no, item.get_department_display(), item.Lab_no, item.get_designation_display(),
                                        item.emp_id, item.get_highest_qual_display(), item.university_name, item.pshd,
@@ -1118,7 +1118,7 @@ def download_files(request, back_up_data=False):
                     sheet2.append(headers_2)
 
                     file_path_links = []
-                    for item in Faculty_participation_data.objects.filter(query):
+                    for item in Faculty_participation_data.objects.filter(query).order_by('session','email__emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.emp_id, item.email.get_department_display(),
                                        item.email.name, item.top, item.get_category_display(), item.get_mode_display(),
                                        item.get_level_display(), item.organizer, item.sponsors, item.get_approval_display(),
@@ -1187,7 +1187,7 @@ def download_files(request, back_up_data=False):
                         cell.font = Font(name='Arial', size=11, bold=True)
 
                     file_path_links = []
-                    for item in mooc_course.objects.filter(query):
+                    for item in mooc_course.objects.filter(query).order_by('session','email__emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email,
                                     item.get_session_display(), item.email.name, item.email.emp_id,
                                     item.email.get_department_display(),
@@ -1261,7 +1261,7 @@ def download_files(request, back_up_data=False):
                         cell.font = Font(name='Arial', size=11, bold=True)
 
                     file_path_links = []
-                    for item in events.objects.filter(query):
+                    for item in events.objects.filter(query).order_by('session','email__emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email,
                                     item.begi_date.strftime("%d-%m-%Y"),
                                     item.end_date.strftime("%d-%m-%Y"), ", ".join(item.eof_display_list),
@@ -1328,7 +1328,7 @@ def download_files(request, back_up_data=False):
                         cell.font = Font(name='Arial', size=11, bold=True)
 
                     file_path_links = []
-                    for item in awards_and_achievments.objects.filter(query):
+                    for item in awards_and_achievments.objects.filter(query).order_by('session','email__emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(),
                                        item.email.name, item.email.emp_id, item.email.get_designation_display(), item.email.get_department_display(),
                                        item.noaa, item.get_category_display(), item.paf,
@@ -1390,7 +1390,7 @@ def download_files(request, back_up_data=False):
                         cell.font = Font(name='Arial', size=11, bold=True)
 
                     file_path_links = []
-                    for item in sponsored_research.objects.filter(query):
+                    for item in sponsored_research.objects.filter(query).order_by('session','email__emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.name,
                                        item.email.emp_id, item.email.get_department_display(), item.get_category_display(),
                                        item.nofa, item.dop,
@@ -1454,7 +1454,7 @@ def download_files(request, back_up_data=False):
                         cell.font = Font(name='Arial', size=11, bold=True)
 
                     file_path_links = []
-                    for item in research_journal.objects.filter(query):
+                    for item in research_journal.objects.filter(query).order_by('session','email__emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.emp_id,
                                        item.noa, item.email.get_department_display(), item.top,
                                        item.noj, item.nop, item.vi,
@@ -1517,7 +1517,7 @@ def download_files(request, back_up_data=False):
                         cell.font = Font(name='Arial', size=11, bold=True)
 
                     file_path_links = []
-                    for item in research_conference.objects.filter(query):
+                    for item in research_conference.objects.filter(query).order_by('session','email__emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.get_department_display(),
                                        item.email.emp_id, item.noa, item.toc,
                                        item.top, item.topc, item.get_level_display(),
@@ -1581,7 +1581,7 @@ def download_files(request, back_up_data=False):
                         cell.font = Font(name='Arial', size=11, bold=True)
 
                     file_path_links = []
-                    for item in research_book.objects.filter(query):
+                    for item in research_book.objects.filter(query).order_by('session','email__emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.email.get_department_display(), item.email.emp_id,
                                        item.noa, item.tob,
                                        item.top, item.get_level_display(), item.isbn,
@@ -1644,7 +1644,7 @@ def download_files(request, back_up_data=False):
                         cell.font = Font(name='Arial', size=11, bold=True)
 
                     file_path_links = []
-                    for item in patents.objects.filter(query):
+                    for item in patents.objects.filter(query).order_by('session','email__emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.get_department_display(), item.email.emp_id,
                                        item.email.name, item.get_sop_display(),
                                        item.ag, item.gi, item.get_pg_display(),
@@ -1703,7 +1703,7 @@ def download_files(request, back_up_data=False):
                     for cell in sheet11[1]:
                         cell.font = Font(bold=True)
 
-                    for item in guided.objects.filter(query):
+                    for item in guided.objects.filter(query).order_by('session','email__emp_id'):
                         sheet11.append([timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.name, item.email.emp_id,
                                        item.email.get_department_display(), item.nos,
                                        item.get_category_display(), item.ens, item.urns,
@@ -1748,7 +1748,7 @@ def download_files(request, back_up_data=False):
                         cell.font = Font(name='Arial', size=11, bold=True)
 
                     file_path_links = []
-                    for item in resource.objects.filter(query):
+                    for item in resource.objects.filter(query).order_by('session','email__emp_id'):
                         row_data = [timezone.localtime(item.created_at).strftime("%d-%m-%Y %H:%M:%S"), item.email.email, item.get_session_display(), item.email.name, item.email.emp_id,
                                        item.email.get_department_display(), item.get_category_display(),
                                        item.toe, item.sa, item.get_rpt_display(),
